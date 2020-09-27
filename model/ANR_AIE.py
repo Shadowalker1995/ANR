@@ -72,7 +72,7 @@ class ANR_AIE(nn.Module):
 			tqdm.write("affinityMatrix: {}".format( affinityMatrix.size() ))
 
 		# Non-Linearity: ReLU
-		affinityMatrix = F.relu(affinityMatrix)
+		affinityMatrix = F.relu(affinityMatrix) # S, Formula (5)
 
 
 		# ===================================================================== User Importance (over Aspects) =====================================================================
