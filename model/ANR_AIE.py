@@ -63,7 +63,7 @@ class ANR_AIE(nn.Module):
 		'''
 		Affinity Matrix (User Aspects x Item Aspects), i.e. User Aspects - Rows, Item Aspects - Columns
 		'''
-		affinityMatrix = torch.matmul(userAspRep, self.W_a)
+		affinityMatrix = torch.matmul(userAspRep, self.W_a) # W(s)
 		if(verbose > 0):
 			tqdm.write("\naffinityMatrix: {}".format( affinityMatrix.size() ))
 
