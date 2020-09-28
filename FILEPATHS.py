@@ -14,4 +14,3 @@ fp_iid_itemDoc		= "_iid_itemDoc.npy"
 
 fp_wid_wordEmbed	= "_wid_wordEmbed.npy"
 
-

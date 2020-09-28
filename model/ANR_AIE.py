@@ -5,19 +5,15 @@ import torch.nn.functional as F
 from tqdm import tqdm
 
 
-
 '''
 Aspect Importance Estimation (AIE)
 '''
 class ANR_AIE(nn.Module):
-
     def __init__(self, logger, args):
-
         super(ANR_AIE, self).__init__()
 
         self.logger = logger
         self.args = args
-
 
         # Matrix for Interaction between User Aspect-level Representations & Item Aspect-level Representations 
         # This is a learnable (h1 x h1) matrix, i.e. User Aspects - Rows, Item Aspects - Columns
@@ -31,7 +27,6 @@ class ANR_AIE(nn.Module):
         self.W_i = nn.Parameter(torch.Tensor(self.args.h2, self.args.h1), requires_grad = True)
         self.w_hi = nn.Parameter(torch.Tensor(self.args.h2, 1), requires_grad = True)
 
-
         # Initialize all weights using random uniform distribution from [-0.01, 0.01]
         self.W_a.data.uniform_(-0.01, 0.01)
 
@@ -43,11 +38,10 @@ class ANR_AIE(nn.Module):
 
 
     '''
-    [Input]        userAspRep:        bsz x num_aspects x h1
-    [Input]        itemAspRep:        bsz x num_aspects x h1
+    [Input]  userAspRep: bsz x num_aspects x h1
+    [Input]  itemAspRep: bsz x num_aspects x h1
     '''
     def forward(self, userAspRep, itemAspRep, verbose = 0):
-
         if(verbose > 0):
             tqdm.write("\n\n============================== Aspect Importance Estimation (AIE) ==============================")
             tqdm.write("[Input to AIE] userAspRep: {}".format( userAspRep.size() ))
@@ -58,7 +52,6 @@ class ANR_AIE(nn.Module):
         if(verbose > 0):
             tqdm.write("\nuserAspRepTrans: {}".format( userAspRepTrans.size() ))
             tqdm.write("itemAspRepTrans: {}".format( itemAspRepTrans.size() ))
-
 
         '''
         Affinity Matrix (User Aspects x Item Aspects), i.e. User Aspects - Rows, Item Aspects - Columns
@@ -74,18 +67,17 @@ class ANR_AIE(nn.Module):
         # Non-Linearity: ReLU
         affinityMatrix = F.relu(affinityMatrix) # S, Formula (5)
 
-
-        # ===================================================================== User Importance (over Aspects) =====================================================================
-        H_u_1 = torch.matmul(self.W_u, userAspRepTrans)
-        H_u_2 = torch.matmul(self.W_i, itemAspRepTrans)
+        # =========== User Importance (over Aspects) ===========
+        H_u_1 = torch.matmul(self.W_u, userAspRepTrans) # P(u), W(X)
+        H_u_2 = torch.matmul(self.W_i, itemAspRepTrans) # Q(i), W(Y)
         H_u_2 = torch.matmul(H_u_2, torch.transpose(affinityMatrix, 1, 2))
-        H_u = H_u_1 + H_u_2
+        H_u = H_u_1 + H_u_2 # H(u), Formula (6)
 
         # Non-Linearity: ReLU
         H_u = F.relu(H_u)
 
         # User Aspect-level Importance
-        userAspImpt = torch.matmul(torch.transpose(self.w_hu, 0, 1), H_u)
+        userAspImpt = torch.matmul(torch.transpose(self.w_hu, 0, 1), H_u) # B(u), Formula (6)
         if(verbose > 0):
             tqdm.write("\nuserAspImpt: {}".format( userAspImpt.size() ))
 
@@ -94,7 +86,7 @@ class ANR_AIE(nn.Module):
         if(verbose > 0):
             tqdm.write("userAspImpt: {}".format( userAspImpt.size() ))
 
-        userAspImpt = F.softmax(userAspImpt, dim = 1)
+        userAspImpt = F.softmax(userAspImpt, dim = 1) # B(u), Formula (6)
         if(verbose > 0):
             tqdm.write("userAspImpt: {}".format( userAspImpt.size() ))
 
@@ -102,11 +94,9 @@ class ANR_AIE(nn.Module):
         userAspImpt = torch.squeeze(userAspImpt, 2)
         if(verbose > 0):
             tqdm.write("userAspImpt: {}".format( userAspImpt.size() ))
+        # =========== User Importance (over Aspects) ===========
 
-        # ===================================================================== User Importance (over Aspects) =====================================================================
-
-
-        # ===================================================================== Item Importance (over Aspects) =====================================================================
+        # =========== Item Importance (over Aspects) ===========
         H_i_1 = torch.matmul(self.W_i, itemAspRepTrans)
         H_i_2 = torch.matmul(self.W_u, userAspRepTrans)
         H_i_2 = torch.matmul(H_i_2, affinityMatrix)
@@ -133,9 +123,7 @@ class ANR_AIE(nn.Module):
         itemAspImpt = torch.squeeze(itemAspImpt, 2)
         if(verbose > 0):
             tqdm.write("itemAspImpt: {}".format( itemAspImpt.size() ))
-
-        # ===================================================================== Item Importance (over Aspects) =====================================================================
-
+        # =========== Item Importance (over Aspects) ===========
 
         if(verbose > 0):
             tqdm.write("\n[Output of AIE] userAspImpt (i.e. the User Aspect-level Importance): {}".format( userAspImpt.size() ))
