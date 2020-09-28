@@ -25,13 +25,13 @@ args=parser.parse_args()
 args.dev_test_in_train=True if (args.dev_test_in_train == 1) else False
 
 # Dataset, e.g. amazon_instant_video
-CATEGORY=args.dataset.strip().lower()
+CATEGORY = args.dataset.strip()
 print("\nDataset: {}".format( CATEGORY ))
 
-MIN_REVIEW_LEN=args.minRL         # Minimum review length based on number of tokens
-MIN_REVIEWS=args.minReviews        # Minimum number of reviews per user/item
-VOCAB_SIZE=args.vocab                # Vocabulary size
-MAX_DOC_LEN=args.maxDL            # Maximum length of user/item document
+MIN_REVIEW_LEN = args.minRL         # Minimum review length based on number of tokens
+MIN_REVIEWS = args.minReviews        # Minimum number of reviews per user/item
+VOCAB_SIZE = args.vocab                # Vocabulary size
+MAX_DOC_LEN = args.maxDL            # Maximum length of user/item document
 
 # Random seed
 np.random.seed(args.random_seed)
@@ -153,7 +153,7 @@ while True:
     items=sorted(list(item_count))
     users_dict={user: "" for user in users}
     items_dict={item: "" for item in items}
-    interactions[:]=[interaction for interaction in tqdm(interactions, "Updating interactions") 
+    interactions[:]=[interaction for interaction in tqdm(interactions, "Updating interactions")
         if (hit(interaction, users_dict, items_dict) == True)]
 
     user_count, item_count=count(interactions)

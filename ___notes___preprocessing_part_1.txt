@@ -1,16 +1,11 @@
 cd to 'preprocessing' folder
 
-
 run the following command:
 python3 preprocessing_simple.py -d amazon_instant_video -dev_test_in_train 1
-
-
 
 NOTE:
     you should have the input reviews/rating in the 'datasets' folder, e.g. amazon_instant_video.json
     this will be the 'dataset' used in the -d argument
-
-
 
 There should be 8 files created in the corresponding folder, e.g. datasets/amazon_instant_video/
 
@@ -26,8 +21,6 @@ Files required to run the model:
 (7) E.g. datasets/amazon_instant_video/amazon_instant_video_uid_userDoc.npy
 (8) E.g. datasets/amazon_instant_video/amazon_instant_video_iid_itemDoc.npy
 
-
-
 Purpose of files:
 (2) contains various mappings, e.g. word to wid, user to uid, etc
 (3) contains various statistical information, e.g. number of users, number of items, number of data samples for train/dev/test
@@ -42,5 +35,4 @@ Purpose of files:
 -   num_items:      Number of items, and this depends on the dataset
 -   max_doc_len:    Maximum length of each item document, i.e. 500 in our experiments
 -   Each entry in this matrix is a wid
-
 

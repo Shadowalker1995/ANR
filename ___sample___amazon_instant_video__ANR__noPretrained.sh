@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # Example script for ANR
 # We repeat the process 5 times using different random seeds
 

@@ -1,7 +1,5 @@
 Hello!
 
-
-
 Step 0. We asssume the following directory structure:
 
 test/                                   # root folder
@@ -25,9 +23,7 @@ test/                                   # root folder
     PyTorchTEST.py                      # Basically main.py.. The model is trained and tested here (despite the weird filename)
 
 
-
 Step 1. Preprocessing
-
   - NOTE: For this step, your current directory should be the 'preprocessing' folder..
   - E.g. test/ANR/preprocessing/ in the example directory structure!
 
@@ -35,9 +31,7 @@ Step 1. Preprocessing
   - refer to ___notes___preprocessing_part_2.txt
 
 
-
 Step 2. Running the model
-
   - NOTE: For this step, your current directory should be the 'ANR' folder.. i.e. test/ANR/ in the example directory structure!
 
   - If you want to train & test the model directly..
@@ -49,9 +43,7 @@ Step 2. Running the model
     - refer to ___sample___amazon_instant_video__ANR.sh
 
 
-
 [ Miscellaneous Information ]
-
 Experiments were run on a Ubuntu server with version 14.04.5 LTS, conda 4.5.0, python 3.6.3, and pytorch 0.3.0.
 
 Yelp dataset
@@ -63,24 +55,17 @@ Amazon datasets
 - Obtained from: http://jmcauley.ucsd.edu/data/amazon/
 
 
-
 [ Optional ]
 An example using the Amazon Instant Video dataset:
 
-
 (1) Download the json file and put it in the 'datasets' folder
-
   - e.g. test/ANR/datasets/amazon_instant_video.json
 
-
 (2) Download the pretrained word2vec embeddings if you haven't done so..
-
   - If you are following the example directory structure, there is no need to change anything
   - If not, please edit this line "input_embeddings   = "../../GoogleNews-vectors-negative300.bin" in pretrained_vectors_simple.py
 
-
 (3) Preprocessing Part 1
-
   - cd to 'preprocessing' folder
 
   - For example, run this:
@@ -91,9 +76,7 @@ An example using the Amazon Instant Video dataset:
   - there will be a new folder within 'datasets', e.g. test/ANR/datasets/amazon_instant_video/
   - there will be a total of 8 files inside
 
-
 (4) Preprocessing Part 2
-
   - cd to 'preprocessing' folder
 
   - For example, run this:
@@ -104,9 +87,7 @@ An example using the Amazon Instant Video dataset:
   - there will be 2 new files added to the folder, e.g. test/ANR/datasets/amazon_instant_video/
   - there will be a total of 10 files inside
 
-
 (5) Model Part 1 - Pretraining
-
   - cd to 'ANR' folder
 
   - For example, run this:
@@ -126,9 +107,7 @@ An example using the Amazon Instant Video dataset:
 
   - NOTE: simplified model == ANRS, and the complete model == ANR
 
-
 (6) Model Part 2 - Actual Model
-
   - cd to 'ANR' folder
 
   - For example, run this:
@@ -148,8 +127,6 @@ An example using the Amazon Instant Video dataset:
     - model size, what are the trainable parameters
     - for each epoch: the training loss, the dev MSE, and the test MSE, as well as time taken
     - at the end of the file, it shows the best dev MSE, when the best dev MSE was obtained, and the corresponding test MSE
-
-
 
 
 [ Optional ]
@@ -178,6 +155,4 @@ An example using the Amazon Instant Video dataset:
   -K:     number of aspects
   -h1:    dimensionality of aspect-level user & item representations
   -h2:    size of hidden layers in Aspect Importance Estimation
-
-
 

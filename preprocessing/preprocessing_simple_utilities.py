@@ -35,21 +35,20 @@ UNK = '<unk>'
 # https://stackoverflow.com/questions/14630288/unicodeencodeerror-charmap-codec-cant-encode-character-maps-to-undefined
 # This version works for both Python 2 & 3
 def uprint(*objects):
-
     sep = " "
     end = "\n"
     file = sys.stdout
     enc = file.encoding
 
     if enc == 'UTF-8':
-        print(*objects, sep = sep, end = end, file = file)
+        print(*objects, sep=sep, end=end, file=file)
     else:
-        f = lambda obj: str(obj).encode(enc, errors = 'backslashreplace').decode(enc)
-        print(*map(f, objects), sep = sep, end = end, file = file)
+        f = lambda obj: str(obj).encode(enc, errors='backslashreplace').decode(enc)
+        print(*map(f, objects), sep=sep, end=end, file=file)
 
 
 def append_to_file(path, txt, print = True):
-    with codecs.open(path, 'a+', encoding = 'utf-8', errors = 'ignore') as f:
+    with codecs.open(path, 'a+', encoding='utf-8', errors='ignore') as f:
         f.write(txt + '\n')
 
     if(print == True):
@@ -63,7 +62,7 @@ def print_args(args):
 
     lst_args = []
     lst_args.append("[args from argparse.ArgumentParser().parse_args()]")
-    for key in sorted(items.keys(), key = lambda s: s.lower()):
+    for key in sorted(items.keys(), key=lambda s: s.lower()):
 
         value = items[key]
         lst_args.append("{}: {}".format( key, str(value) ))
@@ -72,8 +71,7 @@ def print_args(args):
     return "\n".join(lst_args)
 
 
-def count(interactions, print_min = False):
-
+def count(interactions, print_min=False):
     user_count = Counter()
     item_count = Counter()
 
@@ -88,7 +86,7 @@ def count(interactions, print_min = False):
     return user_count, item_count
 
 
-def stack_count(interactions, user_count, item_count, print_min = False):
+def stack_count(interactions, user_count, item_count, print_min=False):
 
     for interaction in interactions:
         user_count[interaction[0]] += 1
@@ -155,18 +153,16 @@ def word2id(word, word_wid):
         return word_wid[UNK]
 
 
-def post_padding(doc, maxlen, pad_char = 0):
+def post_padding(doc, maxlen, pad_char=0):
     return doc[:maxlen] + ([pad_char] * (maxlen - len(doc)) )
 
 
-def prepare_set(interactions, user_uid, item_iid, uid_userDocLen, iid_itemDocLen, set_type, output_log, printToScreen = False):
-
+def prepare_set(interactions, user_uid, item_iid, uid_userDocLen, iid_itemDocLen, set_type, output_log, printToScreen=False):
     lst_uid = []
     lst_iid = []
     lst_rating = []
 
     for interaction in tqdm(interactions, "Preparing the {} set".format(set_type)):
-
         user = interaction[0]
         item = interaction[1]
         rating = interaction[2]
@@ -179,17 +175,16 @@ def prepare_set(interactions, user_uid, item_iid, uid_userDocLen, iid_itemDocLen
         lst_iid.append(iid)
         lst_rating.append(rating)
 
-
     # Distribution of Ratings (Just fyi)
     ratings_min = np.min(lst_rating)
     ratings_max = np.max(lst_rating)
     append_to_file(output_log, "[{}] Lowest Rating: {:.2f}, Highest Rating: {:.2f}, Average Rating: {:.3f}".format(
-        set_type, ratings_min, ratings_max, np.mean(lst_rating) ), print = printToScreen)
+        set_type, ratings_min, ratings_max, np.mean(lst_rating) ), print=printToScreen)
     ratingsCounter = Counter(lst_rating)
     ratingsDist = ratingsCounter.items()
-    ratingsDist = sorted(ratingsDist, key = lambda interaction: interaction[0])
+    ratingsDist = sorted(ratingsDist, key=lambda interaction: interaction[0])
     ratingsDist = ", ".join(["[{:.2f}: {}]".format(r, c) for r, c in ratingsDist])
-    append_to_file(output_log, "[{}] {}\n".format( set_type, ratingsDist ), print = printToScreen)
+    append_to_file(output_log, "[{}] {}\n".format( set_type, ratingsDist ), print=printToScreen)
 
 
     return zip(lst_uid, lst_iid, lst_rating)
@@ -203,13 +198,11 @@ def load_pickle(fin):
 
 # Includes startIndex, excludes endIndex
 def createNumpyMatrix(startIndex, endIndex, mapping):
-
     npMatrix = []
     rows = (endIndex - startIndex)
     columns = len(mapping[startIndex])
 
     for idx in range(startIndex, endIndex):
-
         vec = mapping[idx]
         npMatrix.append(vec)
 

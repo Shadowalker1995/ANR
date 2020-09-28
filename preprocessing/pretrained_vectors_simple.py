@@ -37,7 +37,7 @@ input_env            = "{}{}{}".format( CATEGORY_FOLDER, CATEGORY, fp_env )
 
 # NOTE: This is the input file for the pretrained word embeddings
 # NOTE: Specify the correct file!!
-input_embeddings    = "../../GoogleNews-vectors-negative300.bin"
+input_embeddings    = "../datasets/GoogleNews-vectors-negative300.bin"
 # =========== INPUT ===========
 
 
