@@ -1,11 +1,6 @@
 from __future__ import print_function
 
-import os, sys, inspect
-current_dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-parent_dir = os.path.dirname(current_dir)
-sys.path.insert(0, parent_dir)
-from FILEPATHS import *
-
+import inspect
 import sys
 import os
 import json
@@ -19,13 +14,16 @@ import gc
 import numpy as np
 import random
 import argparse
+from FILEPATHS import *
 
+current_dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parent_dir = os.path.dirname(current_dir)
+sys.path.insert(0, parent_dir)
 
 if sys.version_info > (3, 4):
     import _pickle as pickle
 else:
     import pickle as pickle
-
 
 # Padding and OOV
 PAD = '<pad>'
@@ -47,23 +45,20 @@ def uprint(*objects):
         print(*map(f, objects), sep=sep, end=end, file=file)
 
 
-def append_to_file(path, txt, print = True):
+def append_to_file(path, txt, print=True):
     with codecs.open(path, 'a+', encoding='utf-8', errors='ignore') as f:
         f.write(txt + '\n')
 
-    if(print == True):
+    if print:
         uprint(txt)
 
 
 def print_args(args):
-
     args.command = ' '.join(sys.argv)
     items = vars(args)
 
-    lst_args = []
-    lst_args.append("[args from argparse.ArgumentParser().parse_args()]")
+    lst_args = ["[args from argparse.ArgumentParser().parse_args()]"]
     for key in sorted(items.keys(), key=lambda s: s.lower()):
-
         value = items[key]
         lst_args.append("{}: {}".format( key, str(value) ))
 
@@ -79,7 +74,7 @@ def count(interactions, print_min=False):
         user_count[interaction[0]] += 1
         item_count[interaction[1]] += 1
 
-    if(print_min):
+    if print_min:
         print("Least # of reviews for an user: {}, Least # of reviews for an item: {}".format(
             user_count.most_common()[-1][1], item_count.most_common()[-1][1]))
 
@@ -87,19 +82,17 @@ def count(interactions, print_min=False):
 
 
 def stack_count(interactions, user_count, item_count, print_min=False):
-
     for interaction in interactions:
         user_count[interaction[0]] += 1
         item_count[interaction[1]] += 1
 
-    if(print_min):
+    if print_min:
         print("Least # of reviews for an user: {}, Least # of reviews for an item: {}".format(
             user_count.most_common()[-1][1], item_count.most_common()[-1][1]))
 
 
 # Returns the set of users, and the set of items, within interactions
 def get_users_items(interactions):
-
     users = set()
     items = set()
 
@@ -111,9 +104,8 @@ def get_users_items(interactions):
 
 
 def drop_if_lt(x_count, threshold):
-
     for x in list(x_count):
-        if(x_count[x] < threshold):
+        if x_count[x] < threshold:
             del x_count[x]
 
 
@@ -137,7 +129,7 @@ def simple_tokenizer(txt):
     txt = re.sub(r"[^\w\s]", " ", txt)
 
     # Tokenize
-    txt =  [x for x in txt.split() if len(x) > 0]
+    txt = [x for x in txt.split() if len(x) > 0]
 
     return txt
 
@@ -178,14 +170,14 @@ def prepare_set(interactions, user_uid, item_iid, uid_userDocLen, iid_itemDocLen
     # Distribution of Ratings (Just fyi)
     ratings_min = np.min(lst_rating)
     ratings_max = np.max(lst_rating)
+    rating_avg = np.mean(lst_rating)
     append_to_file(output_log, "[{}] Lowest Rating: {:.2f}, Highest Rating: {:.2f}, Average Rating: {:.3f}".format(
-        set_type, ratings_min, ratings_max, np.mean(lst_rating) ), print=printToScreen)
+        set_type, ratings_min, ratings_max, rating_avg ), print=printToScreen)
     ratingsCounter = Counter(lst_rating)
     ratingsDist = ratingsCounter.items()
     ratingsDist = sorted(ratingsDist, key=lambda interaction: interaction[0])
     ratingsDist = ", ".join(["[{:.2f}: {}]".format(r, c) for r, c in ratingsDist])
     append_to_file(output_log, "[{}] {}\n".format( set_type, ratingsDist ), print=printToScreen)
-
 
     return zip(lst_uid, lst_iid, lst_rating)
 
@@ -210,4 +202,3 @@ def createNumpyMatrix(startIndex, endIndex, mapping):
     npMatrix = np.reshape(npMatrix, (rows, columns))
 
     return npMatrix
-
