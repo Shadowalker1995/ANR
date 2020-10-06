@@ -1,7 +1,6 @@
 from preprocessing_simple_utilities import *
 import gensim
 
-
 parser = argparse.ArgumentParser()
 parser.add_argument("-d", "--dataset", type=str, default="amazon_instant_video", help="Dataset (Default: amazon_instant_video)")
 parser.add_argument("-emb_dim", "--emb_dim", type=int, default=300, help="Embeddings Dimension (Default: 300)")
@@ -66,6 +65,7 @@ append_to_file(output_log, "{:<38s} {}".format( "[INPUT] Pretrained Word Embeddi
 # Output Info
 append_to_file(output_log, "\n{:<38s} {}".format( "[OUTPUT] wid_wordEmbed:", output_wid_wordEmbed ))
 
+
 # Load word-to-wid mappings from the environment file
 append_to_file(output_log, "\nLoading word-to-wid mappings (i.e. word_wid) from \"{}\"".format( input_env ))
 env = load_pickle( input_env )
@@ -75,6 +75,7 @@ wid_word = {wid: word for word, wid in word_wid.items()}
 # Force garbage collection
 del env
 gc.collect()
+
 
 # Vocab
 vocab = word_wid.keys()
@@ -96,6 +97,7 @@ for v in tqdm(vocab, "Processing pretrained vectors"):
 append_to_file(output_log, "\nFinished processing pretrained embeddings..")
 append_to_file(output_log, "# of words with pretrained embeddings: {}".format( len(embeddings) ))
 
+
 wordEmbedMatrix = []
 noPretrainedEmb_words = []
 
@@ -116,7 +118,6 @@ for wid in tqdm(range(2, len(word_wid)), "Forming Matrix"):
     except:
         # Words that do not have a pretrained embedding are initialized randomly using a uniform distribution U(−0.01, 0.01)
         vec = np.random.uniform(low=-args.emb_rand_init, high=args.emb_rand_init, size=args.emb_dim).tolist()
-
         wordEmbedMatrix.append(vec)
         noPretrainedEmb_words.append(word)
 
@@ -133,6 +134,7 @@ append_to_file(output_log, "Embeddings successfully saved to '{}'\n".format( out
 
 # Force garbage collection
 gc.collect()
+
 
 endTime = time.time()
 durationInSecs = endTime - startTime

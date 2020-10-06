@@ -13,10 +13,10 @@ from .ANRS_RatingPred import ANRS_RatingPred
 from tqdm import tqdm
 
 
-'''
-This is the complete Aspect-based Neural Recommender (ANR), with ARL and AIE as its main components.
-'''
 class ANR(nn.Module):
+    """
+    This is the complete Aspect-based Neural Recommender (ANR), with ARL and AIE as its main components.
+    """
     def __init__(self, logger, args, num_users, num_items):
         super(ANR, self).__init__()
 
@@ -41,7 +41,7 @@ class ANR(nn.Module):
         self.shared_ANR_ARL = ANR_ARL(logger, args)
 
         # Rating Prediction - Aspect Importance Estimation + Aspect-based Rating Prediction
-        if(self.args.model == "ANR"):
+        if self.args.model == "ANR":
             # Aspect-Based Co-Attention (Parallel Co-Attention, using the Affinity Matrix as a Feature) --- Aspect Importance Estimation
             self.ANR_AIE = ANR_AIE(logger, args)
 
@@ -50,17 +50,16 @@ class ANR(nn.Module):
 
         # 'Simplified Model' - Basically, ARL + simplfied network (3x FCs) for rating prediction
         # The only purpose of this is to obtain the pretrained weights for ARL
-        elif(self.args.model == "ANRS"):
+        elif self.args.model == "ANRS":
             # Rating Prediction using the 'Simplified Model'
             self.ANRS_RatingPred = ANRS_RatingPred(logger, args)
-
 
     def forward(self, batch_uid, batch_iid, verbose = 0):
         # Input
         batch_userDoc = self.uid_userDoc(batch_uid)
         batch_itemDoc = self.iid_itemDoc(batch_iid)
 
-        if(verbose > 0):
+        if verbose > 0:
             tqdm.write("batch_userDoc: {}".format( batch_userDoc.size() ))
             tqdm.write("batch_itemDoc: {}".format( batch_itemDoc.size() ))
 
@@ -68,35 +67,35 @@ class ANR(nn.Module):
         batch_userDocEmbed = self.wid_wEmbed( batch_userDoc.long() )
         batch_itemDocEmbed = self.wid_wEmbed( batch_itemDoc.long() )
 
-        if(verbose > 0):
+        if verbose > 0:
             tqdm.write("batch_userDocEmbed: {}".format( batch_userDocEmbed.size() ))
             tqdm.write("batch_itemDocEmbed: {}".format( batch_itemDocEmbed.size() ))
 
         # =========== User Aspect-Based Representations ===========
         # Aspect-based Representation Learning for User
-        if(verbose > 0):
+        if verbose > 0:
             tqdm.write("\n[Input to ARL] batch_userDocEmbed: {}".format( batch_userDocEmbed.size() ))
 
         userAspAttn, userAspDoc = self.shared_ANR_ARL(batch_userDocEmbed, verbose=verbose)
-        if(verbose > 0):
+        if verbose > 0:
             tqdm.write("[Output of ARL] userAspAttn: {}".format( userAspAttn.size() ))
             tqdm.write("[Output of ARL] userAspDoc:  {}".format( userAspDoc.size() ))
         # =========== User Aspect-Based Representations ===========
 
         # =========== Item Aspect-Based Representations ===========
         # Aspect-based Representation Learning for Item
-        if(verbose > 0):
+        if verbose > 0:
             tqdm.write("\n[Input to ARL] batch_itemDocEmbed: {}".format( batch_itemDocEmbed.size() ))
 
         # print("ANR forward start")
         itemAspAttn, itemAspDoc = self.shared_ANR_ARL(batch_itemDocEmbed, verbose=verbose)
         # print("ANR forward end")
-        if(verbose > 0):
+        if verbose > 0:
             tqdm.write("[Output of ARL] itemAspAttn: {}".format( itemAspAttn.size() ))
             tqdm.write("[Output of ARL] itemAspDoc:  {}".format( itemAspDoc.size() ))
         # =========== Item Aspect-Based Representations ===========
 
-        if(self.args.model == "ANR"):
+        if self.args.model == "ANR":
             # Aspect-based Co-Attention --- Aspect Importance Estimation
             userCoAttn, itemCoAttn = self.ANR_AIE(userAspDoc, itemAspDoc, verbose=verbose)
 
@@ -105,11 +104,11 @@ class ANR(nn.Module):
 
         # 'Simplified Model' - Basically, ARL + simplfied network (3x FCs) for rating prediction
         # The only purpose of this is to obtain the pretrained weights for ARL
-        elif(self.args.model == "ANRS"):
+        elif self.args.model == "ANRS":
             # Rating Prediction using 3x FCs
             rating_pred = self.ANRS_RatingPred(userAspDoc, itemAspDoc, verbose=verbose)
 
-        if(verbose > 0):
+        if verbose > 0 :
             tqdm.write("\n[Final Output of {}] rating_pred: {}\n".format( self.args.model, rating_pred.size() ))
 
         return rating_pred

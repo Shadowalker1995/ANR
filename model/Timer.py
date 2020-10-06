@@ -2,14 +2,14 @@ import time
 from datetime import datetime
 
 
-def getMinutes(elapsedTime):
-    return elapsedTime / 60
+def getMinutes(Time):
+    return Time / 60
 
 
-def getHoursMinutes(elapsedTime):
-    hours = (elapsedTime // 60 // 60)
-    minutes = (elapsedTime // 60) - (hours * 60)
-    seconds = elapsedTime - (hours * 60 * 60) - (minutes * 60)
+def getHoursMinutes(Time):
+    hours = (Time // 60 // 60)
+    minutes = (Time // 60) - (hours * 60)
+    seconds = Time - (hours * 60 * 60) - (minutes * 60)
     return int(hours), int(minutes), int(seconds)
 
 
@@ -19,16 +19,16 @@ class Timer():
         # E.g. "global" can be used to measure total program execution time, "init" for initialization, etc
         self.timer_dict = {}
 
-    def startTimer(self, key = "global"):
+    def startTimer(self, key="global"):
         self.timer_dict[key] = time.time()
 
-    def getElapsedTime(self, key = "global"):
+    def getElapsedTime(self, key="global"):
         if key not in self.timer_dict.keys():
             return 0
         return time.time() - self.timer_dict[key]
 
-    def getElapsedTimeStr(self, key = "global", conv2Mins = False, conv2HrsMins = False):
-        elapsedTime = self.getElapsedTime(key = key)
+    def getElapsedTimeStr(self, key="global", conv2Mins=False, conv2HrsMins=False):
+        elapsedTime = self.getElapsedTime(key=key)
         if conv2HrsMins:
             hours, minutes, seconds = getHoursMinutes(elapsedTime)
             return "Elapsed Time: {:,.2f}s ({:d}:{:02d}:{:02d})".format( elapsedTime, hours, minutes, seconds )

@@ -1,7 +1,3 @@
-import os, sys, inspect
-current_dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-parent_dir = os.path.dirname(current_dir)
-sys.path.insert(0, parent_dir)
 from FILEPATHS import *
 
 import torch
@@ -15,11 +11,19 @@ from .RWRDataset import RWRDataset
 
 import numpy as np
 
+import os
+import sys
+import inspect
+
+current_dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parent_dir = os.path.dirname(current_dir)
+sys.path.insert(0, parent_dir)
 
 if sys.version_info > (3, 4):
     import _pickle as pickle
 else:
     import pickle as pickle
+
 
 # Tokens - NOTE: In the vocabulary, <pad> has index 0, and <unk> has index 1
 PAD_TAG = "<pad>"
@@ -110,7 +114,7 @@ def generate_mdl_summary(mdl, logger):
 
 # https://www.python.org/dev/peps/pep-0485/
 # PEP 485 -- A Function for testing approximate equality
-def isclose(a, b, rel_tol = 1e-09, abs_tol = 0.0):
+def isclose(a, b, rel_tol=1e-09, abs_tol=0.0):
     return abs(a - b) <= max(rel_tol * max(abs(a), abs(b)), abs_tol)
 
 
@@ -141,23 +145,23 @@ def loadInfo(args):
 
 # Loads the training, validation, and testing sets
 def loadTrainDevTest(logger, args):
-    train_path     = "{}{}{}".format( args.input_dir, args.dataset, fp_split_train )
-    dev_path     = "{}{}{}".format( args.input_dir, args.dataset, fp_split_dev )
-    test_path     = "{}{}{}".format( args.input_dir, args.dataset, fp_split_test )
+    train_path = "{}{}{}".format( args.input_dir, args.dataset, fp_split_train )
+    dev_path = "{}{}{}".format( args.input_dir, args.dataset, fp_split_dev )
+    test_path = "{}{}{}".format( args.input_dir, args.dataset, fp_split_test )
 
     print("\nLoading training set from \"{}\"..".format( train_path ))
     train_set = RWRDataset(train_path)
-    train_loader = data.DataLoader(dataset = train_set, batch_size = args.batch_size, shuffle = True, num_workers = 0)
+    train_loader = data.DataLoader(dataset=train_set, batch_size=args.batch_size, shuffle=True, num_workers=0)
     print("Training set loaded! Note: Training examples are shuffled every epoch, i.e. shuffle = True!")
 
     print("\nLoading validation set from \"{}\"..".format( dev_path ))
     dev_set = RWRDataset(dev_path)
-    dev_loader = data.DataLoader(dataset = dev_set, batch_size = args.batch_size, shuffle = False, num_workers = 0)
+    dev_loader = data.DataLoader(dataset=dev_set, batch_size=args.batch_size, shuffle=False, num_workers=0)
     print("Validation set loaded!")
 
     print("\nLoading testing set from \"{}\"..".format( test_path ))
     test_set = RWRDataset(test_path)
-    test_loader = data.DataLoader(dataset = test_set, batch_size = args.batch_size, shuffle = False, num_workers = 0)
+    test_loader = data.DataLoader(dataset=test_set, batch_size=args.batch_size, shuffle=False, num_workers=0)
     print("Testing set loaded!")
 
     logger.log("\nTrain/Dev/Test splits loaded! |TRAIN|: {:,}, |DEV|: {:,}, |TEST|: {:,}".format( len(train_set), len(dev_set), len(test_set) ))
