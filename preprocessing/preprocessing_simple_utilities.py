@@ -120,7 +120,6 @@ def hit(interaction, users_dict, items_dict):
 
 # Replace with custom tokenizer and any desired preprocessing here
 def simple_tokenizer(txt):
-
     # Convert to lowercase, remove new lines
     txt = txt.lower()
     txt = txt.replace("\r\n", " ").replace("\n", " ")

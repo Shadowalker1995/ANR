@@ -16,7 +16,7 @@ def mkdir_p(path):
 
 
 # Saving all the arguments
-def print_args(args, path = None):
+def print_args(args, path=None):
     if path:
         output_file = open(path, "w")
 
@@ -28,7 +28,7 @@ def print_args(args, path = None):
     items = vars(args)
     if path:
         output_file.write("{}\n".format(TEXT_SEP))
-    for key in sorted(items.keys(), key = lambda s: s.lower()):
+    for key in sorted(items.keys(), key=lambda s: s.lower()):
         value = items[key]
         if not value:
             value = "None"
@@ -43,7 +43,7 @@ def print_args(args, path = None):
 
 
 # Helper class for logging everything to "logs.txt"
-class Logger():
+class Logger:
     def __init__(self, out_dir, log_path, args):
         self.out_dir = out_dir
         self.log_path = log_path
@@ -51,22 +51,21 @@ class Logger():
         mkdir_p(self.out_dir)
         with open(self.log_path, 'w+') as f:
             f.write("")
-        print_args(args, path = self.log_path)
+        print_args(args, path=self.log_path)
 
-    def log(self, txt, log_path = None, print_txt = True):
-        if(log_path is None):
+    def log(self, txt, log_path=None, print_txt=True):
+        if log_path is None:
             with open(self.log_path, 'a+') as f:
                 f.write(txt + "\n")
         else:
             with open(log_path, 'a+') as f:
                 f.write(txt + "\n")
-        if(print_txt):
+        if print_txt:
             print(txt)
 
-    def logQ(self, txt, log_path = None):
-        self.log(txt, log_path = log_path, print_txt = False)
+    def logQ(self, txt, log_path=None):
+        self.log(txt, log_path=log_path, print_txt = False)
 
-    def emptyFile(self, log_path = None):
+    def emptyFile(self, log_path=None):
         with open(log_path, 'w+') as f:
             f.write("")
-

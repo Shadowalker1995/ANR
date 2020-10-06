@@ -4,7 +4,6 @@ from itertools import groupby
 parser = argparse.ArgumentParser()
 parser.add_argument("-d", "--dataset", type=str, default="amazon_instant_video",
                     help="Dataset (Default: amazon_instant_video)")
-
 parser.add_argument("-dmax", "--dataset_maximum_size", type=int, default=5000000,
                     help="Maximum Size of Dataset, Randomly subsample if larger than this. (Default: 5,000,000)")
 parser.add_argument("-minRL", "--minRL", type=int, default=10, help="Minimum Review Length (Default: 10)")
@@ -38,6 +37,7 @@ random.seed(args.random_seed)
 
 startTime = time.time()
 
+
 # =========== INPUT ===========
 # Source Folder
 SOURCE_FOLDER = "../datasets/"
@@ -65,6 +65,7 @@ output_uid_userDoc = "{}{}{}".format(CATEGORY_FOLDER, CATEGORY, fp_uid_userDoc)
 output_iid_itemDoc = "{}{}{}".format(CATEGORY_FOLDER, CATEGORY, fp_iid_itemDoc)
 # =========== OUTPUT ===========
 
+
 # Clear the info (preprocessing log) file
 with open(output_log, 'w+') as f:
     f.write('')
@@ -86,6 +87,7 @@ append_to_file(output_log, "{:<28s} {}".format("[OUTPUT] split_test:", output_sp
 append_to_file(output_log, "{:<28s} {}".format("[OUTPUT] uid_userDoc:", output_uid_userDoc))
 append_to_file(output_log, "{:<28s} {}".format("[OUTPUT] iid_itemDoc:", output_iid_itemDoc))
 
+
 print("\nPreprocessing data for \"{}\"".format(CATEGORY))
 
 append_to_file(output_log, "\n[Settings]\nMin reviews for user/item: {}".format(MIN_REVIEWS))
@@ -95,23 +97,19 @@ append_to_file(output_log,
                    MAX_DOC_LEN))
 append_to_file(output_log, "Top-{} words in vocabulary being utilized!\n".format(VOCAB_SIZE))
 
-interactions = []
-
 # Initial pass of reviews to get the user-item interactions
+interactions = []
 append_to_file(output_log, "\nInitial pass of reviews to get the user-item interactions!")
 with codecs.open(REVIEW_JSON, 'r', encoding='utf-8', errors='ignore') as inFile:
     lines = inFile.readlines()
-
     for line in tqdm(lines, "Initial pass of reviews for \"{}\"".format(CATEGORY)):
         d = json.loads(line)
-
         if "Yelp" in CATEGORY:
             user = d['user_id']
             item = d['business_id']
         else:
             user = d['reviewerID']
             item = d['asin']
-
         interactions.append([user, item])
 
 user_count, item_count = count(interactions)
@@ -123,6 +121,7 @@ gc.collect()
 
 append_to_file(output_log, "[Initial stats] Users: {:,}, Items: {:,}, Ratings: {:,}, Density: {:.7f}\n".format(
     len(user_count), len(item_count), num_reviews, float(num_reviews) / (len(user_count) * len(item_count))))
+
 
 print("\nStarting to filter away users & items based on thresold of {} reviews!".format(MIN_REVIEWS))
 while True:
@@ -149,11 +148,9 @@ while True:
 
     # Update interactions based on user & item Counters
     print("Updating interactions based on remaining users & items..")
-    users = sorted(list(user_count))
-    items = sorted(list(item_count))
-    users_dict = {user: "" for user in users}
-    items_dict = {item: "" for item in items}
-    interactions[:] = [interaction for interaction in tqdm(interactions, "Updating interactions")
+    users_dict = dict(user_count)
+    items_dict = dict(item_count)
+    interactions = [interaction for interaction in tqdm(interactions, "Updating interactions")
                        if hit(interaction, users_dict, items_dict)]
 
     user_count, item_count = count(interactions)
@@ -168,7 +165,6 @@ while True:
     elapsedTimeInMins = elapsedTimeInSecs / 60
     print("\nElapsed time for \"{}\": {:.2f} seconds ({:.2f} minutes)".format(CATEGORY, elapsedTimeInSecs,
                                                                               elapsedTimeInMins))
-
 users_dict = dict(user_count)
 items_dict = dict(item_count)
 
@@ -176,9 +172,9 @@ items_dict = dict(item_count)
 interactions.clear()
 gc.collect()
 
-interactions = []
 
 # Second pass of reviews to get the rating, date, and tokenized review
+interactions = []
 append_to_file(output_log, "\n\nSecond pass of reviews to get the rating, date, and tokenized review!")
 with codecs.open(REVIEW_JSON, 'r', encoding='utf-8', errors='ignore') as inFile:
     lines = inFile.readlines()
@@ -216,6 +212,7 @@ gc.collect()
 append_to_file(output_log, "[Current stats] Users: {:,}, Items: {:,}, Ratings: {:,}, Density: {:.7f}".format(
     len(user_count), len(item_count), num_reviews, float(num_reviews) / (len(user_count) * len(item_count))))
 
+
 # BEFORE filtering reviews with less than MIN_REVIEW_LEN tokens
 oldUsers = len(user_count)
 oldItems = len(item_count)
@@ -223,7 +220,7 @@ oldItems = len(item_count)
 # Filter user-item interactions based on minimum review length
 append_to_file(output_log, "\nFiltering user-item interactions based on minimum review length of {} tokens..".format(
     MIN_REVIEW_LEN))
-interactions[:] = [interaction for interaction in tqdm(interactions, "Filtering interactions")
+interactions = [interaction for interaction in tqdm(interactions, "Filtering interactions")
                    if (len(interaction[4]) >= MIN_REVIEW_LEN)]
 
 user_count, item_count = count(interactions)
@@ -237,6 +234,7 @@ print("Users: {:,} -> {:,}, Items: {:,} -> {:,}".format(oldUsers, currUsers, old
 
 append_to_file(output_log, "[Current stats] Users: {:,}, Items: {:,}, Ratings: {:,}, Density: {:.7f}\n".format(
     len(user_count), len(item_count), num_reviews, float(num_reviews) / (len(user_count) * len(item_count))))
+
 
 print(
     "\nStarting to filter away users & items based on thresold of {} reviews (after removing reviews with <= {} tokens)!".format(
@@ -268,7 +266,7 @@ while True:
     print("Updating interactions based on remaining users & items..")
     users_dict = dict(user_count)
     items_dict = dict(item_count)
-    interactions[:] = [interaction for interaction in tqdm(interactions, "Updating interactions")
+    interactions = [interaction for interaction in tqdm(interactions, "Updating interactions")
                        if hit(interaction, users_dict, items_dict)]
 
     user_count, item_count = count(interactions)
@@ -293,6 +291,7 @@ if len(interactions) > args.dataset_maximum_size:
     interactions = random.sample(interactions, args.dataset_maximum_size)
     append_to_file(output_log, "*** Current Dataset Size (i.e. num_ratings):  {:,}!".format(len(interactions)))
     append_to_file(output_log, "{}".format("*" * 125))
+
 
 # TRAIN/DEV/TEST ratio
 dev_test_ratio = ((1.0 - args.train_ratio) / 2.0)
@@ -328,6 +327,7 @@ append_to_file(output_log,
                    num_reviews, len(train_interactions), train_pct, len(dev_interactions), dev_pct,
                    len(test_interactions), test_pct))
 
+
 # If true (i.e. -dev_test_in_train 1), users/items in the DEV and TEST sets are supposed to be present during the training process
 # NOTE: We chose to do this INSTEAD OF representing such users & items with an EMPTY document.
 # NOTE: For users (or items) who do not appear in the TRAINING set, their documents will be EMPTY since we construct these documents based on reviews available from the TRAINING set.
@@ -341,13 +341,11 @@ if args.dev_test_in_train:
     oldDevSize = len(dev_interactions)
     oldTestSize = len(test_interactions)
 
-    train_users = sorted(list(train_user_count))
-    train_items = sorted(list(train_item_count))
-    train_users_dict = {user: "" for user in train_users}
-    train_items_dict = {item: "" for item in train_items}
-    dev_interactions[:] = [i for i in tqdm(dev_interactions, "Updating DEV interactions") if
+    train_users_dict = dict(train_user_count)
+    train_items_dict = dict(train_item_count)
+    dev_interactions = [i for i in tqdm(dev_interactions, "Updating DEV interactions") if
                            hit(i, train_users_dict, train_items_dict)]
-    test_interactions[:] = [i for i in tqdm(test_interactions, "Updating TEST interactions") if
+    test_interactions = [i for i in tqdm(test_interactions, "Updating TEST interactions") if
                             hit(i, train_users_dict, train_items_dict)]
 
     newDevSize = len(dev_interactions)
@@ -365,6 +363,7 @@ if args.dev_test_in_train:
                    "\n[Current Stats] Total Interactions: {:,}, TRAIN: {:,} ({:.2f}%), DEV: {:,} ({:.2f}%), TEST: {:,} ({:.2f}%)".format(
                        num_reviews, len(train_interactions), train_pct, len(dev_interactions), dev_pct,
                        len(test_interactions), test_pct))
+
 
 # Just for the statistics
 user_count = Counter()
@@ -395,6 +394,7 @@ append_to_file(output_log, "[FINAL Stats][DEV]   Users: {:,}, Items: {:,}, Ratin
 test_users, test_items = get_users_items(test_interactions)
 append_to_file(output_log, "[FINAL Stats][TEST]  Users: {:,}, Items: {:,}, Ratings: {:,}\n\n".format(
     len(test_users), len(test_items), len(test_interactions)))
+
 
 # Here, we construct the user & item documents
 users_reviews = defaultdict(list)
@@ -452,12 +452,14 @@ for item, item_doc in items_doc.items():
 
 append_to_file(output_log, "\nMinimum User Doc Len: {}, Minimum Item Doc Len: {}".format(minUserDocLen, minItemDocLen))
 
+
 # Get vocabulary based on the user & item documents
 words = []
 for user, user_doc in users_doc.items():
     words += [word for word in user_doc]
 for item, item_doc in items_doc.items():
     words += [word for word in item_doc]
+
 
 # Get unique words to form the vocabulary
 append_to_file(output_log,
@@ -469,6 +471,7 @@ append_to_file(output_log, "For the vocabulary, we are only using the {:,} most 
 words_count = Counter(words).most_common(VOCAB_SIZE)
 words = [w for w, c in words_count]
 append_to_file(output_log, "Current number of words: {:,}\n".format(len(words)))
+
 
 # Build word dictionary - PAD is 0, UNK (OOV) is 1
 word_wid = {word: (wid + 2) for wid, word in enumerate(words)}
@@ -496,9 +499,11 @@ iid_itemDoc = {iid: post_padding(itemDoc, MAX_DOC_LEN, word_wid[PAD]) for iid, i
 # Force garbage collection
 gc.collect()
 
+
 train = prepare_set(train_interactions, user_uid, item_iid, uid_userDocLen, iid_itemDocLen, "TRAINING", output_log)
 dev = prepare_set(dev_interactions, user_uid, item_iid, uid_userDocLen, iid_itemDocLen, "DEV", output_log)
 test = prepare_set(test_interactions, user_uid, item_iid, uid_userDocLen, iid_itemDocLen, "TESTING", output_log)
+
 
 env = {
     # List of (word, frequency)
