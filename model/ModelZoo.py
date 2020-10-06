@@ -19,11 +19,11 @@ class ModelZoo:
         self.timer = timer
 
         self.num_users, self.num_items = loadInfo(args)
-        self.logger.log("\n[INFO] # of Users: {:,}, # of Items: {:,}".format( self.num_users, self.num_items ))
+        self.logger.log("\n[INFO] # of Users: {:,}, # of Items: {:,}".format(self.num_users, self.num_items))
 
     def createAndInitModel(self):
         self.timer.startTimer("init")
-        self.logger.log("\nCreating model (Selected Model: {})..".format( self.args.model ))
+        self.logger.log("\nCreating model (Selected Model: {})..".format(self.args.model))
 
         '''
         Model Creation
@@ -47,7 +47,7 @@ class ModelZoo:
         if self.args.use_cuda:
             torch.cuda.empty_cache()
 
-        self.logger.log("\nInitialization Complete.. {}".format( self.timer.getElapsedTimeStr("init", conv2Mins=True) ))
+        self.logger.log("\nInitialization Complete.. {}".format(self.timer.getElapsedTimeStr("init", conv2Mins=True)))
         return self.mdl
 
     def createModel(self):
@@ -59,10 +59,8 @@ class ModelZoo:
 
         if self.args.model == "ANR" or self.args.model == "ANRS":
             self.mdl = ANR(self.logger, self.args, self.num_users, self.num_items)
-
         # elif(self.args.model == "DeepCoNN"):
         #     self.mdl = DeepCoNN(self.logger, self.args, self.num_users, self.num_items)
-
         # elif(self.args.model == "DAttn"):
         #     self.mdl = DAttn(self.logger, self.args, self.num_users, self.num_items)
 
@@ -77,16 +75,14 @@ class ModelZoo:
         #     self.initDAttn()
 
     # # DeepCoNN - Initialization (User Documents, Item Documents, Word Embeddings)
-    # def initDeepCoNN(self):
-
-    #     self.loadDocs()
-    #     self.loadWordEmbeddings()
+    def initDeepCoNN(self):
+        self.loadDocs()
+        self.loadWordEmbeddings()
 
     # # DAttn - Initialization (User Documents, Item Documents, Word Embeddings)
-    # def initDAttn(self):
-
-    #     self.loadDocs()
-    #     self.loadWordEmbeddings()
+    def initDAttn(self):
+        self.loadDocs()
+        self.loadWordEmbeddings()
 
     # ANR - Initialization (User Documents, Item Documents, Word Embeddings)
     # ANR - Optionally, Load the Pretrained Weights for ARL

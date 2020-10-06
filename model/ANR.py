@@ -42,7 +42,8 @@ class ANR(nn.Module):
 
         # Rating Prediction - Aspect Importance Estimation + Aspect-based Rating Prediction
         if self.args.model == "ANR":
-            # Aspect-Based Co-Attention (Parallel Co-Attention, using the Affinity Matrix as a Feature) --- Aspect Importance Estimation
+            # Aspect-Based Co-Attention (Parallel Co-Attention, using the Affinity Matrix as a Feature) --- Aspect
+            # Importance Estimation
             self.ANR_AIE = ANR_AIE(logger, args)
 
             # Aspect-Based Rating Predictor based on the estimated Aspect-Level Importance
@@ -54,32 +55,30 @@ class ANR(nn.Module):
             # Rating Prediction using the 'Simplified Model'
             self.ANRS_RatingPred = ANRS_RatingPred(logger, args)
 
-    def forward(self, batch_uid, batch_iid, verbose = 0):
+    def forward(self, batch_uid, batch_iid, verbose=0):
         # Input
         batch_userDoc = self.uid_userDoc(batch_uid)
         batch_itemDoc = self.iid_itemDoc(batch_iid)
-
         if verbose > 0:
-            tqdm.write("batch_userDoc: {}".format( batch_userDoc.size() ))
-            tqdm.write("batch_itemDoc: {}".format( batch_itemDoc.size() ))
+            tqdm.write("batch_userDoc: {}".format(batch_userDoc.size()))
+            tqdm.write("batch_itemDoc: {}".format(batch_itemDoc.size()))
 
         # Embedding Layer
-        batch_userDocEmbed = self.wid_wEmbed( batch_userDoc.long() )
-        batch_itemDocEmbed = self.wid_wEmbed( batch_itemDoc.long() )
-
+        batch_userDocEmbed = self.wid_wEmbed(batch_userDoc.long())
+        batch_itemDocEmbed = self.wid_wEmbed(batch_itemDoc.long())
         if verbose > 0:
-            tqdm.write("batch_userDocEmbed: {}".format( batch_userDocEmbed.size() ))
-            tqdm.write("batch_itemDocEmbed: {}".format( batch_itemDocEmbed.size() ))
+            tqdm.write("batch_userDocEmbed: {}".format(batch_userDocEmbed.size()))
+            tqdm.write("batch_itemDocEmbed: {}".format(batch_itemDocEmbed.size()))
 
         # =========== User Aspect-Based Representations ===========
         # Aspect-based Representation Learning for User
         if verbose > 0:
-            tqdm.write("\n[Input to ARL] batch_userDocEmbed: {}".format( batch_userDocEmbed.size() ))
+            tqdm.write("\n[Input to ARL] batch_userDocEmbed: {}".format(batch_userDocEmbed.size()))
 
         userAspAttn, userAspDoc = self.shared_ANR_ARL(batch_userDocEmbed, verbose=verbose)
         if verbose > 0:
-            tqdm.write("[Output of ARL] userAspAttn: {}".format( userAspAttn.size() ))
-            tqdm.write("[Output of ARL] userAspDoc:  {}".format( userAspDoc.size() ))
+            tqdm.write("[Output of ARL] userAspAttn: {}".format(userAspAttn.size()))
+            tqdm.write("[Output of ARL] userAspDoc:  {}".format(userAspDoc.size()))
         # =========== User Aspect-Based Representations ===========
 
         # =========== Item Aspect-Based Representations ===========
@@ -91,8 +90,8 @@ class ANR(nn.Module):
         itemAspAttn, itemAspDoc = self.shared_ANR_ARL(batch_itemDocEmbed, verbose=verbose)
         # print("ANR forward end")
         if verbose > 0:
-            tqdm.write("[Output of ARL] itemAspAttn: {}".format( itemAspAttn.size() ))
-            tqdm.write("[Output of ARL] itemAspDoc:  {}".format( itemAspDoc.size() ))
+            tqdm.write("[Output of ARL] itemAspAttn: {}".format(itemAspAttn.size()))
+            tqdm.write("[Output of ARL] itemAspDoc:  {}".format(itemAspDoc.size()))
         # =========== Item Aspect-Based Representations ===========
 
         if self.args.model == "ANR":
@@ -108,8 +107,7 @@ class ANR(nn.Module):
             # Rating Prediction using 3x FCs
             rating_pred = self.ANRS_RatingPred(userAspDoc, itemAspDoc, verbose=verbose)
 
-        if verbose > 0 :
-            tqdm.write("\n[Final Output of {}] rating_pred: {}\n".format( self.args.model, rating_pred.size() ))
+        if verbose > 0:
+            tqdm.write("\n[Final Output of {}] rating_pred: {}\n".format(self.args.model, rating_pred.size()))
 
         return rating_pred
-

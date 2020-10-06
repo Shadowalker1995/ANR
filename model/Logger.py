@@ -38,7 +38,7 @@ def print_args(args, path=None):
         output_file.write("{}\n".format(TEXT_SEP))
         output_file.close()
 
-    print("\nCommand: {}".format( args.command ))
+    print("\nCommand: {}".format(args.command))
     del args.command
 
 
@@ -64,7 +64,7 @@ class Logger:
             print(txt)
 
     def logQ(self, txt, log_path=None):
-        self.log(txt, log_path=log_path, print_txt = False)
+        self.log(txt, log_path=log_path, print_txt=False)
 
     def emptyFile(self, log_path=None):
         with open(log_path, 'w+') as f:
