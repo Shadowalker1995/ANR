@@ -131,7 +131,7 @@ def evaluate(mdl, set_loader, epoch_num=-1, use_cuda=True, phase="Dev", print_tx
         batch_uid = to_var(batch_uid, use_cuda=use_cuda, phase=phase)
         batch_iid = to_var(batch_iid, use_cuda=use_cuda, phase=phase)
 
-        rating_pred = torch.squeeze(mdl(batch_uid, batch_iid))
+        rating_pred = torch.squeeze(mdl(batch_uid, batch_iid))      ## ?
 
         all_rating_true.extend(batch_rating)
         all_rating_pred.extend(rating_pred.data)

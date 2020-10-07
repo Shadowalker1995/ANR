@@ -59,10 +59,7 @@ def torch_summarize(model, show_weights=True, show_parameters=True, show_trainab
 
     for key, module in model._modules.items():
         # If it contains layers let call it recursively to get params and weights
-        if type(module) in [
-            torch.nn.modules.container.Container,
-            torch.nn.modules.container.Sequential
-        ]:
+        if type(module) in [torch.nn.modules.container.Container, torch.nn.modules.container.Sequential]:
             modstr = torch_summarize(module)
         else:
             modstr = module.__repr__()
@@ -165,9 +162,8 @@ def loadTrainDevTest(logger, args):
     test_loader = data.DataLoader(dataset=test_set, batch_size=args.batch_size, shuffle=False, num_workers=0)
     print("Testing set loaded!")
 
-    logger.log(
-        "\nTrain/Dev/Test splits loaded! |TRAIN|: {:,}, |DEV|: {:,}, |TEST|: {:,}".format(len(train_set), len(dev_set),
-                                                                                          len(test_set)))
+    logger.log("\nTrain/Dev/Test splits loaded! |TRAIN|: {:,}, |DEV|: {:,}, |TEST|: {:,}".
+               format(len(train_set), len(dev_set), len(test_set)))
     return train_set, train_loader, dev_set, dev_loader, test_set, test_loader
 
 

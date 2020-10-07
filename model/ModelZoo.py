@@ -93,30 +93,32 @@ class ModelZoo:
         # Optionally, Load the Pretrained Weights for ARL
         if self.args.ARL_path != "":
             # Determine Full Path, Load Everything from the Saved Model States
-            saved_models_dir = "./__saved_models__/{} - {}/".format( self.args.dataset, "ANRS" )
-            full_model_path = "{}{}.pth".format( saved_models_dir, self.args.ARL_path.strip() )
+            saved_models_dir = "./__saved_models__/{} - {}/".format(self.args.dataset, "ANRS")
+            full_model_path = "{}{}.pth".format(saved_models_dir, self.args.ARL_path.strip())
             self.logger.log("\nLoading pretrained ARL weights of \"{}\" for dataset \"{}\" from \"{}\"!".format(
-                self.args.model, self.args.dataset, full_model_path ))
-            self.logger.log("Loading pretrained ARL weights on GPU \"{}\"!".format( self.args.gpu ))
-            model_states = torch.load(full_model_path, map_location = lambda storage, loc: storage.cuda( self.args.gpu ))
+                self.args.model, self.args.dataset, full_model_path))
+            self.logger.log("Loading pretrained ARL weights on GPU \"{}\"!".format(self.args.gpu))
+            model_states = torch.load(full_model_path, map_location=lambda storage, loc: storage.cuda(self.args.gpu))
 
             # Update Current Model, using the pretrained ARL weights
             DESIRED_KEYS = ["shared_ANR_ARL.aspProj", "shared_ANR_ARL.aspEmbed.weight"]
 
             pretrained_mdl_state_dict = model_states["mdl"]
             pretrained_mdl_state_dict = {k: v for k, v in pretrained_mdl_state_dict.items() if k in DESIRED_KEYS}
+
             self.logger.log("\nLoaded pretrained model states:\n")
             for pretrained_key in pretrained_mdl_state_dict.keys():
-                self.logger.log("\t{}".format( pretrained_key ))
+                self.logger.log("\t{}".format(pretrained_key))
             current_mdl_dict = self.mdl.state_dict()
             current_mdl_dict.update(pretrained_mdl_state_dict)
             self.mdl.load_state_dict(current_mdl_dict)
             self.logger.log("\nPretrained model states transferred to current model!")
 
-            self.mdl.shared_ANR_ARL.aspProj.requires_grad = False if (self.args.ARL_lr == 0) else True
-            self.mdl.shared_ANR_ARL.aspEmbed.weight.requires_grad = False if (self.args.ARL_lr == 0) else True
+            self.mdl.shared_ANR_ARL.aspProj.requires_grad = False if self.args.ARL_lr == 0 else True
+            self.mdl.shared_ANR_ARL.aspEmbed.weight.requires_grad = False if self.args.ARL_lr == 0 else True
 
-            self.logger.log("\n*** \"{}\" are {}!! ***\n".format( ", ".join(DESIRED_KEYS), "NOT Updatable" if (self.args.ARL_lr == 0) else "FINE-TUNED" ))
+            self.logger.log("\n*** \"{}\" are {}!! ***\n"
+                            .format(", ".join(DESIRED_KEYS), "NOT Updatable" if self.args.ARL_lr == 0 else "FINE-TUNED"))
 
     # ANRS - Initialization (User Documents, Item Documents, Word Embeddings)
     def initANRS(self):
@@ -125,23 +127,23 @@ class ModelZoo:
 
     # Load the user documents & item documents
     def loadDocs(self):
-        uid_userDoc_path = "{}{}{}".format( self.args.input_dir, self.args.dataset, fp_uid_userDoc )
-        iid_itemDoc_path = "{}{}{}".format( self.args.input_dir, self.args.dataset, fp_iid_itemDoc )
+        uid_userDoc_path = "{}{}{}".format(self.args.input_dir, self.args.dataset, fp_uid_userDoc)
+        iid_itemDoc_path = "{}{}{}".format(self.args.input_dir, self.args.dataset, fp_iid_itemDoc)
 
         # User Documents
-        self.logger.log("\nLoading uid_userDoc from \"{}\"..".format( uid_userDoc_path ))
-        np_uid_userDoc = np.load( uid_userDoc_path )
+        self.logger.log("\nLoading uid_userDoc from \"{}\"..".format(uid_userDoc_path))
+        np_uid_userDoc = np.load(uid_userDoc_path)
 
         self.mdl.uid_userDoc.weight.data.copy_(torch.from_numpy(np_uid_userDoc).long())
-        self.logger.log("uid_userDoc loaded! [uid_userDoc: {}]".format( np_uid_userDoc.shape ))
+        self.logger.log("uid_userDoc loaded! [uid_userDoc: {}]".format(np_uid_userDoc.shape))
         del np_uid_userDoc
 
         # Item Documents
-        self.logger.log("\nLoading iid_itemDoc from \"{}\"..".format( iid_itemDoc_path ))
-        np_iid_itemDoc = np.load( iid_itemDoc_path )
+        self.logger.log("\nLoading iid_itemDoc from \"{}\"..".format(iid_itemDoc_path))
+        np_iid_itemDoc = np.load(iid_itemDoc_path)
 
         self.mdl.iid_itemDoc.weight.data.copy_(torch.from_numpy(np_iid_itemDoc).long())
-        self.logger.log("iid_itemDoc loaded! [iid_itemDoc: {}]".format( np_iid_itemDoc.shape ))
+        self.logger.log("iid_itemDoc loaded! [iid_itemDoc: {}]".format(np_iid_itemDoc.shape))
         del np_iid_itemDoc
 
     # Load/Randomly initialize the word embeddings
@@ -151,22 +153,22 @@ class ModelZoo:
             # 1: w2v (Google News), 300-dimensions
             # 2: GloVe (6B, 400K, 100d), this is included as it works better for D-Attn
             if self.args.pretrained_src == 1:
-                wid_wEmbed_path = "{}{}{}".format( self.args.input_dir, self.args.dataset, fp_wid_wordEmbed )
+                wid_wEmbed_path = "{}{}{}".format(self.args.input_dir, self.args.dataset, fp_wid_wordEmbed)
             elif self.args.pretrained_src == 2:
-                wid_wEmbed_path = "{}{}{}".format( self.args.input_dir, self.args.dataset, fp_wid_wordEmbed )
+                wid_wEmbed_path = "{}{}{}".format(self.args.input_dir, self.args.dataset, fp_wid_wordEmbed)
 
-            self.logger.log("\nLoading pretrained word embeddings from \"{}\"..".format( wid_wEmbed_path ))
-            np_wid_wEmbed = np.load( wid_wEmbed_path )
+            self.logger.log("\nLoading pretrained word embeddings from \"{}\"..".format(wid_wEmbed_path))
+            np_wid_wEmbed = np.load(wid_wEmbed_path)
 
             self.mdl.wid_wEmbed.weight.data.copy_(torch.from_numpy(np_wid_wEmbed))
-            self.logger.log("Pretrained word embeddings loaded! [wid_wEmbed: {}]".format( np_wid_wEmbed.shape ))
+            self.logger.log("Pretrained word embeddings loaded! [wid_wEmbed: {}]".format(np_wid_wEmbed.shape))
             del np_wid_wEmbed
         else:
             # Randomly initialize word embeddings, using random uniform distribution from [rand_uniform_dist_min, rand_uniform_dist_max]
             rand_uniform_dist_min = -0.01
             rand_uniform_dist_max = 0.01
             self.mdl.wid_wEmbed.weight.data.uniform_(rand_uniform_dist_min, rand_uniform_dist_max)
-            self.logger.log("\nWord embeddings are randomly initialized using random uniform distribution from [{:.2f}, {:.2f}]..".format( rand_uniform_dist_min, rand_uniform_dist_max ))
+            self.logger.log("\nWord embeddings are randomly initialized using random uniform distribution from [{:.2f}, {:.2f}]..".format(rand_uniform_dist_min, rand_uniform_dist_max))
 
         # Ensures that the embeddings for <pad> and <unk> are always zero vectors
         self.mdl.wid_wEmbed.weight.data[PAD_idx].fill_(0)
@@ -224,11 +226,11 @@ class ModelZoo:
 
         if lstDiffLRParamNames:
             self.logger.log("\nParameters that are fine-tuned using a smaller LR (LR: {}):\n{}".format(
-                (self.args.learning_rate * self.args.ARL_lr), ", ".join(lstDiffLRParamNames) ))
+                (self.args.learning_rate * self.args.ARL_lr), ", ".join(lstDiffLRParamNames)))
 
         if lstL2RegParamNames:
             self.logger.log("\nParameters with L2 Regularization (Regularization Strength: {}):\n{}".format(
-                self.args.L2_reg, ", ".join(lstL2RegParamNames) ))
+                self.args.L2_reg, ", ".join(lstL2RegParamNames)))
 
         return [{'params': paramsWithL2Reg, 'lr': self.args.learning_rate, 'weight_decay': self.args.L2_reg},
                 {'params': paramsWithDiffLR, 'lr': (self.args.learning_rate * self.args.ARL_lr)},

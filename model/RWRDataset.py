@@ -21,7 +21,7 @@ class RWRDataset(data.Dataset):
         self.dataset_split_file = dataset_split_file
         self.dataset = []
         for sample in load_pickle(dataset_split_file):
-            self.dataset.append( sample )
+            self.dataset.append(sample)
 
     def __getitem__(self, index):
         return self.dataset[index]
