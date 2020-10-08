@@ -1,0 +1,278 @@
+╭─xulabzz ~/Dev/NLP/ANR ‹master*›
+╰─➤  $ /bin/zsh /home/xulabzz/Dev/NLP/ANR/___sample___test__ANR___SIMPLE.sh
+
+[utilities.py\select_gpu] os.environ["CUDA_VISIBLE_DEVICES"]: 0
+
+Command: -d test -m ANRS -e 10 -p 1 -v 19438 -rs 1337 -gpu 0 -vb 1 -sm test_ANRS
+
+Loading 'info' from "./datasets/test/test_info.pkl"..
+'info' loaded!
+
+[INFO] # of Users: 11,782, # of Items: 1,127
+
+Creating model (Selected Model: ANRS)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 1.29s (0.02 minute)
+
+Loading uid_userDoc from "./datasets/test/test_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (11782, 500)]
+
+Loading iid_itemDoc from "./datasets/test/test_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (1127, 500)]
+
+Loading pretrained word embeddings from "./datasets/test/test_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (19440, 300)]
+
+Initialization Complete.. Elapsed Time: 1.33s (0.02 minute)
+
+Loading training set from "./datasets/test/test_split_train.pkl"..
+Training set loaded! Note: Training examples are shuffled every epoch, i.e. shuffle = True!
+
+Loading validation set from "./datasets/test/test_split_dev.pkl"..
+Validation set loaded!
+
+Loading testing set from "./datasets/test/test_split_test.pkl"..
+Testing set loaded!
+
+Train/Dev/Test splits loaded! |TRAIN|: 15,873, |DEV|: 927, |TEST|: 940
+Train/Dev/Test splits loaded! Elapsed Time: 1.34s (0.02 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 18.90507, MAE: 4.22242
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 18.79383, MAE: 4.19434
+
+Initial Evaluation Complete.. Elapsed Time: 1.61s (0.03 minute)
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 12,302,691
+# of Trainable Parameters: 16,191
+ANR (
+  (uid_userDoc): Embedding(11782, 500), weights = ((11782, 500),), parameters = 5,891,000
+  (iid_itemDoc): Embedding(1127, 500), weights = ((1127, 500),), parameters = 563,500
+  (wid_wEmbed): Embedding(19440, 300), weights = ((19440, 300),), parameters = 5,832,000
+  (shared_ANR_ARL): ANR_ARL(
+    (aspEmbed): Embedding(5, 30)
+    (aspProj): Parameter(5, 300, 10)
+  ), weights = ((5, 300, 10), (5, 30)), parameters = 15,150 (Trainable)
+  (ANRS_RatingPred): ANRS_RatingPred(
+    (userFC): Linear(in_features=50, out_features=10, bias=True)
+    (itemFC): Linear(in_features=50, out_features=10, bias=True)
+    (userFC_Dropout): Dropout(p=0.5, inplace=False)
+    (itemFC_Dropout): Dropout(p=0.5, inplace=False)
+    (prediction): Linear(in_features=20, out_features=1, bias=True)
+  ), weights = ((10, 50), (10,), (10, 50), (10,), (1, 20), (1,)), parameters = 1,041 (Trainable)
+)
+
+
+batch_userDoc: torch.Size([128, 500])                                                                                                                      
+batch_itemDoc: torch.Size([128, 500])                                                                                                                      
+batch_userDocEmbed: torch.Size([128, 500, 300])                                                                                                            
+batch_itemDocEmbed: torch.Size([128, 500, 300])                                                                                                            
+                                                                                                                                                           
+[Input to ARL] batch_userDocEmbed: torch.Size([128, 500, 300])
+                                                                                                                                                           
+============================== Aspect Representation Learning (ARL) ==============================
+[Input] batch_docIn: torch.Size([128, 500, 300])                                                                                                           
+                                                                                                                                                          
+As an example, for <Aspect 0>:
+
+        batch_docIn: torch.Size([128, 500, 300])                                                                                                           
+        self.aspProj[0]: torch.Size([300, 10])                                                                                                             
+        batch_aspProjDoc: torch.Size([128, 500, 10])                                                                                                       
+                                                                                                                                                           
+        batch_aspEmbed: torch.Size([128, 30, 1])
+                                                                                                                                                           
+        batch_aspProjDoc_padded [PADDED; Pad Size: 1]: torch.Size([128, 502, 10])
+        batch_aspProjDoc_padded: torch.Size([128, 500, 10, 3])                                                                                             
+        batch_aspProjDoc_padded: torch.Size([128, 500, 3, 10])                                                                                             
+        batch_aspProjDoc_padded: torch.Size([128, 500, 30])                                                                                                
+                                                                                                                                                           
+        batch_aspAttn [Window Size: 3]: torch.Size([128, 500, 1])
+                                                                                                                                                           
+        batch_aspRep: torch.Size([128, 500, 10])
+        batch_aspRep: torch.Size([128, 10])                                                                                                                
+                                                                                                                                                           
+[Output] <All 5 Aspects>
+[Output] batch_aspAttn: torch.Size([128, 5, 500])                                                                                                          
+[Output] batch_aspRep: torch.Size([128, 5, 10])                                                                                                            
+============================== ==================================== ==============================                                                         
+
+[Output of ARL] userAspAttn: torch.Size([128, 5, 500])                                                                                                     
+[Output of ARL] userAspDoc:  torch.Size([128, 5, 10])                                                                                                      
+                                                                                                                                                           
+[Input to ARL] batch_itemDocEmbed: torch.Size([128, 500, 300])
+                                                                                                                                                           
+============================== Aspect Representation Learning (ARL) ==============================
+[Input] batch_docIn: torch.Size([128, 500, 300])                                                                                                           
+                                                                                                                                                           
+As an example, for <Aspect 0>:
+
+        batch_docIn: torch.Size([128, 500, 300])                                                                                                           
+        self.aspProj[0]: torch.Size([300, 10])                                                                                                             
+        batch_aspProjDoc: torch.Size([128, 500, 10])                                                                                                       
+                                                                                                                                                           
+        batch_aspEmbed: torch.Size([128, 30, 1])
+                                                                                                                                                           
+        batch_aspProjDoc_padded [PADDED; Pad Size: 1]: torch.Size([128, 502, 10])
+        batch_aspProjDoc_padded: torch.Size([128, 500, 10, 3])                                                                                             
+        batch_aspProjDoc_padded: torch.Size([128, 500, 3, 10])                                                                                             
+        batch_aspProjDoc_padded: torch.Size([128, 500, 30])                                                                                                
+                                                                                                                                                           
+        batch_aspAttn [Window Size: 3]: torch.Size([128, 500, 1])
+                                                                                                                                                           
+        batch_aspRep: torch.Size([128, 500, 10])
+        batch_aspRep: torch.Size([128, 10])                                                                                                                
+                                                                                                                                                           
+[Output] <All 5 Aspects>
+[Output] batch_aspAttn: torch.Size([128, 5, 500])                                                                                                          
+[Output] batch_aspRep: torch.Size([128, 5, 10])                                                                                                            
+============================== ==================================== ==============================                                                         
+
+[Output of ARL] itemAspAttn: torch.Size([128, 5, 500])                                                                                                     
+[Output of ARL] itemAspDoc:  torch.Size([128, 5, 10])                                                                                                      
+                                                                                                                                                           
+
+============================== Aspect-Based BASIC Rating Predictor ==============================
+[Input] userAspRep: torch.Size([128, 5, 10])                                                                                                               
+[Input] itemAspRep: torch.Size([128, 5, 10])                                                                                                               
+                                                                                                                                                           
+[Concatenated] concatUserRep: torch.Size([128, 50])
+[Concatenated] concatItemRep: torch.Size([128, 50])                                                                                                        
+                                                                                                                                                           
+[After FC, i.e. torch.nn.Linear] abstractUserRep: torch.Size([128, 10])
+[After FC, i.e. torch.nn.Linear] abstractItemRep: torch.Size([128, 10])                                                                                    
+[After ReLU] abstractUserRep: torch.Size([128, 10])                                                                                                        
+[After ReLU] abstractItemRep: torch.Size([128, 10])                                                                                                        
+[After Dropout (Dropout Rate of 0.5)] abstractUserRep: torch.Size([128, 10])                                                                               
+[After Dropout (Dropout Rate of 0.5)] abstractItemRep: torch.Size([128, 10])                                                                               
+                                                                                                                                                           
+[Input to Final Prediction Layer] userItemRep: torch.Size([128, 20])
+                                                                                                                                                           
+[ANRS_RatingPred Output] rating_pred: torch.Size([128, 1])
+============================== =================================== ==============================                                                          
+
+                                                                                                                                                           
+[Final Output of ANRS] rating_pred: torch.Size([128, 1])
+
+Epoch 1:  98%|█████████████████████████████████████████████████████████████████████████████████████████████████████████▎ | 123/125 [00:02<00:00, 44.74it/s]/home/xulabzz/miniconda3/lib/python3.8/site-packages/torch/nn/modules/loss.py:445: UserWarning: Using a target size (torch.Size([1])) that is different to the input size (torch.Size([])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  return F.mse_loss(input, target, reduction=self.reduction)
+Epoch 1: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████| 125/125 [00:02<00:00, 44.44it/s]
+
+[Epoch 1/10] Training Loss: 6.92789     Elapsed Time: 2.81s (0:00:02)
+[Epoch 1] [Dev]  MSE: 1.53918, MAE: 1.09551
+[Epoch 1] [Test] MSE: 1.65211, MAE: 1.14163
+
+*** MODEL has obtained the best DEV MSE of 1.53918 so far!
+*** MODEL saved to "./__saved_models__/test - ANRS/test_ANRS_1337.pth"
+
+
+Epoch 2:  96%|██████████████████████████████████████████████████████████████████████████████████████████████████████▋    | 120/125 [00:02<00:00, 44.54it/s]/home/xulabzz/miniconda3/lib/python3.8/site-packages/torch/nn/modules/loss.py:445: UserWarning: Using a target size (torch.Size([1])) that is different to the input size (torch.Size([])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  return F.mse_loss(input, target, reduction=self.reduction)
+Epoch 2: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████| 125/125 [00:02<00:00, 44.81it/s]
+
+[Epoch 2/10] Training Loss: 2.74638     Elapsed Time: 5.75s (0:00:05)
+[Epoch 2] [Dev]  MSE: 1.28471, MAE: 0.96794
+[Epoch 2] [Test] MSE: 1.40403, MAE: 1.01823
+
+*** MODEL has obtained the best DEV MSE of 1.28471 so far!
+*** MODEL saved to "./__saved_models__/test - ANRS/test_ANRS_1337.pth"
+
+
+Epoch 3:  96%|██████████████████████████████████████████████████████████████████████████████████████████████████████▋    | 120/125 [00:02<00:00, 44.44it/s]/home/xulabzz/miniconda3/lib/python3.8/site-packages/torch/nn/modules/loss.py:445: UserWarning: Using a target size (torch.Size([1])) that is different to the input size (torch.Size([])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  return F.mse_loss(input, target, reduction=self.reduction)
+Epoch 3: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████| 125/125 [00:02<00:00, 44.83it/s]
+
+[Epoch 3/10] Training Loss: 2.54862     Elapsed Time: 8.69s (0:00:08)
+[Epoch 3] [Dev]  MSE: 1.25766, MAE: 0.95703
+[Epoch 3] [Test] MSE: 1.38329, MAE: 1.00867
+
+*** MODEL has obtained the best DEV MSE of 1.25766 so far!
+*** MODEL saved to "./__saved_models__/test - ANRS/test_ANRS_1337.pth"
+
+
+Epoch 4:  96%|██████████████████████████████████████████████████████████████████████████████████████████████████████▋    | 120/125 [00:02<00:00, 44.07it/s]/home/xulabzz/miniconda3/lib/python3.8/site-packages/torch/nn/modules/loss.py:445: UserWarning: Using a target size (torch.Size([1])) that is different to the input size (torch.Size([])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  return F.mse_loss(input, target, reduction=self.reduction)
+Epoch 4: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████| 125/125 [00:02<00:00, 44.68it/s]
+
+[Epoch 4/10] Training Loss: 2.43869     Elapsed Time: 11.63s (0:00:11)
+[Epoch 4] [Dev]  MSE: 1.36648, MAE: 1.02576
+[Epoch 4] [Test] MSE: 1.49839, MAE: 1.07743
+
+
+Epoch 5:  96%|██████████████████████████████████████████████████████████████████████████████████████████████████████▋    | 120/125 [00:02<00:00, 44.40it/s]/home/xulabzz/miniconda3/lib/python3.8/site-packages/torch/nn/modules/loss.py:445: UserWarning: Using a target size (torch.Size([1])) that is different to the input size (torch.Size([])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  return F.mse_loss(input, target, reduction=self.reduction)
+Epoch 5: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████| 125/125 [00:02<00:00, 44.55it/s]
+
+[Epoch 5/10] Training Loss: 2.39752     Elapsed Time: 14.59s (0:00:14)
+[Epoch 5] [Dev]  MSE: 1.31696, MAE: 1.00045
+[Epoch 5] [Test] MSE: 1.45229, MAE: 1.05238
+
+
+Epoch 6:  96%|██████████████████████████████████████████████████████████████████████████████████████████████████████▋    | 120/125 [00:02<00:00, 44.50it/s]/home/xulabzz/miniconda3/lib/python3.8/site-packages/torch/nn/modules/loss.py:445: UserWarning: Using a target size (torch.Size([1])) that is different to the input size (torch.Size([])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  return F.mse_loss(input, target, reduction=self.reduction)
+Epoch 6: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████| 125/125 [00:02<00:00, 44.59it/s]
+
+[Epoch 6/10] Training Loss: 2.33821     Elapsed Time: 17.54s (0:00:17)
+[Epoch 6] [Dev]  MSE: 1.31686, MAE: 0.99840
+[Epoch 6] [Test] MSE: 1.45678, MAE: 1.05115
+
+
+Epoch 7:  96%|██████████████████████████████████████████████████████████████████████████████████████████████████████▋    | 120/125 [00:02<00:00, 44.24it/s]/home/xulabzz/miniconda3/lib/python3.8/site-packages/torch/nn/modules/loss.py:445: UserWarning: Using a target size (torch.Size([1])) that is different to the input size (torch.Size([])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  return F.mse_loss(input, target, reduction=self.reduction)
+Epoch 7: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████| 125/125 [00:02<00:00, 44.38it/s]
+
+[Epoch 7/10] Training Loss: 2.24625     Elapsed Time: 20.50s (0:00:20)
+[Epoch 7] [Dev]  MSE: 1.24297, MAE: 0.95449
+[Epoch 7] [Test] MSE: 1.38880, MAE: 1.00668
+
+*** MODEL has obtained the best DEV MSE of 1.24297 so far!
+*** MODEL saved to "./__saved_models__/test - ANRS/test_ANRS_1337.pth"
+
+
+Epoch 8:  96%|██████████████████████████████████████████████████████████████████████████████████████████████████████▋    | 120/125 [00:02<00:00, 44.43it/s]/home/xulabzz/miniconda3/lib/python3.8/site-packages/torch/nn/modules/loss.py:445: UserWarning: Using a target size (torch.Size([1])) that is different to the input size (torch.Size([])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  return F.mse_loss(input, target, reduction=self.reduction)
+Epoch 8: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████| 125/125 [00:02<00:00, 44.84it/s]
+
+[Epoch 8/10] Training Loss: 2.21674     Elapsed Time: 23.44s (0:00:23)
+[Epoch 8] [Dev]  MSE: 1.11905, MAE: 0.86212
+[Epoch 8] [Test] MSE: 1.26493, MAE: 0.91086
+
+*** MODEL has obtained the best DEV MSE of 1.11905 so far!
+*** MODEL saved to "./__saved_models__/test - ANRS/test_ANRS_1337.pth"
+
+
+Epoch 9:  96%|██████████████████████████████████████████████████████████████████████████████████████████████████████▋    | 120/125 [00:02<00:00, 44.47it/s]/home/xulabzz/miniconda3/lib/python3.8/site-packages/torch/nn/modules/loss.py:445: UserWarning: Using a target size (torch.Size([1])) that is different to the input size (torch.Size([])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  return F.mse_loss(input, target, reduction=self.reduction)
+Epoch 9: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████| 125/125 [00:02<00:00, 44.71it/s]
+
+[Epoch 9/10] Training Loss: 2.09201     Elapsed Time: 26.38s (0:00:26)
+[Epoch 9] [Dev]  MSE: 1.26613, MAE: 0.97021
+[Epoch 9] [Test] MSE: 1.40890, MAE: 1.01968
+
+
+Epoch 10:  96%|█████████████████████████████████████████████████████████████████████████████████████████████████████▊    | 120/125 [00:02<00:00, 44.40it/s]/home/xulabzz/miniconda3/lib/python3.8/site-packages/torch/nn/modules/loss.py:445: UserWarning: Using a target size (torch.Size([1])) that is different to the input size (torch.Size([])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  return F.mse_loss(input, target, reduction=self.reduction)
+Epoch 10: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████| 125/125 [00:02<00:00, 44.58it/s]
+
+[Epoch 10/10] Training Loss: 2.00054    Elapsed Time: 29.33s (0:00:29)
+[Epoch 10] [Dev]  MSE: 1.12123, MAE: 0.86996
+[Epoch 10] [Test] MSE: 1.26772, MAE: 0.91887
+
+[Training Loss]
+[6.92789, 2.74638, 2.54862, 2.43869, 2.39752, 2.33821, 2.24625, 2.21674, 2.09201, 2.00054]
+
+[Dev MSE]
+[1.53918, 1.28471, 1.25766, 1.36648, 1.31696, 1.31686, 1.24297, 1.11905, 1.26613, 1.12123]
+[Test MSE]
+[1.65211, 1.40403, 1.38329, 1.49839, 1.45229, 1.45678, 1.3888, 1.26493, 1.4089, 1.26772]
+[Test MAE]
+[1.14163, 1.01823, 1.00867, 1.07743, 1.05238, 1.05115, 1.00668, 0.91086, 1.01968, 0.91887]
+
+
+Best Dev MSE: 1.11905 (Obtained during Evaluation #8)
+Test MSE: 1.26493, Test MAE: 0.91086
+
+End of Program! Elapsed Time: 31.09s (0:00:31)

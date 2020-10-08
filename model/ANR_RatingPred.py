@@ -6,10 +6,10 @@ from tqdm import tqdm
 import numpy as np
 
 
-'''
-Aspect-Based Rating Predictor, using Aspect-based Representations & the estimated Aspect Importance
-'''
 class ANR_RatingPred(nn.Module):
+    """
+    Aspect-Based Rating Predictor, using Aspect-based Representations & the estimated Aspect Importance
+    """
     def __init__(self, logger, args, num_users, num_items):
         super(ANR_RatingPred, self).__init__()
 

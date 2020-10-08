@@ -21,12 +21,12 @@ class ANR_AIE(nn.Module):
         self.W_a = nn.Parameter(torch.Tensor(self.args.h1, self.args.h1), requires_grad=True)   # W_s: h1 x h1
 
         # User "Projection": A (h2 x h1) weight matrix, and a (h2 x 1) vector
-        self.W_u = nn.Parameter(torch.Tensor(self.args.h2, self.args.h1), requires_grad=True)
-        self.w_hu = nn.Parameter(torch.Tensor(self.args.h2, 1), requires_grad=True)
+        self.W_u = nn.Parameter(torch.Tensor(self.args.h2, self.args.h1), requires_grad=True)   # W_x: h2 x h1
+        self.w_hu = nn.Parameter(torch.Tensor(self.args.h2, 1), requires_grad=True)             # v_u: h2 x 1
 
         # Item "Projection": A (h2 x h1) weight matrix, and a (h2 x 1) vector
-        self.W_i = nn.Parameter(torch.Tensor(self.args.h2, self.args.h1), requires_grad=True)
-        self.w_hi = nn.Parameter(torch.Tensor(self.args.h2, 1), requires_grad=True)
+        self.W_i = nn.Parameter(torch.Tensor(self.args.h2, self.args.h1), requires_grad=True)   # W_y: h2 x h1
+        self.w_hi = nn.Parameter(torch.Tensor(self.args.h2, 1), requires_grad=True)             # v_i: h2 x 1
 
         # Initialize all weights using random uniform distribution from [-0.01, 0.01]
         self.W_a.data.uniform_(-0.01, 0.01)
@@ -38,39 +38,47 @@ class ANR_AIE(nn.Module):
         self.w_hi.data.uniform_(-0.01, 0.01)
 
     '''
-    [Input]  userAspRep: bsz x num_aspects x h1
-    [Input]  itemAspRep: bsz x num_aspects x h1
+    [Input]  userAspRep: bsz x num_aspects x h1 P_u
+    [Input]  itemAspRep: bsz x num_aspects x h1 Q_i
     '''
     def forward(self, userAspRep, itemAspRep, verbose=0):
         if verbose > 0:
             tqdm.write(
                 "\n\n============================== Aspect Importance Estimation (AIE) ==============================")
-            tqdm.write("[Input to AIE] userAspRep: {}".format(userAspRep.size()))
-            tqdm.write("[Input to AIE] itemAspRep: {}".format(itemAspRep.size()))
+            tqdm.write("[Input to AIE] userAspRep: {}".format(userAspRep.size()))   # bsz x num_aspects x h1
+            tqdm.write("[Input to AIE] itemAspRep: {}".format(itemAspRep.size()))   # bsz x num_aspects x h1
 
-        userAspRepTrans = torch.transpose(userAspRep, 1, 2)     # bs x h1 x K
-        itemAspRepTrans = torch.transpose(itemAspRep, 1, 2)     # bs x h1 x K
+        userAspRepTrans = torch.transpose(userAspRep, 1, 2)
+        itemAspRepTrans = torch.transpose(itemAspRep, 1, 2)
         if verbose > 0:
-            tqdm.write("\nuserAspRepTrans: {}".format(userAspRepTrans.size()))
-            tqdm.write("itemAspRepTrans: {}".format(itemAspRepTrans.size()))
+            tqdm.write("\nuserAspRepTrans: {}".format(userAspRepTrans.size()))      # bsz x h1 x num_aspects
+            tqdm.write("itemAspRepTrans: {}".format(itemAspRepTrans.size()))        # bsz x h1 x num_aspects
 
         '''
         Affinity Matrix (User Aspects x Item Aspects), i.e. User Aspects - Rows, Item Aspects - Columns
         '''
+        # (bsz x num_aspects x h1) * (h1 x h1) -> bsz x num_aspects x h1
         affinityMatrix = torch.matmul(userAspRep, self.W_a)
         if verbose > 0:
-            tqdm.write("\naffinityMatrix: {}".format(affinityMatrix.size()))
+            tqdm.write("\naffinityMatrix: {}".format(affinityMatrix.size()))        # bsz x num_aspects x h1
 
+        # (bsz x num_aspects x h1) * (bsz x h1 x num_aspects) -> bsz x num_aspects x num_aspects
         affinityMatrix = torch.matmul(affinityMatrix, itemAspRepTrans)
         if verbose > 0:
-            tqdm.write("affinityMatrix: {}".format(affinityMatrix.size()))
+            tqdm.write("affinityMatrix: {}".format(affinityMatrix.size()))          # bsz x num_aspects x num_aspects
 
         # Non-Linearity: ReLU
-        affinityMatrix = F.relu(affinityMatrix)  # S, Formula (5): K x K
+        affinityMatrix = F.relu(affinityMatrix)
 
+        '''
+        H_u = RELU(P_u * W_x + S^T * (Q_i * W_y))
+        beta_u = softmax(H_u * v_x)
+        '''
         # =========== User Importance (over Aspects) ===========
-        H_u_1 = torch.matmul(self.W_u, userAspRepTrans)  # P(u), W(X)
-        H_u_2 = torch.matmul(self.W_i, itemAspRepTrans)  # Q(i), W(Y)
+        # (h2 x h1) * (bsz x h1 x num_aspects) -> bsz x h2 x num_aspects
+        H_u_1 = torch.matmul(self.W_u, userAspRepTrans)
+        H_u_2 = torch.matmul(self.W_i, itemAspRepTrans)
+
         H_u_2 = torch.matmul(H_u_2, torch.transpose(affinityMatrix, 1, 2))
         H_u = H_u_1 + H_u_2  # H(u), Formula (6)
 
@@ -97,6 +105,10 @@ class ANR_AIE(nn.Module):
             tqdm.write("userAspImpt: {}".format(userAspImpt.size()))
         # =========== User Importance (over Aspects) ===========
 
+        '''
+        H_i = RELU(Q_i * W_y + S * (P_u * W_x))
+        beta_i = softmax(H_i * v_y)
+        '''
         # =========== Item Importance (over Aspects) ===========
         H_i_1 = torch.matmul(self.W_i, itemAspRepTrans)
         H_i_2 = torch.matmul(self.W_u, userAspRepTrans)

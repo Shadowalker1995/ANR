@@ -51,7 +51,6 @@ class ANRS_RatingPred(nn.Module):
         # Concatenate all aspect-level representations into a single vector
         concatUserRep = userAspRep.view(-1, self.args.num_aspects * self.args.h1)
         concatItemRep = itemAspRep.view(-1, self.args.num_aspects * self.args.h1)
-
         if verbose > 0:
             tqdm.write("\n[Concatenated] concatUserRep: {}".format(concatUserRep.size()))
             tqdm.write("[Concatenated] concatItemRep: {}".format(concatItemRep.size()))
@@ -59,7 +58,6 @@ class ANRS_RatingPred(nn.Module):
         # Fully-Connected (To get the abstract user & item representations)
         abstractUserRep = self.userFC(concatUserRep)
         abstractItemRep = self.itemFC(concatItemRep)
-
         if verbose > 0:
             tqdm.write("\n[After FC, i.e. torch.nn.Linear] abstractUserRep: {}".format(abstractUserRep.size()))
             tqdm.write("[After FC, i.e. torch.nn.Linear] abstractItemRep: {}".format(abstractItemRep.size()))
@@ -67,7 +65,6 @@ class ANRS_RatingPred(nn.Module):
         # Non-Linearity: ReLU
         abstractUserRep = F.relu(abstractUserRep)
         abstractItemRep = F.relu(abstractItemRep)
-
         if verbose > 0:
             tqdm.write("[After ReLU] abstractUserRep: {}".format(abstractUserRep.size()))
             tqdm.write("[After ReLU] abstractItemRep: {}".format(abstractItemRep.size()))
@@ -75,7 +72,6 @@ class ANRS_RatingPred(nn.Module):
         # Dropout
         abstractUserRep = self.userFC_Dropout(abstractUserRep)
         abstractItemRep = self.itemFC_Dropout(abstractItemRep)
-
         if verbose > 0:
             tqdm.write("[After Dropout (Dropout Rate of {:.1f})] abstractUserRep: {}".format(self.args.dropout_rate,
                                                                                              abstractUserRep.size()))
@@ -90,7 +86,6 @@ class ANRS_RatingPred(nn.Module):
         # Actual Rating Prediction
         # FC: Fully Connected, i.e. torch.nn.Linear
         rating_pred = self.prediction(userItemRep)
-
         if verbose > 0:
             tqdm.write("\n[ANRS_RatingPred Output] rating_pred: {}".format(rating_pred.size()))
             tqdm.write(

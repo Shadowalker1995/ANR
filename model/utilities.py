@@ -48,7 +48,12 @@ def to_var(x, use_cuda=False, phase="Train"):
     # phase = {Train, Dev, Test}
     if use_cuda:
         x = x.cuda()
-    return Variable(x, volatile=(False if phase == "Train" else True))
+    if phase == "Train":
+        with torch.no_grad():
+            return Variable(x)
+    else:
+        return Variable(x)
+    # return Variable(x, volatile=(False if phase == "Train" else True))
     # return Variable(x)
 
 

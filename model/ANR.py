@@ -42,8 +42,8 @@ class ANR(nn.Module):
 
         # Rating Prediction - Aspect Importance Estimation + Aspect-based Rating Prediction
         if self.args.model == "ANR":
-            # Aspect-Based Co-Attention (Parallel Co-Attention, using the Affinity Matrix as a Feature) --- Aspect
-            # Importance Estimation
+            # Aspect-Based Co-Attention (Parallel Co-Attention, using the Affinity Matrix as a Feature)
+            # Aspect Importance Estimation
             self.ANR_AIE = ANR_AIE(logger, args)
 
             # Aspect-Based Rating Predictor based on the estimated Aspect-Level Importance

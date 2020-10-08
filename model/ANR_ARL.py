@@ -51,9 +51,9 @@ class ANR_ARL(nn.Module):
             batch_aspProjDoc = torch.matmul(batch_docIn, self.aspProj[a])
 
             if verbose > 0 and a == 0:
-                tqdm.write("\tbatch_docIn: {}".format(batch_docIn.size()))
-                tqdm.write("\tself.aspProj[{}]: {}".format(a, self.aspProj[a].size()))
-                tqdm.write("\tbatch_aspProjDoc: {}".format(batch_aspProjDoc.size()))
+                tqdm.write("\tbatch_docIn: {}".format(batch_docIn.size()))              # bsz x max_doc_len x word_embedding_dim
+                tqdm.write("\tself.aspProj[{}]: {}".format(a, self.aspProj[a].size()))  # word_embedding_dim x h1
+                tqdm.write("\tbatch_aspProjDoc: {}".format(batch_aspProjDoc.size()))    # bsz x max_doc_len x h1
 
             # Aspect Embedding: (bsz x h1 x 1) after tranposing!
             bsz = batch_docIn.size()[0]
@@ -86,7 +86,7 @@ class ANR_ARL(nn.Module):
                 batch_aspProjDoc_padded = batch_aspProjDoc_padded.unfold(1, self.args.ctx_win_size, 1)
                 if verbose > 0 and a == 0:
                     tqdm.write("\tbatch_aspProjDoc_padded: {}".format(batch_aspProjDoc_padded.size()))
-                batch_aspProjDoc_padded = torch.transpose(batch_aspProjDoc_padded, 2, 3)
+                batch_aspProjDoc_padded = torch.transpose(batch_aspProjDoc_padded, 2, 3)    # why we need transpose? concat 3 word embedding vector
                 if verbose > 0 and a == 0:
                     tqdm.write("\tbatch_aspProjDoc_padded: {}".format(batch_aspProjDoc_padded.size()))
                 batch_aspProjDoc_padded = batch_aspProjDoc_padded.contiguous().view(-1, self.args.max_doc_len,
@@ -95,10 +95,10 @@ class ANR_ARL(nn.Module):
                     tqdm.write("\tbatch_aspProjDoc_padded: {}".format(batch_aspProjDoc_padded.size()))
 
                 # Calculate Attention: Inner Product & Softmax
-                # (bsz x max_doc_len x (ctx_win_size x h1)) x (bsz x (ctx_win_size x h1) x 1) -> (bsz x max_doc_len x 1)
+                # (bsz x max_doc_len x (ctx_win_size x h1)) * (bsz x (ctx_win_size x h1) x 1) -> (bsz x max_doc_len x 1)
                 batch_aspAttn = torch.matmul(batch_aspProjDoc_padded, batch_aspEmbed)
 
-                batch_aspAttn = F.softmax(batch_aspAttn, dim=1)  # Formula (3)
+                batch_aspAttn = F.softmax(batch_aspAttn, dim=1)
                 if verbose > 0 and a == 0:
                     tqdm.write(
                         "\n\tbatch_aspAttn [Window Size: {}]: {}".format(self.args.ctx_win_size, batch_aspAttn.size()))
@@ -108,13 +108,13 @@ class ANR_ARL(nn.Module):
             batch_aspRep = batch_aspProjDoc * batch_aspAttn.expand_as(batch_aspProjDoc)
             if verbose > 0 and a == 0:
                 tqdm.write("\n\tbatch_aspRep: {}".format(batch_aspRep.size()))
-            batch_aspRep = torch.sum(batch_aspRep, dim=1)  # P(u,a), Formula (4)
+            batch_aspRep = torch.sum(batch_aspRep, dim=1)
             if verbose > 0 and a == 0:
                 tqdm.write("\tbatch_aspRep: {}".format(batch_aspRep.size()))
 
             # Store the results (Attention & Representation) for this aspect
             lst_batch_aspAttn.append(torch.transpose(batch_aspAttn, 1, 2))
-            lst_batch_aspRep.append(torch.unsqueeze(batch_aspRep, 1))  # P(u,a), Formula (4)
+            lst_batch_aspRep.append(torch.unsqueeze(batch_aspRep, 1))
 
         # Reshape the Attentions & Representations
         # batch_aspAttn:        (bsz x num_aspects x max_doc_len)

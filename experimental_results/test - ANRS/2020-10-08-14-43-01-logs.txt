@@ -33,7 +33,7 @@
 
 Creating model (Selected Model: ANRS)..
 [args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
-Model created! Elapsed Time: 1.36s (0.02 minute)
+Model created! Elapsed Time: 1.29s (0.02 minute)
 
 Loading uid_userDoc from "./datasets/test/test_uid_userDoc.npy"..
 uid_userDoc loaded! [uid_userDoc: (11782, 500)]
@@ -44,10 +44,10 @@ iid_itemDoc loaded! [iid_itemDoc: (1127, 500)]
 Loading pretrained word embeddings from "./datasets/test/test_wid_wordEmbed.npy"..
 Pretrained word embeddings loaded! [wid_wEmbed: (19440, 300)]
 
-Initialization Complete.. Elapsed Time: 1.45s (0.02 minute)
+Initialization Complete.. Elapsed Time: 1.33s (0.02 minute)
 
 Train/Dev/Test splits loaded! |TRAIN|: 15,873, |DEV|: 927, |TEST|: 940
-Train/Dev/Test splits loaded! Elapsed Time: 1.46s (0.02 minute)
+Train/Dev/Test splits loaded! Elapsed Time: 1.34s (0.02 minute)
 
 Performing initial evaluation for VALIDATION set..
 [Initial] [Dev]  MSE: 18.90507, MAE: 4.22242
@@ -55,7 +55,7 @@ Performing initial evaluation for VALIDATION set..
 Performing initial evaluation for TESTING set..
 [Initial] [Test] MSE: 18.79383, MAE: 4.19434
 
-Initial Evaluation Complete.. Elapsed Time: 2.00s (0.03 minute)
+Initial Evaluation Complete.. Elapsed Time: 1.61s (0.03 minute)
 
 Optimizer: Adam, Loss Function: MSELoss
 
@@ -79,70 +79,73 @@ ANR (
 )
 ========================================================================================================================
 
-[Epoch 1/10] Training Loss: 6.91097	Elapsed Time: 3.98s (0:00:03)
-[Epoch 1] [Dev]  MSE: 1.56195, MAE: 1.10287
-[Epoch 1] [Test] MSE: 1.67345, MAE: 1.14831
+[Epoch 1/10] Training Loss: 6.92789	Elapsed Time: 2.81s (0:00:02)
+[Epoch 1] [Dev]  MSE: 1.53918, MAE: 1.09551
+[Epoch 1] [Test] MSE: 1.65211, MAE: 1.14163
 
-*** MODEL has obtained the best DEV MSE of 1.56195 so far!
+*** MODEL has obtained the best DEV MSE of 1.53918 so far!
 *** MODEL saved to "./__saved_models__/test - ANRS/test_ANRS_1337.pth"
 
-[Epoch 2/10] Training Loss: 2.69839	Elapsed Time: 8.20s (0:00:08)
-[Epoch 2] [Dev]  MSE: 1.26362, MAE: 0.95263
-[Epoch 2] [Test] MSE: 1.38918, MAE: 1.00532
+[Epoch 2/10] Training Loss: 2.74638	Elapsed Time: 5.75s (0:00:05)
+[Epoch 2] [Dev]  MSE: 1.28471, MAE: 0.96794
+[Epoch 2] [Test] MSE: 1.40403, MAE: 1.01823
 
-*** MODEL has obtained the best DEV MSE of 1.26362 so far!
+*** MODEL has obtained the best DEV MSE of 1.28471 so far!
 *** MODEL saved to "./__saved_models__/test - ANRS/test_ANRS_1337.pth"
 
-[Epoch 3/10] Training Loss: 2.56172	Elapsed Time: 12.42s (0:00:12)
-[Epoch 3] [Dev]  MSE: 1.27371, MAE: 0.96693
-[Epoch 3] [Test] MSE: 1.40492, MAE: 1.01945
+[Epoch 3/10] Training Loss: 2.54862	Elapsed Time: 8.69s (0:00:08)
+[Epoch 3] [Dev]  MSE: 1.25766, MAE: 0.95703
+[Epoch 3] [Test] MSE: 1.38329, MAE: 1.00867
 
-[Epoch 4/10] Training Loss: 2.45559	Elapsed Time: 16.67s (0:00:16)
-[Epoch 4] [Dev]  MSE: 1.52186, MAE: 1.10620
-[Epoch 4] [Test] MSE: 1.64943, MAE: 1.15468
-
-[Epoch 5/10] Training Loss: 2.44413	Elapsed Time: 20.89s (0:00:20)
-[Epoch 5] [Dev]  MSE: 1.14843, MAE: 0.88296
-[Epoch 5] [Test] MSE: 1.29033, MAE: 0.93256
-
-*** MODEL has obtained the best DEV MSE of 1.14843 so far!
+*** MODEL has obtained the best DEV MSE of 1.25766 so far!
 *** MODEL saved to "./__saved_models__/test - ANRS/test_ANRS_1337.pth"
 
-[Epoch 6/10] Training Loss: 2.37937	Elapsed Time: 25.15s (0:00:25)
-[Epoch 6] [Dev]  MSE: 1.16698, MAE: 0.90183
-[Epoch 6] [Test] MSE: 1.31005, MAE: 0.95267
+[Epoch 4/10] Training Loss: 2.43869	Elapsed Time: 11.63s (0:00:11)
+[Epoch 4] [Dev]  MSE: 1.36648, MAE: 1.02576
+[Epoch 4] [Test] MSE: 1.49839, MAE: 1.07743
 
-[Epoch 7/10] Training Loss: 2.25648	Elapsed Time: 29.68s (0:00:29)
-[Epoch 7] [Dev]  MSE: 1.13588, MAE: 0.87982
-[Epoch 7] [Test] MSE: 1.27883, MAE: 0.92854
+[Epoch 5/10] Training Loss: 2.39752	Elapsed Time: 14.59s (0:00:14)
+[Epoch 5] [Dev]  MSE: 1.31696, MAE: 1.00045
+[Epoch 5] [Test] MSE: 1.45229, MAE: 1.05238
 
-*** MODEL has obtained the best DEV MSE of 1.13588 so far!
+[Epoch 6/10] Training Loss: 2.33821	Elapsed Time: 17.54s (0:00:17)
+[Epoch 6] [Dev]  MSE: 1.31686, MAE: 0.99840
+[Epoch 6] [Test] MSE: 1.45678, MAE: 1.05115
+
+[Epoch 7/10] Training Loss: 2.24625	Elapsed Time: 20.50s (0:00:20)
+[Epoch 7] [Dev]  MSE: 1.24297, MAE: 0.95449
+[Epoch 7] [Test] MSE: 1.38880, MAE: 1.00668
+
+*** MODEL has obtained the best DEV MSE of 1.24297 so far!
 *** MODEL saved to "./__saved_models__/test - ANRS/test_ANRS_1337.pth"
 
-[Epoch 8/10] Training Loss: 2.18995	Elapsed Time: 34.27s (0:00:34)
-[Epoch 8] [Dev]  MSE: 1.16000, MAE: 0.89859
-[Epoch 8] [Test] MSE: 1.30765, MAE: 0.94879
+[Epoch 8/10] Training Loss: 2.21674	Elapsed Time: 23.44s (0:00:23)
+[Epoch 8] [Dev]  MSE: 1.11905, MAE: 0.86212
+[Epoch 8] [Test] MSE: 1.26493, MAE: 0.91086
 
-[Epoch 9/10] Training Loss: 2.15399	Elapsed Time: 38.65s (0:00:38)
-[Epoch 9] [Dev]  MSE: 1.14876, MAE: 0.89182
-[Epoch 9] [Test] MSE: 1.29558, MAE: 0.94033
+*** MODEL has obtained the best DEV MSE of 1.11905 so far!
+*** MODEL saved to "./__saved_models__/test - ANRS/test_ANRS_1337.pth"
 
-[Epoch 10/10] Training Loss: 1.97859	Elapsed Time: 42.91s (0:00:42)
-[Epoch 10] [Dev]  MSE: 1.16211, MAE: 0.90186
-[Epoch 10] [Test] MSE: 1.31138, MAE: 0.95138
+[Epoch 9/10] Training Loss: 2.09201	Elapsed Time: 26.38s (0:00:26)
+[Epoch 9] [Dev]  MSE: 1.26613, MAE: 0.97021
+[Epoch 9] [Test] MSE: 1.40890, MAE: 1.01968
+
+[Epoch 10/10] Training Loss: 2.00054	Elapsed Time: 29.33s (0:00:29)
+[Epoch 10] [Dev]  MSE: 1.12123, MAE: 0.86996
+[Epoch 10] [Test] MSE: 1.26772, MAE: 0.91887
 
 [Training Loss]
-[6.91097, 2.69839, 2.56172, 2.45559, 2.44413, 2.37937, 2.25648, 2.18995, 2.15399, 1.97859]
+[6.92789, 2.74638, 2.54862, 2.43869, 2.39752, 2.33821, 2.24625, 2.21674, 2.09201, 2.00054]
 
 [Dev MSE]
-[1.56195, 1.26362, 1.27371, 1.52186, 1.14843, 1.16698, 1.13588, 1.16, 1.14876, 1.16211]
+[1.53918, 1.28471, 1.25766, 1.36648, 1.31696, 1.31686, 1.24297, 1.11905, 1.26613, 1.12123]
 [Test MSE]
-[1.67345, 1.38918, 1.40492, 1.64943, 1.29033, 1.31005, 1.27883, 1.30765, 1.29558, 1.31138]
+[1.65211, 1.40403, 1.38329, 1.49839, 1.45229, 1.45678, 1.3888, 1.26493, 1.4089, 1.26772]
 [Test MAE]
-[1.14831, 1.00532, 1.01945, 1.15468, 0.93256, 0.95267, 0.92854, 0.94879, 0.94033, 0.95138]
+[1.14163, 1.01823, 1.00867, 1.07743, 1.05238, 1.05115, 1.00668, 0.91086, 1.01968, 0.91887]
 
 
-Best Dev MSE: 1.13588 (Obtained during Evaluation #7)
-Test MSE: 1.27883, Test MAE: 0.92854
+Best Dev MSE: 1.11905 (Obtained during Evaluation #8)
+Test MSE: 1.26493, Test MAE: 0.91086
 
-End of Program! Elapsed Time: 45.17s (0:00:45)
+End of Program! Elapsed Time: 31.09s (0:00:31)
