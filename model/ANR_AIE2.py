@@ -21,11 +21,11 @@ class ANR_AIE(nn.Module):
         self.W_a = nn.Parameter(torch.Tensor(self.args.h1, self.args.h1), requires_grad=True)   # W_s: h1 x h1
 
         # User "Projection": A (h2 x h1) weight matrix, and a (h2 x 1) vector
-        self.W_u = nn.Parameter(torch.Tensor(self.args.h2, self.args.h1), requires_grad=True)   # W_x: h2 x h1
+        self.W_u = nn.Parameter(torch.Tensor(self.args.h1, self.args.h2), requires_grad=True)   # W_x: h1 x h2
         self.w_hu = nn.Parameter(torch.Tensor(self.args.h2, 1), requires_grad=True)             # v_x: h2 x 1
 
         # Item "Projection": A (h2 x h1) weight matrix, and a (h2 x 1) vector
-        self.W_i = nn.Parameter(torch.Tensor(self.args.h2, self.args.h1), requires_grad=True)   # W_y: h2 x h1
+        self.W_i = nn.Parameter(torch.Tensor(self.args.h1, self.args.h2), requires_grad=True)   # W_y: h1 x h2
         self.w_hi = nn.Parameter(torch.Tensor(self.args.h2, 1), requires_grad=True)             # v_y: h2 x 1
 
         # Initialize all weights using random uniform distribution from [-0.01, 0.01]
@@ -76,29 +76,30 @@ class ANR_AIE(nn.Module):
         beta_u = softmax(H_u * v_x)
         '''
         # =========== User Importance (over Aspects) ===========
-        # (h2 x h1) * (bsz x h1 x num_aspects) -> bsz x h2 x num_aspects
-        H_u_1 = torch.matmul(self.W_u, userAspRepTrans)
-        H_u_2 = torch.matmul(self.W_i, itemAspRepTrans)
+        # (bsz x num_aspects x h1) * (h1 x h2) -> bsz x num_aspects x h2
+        H_u_1 = torch.matmul(userAspRep, self.W_u)
+        H_u_2 = torch.matmul(itemAspRep, self.W_i)
 
-        # (bsz x h2 x num_aspects) * (bsz x num_aspects x num_aspects) -> bsz x h2 x num_aspects
-        H_u_2 = torch.matmul(H_u_2, torch.transpose(affinityMatrix, 1, 2))
-        H_u = H_u_1 + H_u_2                                                         # bsz x h2 x num_aspects
+        # (bsz x num_aspects x num_aspects) * (bsz x num_aspects x h2) -> bsz x num_aspects x h2
+        H_u_2 = torch.matmul(torch.transpose(affinityMatrix, 1, 2), H_u_2)
+
+        H_u = H_u_1 + H_u_2                                                         # bsz x num_aspects x h2
 
         # Non-Linearity: ReLU
-        H_u = F.relu(H_u)                                                           # bsz x h2 x num_aspects, H_u
+        H_u = F.relu(H_u)                                                           # bsz x num_aspects x h2, H_u
 
         # User Aspect-level Importance
-        # (1 x h2) * (bsz x h2 x num_aspects) -> bsz x 1 x num_aspects
-        userAspImpt = torch.matmul(torch.transpose(self.w_hu, 0, 1), H_u)           # bsz x 1 x num_aspects
+        # (bsz x num_aspects x h2) * (h2 x 1) -> bsz x num_aspects x 1
+        userAspImpt = torch.matmul(H_u, self.w_hu)           # bsz x num_aspects x 1
         if verbose > 0:
             tqdm.write("\nuserAspImpt: {}".format(userAspImpt.size()))
 
         # User Aspect-level Importance: (bsz x 1 x num_aspects) -> (bsz x num_aspects x 1)
-        userAspImpt = torch.transpose(userAspImpt, 1, 2)
-        if verbose > 0:
-            tqdm.write("userAspImpt: {}".format(userAspImpt.size()))
+        # userAspImpt = torch.transpose(userAspImpt, 1, 2)
+        # if verbose > 0:
+        #     tqdm.write("userAspImpt: {}".format(userAspImpt.size()))
 
-        userAspImpt = F.softmax(userAspImpt, dim=1)                                 # bsz x 1 x num_aspects, beta_u
+        userAspImpt = F.softmax(userAspImpt, dim=1)                                 # bsz x num_aspects x 1, beta_u
         if verbose > 0:
             tqdm.write("userAspImpt: {}".format(userAspImpt.size()))
 
@@ -113,29 +114,29 @@ class ANR_AIE(nn.Module):
         beta_i = softmax(H_i * v_y)
         '''
         # =========== Item Importance (over Aspects) ===========
-        # (h2 x h1) * (bsz x h1 x num_aspects) -> bsz x h2 x num_aspects
-        H_i_1 = torch.matmul(self.W_i, itemAspRepTrans)
-        H_i_2 = torch.matmul(self.W_u, userAspRepTrans)
+        # (bsz x num_aspects x h1) * (h1 x h2) -> bsz x num_aspects x h2
+        H_i_1 = torch.matmul(itemAspRep, self.W_i)
+        H_i_2 = torch.matmul(userAspRep, self.W_u)
 
-        # (bsz x h2 x num_aspects) * (bsz x num_aspects x num_aspects) -> bsz x h2 x num_aspects
-        H_i_2 = torch.matmul(H_i_2, affinityMatrix)
-        H_i = H_i_1 + H_i_2                                                         # bsz x h2 x num_aspects
+        # (bsz x num_aspects x num_aspects) * (bsz x num_aspects x h2) -> bsz x num_aspects x h2
+        H_i_2 = torch.matmul(affinityMatrix, H_i_2)
+        H_i = H_i_1 + H_i_2                                                         # bsz x num_aspects x h2
 
         # Non-Linearity: ReLU
-        H_i = F.relu(H_i)                                                           # bsz x h2 x num_aspects
+        H_i = F.relu(H_i)                                                           # bsz x num_aspects x h2
 
         # Item Aspect-level Importance
-        # (1 x h2) * (bsz x h2 x num_aspects) -> bsz x 1 x num_aspects
-        itemAspImpt = torch.matmul(torch.transpose(self.w_hi, 0, 1), H_i)           # bsz x 1 x num_aspects
+        # (bsz x num_aspects x h2) * (h2 x 1) -> bsz x num_aspects x 1
+        itemAspImpt = torch.matmul(H_i, self.w_hi)           # bsz x num_aspects x 1
         if verbose > 0:
             tqdm.write("\nitemAspImpt: {}".format(itemAspImpt.size()))
 
         # Item Aspect-level Importance: (bsz x 1 x num_aspects) -> (bsz x num_aspects x 1)
-        itemAspImpt = torch.transpose(itemAspImpt, 1, 2)
-        if verbose > 0:
-            tqdm.write("itemAspImpt: {}".format(itemAspImpt.size()))
+        # itemAspImpt = torch.transpose(itemAspImpt, 1, 2)
+        # if verbose > 0:
+        #     tqdm.write("itemAspImpt: {}".format(itemAspImpt.size()))
 
-        itemAspImpt = F.softmax(itemAspImpt, dim=1)                                 # # bsz x 1 x num_aspects, beta_i
+        itemAspImpt = F.softmax(itemAspImpt, dim=1)                                 # bsz x num_aspects x 1, beta_i
         if verbose > 0:
             tqdm.write("itemAspImpt: {}".format(itemAspImpt.size()))
 
