@@ -109,7 +109,6 @@ noPretrainedEmb_words.append(UNK)
 
 for wid in tqdm(range(2, len(word_wid)), "Forming Matrix"):
     word = wid_word[wid]
-
     try:
         vec = embeddings[word]
         vec = vec.tolist()

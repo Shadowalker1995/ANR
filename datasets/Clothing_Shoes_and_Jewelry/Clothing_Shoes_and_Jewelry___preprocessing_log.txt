@@ -1,0 +1,34 @@
+[args from argparse.ArgumentParser().parse_args()]
+command: /home/xulabzz/Dev/NLP/ANR/preprocessing/preprocessing_simple.py -d Clothing_Shoes_and_Jewelry -dev_test_in_train 1
+dataset: Clothing_Shoes_and_Jewelry
+dataset_maximum_size: 5000000
+dev_test_in_train: True
+maxDL: 500
+minReviews: 1
+minRL: 10
+random_seed: 1337
+train_ratio: 0.8
+vocab: 50000
+
+[INPUT] Source Folder:       ../datasets/
+[INPUT] Reviews/Ratings:     ../datasets/reviews_Clothing_Shoes_and_Jewelry.json
+
+[OUTPUT] Category Folder:    ../datasets/Clothing_Shoes_and_Jewelry/
+[OUTPUT] env:                ../datasets/Clothing_Shoes_and_Jewelry/Clothing_Shoes_and_Jewelry_env.pkl
+[OUTPUT] info:               ../datasets/Clothing_Shoes_and_Jewelry/Clothing_Shoes_and_Jewelry_info.pkl
+[OUTPUT] split_train:        ../datasets/Clothing_Shoes_and_Jewelry/Clothing_Shoes_and_Jewelry_split_train.pkl
+[OUTPUT] split_dev:          ../datasets/Clothing_Shoes_and_Jewelry/Clothing_Shoes_and_Jewelry_split_dev.pkl
+[OUTPUT] split_test:         ../datasets/Clothing_Shoes_and_Jewelry/Clothing_Shoes_and_Jewelry_split_test.pkl
+[OUTPUT] uid_userDoc:        ../datasets/Clothing_Shoes_and_Jewelry/Clothing_Shoes_and_Jewelry_uid_userDoc.npy
+[OUTPUT] iid_itemDoc:        ../datasets/Clothing_Shoes_and_Jewelry/Clothing_Shoes_and_Jewelry_iid_itemDoc.npy
+
+[Settings]
+Min reviews for user/item: 1
+Min review length to qualify as an user-item interaction: 10
+Max words for user/item document: 500 (For truncating/padding to get a fixed-size representation)
+Top-50000 words in vocabulary being utilized!
+
+
+Second pass of visual features to get the user-item interactions!
+[Second stats] Items with image: 1,494,171, Images: 1,494,171, Density: 1.0000000
+

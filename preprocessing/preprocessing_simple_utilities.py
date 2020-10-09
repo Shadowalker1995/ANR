@@ -69,16 +69,23 @@ def print_args(args):
 def count(interactions, print_min=False):
     user_count = Counter()
     item_count = Counter()
-
     for interaction in interactions:
         user_count[interaction[0]] += 1
         item_count[interaction[1]] += 1
-
     if print_min:
         print("Least # of reviews for an user: {}, Least # of reviews for an item: {}".format(
             user_count.most_common()[-1][1], item_count.most_common()[-1][1]))
-
     return user_count, item_count
+
+
+def feature_count(interactions, print_min=False):
+    item_feature_count = Counter()
+    for interaction in interactions:
+        item_feature_count[interaction[0]] += 1
+    if print_min:
+        print("Least # of visual features for an item: {}".format(
+            item_feature_count.most_common()[-1][1]))
+    return item_feature_count
 
 
 def stack_count(interactions, user_count, item_count, print_min=False):
