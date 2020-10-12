@@ -14,6 +14,8 @@ import gc
 import numpy as np
 import random
 import argparse
+import array
+import gzip
 from FILEPATHS import *
 
 current_dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
@@ -60,7 +62,7 @@ def print_args(args):
     lst_args = ["[args from argparse.ArgumentParser().parse_args()]"]
     for key in sorted(items.keys(), key=lambda s: s.lower()):
         value = items[key]
-        lst_args.append("{}: {}".format( key, str(value) ))
+        lst_args.append("{}: {}".format(key, str(value)))
 
     del args.command
     return "\n".join(lst_args)
@@ -152,10 +154,11 @@ def word2id(word, word_wid):
 
 
 def post_padding(doc, maxlen, pad_char=0):
-    return doc[:maxlen] + ([pad_char] * (maxlen - len(doc)) )
+    return doc[:maxlen] + ([pad_char] * (maxlen - len(doc)))
 
 
-def prepare_set(interactions, user_uid, item_iid, uid_userDocLen, iid_itemDocLen, set_type, output_log, printToScreen=False):
+def prepare_set(interactions, user_uid, item_iid, uid_userDocLen, iid_itemDocLen, set_type, output_log,
+                printToScreen=False):
     lst_uid = []
     lst_iid = []
     lst_rating = []
@@ -178,12 +181,12 @@ def prepare_set(interactions, user_uid, item_iid, uid_userDocLen, iid_itemDocLen
     ratings_max = np.max(lst_rating)
     rating_avg = np.mean(lst_rating)
     append_to_file(output_log, "[{}] Lowest Rating: {:.2f}, Highest Rating: {:.2f}, Average Rating: {:.3f}".format(
-        set_type, ratings_min, ratings_max, rating_avg ), print=printToScreen)
+        set_type, ratings_min, ratings_max, rating_avg), print=printToScreen)
     ratingsCounter = Counter(lst_rating)
     ratingsDist = ratingsCounter.items()
     ratingsDist = sorted(ratingsDist, key=lambda interaction: interaction[0])
     ratingsDist = ", ".join(["[{:.2f}: {}]".format(r, c) for r, c in ratingsDist])
-    append_to_file(output_log, "[{}] {}\n".format( set_type, ratingsDist ), print=printToScreen)
+    append_to_file(output_log, "[{}] {}\n".format(set_type, ratingsDist), print=printToScreen)
 
     return zip(lst_uid, lst_iid, lst_rating)
 
@@ -208,3 +211,19 @@ def createNumpyMatrix(startIndex, endIndex, mapping):
     npMatrix = np.reshape(npMatrix, (rows, columns))
 
     return npMatrix
+
+
+def readImageFeatures(path):
+    f = open(path, 'rb')
+    while True:
+        asin = f.read(10)
+        if asin == '': break
+        a = array.array('f')
+        a.fromfile(f, 4096)
+        yield asin, a.tolist()
+
+
+def read_gzip(path):
+    g = gzip.open(path, 'r')
+    for line in g:
+        yield eval(line)

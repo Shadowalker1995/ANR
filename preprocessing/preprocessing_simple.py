@@ -9,6 +9,8 @@ parser.add_argument("-dmax", "--dataset_maximum_size", type=int, default=5000000
 parser.add_argument("-minRL", "--minRL", type=int, default=10, help="Minimum Review Length (Default: 10)")
 parser.add_argument("-minReviews", "--minReviews", type=int, default=1,
                     help="Minimum Reviews Per User/Item (Default: 1)")
+parser.add_argument("-minImages", "--minImages", type=int, default=1,
+                    help="Minimum Images Per Item (Default: 1)")
 parser.add_argument("-v", "--vocab", type=int, default=50000, help="Vocabulary Size (Default: 50000)")
 parser.add_argument("-maxDL", "--maxDL", type=int, default=500, help="Maximum Document Length (Default: 500)")
 parser.add_argument("-tr", "--train_ratio", dest="train_ratio", type=float, metavar="<float>", default=0.8,
@@ -25,11 +27,12 @@ args.dev_test_in_train = True if (args.dev_test_in_train == 1) else False
 # Dataset, e.g. amazon_instant_video
 CATEGORY = args.dataset.strip()
 REVIEW = "reviews_" + CATEGORY
-VISUAL = "image_features_" + CATEGORY
+VISUAL = "image_features_" + CATEGORY + "_pca"
 print("\nDataset: {}".format(CATEGORY))
 
 MIN_REVIEW_LEN = args.minRL  # Minimum review length based on number of tokens
 MIN_REVIEWS = args.minReviews  # Minimum number of reviews per user/item
+MIN_IMAGES = args.minImages  # Minimum number of images per item
 VOCAB_SIZE = args.vocab  # Vocabulary size
 MAX_DOC_LEN = args.maxDL  # Maximum length of user/item document
 
@@ -46,7 +49,9 @@ SOURCE_FOLDER = "../datasets/"
 
 # Input Reviews (Each review has a corresponding rating, user, and item)
 REVIEW_JSON = "{}{}.json".format(SOURCE_FOLDER, REVIEW)
+REVIEW_GZIP = "{}{}.json.gz".format(SOURCE_FOLDER, REVIEW)
 VISUAL_JSON = "{}{}.json".format(SOURCE_FOLDER, VISUAL)
+VISUAL_BINARY = "{}{}.b".format(SOURCE_FOLDER, VISUAL)
 # =========== INPUT ===========
 
 # =========== OUTPUT ===========
@@ -102,8 +107,16 @@ append_to_file(output_log, "Top-{} words in vocabulary being utilized!\n".format
 
 
 # ========== Initial pass of reviews to get the user-item interactions ==========
-# interactions = []
-# append_to_file(output_log, "\nInitial pass of reviews to get the user-item interactions!")
+interactions = []
+append_to_file(output_log, "\nInitial pass of reviews to get the user-item interactions!")
+for d in read_gzip(REVIEW_GZIP):
+    if "Yelp" in CATEGORY:
+        user = d['user_id']
+        item = d['business_id']
+    else:
+        user = d['reviewerID']
+        item = d['asin']
+    interactions.append([user, item])
 # with codecs.open(REVIEW_JSON, 'r', encoding='utf-8', errors='ignore') as inFile:
 #     lines = inFile.readlines()
 #     for line in tqdm(lines, "Initial pass of reviews for \"{}\"".format(CATEGORY)):
@@ -115,50 +128,79 @@ append_to_file(output_log, "Top-{} words in vocabulary being utilized!\n".format
 #             user = d['reviewerID']
 #             item = d['asin']
 #         interactions.append([user, item])
-#
-# user_count, item_count = count(interactions)
-# num_reviews = len(interactions)
-#
-# # Force garbage collection
+
+user_count, item_count = count(interactions)
+num_reviews = len(interactions)
+
+# Force garbage collection
 # lines.clear()
 # gc.collect()
-#
-# append_to_file(output_log, "[Initial stats] Users: {:,}, Items: {:,}, Ratings: {:,}, Density: {:.7f}\n".format(
-#     len(user_count), len(item_count), num_reviews, float(num_reviews) / (len(user_count) * len(item_count))))
+
+append_to_file(output_log, "[Initial stats] Users: {:,}, Items: {:,}, Ratings: {:,}, Density: {:.7f}\n".format(
+    len(user_count), len(item_count), num_reviews, float(num_reviews) / (len(user_count) * len(item_count))))
 # ========== Initial pass of reviews to get the user-item interactions ==========
 
 
-# ========== Second pass of visual features to get the user-item interactions ==========
-# item_features = []
-item_feature_count = defaultdict(int)
-append_to_file(output_log, "\nSecond pass of visual features to get the user-item interactions!")
+# ========== Second pass of visual features to get the item-feature interactions ==========
+item_features = []
+append_to_file(output_log, "\nSecond pass of visual features to get the item-feature interactions!")
 with codecs.open(VISUAL_JSON, 'r', encoding='utf-8', errors='ignore') as inFile:
-    i = 0
-    for line in inFile:
-        if not line.strip():
-            print("Done")
-            break
+    lines = inFile.readlines()
+    for line in tqdm(lines, "Initial pass of reviews for \"{}\"".format(CATEGORY)):
         d = json.loads(line)
         item = d['asin']
-        # feature = d['feature']
-        # item_features.append([item, feature])
-        item_feature_count[item] += 1
+        feature = d['feature']
+        item_features.append([item, feature])
 
-        i += 1
-        if i % 10000 == 0:
-            print("Read for {} line".format(i))
-
-# item_feature_count = feature_count(item_features)
-# num_images = len(item_features)
-num_images = sum(item_feature_count.values())
+item_feature_count = feature_count(item_features)
+item_feature_count = dict(item_feature_count)
+num_images = len(item_features)
 
 # Force garbage collection
-# line.clear()
-# gc.collect()
+lines.clear()
+gc.collect()
 
 append_to_file(output_log, "[Second stats] Items with image: {:,}, Images: {:,}, Density: {:.7f}\n".format(
     len(item_feature_count), num_images, float(len(item_feature_count)) / num_images))
 # ========== Second pass of visual features to get the user-item interactions ==========
+
+
+# ========== filter away users & items based on the num of images ==========
+print("\nStarting to filter away users & items based on thresold of {} images!".format(MIN_IMAGES))
+while True:
+    oldUsers = len(user_count)
+    oldItems = len(item_count)
+
+    # Update interactions based on the num of images
+    print("Updating interactions based on the num of images...")
+    interactions = [interaction for interaction in tqdm(interactions, "Filtering interactions")
+                    if interaction[1] in item_feature_count]
+
+    user_count, item_count = count(interactions)
+    num_reviews = len(interactions)
+    # AFTER filtering away users & items based on the num of images
+    currUsers = len(user_count)
+    currItems = len(item_count)
+    print("\nFiltered users & items based on thresold of {} images!".format(MIN_IMAGES))
+    print("Users: {} -> {}, Items: {} -> {}".format(oldUsers, currUsers, oldItems, currItems))
+
+    append_to_file(output_log, "[Current stats] Users: {}, Items: {}, Ratings: {}, Density: {:.7f}".format(
+        len(user_count), len(item_count), num_reviews, float(num_reviews) / (len(user_count) * len(item_count))))
+
+    # Check if no users and items were filtered
+    if oldUsers == currUsers and oldItems == currItems:
+        append_to_file(output_log, "\nNo change in # of users or # of items!\n")
+        append_to_file(output_log, "[Final stats] Users: {:,}, Items: {:,}, Ratings: {:,}, Density: {:.7f}".format(
+            len(user_count), len(item_count), num_reviews, float(num_reviews) / (len(user_count) * len(item_count))))
+        break
+
+    # Progress update
+    currTime = time.time()
+    elapsedTimeInSecs = currTime - startTime
+    elapsedTimeInMins = elapsedTimeInSecs / 60
+    print("\nElapsed time for \"{}\": {:.2f} seconds ({:.2f} minutes)".format(CATEGORY, elapsedTimeInSecs,
+                                                                              elapsedTimeInMins))
+# ========== filter away users & items based on the num of images ==========
 
 
 # ========== filter away users & items based on the num of reviews ==========
@@ -216,48 +258,63 @@ gc.collect()
 # ========== Second pass of reviews to get the rating, date, and tokenized review and image feature ==========
 interactions = []
 append_to_file(output_log, "\n\nSecond pass of reviews to get the rating, date, and tokenized review!")
-with codecs.open(REVIEW_JSON, 'r', encoding='utf-8', errors='ignore') as inFile:
-    lines = inFile.readlines()
-
-    for line in tqdm(lines, "Second pass of reviews for \"{}\"".format(CATEGORY)):
-        d = json.loads(line)
-
+for d in read_gzip(REVIEW_GZIP):
+    if "Yelp" in CATEGORY:
+        user = d['user_id']
+        item = d['business_id']
+    else:
+        user = d['reviewerID']
+        item = d['asin']
+    if hit((user, item), users_dict, items_dict):
         if "Yelp" in CATEGORY:
-            user = d['user_id']
-            item = d['business_id']
+            rating = d['stars']
+            date = d['date']
+            date = int(time.mktime(time.strptime(date, "%Y-%m-%d")))
+            text = simple_tokenizer(d['text'])
         else:
-            user = d['reviewerID']
-            item = d['asin']
-
-        if hit((user, item), users_dict, items_dict):
-            if "Yelp" in CATEGORY:
-                rating = d['stars']
-                date = d['date']
-                date = int(time.mktime(time.strptime(date, "%Y-%m-%d")))
-                text = simple_tokenizer(d['text'])
-            else:
-                rating = d['overall']
-                date = d['unixReviewTime']
-                text = simple_tokenizer(d['reviewText'])
-            interactions.append([user, item, rating, date, text])
+            rating = d['overall']
+            date = d['unixReviewTime']
+            text = simple_tokenizer(d['reviewText'])
+        interactions.append([user, item, rating, date, text])
+# with codecs.open(REVIEW_JSON, 'r', encoding='utf-8', errors='ignore') as inFile:
+#     lines = inFile.readlines()
+#     for line in tqdm(lines, "Second pass of reviews for \"{}\"".format(CATEGORY)):
+#         d = json.loads(line)
+#         if "Yelp" in CATEGORY:
+#             user = d['user_id']
+#             item = d['business_id']
+#         else:
+#             user = d['reviewerID']
+#             item = d['asin']
+#         if hit((user, item), users_dict, items_dict):
+#             if "Yelp" in CATEGORY:
+#                 rating = d['stars']
+#                 date = d['date']
+#                 date = int(time.mktime(time.strptime(date, "%Y-%m-%d")))
+#                 text = simple_tokenizer(d['text'])
+#             else:
+#                 rating = d['overall']
+#                 date = d['unixReviewTime']
+#                 text = simple_tokenizer(d['reviewText'])
+#             interactions.append([user, item, rating, date, text])
 
 user_count, item_count = count(interactions)
 num_reviews = len(interactions)
 
 # Force garbage collection
-lines.clear()
-gc.collect()
+# lines.clear()
+# gc.collect()
 
 append_to_file(output_log, "[Current stats] Users: {:,}, Items: {:,}, Ratings: {:,}, Density: {:.7f}".format(
     len(user_count), len(item_count), num_reviews, float(num_reviews) / (len(user_count) * len(item_count))))
 # ========== Second pass of reviews to get the rating, date, and tokenized review ==========
 
 
+# ========== Filter user-item interactions based on minimum review length ===========
 # BEFORE filtering reviews with less than MIN_REVIEW_LEN tokens
 oldUsers = len(user_count)
 oldItems = len(item_count)
 
-# ========== Filter user-item interactions based on minimum review length ===========
 append_to_file(output_log, "\nFiltering user-item interactions based on minimum review length of {} tokens..".format(
     MIN_REVIEW_LEN))
 interactions = [interaction for interaction in tqdm(interactions, "Filtering interactions")
@@ -305,7 +362,7 @@ while True:
     users_dict = dict(user_count)
     items_dict = dict(item_count)
     interactions = [interaction for interaction in tqdm(interactions, "Updating interactions")
-                       if hit(interaction, users_dict, items_dict)]
+                    if hit(interaction, users_dict, items_dict)]
 
     user_count, item_count = count(interactions)
     num_reviews = len(interactions)

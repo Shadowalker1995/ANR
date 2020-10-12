@@ -4,6 +4,7 @@ dataset: Clothing_Shoes_and_Jewelry
 dataset_maximum_size: 5000000
 dev_test_in_train: True
 maxDL: 500
+minImages: 1
 minReviews: 1
 minRL: 10
 random_seed: 1337
@@ -29,6 +30,16 @@ Max words for user/item document: 500 (For truncating/padding to get a fixed-siz
 Top-50000 words in vocabulary being utilized!
 
 
-Second pass of visual features to get the user-item interactions!
+Initial pass of reviews to get the user-item interactions!
+[Initial stats] Users: 3,117,268, Items: 1,136,004, Ratings: 5,748,920, Density: 0.0000016
+
+
+Second pass of visual features to get the item-feature interactions!
 [Second stats] Items with image: 1,494,171, Images: 1,494,171, Density: 1.0000000
 
+[Current stats] Users: 3103441, Items: 1128716, Ratings: 5711764, Density: 0.0000016
+[Current stats] Users: 3103441, Items: 1128716, Ratings: 5711764, Density: 0.0000016
+
+No change in # of users or # of items!
+
+[Final stats] Users: 3,103,441, Items: 1,128,716, Ratings: 5,711,764, Density: 0.0000016
