@@ -109,7 +109,7 @@ append_to_file(output_log, "Top-{} words in vocabulary being utilized!\n".format
 # ========== Initial pass of reviews to get the user-item interactions ==========
 interactions = []
 append_to_file(output_log, "\nInitial pass of reviews to get the user-item interactions!")
-for d in read_gzip(REVIEW_GZIP):
+for d in tqdm(read_gzip(REVIEW_GZIP), "Initial pass of reviews for \"{}\"".format(CATEGORY)):
     if "Yelp" in CATEGORY:
         user = d['user_id']
         item = d['business_id']
@@ -142,7 +142,8 @@ append_to_file(output_log, "[Initial stats] Users: {:,}, Items: {:,}, Ratings: {
 
 
 # ========== Second pass of visual features to get the item-feature interactions ==========
-item_features = []
+# item_features = []
+item_features = defaultdict(list)
 append_to_file(output_log, "\nSecond pass of visual features to get the item-feature interactions!")
 with codecs.open(VISUAL_JSON, 'r', encoding='utf-8', errors='ignore') as inFile:
     lines = inFile.readlines()
@@ -150,10 +151,10 @@ with codecs.open(VISUAL_JSON, 'r', encoding='utf-8', errors='ignore') as inFile:
         d = json.loads(line)
         item = d['asin']
         feature = d['feature']
-        item_features.append([item, feature])
+        # item_features.append([item, feature])
+        item_features[item].append(feature)
 
 item_feature_count = feature_count(item_features)
-item_feature_count = dict(item_feature_count)
 num_images = len(item_features)
 
 # Force garbage collection
@@ -258,7 +259,7 @@ gc.collect()
 # ========== Second pass of reviews to get the rating, date, and tokenized review and image feature ==========
 interactions = []
 append_to_file(output_log, "\n\nSecond pass of reviews to get the rating, date, and tokenized review!")
-for d in read_gzip(REVIEW_GZIP):
+for d in tqdm(read_gzip(REVIEW_GZIP), "Second pass of reviews for \"{}\"".format(CATEGORY)):
     if "Yelp" in CATEGORY:
         user = d['user_id']
         item = d['business_id']
@@ -275,7 +276,8 @@ for d in read_gzip(REVIEW_GZIP):
             rating = d['overall']
             date = d['unixReviewTime']
             text = simple_tokenizer(d['reviewText'])
-        interactions.append([user, item, rating, date, text])
+            vf = item_features[item][0]
+        interactions.append([user, item, rating, date, text, vf])
 # with codecs.open(REVIEW_JSON, 'r', encoding='utf-8', errors='ignore') as inFile:
 #     lines = inFile.readlines()
 #     for line in tqdm(lines, "Second pass of reviews for \"{}\"".format(CATEGORY)):

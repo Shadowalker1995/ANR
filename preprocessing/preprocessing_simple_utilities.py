@@ -80,10 +80,13 @@ def count(interactions, print_min=False):
     return user_count, item_count
 
 
-def feature_count(interactions, print_min=False):
-    item_feature_count = Counter()
-    for interaction in interactions:
-        item_feature_count[interaction[0]] += 1
+def feature_count(item_features, print_min=False):
+    # item_feature_count = Counter()
+    # for item_feature in item_features:
+    #     item_feature_count[item_features[item_feature]] += 1
+    item_feature_count = defaultdict(int)
+    for item_feature in item_features:
+        item_feature_count[item_feature] = len(item_features[item_feature])
     if print_min:
         print("Least # of visual features for an item: {}".format(
             item_feature_count.most_common()[-1][1]))

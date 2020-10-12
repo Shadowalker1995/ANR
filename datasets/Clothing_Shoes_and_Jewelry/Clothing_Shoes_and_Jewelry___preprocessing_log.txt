@@ -43,3 +43,7 @@ Second pass of visual features to get the item-feature interactions!
 No change in # of users or # of items!
 
 [Final stats] Users: 3,103,441, Items: 1,128,716, Ratings: 5,711,764, Density: 0.0000016
+
+No change in # of users or # of items!
+
+[Final stats] Users: 3,103,441, Items: 1,128,716, Ratings: 5,711,764, Density: 0.0000016
