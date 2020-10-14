@@ -1,7 +1,7 @@
 [args from argparse.ArgumentParser().parse_args()]
 command: /home/xulabzz/Dev/NLP/ANR/preprocessing/preprocessing_simple.py -d Clothing_Shoes_and_Jewelry -dev_test_in_train 1
 dataset: Clothing_Shoes_and_Jewelry
-dataset_maximum_size: 5000000
+dataset_maximum_size: 3000000
 dev_test_in_train: True
 maxDL: 500
 minImages: 1
@@ -47,3 +47,19 @@ No change in # of users or # of items!
 No change in # of users or # of items!
 
 [Final stats] Users: 3,103,441, Items: 1,128,716, Ratings: 5,711,764, Density: 0.0000016
+
+
+Third pass of reviews to get the rating, date, the num of tokenized review and index!
+[Current stats] Users: 3,103,441, Items: 1,128,716, Ratings: 5,711,764, Density: 0.0000016
+
+Filtering user-item interactions based on minimum review length of 10 tokens..
+[Current stats] Users: 3,067,624, Items: 1,117,869, Ratings: 5,634,543, Density: 0.0000016
+
+
+No change in # of users or # of items!
+
+[Final stats] Users: 3,067,624, Items: 1,117,869, Ratings: 5,634,543, Density: 0.0000016
+
+*****************************************************************************************************************************
+*** Original Dataset Size (i.e. num_ratings): 5,634,543!
+*** Selecting a random subsample of 3,000,000 user-item interactions!

@@ -4,7 +4,7 @@ from itertools import groupby
 parser = argparse.ArgumentParser()
 parser.add_argument("-d", "--dataset", type=str, default="amazon_instant_video",
                     help="Dataset (Default: amazon_instant_video)")
-parser.add_argument("-dmax", "--dataset_maximum_size", type=int, default=5000000,
+parser.add_argument("-dmax", "--dataset_maximum_size", type=int, default=3000000,
                     help="Maximum Size of Dataset, Randomly subsample if larger than this. (Default: 5,000,000)")
 parser.add_argument("-minRL", "--minRL", type=int, default=10, help="Minimum Review Length (Default: 10)")
 parser.add_argument("-minReviews", "--minReviews", type=int, default=1,
@@ -13,6 +13,7 @@ parser.add_argument("-minImages", "--minImages", type=int, default=1,
                     help="Minimum Images Per Item (Default: 1)")
 parser.add_argument("-v", "--vocab", type=int, default=50000, help="Vocabulary Size (Default: 50000)")
 parser.add_argument("-maxDL", "--maxDL", type=int, default=500, help="Maximum Document Length (Default: 500)")
+parser.add_argument("-maxVL", "--maxVL", type=int, default=500, help="Maximum Visual Features Length (Default: 500)")
 parser.add_argument("-tr", "--train_ratio", dest="train_ratio", type=float, metavar="<float>", default=0.8,
                     help="Train Ratio (Default: 0.8)")
 parser.add_argument("-rs", '--random_seed', dest="random_seed", type=int, metavar="<int>", default=1337,
@@ -35,6 +36,7 @@ MIN_REVIEWS = args.minReviews  # Minimum number of reviews per user/item
 MIN_IMAGES = args.minImages  # Minimum number of images per item
 VOCAB_SIZE = args.vocab  # Vocabulary size
 MAX_DOC_LEN = args.maxDL  # Maximum length of user/item document
+MAX_VIS_LEN = args.maxVL  # Maximum length of user/item visual features
 
 # Random seed
 np.random.seed(args.random_seed)
@@ -193,14 +195,13 @@ while True:
         append_to_file(output_log, "\nNo change in # of users or # of items!\n")
         append_to_file(output_log, "[Final stats] Users: {:,}, Items: {:,}, Ratings: {:,}, Density: {:.7f}".format(
             len(user_count), len(item_count), num_reviews, float(num_reviews) / (len(user_count) * len(item_count))))
+        # Progress update
+        currTime = time.time()
+        elapsedTimeInSecs = currTime - startTime
+        elapsedTimeInMins = elapsedTimeInSecs / 60
+        print("\nElapsed time for \"{}\": {:.2f} seconds ({:.2f} minutes)".format(CATEGORY, elapsedTimeInSecs,
+                                                                                  elapsedTimeInMins))
         break
-
-    # Progress update
-    currTime = time.time()
-    elapsedTimeInSecs = currTime - startTime
-    elapsedTimeInMins = elapsedTimeInSecs / 60
-    print("\nElapsed time for \"{}\": {:.2f} seconds ({:.2f} minutes)".format(CATEGORY, elapsedTimeInSecs,
-                                                                              elapsedTimeInMins))
 # ========== filter away users & items based on the num of images ==========
 
 
@@ -226,6 +227,12 @@ while True:
         append_to_file(output_log, "\nNo change in # of users or # of items!\n")
         append_to_file(output_log, "[Final stats] Users: {:,}, Items: {:,}, Ratings: {:,}, Density: {:.7f}".format(
             len(user_count), len(item_count), num_reviews, float(num_reviews) / (len(user_count) * len(item_count))))
+        # Progress update
+        currTime = time.time()
+        elapsedTimeInSecs = currTime - startTime
+        elapsedTimeInMins = elapsedTimeInSecs / 60
+        print("\nElapsed time for \"{}\": {:.2f} seconds ({:.2f} minutes)".format(CATEGORY, elapsedTimeInSecs,
+                                                                                  elapsedTimeInMins))
         break
 
     # Update interactions based on user & item Counters
@@ -241,12 +248,6 @@ while True:
     append_to_file(output_log, "[Current stats] Users: {}, Items: {}, Ratings: {}, Density: {:.7f}".format(
         len(user_count), len(item_count), num_reviews, float(num_reviews) / (len(user_count) * len(item_count))))
 
-    # Progress update
-    currTime = time.time()
-    elapsedTimeInSecs = currTime - startTime
-    elapsedTimeInMins = elapsedTimeInSecs / 60
-    print("\nElapsed time for \"{}\": {:.2f} seconds ({:.2f} minutes)".format(CATEGORY, elapsedTimeInSecs,
-                                                                              elapsedTimeInMins))
 users_dict = dict(user_count)
 items_dict = dict(item_count)
 
@@ -256,10 +257,11 @@ gc.collect()
 # ========== filter away users & items based on the num of reviews ==========
 
 
-# ========== Second pass of reviews to get the rating, date, and tokenized review and image feature ==========
+# ========== Third pass of reviews to get the rating, date, the num of tokenized review and index ==========
 interactions = []
-append_to_file(output_log, "\n\nSecond pass of reviews to get the rating, date, and tokenized review!")
-for d in tqdm(read_gzip(REVIEW_GZIP), "Second pass of reviews for \"{}\"".format(CATEGORY)):
+append_to_file(output_log, "\n\nThird pass of reviews to get the rating, date, the num of tokenized review and index!")
+index = 0
+for d in tqdm(read_gzip(REVIEW_GZIP), "Third pass of len of reviews for \"{}\"".format(CATEGORY)):
     if "Yelp" in CATEGORY:
         user = d['user_id']
         item = d['business_id']
@@ -271,13 +273,13 @@ for d in tqdm(read_gzip(REVIEW_GZIP), "Second pass of reviews for \"{}\"".format
             rating = d['stars']
             date = d['date']
             date = int(time.mktime(time.strptime(date, "%Y-%m-%d")))
-            text = simple_tokenizer(d['text'])
+            text_len = len(simple_tokenizer(d['text']))
         else:
             rating = d['overall']
             date = d['unixReviewTime']
-            text = simple_tokenizer(d['reviewText'])
-            vf = item_features[item][0]
-        interactions.append([user, item, rating, date, text, vf])
+            text_len = len(simple_tokenizer(d['reviewText']))
+        interactions.append([user, item, rating, date, text_len, index])
+    index += 1
 # with codecs.open(REVIEW_JSON, 'r', encoding='utf-8', errors='ignore') as inFile:
 #     lines = inFile.readlines()
 #     for line in tqdm(lines, "Second pass of reviews for \"{}\"".format(CATEGORY)):
@@ -309,7 +311,7 @@ num_reviews = len(interactions)
 
 append_to_file(output_log, "[Current stats] Users: {:,}, Items: {:,}, Ratings: {:,}, Density: {:.7f}".format(
     len(user_count), len(item_count), num_reviews, float(num_reviews) / (len(user_count) * len(item_count))))
-# ========== Second pass of reviews to get the rating, date, and tokenized review ==========
+# ========== Third pass of reviews to get the rating, date, the num of tokenized review and index ==========
 
 
 # ========== Filter user-item interactions based on minimum review length ===========
@@ -320,7 +322,7 @@ oldItems = len(item_count)
 append_to_file(output_log, "\nFiltering user-item interactions based on minimum review length of {} tokens..".format(
     MIN_REVIEW_LEN))
 interactions = [interaction for interaction in tqdm(interactions, "Filtering interactions")
-                if (len(interaction[4]) >= MIN_REVIEW_LEN)]
+                if (interaction[4] >= MIN_REVIEW_LEN)]
 
 user_count, item_count = count(interactions)
 num_reviews = len(interactions)
@@ -381,17 +383,43 @@ while True:
 # ========== Filter user-item interactions based on minimum review length ===========
 
 
-# For LIMITING large datasets
-if len(interactions) > args.dataset_maximum_size:
+# ========== For LIMITING large datasets ===========
+len_interactions = len(interactions)
+if len_interactions > args.dataset_maximum_size:
     append_to_file(output_log, "\n{}".format("*" * 125))
-    append_to_file(output_log, "*** Original Dataset Size (i.e. num_ratings): {:,}!".format(len(interactions)))
+    append_to_file(output_log, "*** Original Dataset Size (i.e. num_ratings): {:,}!".format(len_interactions))
     append_to_file(output_log,
                    "*** Selecting a random subsample of {:,} user-item interactions!".format(args.dataset_maximum_size))
     interactions = random.sample(interactions, args.dataset_maximum_size)
+    # sort interactions with the user-item pair index
+    interactions = sorted(interactions, key=lambda x: x[5], reverse=False)
+    # get the real review text based on the index
+    index = 0
+    index_interation = 0
+    for d in tqdm(read_gzip(REVIEW_GZIP), "Fourth pass of reviews for \"{}\"".format(CATEGORY)):
+        try:
+            if index == interactions[index_interation][5]:
+                if "Yelp" in CATEGORY:
+                    item = d['business_id']
+                    text = simple_tokenizer(d['text'])
+                    vf = []
+                else:
+                    item = d['asin']
+                    text = simple_tokenizer(d['reviewText'])
+                    vf = item_features[item][0]
+                interactions[index_interation] = interactions[index_interation][:4]
+                interactions[index_interation].append(text)
+                interactions[index_interation].append(vf)
+                index_interation += 1
+        except IndexError as e:
+            break
+        index += 1
     append_to_file(output_log, "*** Current Dataset Size (i.e. num_ratings):  {:,}!".format(len(interactions)))
     append_to_file(output_log, "{}".format("*" * 125))
+# ========== For LIMITING large datasets ===========
 
 
+# ========== Split TRAIN/DEV/TEST dataset ===========
 # TRAIN/DEV/TEST ratio
 dev_test_ratio = ((1.0 - args.train_ratio) / 2.0)
 
@@ -408,7 +436,6 @@ num_reviews = len(interactions)
 
 train_index = int(args.train_ratio * num_reviews)
 train_interactions = interactions[:train_index]
-
 dev_ratio = args.train_ratio + dev_test_ratio
 dev_index = int(dev_ratio * num_reviews)
 dev_interactions = interactions[train_index:dev_index]
@@ -425,8 +452,10 @@ append_to_file(output_log,
                "\n[Initial Stats] Total Interactions: {:,}, TRAIN: {:,} ({:.2f}%), DEV: {:,} ({:.2f}%), TEST: {:,} ({:.2f}%)".format(
                    num_reviews, len(train_interactions), train_pct, len(dev_interactions), dev_pct,
                    len(test_interactions), test_pct))
+# ========== Split TRAIN/DEV/TEST dataset ===========
 
 
+# ========== Remove users & items who do not appear in training set, from the dev and test sets ===========
 # If true (i.e. -dev_test_in_train 1), users/items in the DEV and TEST sets are supposed to be present during the training process
 # NOTE: We chose to do this INSTEAD OF representing such users & items with an EMPTY document.
 # NOTE: For users (or items) who do not appear in the TRAINING set, their documents will be EMPTY since we construct these documents based on reviews available from the TRAINING set.
@@ -443,9 +472,9 @@ if args.dev_test_in_train:
     train_users_dict = dict(train_user_count)
     train_items_dict = dict(train_item_count)
     dev_interactions = [i for i in tqdm(dev_interactions, "Updating DEV interactions") if
-                           hit(i, train_users_dict, train_items_dict)]
+                        hit(i, train_users_dict, train_items_dict)]
     test_interactions = [i for i in tqdm(test_interactions, "Updating TEST interactions") if
-                            hit(i, train_users_dict, train_items_dict)]
+                         hit(i, train_users_dict, train_items_dict)]
 
     newDevSize = len(dev_interactions)
     newTestSize = len(test_interactions)
@@ -462,7 +491,6 @@ if args.dev_test_in_train:
                    "\n[Current Stats] Total Interactions: {:,}, TRAIN: {:,} ({:.2f}%), DEV: {:,} ({:.2f}%), TEST: {:,} ({:.2f}%)".format(
                        num_reviews, len(train_interactions), train_pct, len(dev_interactions), dev_pct,
                        len(test_interactions), test_pct))
-
 
 # Just for the statistics
 user_count = Counter()
@@ -493,9 +521,10 @@ append_to_file(output_log, "[FINAL Stats][DEV]   Users: {:,}, Items: {:,}, Ratin
 test_users, test_items = get_users_items(test_interactions)
 append_to_file(output_log, "[FINAL Stats][TEST]  Users: {:,}, Items: {:,}, Ratings: {:,}\n\n".format(
     len(test_users), len(test_items), len(test_interactions)))
+# ========== Remove users & items who do not appear in training set, from the dev and test sets ===========
 
 
-# Here, we construct the user & item documents
+# ========== Construct the user & item documents ===========
 users_reviews = defaultdict(list)
 items_reviews = defaultdict(list)
 
@@ -550,8 +579,10 @@ for item, item_doc in items_doc.items():
     minItemDocLen = min(minItemDocLen, currItemDocLen)
 
 append_to_file(output_log, "\nMinimum User Doc Len: {}, Minimum Item Doc Len: {}".format(minUserDocLen, minItemDocLen))
+# ========== Construct the user & item documents ===========
 
 
+# ========== Convert user & item documents to corresponding wid ===========
 # Get vocabulary based on the user & item documents
 words = []
 for user, user_doc in users_doc.items():
@@ -597,6 +628,65 @@ iid_itemDoc = {iid: post_padding(itemDoc, MAX_DOC_LEN, word_wid[PAD]) for iid, i
 
 # Force garbage collection
 gc.collect()
+# ========== Convert user & item documents to corresponding wid ===========
+
+
+# ========== Construct the user & item visual features ===========
+users_visuals = defaultdict(list)
+items_visuals = defaultdict(list)
+
+append_to_file(output_log, "\nConsolidating user/item visual features from TRAINING set")
+for interaction in tqdm(train_interactions, desc="Consolidating user/item visual features from TRAINING set"):
+    user = interaction[0]
+    item = interaction[1]
+
+    vf = interaction[5]
+
+    users_visuals[user].append(vf)
+    items_visuals[item].append(vf)
+
+users_vis = defaultdict(list)
+items_vis = defaultdict(list)
+
+append_to_file(output_log, "\nCreating user visuals from TRAINING set")
+for user, visuals in users_visuals.items():
+    random.shuffle(visuals)
+    for visual in visuals:
+        currUserVisLen = len(users_vis[user])
+        if currUserVisLen < MAX_VIS_LEN:
+            users_vis[user].extend(visual[:(MAX_VIS_LEN - currUserVisLen)])
+        else:
+            break
+
+append_to_file(output_log, "Creating item visuals from TRAINING set")
+for item, visuals in items_visuals.items():
+    random.shuffle(visuals)
+    for visual in visuals:
+        currItemVisLen = len(items_vis[item])
+        if currItemVisLen < MAX_VIS_LEN:
+            items_vis[item].extend(visual[:(MAX_VIS_LEN - currItemVisLen)])
+        else:
+            break
+
+# Force garbage collection
+del users_visuals
+del items_visuals
+gc.collect()
+
+# Just checking the visual features length
+minUserVisLen = MAX_VIS_LEN
+minItemVisLen = MAX_VIS_LEN
+
+for user, user_vis in users_vis.items():
+    currUserVisLen = len(user_vis)
+    minUserVisLen = min(minUserVisLen, currUserVisLen)
+
+for item, item_vis in items_vis.items():
+    currItemVisLen = len(item_vis)
+    minItemVisLen = min(minItemVisLen, currItemVisLen)
+
+append_to_file(output_log, "\nMinimum User Vis Len: {}, Minimum Item Vis Len: {}".format(minUserVisLen, minItemVisLen))
+# ========== Construct the user & item visual features ===========
 
 
 train = prepare_set(train_interactions, user_uid, item_iid, uid_userDocLen, iid_itemDocLen, "TRAINING", output_log)
@@ -604,22 +694,18 @@ dev = prepare_set(dev_interactions, user_uid, item_iid, uid_userDocLen, iid_item
 test = prepare_set(test_interactions, user_uid, item_iid, uid_userDocLen, iid_itemDocLen, "TESTING", output_log)
 
 
+# ========== Saving files ===========
 env = {
     # List of (word, frequency)
     'words_count': words_count,
-
     # Mapping from word to wid in the word dictionary
     'word_wid': word_wid,
-
     # Mapping from user to uid in the user dictionary (More for finding user based on uid)
     'user_uid': user_uid,
-
     # Mapping from item to iid in the item dictionary (More for finding item based on iid)
     'item_iid': item_iid,
-
     # Mapping from uid to the original userDocLen
     'uid_userDocLen': uid_userDocLen,
-
     # Mapping from iid to the original itemDocLen
     'iid_itemDocLen': iid_itemDocLen
 }
@@ -691,11 +777,11 @@ append_to_file(output_log,
 endTime = time.time()
 durationInSecs = endTime - startTime
 durationInMins = durationInSecs / 60
-append_to_file(output_log, "\nPreprocessing for \"{}\" done after {:.2f} seconds ({:.2f} minutes)\n".format(CATEGORY,
-                                                                                                            durationInSecs,
-                                                                                                            durationInMins))
+append_to_file(output_log,
+               "\nPreprocessing for \"{}\" done after {:.2f} seconds ({:.2f} minutes)\n".format(CATEGORY, durationInSecs, durationInMins))
 # Force garbage collection
 gc.collect()
+# ========== Saving files ===========
 
 print("\nDone!!\n")
 exit()
