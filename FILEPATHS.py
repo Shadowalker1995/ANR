@@ -12,5 +12,8 @@ fp_split_test = "_split_test.pkl"
 fp_uid_userDoc = "_uid_userDoc.npy"
 fp_iid_itemDoc = "_iid_itemDoc.npy"
 
+fp_uid_userVis = "_uid_userVis.npy"
+fp_iid_itemVis = "_iid_itemVis.npy"
+
 fp_wid_wordEmbed = "_wid_wordEmbed.npy"
 

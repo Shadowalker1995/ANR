@@ -70,7 +70,7 @@ for user, visuals in users_visuals.items():
     for visual in visuals:
         currUserVisLen = len(users_vis[user])
         if currUserVisLen < MAX_VIS_LEN:
-            users_vis[user].extend(visual[:(MAX_VIS_LEN - currUserDocLen)])
+            users_vis[user].extend(visual[:(MAX_VIS_LEN - currUserVisLen)])
         else:
             break
 
@@ -102,4 +102,25 @@ for item, item_vis in items_vis.items():
     minItemVisLen = min(minItemVisLen, currItemVisLen)
 
 append_to_file(output_log, "\nMinimum User Vis Len: {}, Minimum Item Vis Len: {}".format(minUserVisLen, minItemVisLen))
+
+# Build user/item dictionary
+user_uid = {user: uid for uid, user in enumerate(users_vis.keys())}
+item_iid = {item: iid for iid, item in enumerate(items_vis.keys())}
+
+# Convert each user/item to its correspoding index in the user/item dictionary
+# Convert each word to its corresponding index in the word dictionary
+print("For each user/item doc, converting words to wids using word_wid..\n")
+uid_userVis = {user_uid[user]: userVis for user, userVis in users_vis.items()}
+iid_itemVis = {item_iid[item]: itemVis for item, itemVis in items_vis.items()}
+
+# Store the actual length of each user/item document (before padding)
+uid_userVisLen = {uid: len(userVis) for uid, userVis in uid_userVis.items()}
+iid_itemVisLen = {iid: len(itemVis) for iid, itemVis in iid_itemVis.items()}
+
+# Pad the user/item documents to MAX_DOC_LEN
+uid_userVis = {uid: post_padding(userVis, MAX_VIS_LEN, 0) for uid, userVis in uid_userVis.items()}
+iid_itemVis = {iid: post_padding(itemVis, MAX_VIS_LEN, 0) for iid, itemVis in iid_itemVis.items()}
+
+# Force garbage collection
+gc.collect()
 # ========== Construct the user & item visual features ===========

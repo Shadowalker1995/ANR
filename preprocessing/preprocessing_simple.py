@@ -4,8 +4,8 @@ from itertools import groupby
 parser = argparse.ArgumentParser()
 parser.add_argument("-d", "--dataset", type=str, default="amazon_instant_video",
                     help="Dataset (Default: amazon_instant_video)")
-parser.add_argument("-dmax", "--dataset_maximum_size", type=int, default=3000000,
-                    help="Maximum Size of Dataset, Randomly subsample if larger than this. (Default: 5,000,000)")
+parser.add_argument("-dmax", "--dataset_maximum_size", type=int, default=1000000,
+                    help="Maximum Size of Dataset, Randomly subsample if larger than this. (Default: 100,000)")
 parser.add_argument("-minRL", "--minRL", type=int, default=10, help="Minimum Review Length (Default: 10)")
 parser.add_argument("-minReviews", "--minReviews", type=int, default=1,
                     help="Minimum Reviews Per User/Item (Default: 1)")
@@ -73,6 +73,8 @@ output_split_dev = "{}{}{}".format(CATEGORY_FOLDER, CATEGORY, fp_split_dev)
 output_split_test = "{}{}{}".format(CATEGORY_FOLDER, CATEGORY, fp_split_test)
 output_uid_userDoc = "{}{}{}".format(CATEGORY_FOLDER, CATEGORY, fp_uid_userDoc)
 output_iid_itemDoc = "{}{}{}".format(CATEGORY_FOLDER, CATEGORY, fp_iid_itemDoc)
+output_uid_userVis = "{}{}{}".format(CATEGORY_FOLDER, CATEGORY, fp_uid_userVis)
+output_iid_itemVis = "{}{}{}".format(CATEGORY_FOLDER, CATEGORY, fp_iid_itemVis)
 # =========== OUTPUT ===========
 
 
@@ -391,31 +393,31 @@ if len_interactions > args.dataset_maximum_size:
     append_to_file(output_log,
                    "*** Selecting a random subsample of {:,} user-item interactions!".format(args.dataset_maximum_size))
     interactions = random.sample(interactions, args.dataset_maximum_size)
-    # sort interactions with the user-item pair index
-    interactions = sorted(interactions, key=lambda x: x[5], reverse=False)
-    # get the real review text based on the index
-    index = 0
-    index_interation = 0
-    for d in tqdm(read_gzip(REVIEW_GZIP), "Fourth pass of reviews for \"{}\"".format(CATEGORY)):
-        try:
-            if index == interactions[index_interation][5]:
-                if "Yelp" in CATEGORY:
-                    item = d['business_id']
-                    text = simple_tokenizer(d['text'])
-                    vf = []
-                else:
-                    item = d['asin']
-                    text = simple_tokenizer(d['reviewText'])
-                    vf = item_features[item][0]
-                interactions[index_interation] = interactions[index_interation][:4]
-                interactions[index_interation].append(text)
-                interactions[index_interation].append(vf)
-                index_interation += 1
-        except IndexError as e:
-            break
-        index += 1
     append_to_file(output_log, "*** Current Dataset Size (i.e. num_ratings):  {:,}!".format(len(interactions)))
     append_to_file(output_log, "{}".format("*" * 125))
+# sort interactions with the user-item pair index
+interactions = sorted(interactions, key=lambda x: x[5], reverse=False)
+# get the real review text based on the index
+index = 0
+index_interation = 0
+for d in tqdm(read_gzip(REVIEW_GZIP), "Fourth pass of reviews for \"{}\"".format(CATEGORY)):
+    try:
+        if index == interactions[index_interation][5]:
+            if "Yelp" in CATEGORY:
+                item = d['business_id']
+                text = simple_tokenizer(d['text'])
+                vf = []
+            else:
+                item = d['asin']
+                text = simple_tokenizer(d['reviewText'])
+                vf = item_features[item][0]
+            interactions[index_interation] = interactions[index_interation][:4]
+            interactions[index_interation].append(text)
+            interactions[index_interation].append(vf)
+            index_interation += 1
+    except IndexError as e:
+        break
+    index += 1
 # ========== For LIMITING large datasets ===========
 
 
@@ -607,6 +609,8 @@ append_to_file(output_log, "Current number of words: {:,}\n".format(len(words)))
 word_wid = {word: (wid + 2) for wid, word in enumerate(words)}
 word_wid[PAD] = 0
 word_wid[UNK] = 1
+del words
+gc.collect()
 
 # Build user/item dictionary
 user_uid = {user: uid for uid, user in enumerate(users_doc.keys())}
@@ -614,21 +618,41 @@ item_iid = {item: iid for iid, item in enumerate(items_doc.keys())}
 
 # Convert each user/item to its correspoding index in the user/item dictionary
 # Convert each word to its corresponding index in the word dictionary
-print("For each user/item doc, converting words to wids using word_wid..\n")
-uid_userDoc = {user_uid[user]: doc2id(userDoc, word_wid) for user, userDoc in users_doc.items()}
-iid_itemDoc = {item_iid[item]: doc2id(itemDoc, word_wid) for item, itemDoc in items_doc.items()}
+# print("For each user/item doc, converting words to wids using word_wid...\n")
+uid_userDoc = {user_uid[user]: doc2id(userDoc, word_wid) for user, userDoc in tqdm(users_doc.items(), desc="For each user doc, converting words to wids using word_wid...")}
+iid_itemDoc = {item_iid[item]: doc2id(itemDoc, word_wid) for item, itemDoc in tqdm(items_doc.items(), desc="For each item doc, converting words to wids using word_wid...")}
+del users_doc
+del items_doc
+gc.collect()
 
 # Store the actual length of each user/item document (before padding)
-uid_userDocLen = {uid: len(userDoc) for uid, userDoc in uid_userDoc.items()}
-iid_itemDocLen = {iid: len(itemDoc) for iid, itemDoc in iid_itemDoc.items()}
+uid_userDocLen = {uid: len(userDoc) for uid, userDoc in tqdm(uid_userDoc.items(), desc="Store the actual length of each user document (before padding)")}
+iid_itemDocLen = {iid: len(itemDoc) for iid, itemDoc in tqdm(iid_itemDoc.items(), desc="Store the actual length of each item document (before padding)")}
 
 # Pad the user/item documents to MAX_DOC_LEN
-uid_userDoc = {uid: post_padding(userDoc, MAX_DOC_LEN, word_wid[PAD]) for uid, userDoc in uid_userDoc.items()}
-iid_itemDoc = {iid: post_padding(itemDoc, MAX_DOC_LEN, word_wid[PAD]) for iid, itemDoc in iid_itemDoc.items()}
+uid_userDoc = {uid: post_padding(userDoc, MAX_DOC_LEN, word_wid[PAD]) for uid, userDoc in tqdm(uid_userDoc.items(), desc="Pad the user documents to MAX_DOC_LEN")}
+iid_itemDoc = {iid: post_padding(itemDoc, MAX_DOC_LEN, word_wid[PAD]) for iid, itemDoc in tqdm(iid_itemDoc.items(), desc="Pad the item documents to MAX_DOC_LEN")}
+# ========== Convert user & item documents to corresponding wid ===========
+# User Documents
+append_to_file(output_log, "\nCreating numpy matrix for uid_userDoc..")
+uid_userDoc_Matrix = createNumpyMatrix(0, len(uid_userDoc), uid_userDoc)
+np.save(output_uid_userDoc, uid_userDoc_Matrix)
+append_to_file(output_log, "{:<21s} {}".format("User Document Matrix:", uid_userDoc_Matrix.shape))
+append_to_file(output_log, "{:<21s} {}".format("User Document Matrix:", output_uid_userDoc))
 
+# Item Documents
+append_to_file(output_log, "\nCreating numpy matrix for iid_itemDoc..")
+iid_itemDoc_Matrix = createNumpyMatrix(0, len(iid_itemDoc), iid_itemDoc)
+np.save(output_iid_itemDoc, iid_itemDoc_Matrix)
+append_to_file(output_log, "{:<21s} {}".format("Item Document Matrix:", iid_itemDoc_Matrix.shape))
+append_to_file(output_log, "{:<21s} {}".format("Item Document Matrix:", output_iid_itemDoc))
+
+del uid_userDoc
+del iid_itemDoc
+del uid_userDoc_Matrix
+del iid_itemDoc_Matrix
 # Force garbage collection
 gc.collect()
-# ========== Convert user & item documents to corresponding wid ===========
 
 
 # ========== Construct the user & item visual features ===========
@@ -686,12 +710,73 @@ for item, item_vis in items_vis.items():
     minItemVisLen = min(minItemVisLen, currItemVisLen)
 
 append_to_file(output_log, "\nMinimum User Vis Len: {}, Minimum Item Vis Len: {}".format(minUserVisLen, minItemVisLen))
+
+# Build user/item dictionary
+for uid, user in enumerate(users_vis.keys()):
+    assert user_uid[user] == uid, "the {} in users_doc is not same with that in users_vis"
+for iid, item in enumerate(items_vis.keys()):
+    assert item_iid[item] == iid, "the {} in items_doc is not same with that in items_vis"
+# user_uid = {user: uid for uid, user in enumerate(users_vis.keys())}
+# item_iid = {item: iid for iid, item in enumerate(items_vis.keys())}
+
+# Convert user & item to uid & iid
+# print("Convert user & item to uid & iid...\n")
+uid_userVis = {user_uid[user]: userVis for user, userVis in tqdm(users_vis.items(), desc="Convert user to uid...")}
+iid_itemVis = {item_iid[item]: itemVis for item, itemVis in tqdm(items_vis.items(), desc="Convert item to iid...")}
+del users_vis
+del items_vis
+gc.collect()
+
+# Store the actual length of each user/item visual feature (before padding)
+uid_userVisLen = {uid: len(userVis) for uid, userVis in tqdm(uid_userVis.items(), desc="Store the actual length of each user visual feature (before padding)")}
+iid_itemVisLen = {iid: len(itemVis) for iid, itemVis in tqdm(iid_itemVis.items(), desc="Store the actual length of each item visual feature (before padding)")}
+
+# Pad the user/item visual feature to MAX_VIS_LEN
+uid_userVis = {uid: post_padding(userVis, MAX_VIS_LEN, 0) for uid, userVis in tqdm(uid_userVis.items(), desc="Pad the user visual feature to MAX_VIS_LEN")}
+iid_itemVis = {iid: post_padding(itemVis, MAX_VIS_LEN, 0) for iid, itemVis in tqdm(iid_itemVis.items(), desc="Pad the item visual feature to MAX_VIS_LEN")}
 # ========== Construct the user & item visual features ===========
+# User Visual Features
+append_to_file(output_log, "\nCreating numpy matrix for uid_userVis..")
+uid_userVis_Matrix = createNumpyMatrix(0, len(uid_userVis), uid_userVis)
+np.save(output_uid_userVis, uid_userVis_Matrix)
+append_to_file(output_log, "{:<21s} {}".format("User Visual Feature Matrix:", uid_userVis_Matrix.shape))
+append_to_file(output_log, "{:<21s} {}".format("User Visual Feature Matrix:", output_uid_userDoc))
+
+# Item Visual Features
+append_to_file(output_log, "\nCreating numpy matrix for iid_itemVis..")
+iid_itemVis_Matrix = createNumpyMatrix(0, len(iid_itemVis), iid_itemVis)
+np.save(output_iid_itemVis, iid_itemVis_Matrix)
+append_to_file(output_log, "{:<21s} {}".format("Item Visual Feature Matrix:", iid_itemVis_Matrix.shape))
+append_to_file(output_log, "{:<21s} {}".format("Item Visual Feature Matrix:", output_iid_itemDoc))
+del uid_userVis_Matrix
+del iid_itemVis_Matrix
+del uid_userVis
+del iid_itemVis
+# Force garbage collection
+gc.collect()
 
 
 train = prepare_set(train_interactions, user_uid, item_iid, uid_userDocLen, iid_itemDocLen, "TRAINING", output_log)
 dev = prepare_set(dev_interactions, user_uid, item_iid, uid_userDocLen, iid_itemDocLen, "DEV", output_log)
 test = prepare_set(test_interactions, user_uid, item_iid, uid_userDocLen, iid_itemDocLen, "TESTING", output_log)
+# Training set
+with open(output_split_train, "wb+") as f:
+    pickle.dump(train, f, protocol=2)
+append_to_file(output_log, "{:<21s} {}".format("Training Set:", output_split_train))
+
+# Validation set
+with open(output_split_dev, "wb+") as f:
+    pickle.dump(dev, f, protocol=2)
+append_to_file(output_log, "{:<21s} {}".format("Validation Set:", output_split_dev))
+
+# Testing set
+with open(output_split_test, "wb+") as f:
+    pickle.dump(test, f, protocol=2)
+append_to_file(output_log, "{:<21s} {}".format("Test Set:", output_split_test))
+del train
+del dev
+del test
+gc.collect()
 
 
 # ========== Saving files ===========
@@ -707,7 +792,11 @@ env = {
     # Mapping from uid to the original userDocLen
     'uid_userDocLen': uid_userDocLen,
     # Mapping from iid to the original itemDocLen
-    'iid_itemDocLen': iid_itemDocLen
+    'iid_itemDocLen': iid_itemDocLen,
+    # Mapping from uid to the original userVisLen
+    'uid_userVisLen': uid_userVisLen,
+    # Mapping from iid to the original itemVisLen
+    'iid_itemVisLen': iid_itemVisLen
 }
 
 # Some useful information
@@ -722,21 +811,6 @@ info = {
 
 append_to_file(output_log, "\nSaving all required files for \"{}\"..".format(CATEGORY))
 
-# Training set
-with open(output_split_train, "wb+") as f:
-    pickle.dump(train, f, protocol=2)
-append_to_file(output_log, "{:<21s} {}".format("Training Set:", output_split_train))
-
-# Validation set
-with open(output_split_dev, "wb+") as f:
-    pickle.dump(dev, f, protocol=2)
-append_to_file(output_log, "{:<21s} {}".format("Validation Set:", output_split_dev))
-
-# Testing set
-with open(output_split_test, "wb+") as f:
-    pickle.dump(test, f, protocol=2)
-append_to_file(output_log, "{:<21s} {}".format("Test Set:", output_split_test))
-
 # env
 with open(output_env, "wb+") as f:
     pickle.dump(env, f, protocol=2)
@@ -747,28 +821,9 @@ with open(output_info, "wb+") as f:
     pickle.dump(info, f, protocol=2)
 append_to_file(output_log, "{:<21s} {}".format("Info:", output_info))
 
-# User Documents
-append_to_file(output_log, "\nCreating numpy matrix for uid_userDoc..")
-uid_userDoc_Matrix = createNumpyMatrix(0, len(uid_userDoc), uid_userDoc)
-np.save(output_uid_userDoc, uid_userDoc_Matrix)
-append_to_file(output_log, "{:<21s} {}".format("User Document Matrix:", uid_userDoc_Matrix.shape))
-append_to_file(output_log, "{:<21s} {}".format("User Document Matrix:", output_uid_userDoc))
-
-# Item Documents
-append_to_file(output_log, "\nCreating numpy matrix for iid_itemDoc..")
-iid_itemDoc_Matrix = createNumpyMatrix(0, len(iid_itemDoc), iid_itemDoc)
-np.save(output_iid_itemDoc, iid_itemDoc_Matrix)
-append_to_file(output_log, "{:<21s} {}".format("Item Document Matrix:", iid_itemDoc_Matrix.shape))
-append_to_file(output_log, "{:<21s} {}".format("Item Document Matrix:", output_iid_itemDoc))
-
 # Force garbage collection
-del train
-del dev
-del test
 del env
 del info
-del uid_userDoc_Matrix
-del iid_itemDoc_Matrix
 gc.collect()
 
 append_to_file(output_log,
