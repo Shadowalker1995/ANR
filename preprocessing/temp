@@ -1,0 +1,43 @@
+
+Dataset: test
+[args from argparse.ArgumentParser().parse_args()]
+command: preprocessing_simple.py -d test -dev_test_in_train 1
+dataset: test
+dataset_maximum_size: 1000000
+dev_test_in_train: True
+maxDL: 500
+maxVL: 500
+minImages: 1
+minReviews: 1
+minRL: 10
+random_seed: 1337
+train_ratio: 0.8
+vocab: 50000
+
+[INPUT] Source Folder:       ../datasets/
+[INPUT] Reviews/Ratings:     ../datasets/reviews_test.json
+
+[OUTPUT] Category Folder:    ../datasets/test/
+[OUTPUT] env:                ../datasets/test/test_env.pkl
+[OUTPUT] info:               ../datasets/test/test_info.pkl
+[OUTPUT] split_train:        ../datasets/test/test_train_interactions.pkl
+[OUTPUT] split_dev:          ../datasets/test/test_dev_interactions.pkl
+[OUTPUT] split_test:         ../datasets/test/test_test_interactions.pkl
+[OUTPUT] split_train:        ../datasets/test/test_split_train.pkl
+[OUTPUT] split_dev:          ../datasets/test/test_split_dev.pkl
+[OUTPUT] split_test:         ../datasets/test/test_split_test.pkl
+[OUTPUT] uid_userDoc:        ../datasets/test/test_uid_userDoc.npy
+[OUTPUT] iid_itemDoc:        ../datasets/test/test_iid_itemDoc.npy
+[OUTPUT] uid_userDoc:        ../datasets/test/test_uid_userVis.npy
+[OUTPUT] iid_itemDoc:        ../datasets/test/test_iid_itemVis.npy
+
+Preprocessing data for "test"
+
+[Settings]
+Min reviews for user/item: 1
+Min review length to qualify as an user-item interaction: 10
+Max words for user/item document: 500 (For truncating/padding to get a fixed-size representation)
+Top-50000 words in vocabulary being utilized!
+
+
+Initial pass of reviews to get the user-item interactions!
