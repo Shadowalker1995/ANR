@@ -68,6 +68,10 @@ output_log = "{}{}{}".format(CATEGORY_FOLDER, CATEGORY, "___preprocessing_log.tx
 
 output_env = "{}{}{}".format(CATEGORY_FOLDER, CATEGORY, fp_env)
 output_info = "{}{}{}".format(CATEGORY_FOLDER, CATEGORY, fp_info)
+output_interactions = "{}{}{}".format(CATEGORY_FOLDER, CATEGORY, fp_interactions)
+output_train_interactions = "{}{}{}".format(CATEGORY_FOLDER, CATEGORY, fp_train_interactions)
+output_dev_interactions = "{}{}{}".format(CATEGORY_FOLDER, CATEGORY, fp_dev_interactions)
+output_test_interactions = "{}{}{}".format(CATEGORY_FOLDER, CATEGORY, fp_test_interactions)
 output_split_train = "{}{}{}".format(CATEGORY_FOLDER, CATEGORY, fp_split_train)
 output_split_dev = "{}{}{}".format(CATEGORY_FOLDER, CATEGORY, fp_split_dev)
 output_split_test = "{}{}{}".format(CATEGORY_FOLDER, CATEGORY, fp_split_test)
@@ -93,11 +97,17 @@ append_to_file(output_log, "{:<28s} {}".format("[INPUT] Reviews/Ratings:", REVIE
 append_to_file(output_log, "\n{:<28s} {}".format("[OUTPUT] Category Folder:", CATEGORY_FOLDER))
 append_to_file(output_log, "{:<28s} {}".format("[OUTPUT] env:", output_env))
 append_to_file(output_log, "{:<28s} {}".format("[OUTPUT] info:", output_info))
+append_to_file(output_log, "{:<28s} {}".format("[OUTPUT] interactions:", output_interactions))
+append_to_file(output_log, "{:<28s} {}".format("[OUTPUT] train_interactions:", output_train_interactions))
+append_to_file(output_log, "{:<28s} {}".format("[OUTPUT] dev_interactions:", output_dev_interactions))
+append_to_file(output_log, "{:<28s} {}".format("[OUTPUT] test_interactions:", output_test_interactions))
 append_to_file(output_log, "{:<28s} {}".format("[OUTPUT] split_train:", output_split_train))
 append_to_file(output_log, "{:<28s} {}".format("[OUTPUT] split_dev:", output_split_dev))
 append_to_file(output_log, "{:<28s} {}".format("[OUTPUT] split_test:", output_split_test))
 append_to_file(output_log, "{:<28s} {}".format("[OUTPUT] uid_userDoc:", output_uid_userDoc))
 append_to_file(output_log, "{:<28s} {}".format("[OUTPUT] iid_itemDoc:", output_iid_itemDoc))
+append_to_file(output_log, "{:<28s} {}".format("[OUTPUT] uid_userDoc:", output_uid_userVis))
+append_to_file(output_log, "{:<28s} {}".format("[OUTPUT] iid_itemDoc:", output_iid_itemVis))
 
 
 print("\nPreprocessing data for \"{}\"".format(CATEGORY))
@@ -110,420 +120,447 @@ append_to_file(output_log,
 append_to_file(output_log, "Top-{} words in vocabulary being utilized!\n".format(VOCAB_SIZE))
 
 
-# ========== Initial pass of reviews to get the user-item interactions ==========
-interactions = []
-append_to_file(output_log, "\nInitial pass of reviews to get the user-item interactions!")
-for d in tqdm(read_gzip(REVIEW_GZIP), "Initial pass of reviews for \"{}\"".format(CATEGORY)):
-    if "Yelp" in CATEGORY:
-        user = d['user_id']
-        item = d['business_id']
-    else:
-        user = d['reviewerID']
-        item = d['asin']
-    interactions.append([user, item])
-# with codecs.open(REVIEW_JSON, 'r', encoding='utf-8', errors='ignore') as inFile:
-#     lines = inFile.readlines()
-#     for line in tqdm(lines, "Initial pass of reviews for \"{}\"".format(CATEGORY)):
-#         d = json.loads(line)
-#         if "Yelp" in CATEGORY:
-#             user = d['user_id']
-#             item = d['business_id']
-#         else:
-#             user = d['reviewerID']
-#             item = d['asin']
-#         interactions.append([user, item])
-
-user_count, item_count = count(interactions)
-num_reviews = len(interactions)
-
-# Force garbage collection
-# lines.clear()
-# gc.collect()
-
-append_to_file(output_log, "[Initial stats] Users: {:,}, Items: {:,}, Ratings: {:,}, Density: {:.7f}\n".format(
-    len(user_count), len(item_count), num_reviews, float(num_reviews) / (len(user_count) * len(item_count))))
-# ========== Initial pass of reviews to get the user-item interactions ==========
-
-
-# ========== Second pass of visual features to get the item-feature interactions ==========
-# item_features = []
-item_features = defaultdict(list)
-append_to_file(output_log, "\nSecond pass of visual features to get the item-feature interactions!")
-with codecs.open(VISUAL_JSON, 'r', encoding='utf-8', errors='ignore') as inFile:
-    lines = inFile.readlines()
-    for line in tqdm(lines, "Initial pass of reviews for \"{}\"".format(CATEGORY)):
-        d = json.loads(line)
-        item = d['asin']
-        feature = d['feature']
-        # item_features.append([item, feature])
-        item_features[item].append(feature)
-
-item_feature_count = feature_count(item_features)
-num_images = len(item_features)
-
-# Force garbage collection
-lines.clear()
-gc.collect()
-
-append_to_file(output_log, "[Second stats] Items with image: {:,}, Images: {:,}, Density: {:.7f}\n".format(
-    len(item_feature_count), num_images, float(len(item_feature_count)) / num_images))
-# ========== Second pass of visual features to get the user-item interactions ==========
-
-
-# ========== filter away users & items based on the num of images ==========
-print("\nStarting to filter away users & items based on thresold of {} images!".format(MIN_IMAGES))
-while True:
-    oldUsers = len(user_count)
-    oldItems = len(item_count)
-
-    # Update interactions based on the num of images
-    print("Updating interactions based on the num of images...")
-    interactions = [interaction for interaction in tqdm(interactions, "Filtering interactions")
-                    if interaction[1] in item_feature_count]
-
-    user_count, item_count = count(interactions)
-    num_reviews = len(interactions)
-    # AFTER filtering away users & items based on the num of images
-    currUsers = len(user_count)
-    currItems = len(item_count)
-    print("\nFiltered users & items based on thresold of {} images!".format(MIN_IMAGES))
-    print("Users: {} -> {}, Items: {} -> {}".format(oldUsers, currUsers, oldItems, currItems))
-
-    append_to_file(output_log, "[Current stats] Users: {}, Items: {}, Ratings: {}, Density: {:.7f}".format(
-        len(user_count), len(item_count), num_reviews, float(num_reviews) / (len(user_count) * len(item_count))))
-
-    # Check if no users and items were filtered
-    if oldUsers == currUsers and oldItems == currItems:
-        append_to_file(output_log, "\nNo change in # of users or # of items!\n")
-        append_to_file(output_log, "[Final stats] Users: {:,}, Items: {:,}, Ratings: {:,}, Density: {:.7f}".format(
-            len(user_count), len(item_count), num_reviews, float(num_reviews) / (len(user_count) * len(item_count))))
-        # Progress update
-        currTime = time.time()
-        elapsedTimeInSecs = currTime - startTime
-        elapsedTimeInMins = elapsedTimeInSecs / 60
-        print("\nElapsed time for \"{}\": {:.2f} seconds ({:.2f} minutes)".format(CATEGORY, elapsedTimeInSecs,
-                                                                                  elapsedTimeInMins))
-        break
-# ========== filter away users & items based on the num of images ==========
-
-
-# ========== filter away users & items based on the num of reviews ==========
-print("\nStarting to filter away users & items based on thresold of {} reviews!".format(MIN_REVIEWS))
-while True:
-    oldUsers = len(user_count)
-    oldItems = len(item_count)
-
-    # Drop users with less than "MIN_REVIEWS" reviews
-    drop_if_lt(user_count, MIN_REVIEWS)
-
-    # Drop items with less than "MIN_REVIEWS" reviews
-    drop_if_lt(item_count, MIN_REVIEWS)
-
-    currUsers = len(user_count)
-    currItems = len(item_count)
-    print("\nFiltered users & items based on thresold of {} reviews!".format(MIN_REVIEWS))
-    print("Users: {} -> {}, Items: {} -> {}".format(oldUsers, currUsers, oldItems, currItems))
-
-    # Check if no users and items were filtered
-    if oldUsers == currUsers and oldItems == currItems:
-        append_to_file(output_log, "\nNo change in # of users or # of items!\n")
-        append_to_file(output_log, "[Final stats] Users: {:,}, Items: {:,}, Ratings: {:,}, Density: {:.7f}".format(
-            len(user_count), len(item_count), num_reviews, float(num_reviews) / (len(user_count) * len(item_count))))
-        # Progress update
-        currTime = time.time()
-        elapsedTimeInSecs = currTime - startTime
-        elapsedTimeInMins = elapsedTimeInSecs / 60
-        print("\nElapsed time for \"{}\": {:.2f} seconds ({:.2f} minutes)".format(CATEGORY, elapsedTimeInSecs,
-                                                                                  elapsedTimeInMins))
-        break
-
-    # Update interactions based on user & item Counters
-    print("Updating interactions based on remaining users & items..")
-    users_dict = dict(user_count)
-    items_dict = dict(item_count)
-    interactions = [interaction for interaction in tqdm(interactions, "Updating interactions")
-                    if hit(interaction, users_dict, items_dict)]
-
-    user_count, item_count = count(interactions)
-    num_reviews = len(interactions)
-
-    append_to_file(output_log, "[Current stats] Users: {}, Items: {}, Ratings: {}, Density: {:.7f}".format(
-        len(user_count), len(item_count), num_reviews, float(num_reviews) / (len(user_count) * len(item_count))))
-
-users_dict = dict(user_count)
-items_dict = dict(item_count)
-
-# Force garbage collection
-interactions.clear()
-gc.collect()
-# ========== filter away users & items based on the num of reviews ==========
-
-
-# ========== Third pass of reviews to get the rating, date, the num of tokenized review and index ==========
-interactions = []
-append_to_file(output_log, "\n\nThird pass of reviews to get the rating, date, the num of tokenized review and index!")
-index = 0
-for d in tqdm(read_gzip(REVIEW_GZIP), "Third pass of len of reviews for \"{}\"".format(CATEGORY)):
-    if "Yelp" in CATEGORY:
-        user = d['user_id']
-        item = d['business_id']
-    else:
-        user = d['reviewerID']
-        item = d['asin']
-    if hit((user, item), users_dict, items_dict):
+train_exist = os.path.exists(output_train_interactions)
+dev_exist = os.path.exists(output_dev_interactions)
+test_exist = os.path.exists(output_test_interactions)
+if not (train_exist and dev_exist and test_exist):
+    # ========== Initial pass of reviews to get the user-item interactions ==========
+    interactions = []
+    append_to_file(output_log, "\nInitial pass of reviews to get the user-item interactions!")
+    for d in tqdm(read_gzip(REVIEW_GZIP), "Initial pass of reviews for \"{}\"".format(CATEGORY)):
         if "Yelp" in CATEGORY:
-            rating = d['stars']
-            date = d['date']
-            date = int(time.mktime(time.strptime(date, "%Y-%m-%d")))
-            text_len = len(simple_tokenizer(d['text']))
+            user = d['user_id']
+            item = d['business_id']
         else:
-            rating = d['overall']
-            date = d['unixReviewTime']
-            text_len = len(simple_tokenizer(d['reviewText']))
-        interactions.append([user, item, rating, date, text_len, index])
-    index += 1
-# with codecs.open(REVIEW_JSON, 'r', encoding='utf-8', errors='ignore') as inFile:
-#     lines = inFile.readlines()
-#     for line in tqdm(lines, "Second pass of reviews for \"{}\"".format(CATEGORY)):
-#         d = json.loads(line)
-#         if "Yelp" in CATEGORY:
-#             user = d['user_id']
-#             item = d['business_id']
-#         else:
-#             user = d['reviewerID']
-#             item = d['asin']
-#         if hit((user, item), users_dict, items_dict):
-#             if "Yelp" in CATEGORY:
-#                 rating = d['stars']
-#                 date = d['date']
-#                 date = int(time.mktime(time.strptime(date, "%Y-%m-%d")))
-#                 text = simple_tokenizer(d['text'])
-#             else:
-#                 rating = d['overall']
-#                 date = d['unixReviewTime']
-#                 text = simple_tokenizer(d['reviewText'])
-#             interactions.append([user, item, rating, date, text])
-
-user_count, item_count = count(interactions)
-num_reviews = len(interactions)
-
-# Force garbage collection
-# lines.clear()
-# gc.collect()
-
-append_to_file(output_log, "[Current stats] Users: {:,}, Items: {:,}, Ratings: {:,}, Density: {:.7f}".format(
-    len(user_count), len(item_count), num_reviews, float(num_reviews) / (len(user_count) * len(item_count))))
-# ========== Third pass of reviews to get the rating, date, the num of tokenized review and index ==========
-
-
-# ========== Filter user-item interactions based on minimum review length ===========
-# BEFORE filtering reviews with less than MIN_REVIEW_LEN tokens
-oldUsers = len(user_count)
-oldItems = len(item_count)
-
-append_to_file(output_log, "\nFiltering user-item interactions based on minimum review length of {} tokens..".format(
-    MIN_REVIEW_LEN))
-interactions = [interaction for interaction in tqdm(interactions, "Filtering interactions")
-                if (interaction[4] >= MIN_REVIEW_LEN)]
-
-user_count, item_count = count(interactions)
-num_reviews = len(interactions)
-
-# AFTER filtering reviews with less than MIN_REVIEW_LEN tokens
-currUsers = len(user_count)
-currItems = len(item_count)
-print("\nFiltered users & items based on minimum review length of {} tokens!".format(MIN_REVIEW_LEN))
-print("Users: {:,} -> {:,}, Items: {:,} -> {:,}".format(oldUsers, currUsers, oldItems, currItems))
-
-append_to_file(output_log, "[Current stats] Users: {:,}, Items: {:,}, Ratings: {:,}, Density: {:.7f}\n".format(
-    len(user_count), len(item_count), num_reviews, float(num_reviews) / (len(user_count) * len(item_count))))
-
-print("\nStarting to filter away users & items based on thresold of {} reviews "
-      "(after removing reviews with <= {} tokens)!".format(MIN_REVIEWS, MIN_REVIEW_LEN))
-while True:
-    user_count, item_count = count(interactions)
-    oldUsers = len(user_count)
-    oldItems = len(item_count)
-
-    # Drop users with less than "MIN_REVIEWS" reviews
-    drop_if_lt(user_count, MIN_REVIEWS)
-
-    # Drop items with less than "MIN_REVIEWS" reviews
-    drop_if_lt(item_count, MIN_REVIEWS)
-
-    currUsers = len(list(user_count))
-    currItems = len(list(item_count))
-    print("\nFiltered users & items based on thresold of {} reviews!".format(MIN_REVIEWS))
-    print("Users: {:,} -> {:,}, Items: {:,} -> {:,}".format(oldUsers, currUsers, oldItems, currItems))
-
-    # Check if no users and items were filtered
-    if oldUsers == currUsers and oldItems == currItems:
-        append_to_file(output_log, "\nNo change in # of users or # of items!\n")
-        append_to_file(output_log, "[Final stats] Users: {:,}, Items: {:,}, Ratings: {:,}, Density: {:.7f}".format(
-            len(user_count), len(item_count), num_reviews, float(num_reviews) / (len(user_count) * len(item_count))))
-        break
-
-    # Update interactions based on user & item Counters
-    print("Updating interactions based on remaining users & items..")
-    users_dict = dict(user_count)
-    items_dict = dict(item_count)
-    interactions = [interaction for interaction in tqdm(interactions, "Updating interactions")
-                    if hit(interaction, users_dict, items_dict)]
+            user = d['reviewerID']
+            item = d['asin']
+        interactions.append([user, item])
+    # with codecs.open(REVIEW_JSON, 'r', encoding='utf-8', errors='ignore') as inFile:
+    #     lines = inFile.readlines()
+    #     for line in tqdm(lines, "Initial pass of reviews for \"{}\"".format(CATEGORY)):
+    #         d = json.loads(line)
+    #         if "Yelp" in CATEGORY:
+    #             user = d['user_id']
+    #             item = d['business_id']
+    #         else:
+    #             user = d['reviewerID']
+    #             item = d['asin']
+    #         interactions.append([user, item])
 
     user_count, item_count = count(interactions)
     num_reviews = len(interactions)
+
+    # Force garbage collection
+    # lines.clear()
+    # gc.collect()
+
+    append_to_file(output_log, "[Initial stats] Users: {:,}, Items: {:,}, Ratings: {:,}, Density: {:.7f}\n".format(
+        len(user_count), len(item_count), num_reviews, float(num_reviews) / (len(user_count) * len(item_count))))
+    # ========== Initial pass of reviews to get the user-item interactions ==========
+
+
+    # ========== Second pass of visual features to get the item-feature interactions ==========
+    # item_features = []
+    item_features = defaultdict(list)
+    append_to_file(output_log, "\nSecond pass of visual features to get the item-feature interactions!")
+    with codecs.open(VISUAL_JSON, 'r', encoding='utf-8', errors='ignore') as inFile:
+        lines = inFile.readlines()
+        for line in tqdm(lines, "Initial pass of reviews for \"{}\"".format(CATEGORY)):
+            d = json.loads(line)
+            item = d['asin']
+            feature = d['feature']
+            # item_features.append([item, feature])
+            item_features[item].append(feature)
+
+    item_feature_count = feature_count(item_features)
+    num_images = len(item_features)
+
+    # Force garbage collection
+    lines.clear()
+    gc.collect()
+
+    append_to_file(output_log, "[Second stats] Items with image: {:,}, Images: {:,}, Density: {:.7f}\n".format(
+        len(item_feature_count), num_images, float(len(item_feature_count)) / num_images))
+    # ========== Second pass of visual features to get the user-item interactions ==========
+
+
+    # ========== filter away users & items based on the num of images ==========
+    print("\nStarting to filter away users & items based on thresold of {} images!".format(MIN_IMAGES))
+    while True:
+        oldUsers = len(user_count)
+        oldItems = len(item_count)
+
+        # Update interactions based on the num of images
+        print("Updating interactions based on the num of images...")
+        interactions = [interaction for interaction in tqdm(interactions, "Filtering interactions")
+                        if interaction[1] in item_feature_count]
+
+        user_count, item_count = count(interactions)
+        num_reviews = len(interactions)
+        # AFTER filtering away users & items based on the num of images
+        currUsers = len(user_count)
+        currItems = len(item_count)
+        print("\nFiltered users & items based on thresold of {} images!".format(MIN_IMAGES))
+        print("Users: {} -> {}, Items: {} -> {}".format(oldUsers, currUsers, oldItems, currItems))
+
+        append_to_file(output_log, "[Current stats] Users: {}, Items: {}, Ratings: {}, Density: {:.7f}".format(
+            len(user_count), len(item_count), num_reviews, float(num_reviews) / (len(user_count) * len(item_count))))
+
+        # Check if no users and items were filtered
+        if oldUsers == currUsers and oldItems == currItems:
+            append_to_file(output_log, "\nNo change in # of users or # of items!\n")
+            append_to_file(output_log, "[Final stats] Users: {:,}, Items: {:,}, Ratings: {:,}, Density: {:.7f}".format(
+                len(user_count), len(item_count), num_reviews, float(num_reviews) / (len(user_count) * len(item_count))))
+            # Progress update
+            currTime = time.time()
+            elapsedTimeInSecs = currTime - startTime
+            elapsedTimeInMins = elapsedTimeInSecs / 60
+            print("\nElapsed time for \"{}\": {:.2f} seconds ({:.2f} minutes)".format(CATEGORY, elapsedTimeInSecs,
+                                                                                      elapsedTimeInMins))
+            break
+    # ========== filter away users & items based on the num of images ==========
+
+
+    # ========== filter away users & items based on the num of reviews ==========
+    print("\nStarting to filter away users & items based on thresold of {} reviews!".format(MIN_REVIEWS))
+    while True:
+        oldUsers = len(user_count)
+        oldItems = len(item_count)
+
+        # Drop users with less than "MIN_REVIEWS" reviews
+        drop_if_lt(user_count, MIN_REVIEWS)
+
+        # Drop items with less than "MIN_REVIEWS" reviews
+        drop_if_lt(item_count, MIN_REVIEWS)
+
+        currUsers = len(user_count)
+        currItems = len(item_count)
+        print("\nFiltered users & items based on thresold of {} reviews!".format(MIN_REVIEWS))
+        print("Users: {} -> {}, Items: {} -> {}".format(oldUsers, currUsers, oldItems, currItems))
+
+        # Check if no users and items were filtered
+        if oldUsers == currUsers and oldItems == currItems:
+            append_to_file(output_log, "\nNo change in # of users or # of items!\n")
+            append_to_file(output_log, "[Final stats] Users: {:,}, Items: {:,}, Ratings: {:,}, Density: {:.7f}".format(
+                len(user_count), len(item_count), num_reviews, float(num_reviews) / (len(user_count) * len(item_count))))
+            # Progress update
+            currTime = time.time()
+            elapsedTimeInSecs = currTime - startTime
+            elapsedTimeInMins = elapsedTimeInSecs / 60
+            print("\nElapsed time for \"{}\": {:.2f} seconds ({:.2f} minutes)".format(CATEGORY, elapsedTimeInSecs,
+                                                                                      elapsedTimeInMins))
+            break
+
+        # Update interactions based on user & item Counters
+        print("Updating interactions based on remaining users & items..")
+        users_dict = dict(user_count)
+        items_dict = dict(item_count)
+        interactions = [interaction for interaction in tqdm(interactions, "Updating interactions")
+                        if hit(interaction, users_dict, items_dict)]
+
+        user_count, item_count = count(interactions)
+        num_reviews = len(interactions)
+
+        append_to_file(output_log, "[Current stats] Users: {}, Items: {}, Ratings: {}, Density: {:.7f}".format(
+            len(user_count), len(item_count), num_reviews, float(num_reviews) / (len(user_count) * len(item_count))))
+
+    users_dict = dict(user_count)
+    items_dict = dict(item_count)
+
+    # Force garbage collection
+    interactions.clear()
+    gc.collect()
+    # ========== filter away users & items based on the num of reviews ==========
+
+
+    # ========== Third pass of reviews to get the rating, date, the num of tokenized review and index ==========
+    interactions = []
+    append_to_file(output_log, "\n\nThird pass of reviews to get the rating, date, the num of tokenized review and index!")
+    index = 0
+    for d in tqdm(read_gzip(REVIEW_GZIP), "Third pass of len of reviews for \"{}\"".format(CATEGORY)):
+        if "Yelp" in CATEGORY:
+            user = d['user_id']
+            item = d['business_id']
+        else:
+            user = d['reviewerID']
+            item = d['asin']
+        if hit((user, item), users_dict, items_dict):
+            if "Yelp" in CATEGORY:
+                rating = d['stars']
+                date = d['date']
+                date = int(time.mktime(time.strptime(date, "%Y-%m-%d")))
+                text_len = len(simple_tokenizer(d['text']))
+            else:
+                rating = d['overall']
+                date = d['unixReviewTime']
+                text_len = len(simple_tokenizer(d['reviewText']))
+            interactions.append([user, item, rating, date, text_len, index])
+        index += 1
+    # with codecs.open(REVIEW_JSON, 'r', encoding='utf-8', errors='ignore') as inFile:
+    #     lines = inFile.readlines()
+    #     for line in tqdm(lines, "Second pass of reviews for \"{}\"".format(CATEGORY)):
+    #         d = json.loads(line)
+    #         if "Yelp" in CATEGORY:
+    #             user = d['user_id']
+    #             item = d['business_id']
+    #         else:
+    #             user = d['reviewerID']
+    #             item = d['asin']
+    #         if hit((user, item), users_dict, items_dict):
+    #             if "Yelp" in CATEGORY:
+    #                 rating = d['stars']
+    #                 date = d['date']
+    #                 date = int(time.mktime(time.strptime(date, "%Y-%m-%d")))
+    #                 text = simple_tokenizer(d['text'])
+    #             else:
+    #                 rating = d['overall']
+    #                 date = d['unixReviewTime']
+    #                 text = simple_tokenizer(d['reviewText'])
+    #             interactions.append([user, item, rating, date, text])
+
+    user_count, item_count = count(interactions)
+    num_reviews = len(interactions)
+
+    # Force garbage collection
+    # lines.clear()
+    # gc.collect()
 
     append_to_file(output_log, "[Current stats] Users: {:,}, Items: {:,}, Ratings: {:,}, Density: {:.7f}".format(
         len(user_count), len(item_count), num_reviews, float(num_reviews) / (len(user_count) * len(item_count))))
-
-    # Progress update
-    currTime = time.time()
-    elapsedTimeInSecs = currTime - startTime
-    elapsedTimeInMins = elapsedTimeInSecs / 60
-    print("\nElapsed time for \"{}\": {:.2f} seconds ({:.2f} minutes)".format(CATEGORY, elapsedTimeInSecs,
-                                                                              elapsedTimeInMins))
-# ========== Filter user-item interactions based on minimum review length ===========
+    # ========== Third pass of reviews to get the rating, date, the num of tokenized review and index ==========
 
 
-# ========== For LIMITING large datasets ===========
-len_interactions = len(interactions)
-if len_interactions > args.dataset_maximum_size:
-    append_to_file(output_log, "\n{}".format("*" * 125))
-    append_to_file(output_log, "*** Original Dataset Size (i.e. num_ratings): {:,}!".format(len_interactions))
+    # ========== Filter user-item interactions based on minimum review length ===========
+    # BEFORE filtering reviews with less than MIN_REVIEW_LEN tokens
+    oldUsers = len(user_count)
+    oldItems = len(item_count)
+
+    append_to_file(output_log, "\nFiltering user-item interactions based on minimum review length of {} tokens..".format(
+        MIN_REVIEW_LEN))
+    interactions = [interaction for interaction in tqdm(interactions, "Filtering interactions")
+                    if (interaction[4] >= MIN_REVIEW_LEN)]
+
+    user_count, item_count = count(interactions)
+    num_reviews = len(interactions)
+
+    # AFTER filtering reviews with less than MIN_REVIEW_LEN tokens
+    currUsers = len(user_count)
+    currItems = len(item_count)
+    print("\nFiltered users & items based on minimum review length of {} tokens!".format(MIN_REVIEW_LEN))
+    print("Users: {:,} -> {:,}, Items: {:,} -> {:,}".format(oldUsers, currUsers, oldItems, currItems))
+
+    append_to_file(output_log, "[Current stats] Users: {:,}, Items: {:,}, Ratings: {:,}, Density: {:.7f}\n".format(
+        len(user_count), len(item_count), num_reviews, float(num_reviews) / (len(user_count) * len(item_count))))
+
+    print("\nStarting to filter away users & items based on thresold of {} reviews "
+          "(after removing reviews with <= {} tokens)!".format(MIN_REVIEWS, MIN_REVIEW_LEN))
+    while True:
+        user_count, item_count = count(interactions)
+        oldUsers = len(user_count)
+        oldItems = len(item_count)
+
+        # Drop users with less than "MIN_REVIEWS" reviews
+        drop_if_lt(user_count, MIN_REVIEWS)
+
+        # Drop items with less than "MIN_REVIEWS" reviews
+        drop_if_lt(item_count, MIN_REVIEWS)
+
+        currUsers = len(list(user_count))
+        currItems = len(list(item_count))
+        print("\nFiltered users & items based on thresold of {} reviews!".format(MIN_REVIEWS))
+        print("Users: {:,} -> {:,}, Items: {:,} -> {:,}".format(oldUsers, currUsers, oldItems, currItems))
+
+        # Check if no users and items were filtered
+        if oldUsers == currUsers and oldItems == currItems:
+            append_to_file(output_log, "\nNo change in # of users or # of items!\n")
+            append_to_file(output_log, "[Final stats] Users: {:,}, Items: {:,}, Ratings: {:,}, Density: {:.7f}".format(
+                len(user_count), len(item_count), num_reviews, float(num_reviews) / (len(user_count) * len(item_count))))
+            break
+
+        # Update interactions based on user & item Counters
+        print("Updating interactions based on remaining users & items..")
+        users_dict = dict(user_count)
+        items_dict = dict(item_count)
+        interactions = [interaction for interaction in tqdm(interactions, "Updating interactions")
+                        if hit(interaction, users_dict, items_dict)]
+
+        user_count, item_count = count(interactions)
+        num_reviews = len(interactions)
+
+        append_to_file(output_log, "[Current stats] Users: {:,}, Items: {:,}, Ratings: {:,}, Density: {:.7f}".format(
+            len(user_count), len(item_count), num_reviews, float(num_reviews) / (len(user_count) * len(item_count))))
+
+        # Progress update
+        currTime = time.time()
+        elapsedTimeInSecs = currTime - startTime
+        elapsedTimeInMins = elapsedTimeInSecs / 60
+        print("\nElapsed time for \"{}\": {:.2f} seconds ({:.2f} minutes)".format(CATEGORY, elapsedTimeInSecs,
+                                                                                  elapsedTimeInMins))
+    # ========== Filter user-item interactions based on minimum review length ===========
+
+
+    # ========== For LIMITING large datasets ===========
+    len_interactions = len(interactions)
+    if len_interactions > args.dataset_maximum_size:
+        append_to_file(output_log, "\n{}".format("*" * 125))
+        append_to_file(output_log, "*** Original Dataset Size (i.e. num_ratings): {:,}!".format(len_interactions))
+        append_to_file(output_log,
+                       "*** Selecting a random subsample of {:,} user-item interactions!".format(args.dataset_maximum_size))
+        interactions = random.sample(interactions, args.dataset_maximum_size)
+        append_to_file(output_log, "*** Current Dataset Size (i.e. num_ratings):  {:,}!".format(len(interactions)))
+        append_to_file(output_log, "{}".format("*" * 125))
+    # sort interactions with the user-item pair index
+    interactions = sorted(interactions, key=lambda x: x[5], reverse=False)
+    # get the real review text based on the index
+    index = 0
+    index_interation = 0
+    for d in tqdm(read_gzip(REVIEW_GZIP), "Fourth pass of reviews for \"{}\"".format(CATEGORY)):
+        try:
+            if index == interactions[index_interation][5]:
+                if "Yelp" in CATEGORY:
+                    item = d['business_id']
+                    text = simple_tokenizer(d['text'])
+                    vf = []
+                else:
+                    item = d['asin']
+                    text = simple_tokenizer(d['reviewText'])
+                    vf = item_features[item][0]
+                interactions[index_interation] = interactions[index_interation][:4]
+                interactions[index_interation].append(text)
+                interactions[index_interation].append(vf)
+                index_interation += 1
+        except IndexError as e:
+            break
+        index += 1
+    # ========== For LIMITING large datasets ===========
+
+
+    # # Interactions
+    # with open(output_interactions, "wb+") as f:
+        # pickle.dump(interactions, f, protocol=2)
+    # append_to_file(output_log, "{:<21s} {}".format("interactions:", output_interactions))
+    # ========== Split TRAIN/DEV/TEST dataset ===========
+    # TRAIN/DEV/TEST ratio
+    dev_test_ratio = ((1.0 - args.train_ratio) / 2.0)
+
+    # Splitting into train/dev/test
     append_to_file(output_log,
-                   "*** Selecting a random subsample of {:,} user-item interactions!".format(args.dataset_maximum_size))
-    interactions = random.sample(interactions, args.dataset_maximum_size)
-    append_to_file(output_log, "*** Current Dataset Size (i.e. num_ratings):  {:,}!".format(len(interactions)))
-    append_to_file(output_log, "{}".format("*" * 125))
-# sort interactions with the user-item pair index
-interactions = sorted(interactions, key=lambda x: x[5], reverse=False)
-# get the real review text based on the index
-index = 0
-index_interation = 0
-for d in tqdm(read_gzip(REVIEW_GZIP), "Fourth pass of reviews for \"{}\"".format(CATEGORY)):
-    try:
-        if index == interactions[index_interation][5]:
-            if "Yelp" in CATEGORY:
-                item = d['business_id']
-                text = simple_tokenizer(d['text'])
-                vf = []
-            else:
-                item = d['asin']
-                text = simple_tokenizer(d['reviewText'])
-                vf = item_features[item][0]
-            interactions[index_interation] = interactions[index_interation][:4]
-            interactions[index_interation].append(text)
-            interactions[index_interation].append(vf)
-            index_interation += 1
-    except IndexError as e:
-        break
-    index += 1
-# ========== For LIMITING large datasets ===========
+                   "\n\n{:.1f}% of ALL reviews are RANDOMLY selected for TRAIN, another {:.1f}% RANDOMLY selected for DEV, and remaining {:.1f}% used for TEST.".format(
+                       args.train_ratio * 100, dev_test_ratio * 100, dev_test_ratio * 100))
 
+    # Random shuffle for all user-item interactions
+    random.shuffle(interactions)
 
-# ========== Split TRAIN/DEV/TEST dataset ===========
-# TRAIN/DEV/TEST ratio
-dev_test_ratio = ((1.0 - args.train_ratio) / 2.0)
+    # Total number of reviews
+    num_reviews = len(interactions)
 
-# Splitting into train/dev/test
-append_to_file(output_log,
-               "\n\n{:.1f}% of ALL reviews are RANDOMLY selected for TRAIN, another {:.1f}% RANDOMLY selected for DEV, and remaining {:.1f}% used for TEST.".format(
-                   args.train_ratio * 100, dev_test_ratio * 100, dev_test_ratio * 100))
+    train_index = int(args.train_ratio * num_reviews)
+    train_interactions = interactions[:train_index]
+    dev_ratio = args.train_ratio + dev_test_ratio
+    dev_index = int(dev_ratio * num_reviews)
+    dev_interactions = interactions[train_index:dev_index]
+    test_interactions = interactions[dev_index:]
 
-# Random shuffle for all user-item interactions
-random.shuffle(interactions)
+    del interactions
+    gc.collect()
 
-# Total number of reviews
-num_reviews = len(interactions)
+    # Assertion to make sure TRAIN + DEV + TEST=ORIGINAL DATASET SIZE
+    assert len(train_interactions) + len(dev_interactions) + len(
+        test_interactions) == num_reviews, "Train/Dev/Test split is wrong!!"
 
-train_index = int(args.train_ratio * num_reviews)
-train_interactions = interactions[:train_index]
-dev_ratio = args.train_ratio + dev_test_ratio
-dev_index = int(dev_ratio * num_reviews)
-dev_interactions = interactions[train_index:dev_index]
-test_interactions = interactions[dev_index:]
-
-# Assertion to make sure TRAIN + DEV + TEST=ORIGINAL DATASET SIZE
-assert len(train_interactions) + len(dev_interactions) + len(
-    test_interactions) == num_reviews, "Train/Dev/Test split is wrong!!"
-
-train_pct = (len(train_interactions) * 100.00) / num_reviews
-dev_pct = (len(dev_interactions) * 100.00) / num_reviews
-test_pct = (len(test_interactions) * 100.00) / num_reviews
-append_to_file(output_log,
-               "\n[Initial Stats] Total Interactions: {:,}, TRAIN: {:,} ({:.2f}%), DEV: {:,} ({:.2f}%), TEST: {:,} ({:.2f}%)".format(
-                   num_reviews, len(train_interactions), train_pct, len(dev_interactions), dev_pct,
-                   len(test_interactions), test_pct))
-# ========== Split TRAIN/DEV/TEST dataset ===========
-
-
-# ========== Remove users & items who do not appear in training set, from the dev and test sets ===========
-# If true (i.e. -dev_test_in_train 1), users/items in the DEV and TEST sets are supposed to be present during the training process
-# NOTE: We chose to do this INSTEAD OF representing such users & items with an EMPTY document.
-# NOTE: For users (or items) who do not appear in the TRAINING set, their documents will be EMPTY since we construct these documents based on reviews available from the TRAINING set.
-# NOTE: Such a EMPTY document will essentially be a matrix of 0s, which is rather meaningless for any review-based model.
-if args.dev_test_in_train:
-    # Remove users & items who do not appear in training set, from the dev and test sets
+    train_pct = (len(train_interactions) * 100.00) / num_reviews
+    dev_pct = (len(dev_interactions) * 100.00) / num_reviews
+    test_pct = (len(test_interactions) * 100.00) / num_reviews
     append_to_file(output_log,
-                   "\n\nRemoving users & items who do not appear in the training set, from the dev and test sets..")
-    train_user_count, train_item_count = count(train_interactions)
+                   "\n[Initial Stats] Total Interactions: {:,}, TRAIN: {:,} ({:.2f}%), DEV: {:,} ({:.2f}%), TEST: {:,} ({:.2f}%)".format(
+                       num_reviews, len(train_interactions), train_pct, len(dev_interactions), dev_pct,
+                       len(test_interactions), test_pct))
+    # ========== Split TRAIN/DEV/TEST dataset ===========
 
-    oldDevSize = len(dev_interactions)
-    oldTestSize = len(test_interactions)
 
-    train_users_dict = dict(train_user_count)
-    train_items_dict = dict(train_item_count)
-    dev_interactions = [i for i in tqdm(dev_interactions, "Updating DEV interactions") if
-                        hit(i, train_users_dict, train_items_dict)]
-    test_interactions = [i for i in tqdm(test_interactions, "Updating TEST interactions") if
-                         hit(i, train_users_dict, train_items_dict)]
+    # ========== Remove users & items who do not appear in training set, from the dev and test sets ===========
+    # If true (i.e. -dev_test_in_train 1), users/items in the DEV and TEST sets are supposed to be present during the training process
+    # NOTE: We chose to do this INSTEAD OF representing such users & items with an EMPTY document.
+    # NOTE: For users (or items) who do not appear in the TRAINING set, their documents will be EMPTY since we construct these documents based on reviews available from the TRAINING set.
+    # NOTE: Such a EMPTY document will essentially be a matrix of 0s, which is rather meaningless for any review-based model.
+    if args.dev_test_in_train:
+        # Remove users & items who do not appear in training set, from the dev and test sets
+        append_to_file(output_log,
+                       "\n\nRemoving users & items who do not appear in the training set, from the dev and test sets..")
+        train_user_count, train_item_count = count(train_interactions)
 
-    newDevSize = len(dev_interactions)
-    newTestSize = len(test_interactions)
+        oldDevSize = len(dev_interactions)
+        oldTestSize = len(test_interactions)
 
-    append_to_file(output_log,
-                   "\nRemoved {:,} interactions from DEV and {:,} interactions from TEST! (i.e. Those belonging to Users/Items which do not appear in TRAIN)".format(
-                       (oldDevSize - newDevSize), (oldTestSize - newTestSize)))
+        train_users_dict = dict(train_user_count)
+        train_items_dict = dict(train_item_count)
+        dev_interactions = [i for i in tqdm(dev_interactions, "Updating DEV interactions") if
+                            hit(i, train_users_dict, train_items_dict)]
+        test_interactions = [i for i in tqdm(test_interactions, "Updating TEST interactions") if
+                             hit(i, train_users_dict, train_items_dict)]
+
+        newDevSize = len(dev_interactions)
+        newTestSize = len(test_interactions)
+
+        append_to_file(output_log,
+                       "\nRemoved {:,} interactions from DEV and {:,} interactions from TEST! (i.e. Those belonging to Users/Items which do not appear in TRAIN)".format(
+                           (oldDevSize - newDevSize), (oldTestSize - newTestSize)))
+
+        num_reviews = len(train_interactions) + len(dev_interactions) + len(test_interactions)
+        train_pct = (len(train_interactions) * 100.00) / num_reviews
+        dev_pct = (len(dev_interactions) * 100.00) / num_reviews
+        test_pct = (len(test_interactions) * 100.00) / num_reviews
+        append_to_file(output_log,
+                       "\n[Current Stats] Total Interactions: {:,}, TRAIN: {:,} ({:.2f}%), DEV: {:,} ({:.2f}%), TEST: {:,} ({:.2f}%)".format(
+                           num_reviews, len(train_interactions), train_pct, len(dev_interactions), dev_pct,
+                           len(test_interactions), test_pct))
+
+    # Just for the statistics
+    user_count = Counter()
+    item_count = Counter()
+    stack_count(train_interactions, user_count, item_count)
+    stack_count(dev_interactions, user_count, item_count)
+    stack_count(test_interactions, user_count, item_count)
+    append_to_file(output_log, "\n\n[FINAL Stats] Users: {:,}, Items: {:,}, Ratings: {:,}, Density: {:.7f}\n".format(
+        len(user_count), len(item_count), num_reviews, float(num_reviews) / (len(user_count) * len(item_count))))
 
     num_reviews = len(train_interactions) + len(dev_interactions) + len(test_interactions)
     train_pct = (len(train_interactions) * 100.00) / num_reviews
     dev_pct = (len(dev_interactions) * 100.00) / num_reviews
     test_pct = (len(test_interactions) * 100.00) / num_reviews
     append_to_file(output_log,
-                   "\n[Current Stats] Total Interactions: {:,}, TRAIN: {:,} ({:.2f}%), DEV: {:,} ({:.2f}%), TEST: {:,} ({:.2f}%)".format(
+                   "[FINAL Stats] Total Interactions: {:,}, TRAIN: {:,} ({:.2f}%), DEV: {:,} ({:.2f}%), TEST: {:,} ({:.2f}%)\n".format(
                        num_reviews, len(train_interactions), train_pct, len(dev_interactions), dev_pct,
                        len(test_interactions), test_pct))
 
-# Just for the statistics
-user_count = Counter()
-item_count = Counter()
-stack_count(train_interactions, user_count, item_count)
-stack_count(dev_interactions, user_count, item_count)
-stack_count(test_interactions, user_count, item_count)
-append_to_file(output_log, "\n\n[FINAL Stats] Users: {:,}, Items: {:,}, Ratings: {:,}, Density: {:.7f}\n".format(
-    len(user_count), len(item_count), num_reviews, float(num_reviews) / (len(user_count) * len(item_count))))
+    train_users, train_items = get_users_items(train_interactions)
+    append_to_file(output_log, "[FINAL Stats][TRAIN] Users: {:,}, Items: {:,}, Ratings: {:,}".format(
+        len(train_users), len(train_items), len(train_interactions)))
 
-num_reviews = len(train_interactions) + len(dev_interactions) + len(test_interactions)
-train_pct = (len(train_interactions) * 100.00) / num_reviews
-dev_pct = (len(dev_interactions) * 100.00) / num_reviews
-test_pct = (len(test_interactions) * 100.00) / num_reviews
-append_to_file(output_log,
-               "[FINAL Stats] Total Interactions: {:,}, TRAIN: {:,} ({:.2f}%), DEV: {:,} ({:.2f}%), TEST: {:,} ({:.2f}%)\n".format(
-                   num_reviews, len(train_interactions), train_pct, len(dev_interactions), dev_pct,
-                   len(test_interactions), test_pct))
+    dev_users, dev_items = get_users_items(dev_interactions)
+    append_to_file(output_log, "[FINAL Stats][DEV]   Users: {:,}, Items: {:,}, Ratings: {:,}".format(
+        len(dev_users), len(dev_items), len(dev_interactions)))
 
-train_users, train_items = get_users_items(train_interactions)
-append_to_file(output_log, "[FINAL Stats][TRAIN] Users: {:,}, Items: {:,}, Ratings: {:,}".format(
-    len(train_users), len(train_items), len(train_interactions)))
-
-dev_users, dev_items = get_users_items(dev_interactions)
-append_to_file(output_log, "[FINAL Stats][DEV]   Users: {:,}, Items: {:,}, Ratings: {:,}".format(
-    len(dev_users), len(dev_items), len(dev_interactions)))
-
-test_users, test_items = get_users_items(test_interactions)
-append_to_file(output_log, "[FINAL Stats][TEST]  Users: {:,}, Items: {:,}, Ratings: {:,}\n\n".format(
-    len(test_users), len(test_items), len(test_interactions)))
-# ========== Remove users & items who do not appear in training set, from the dev and test sets ===========
+    test_users, test_items = get_users_items(test_interactions)
+    append_to_file(output_log, "[FINAL Stats][TEST]  Users: {:,}, Items: {:,}, Ratings: {:,}\n\n".format(
+        len(test_users), len(test_items), len(test_interactions)))
+    # ========== Remove users & items who do not appear in training set, from the dev and test sets ===========
+    # Training set
+    with open(output_train_interactions, "wb+") as f:
+        pickle.dump(train_interactions, f, protocol=2)
+    append_to_file(output_log, "{:<21s} {}".format("train_interactions:", output_train_interactions))
+    # Validation set
+    with open(output_dev_interactions, "wb+") as f:
+        pickle.dump(dev_interactions, f, protocol=2)
+    append_to_file(output_log, "{:<21s} {}".format("dev_interactions:", output_dev_interactions))
+    # Testing set
+    with open(output_test_interactions, "wb+") as f:
+        pickle.dump(test_interactions, f, protocol=2)
+    append_to_file(output_log, "{:<21s} {}".format("test_interactions:", output_test_interactions))
+else:
+    train_interactions = load_pickle(output_train_interactions)
+    dev_interactions = load_pickle(output_dev_interactions)
+    test_interactions = load_pickle(output_test_interactions)
 
 
 # ========== Construct the user & item documents ===========
@@ -633,6 +670,48 @@ iid_itemDocLen = {iid: len(itemDoc) for iid, itemDoc in tqdm(iid_itemDoc.items()
 uid_userDoc = {uid: post_padding(userDoc, MAX_DOC_LEN, word_wid[PAD]) for uid, userDoc in tqdm(uid_userDoc.items(), desc="Pad the user documents to MAX_DOC_LEN")}
 iid_itemDoc = {iid: post_padding(itemDoc, MAX_DOC_LEN, word_wid[PAD]) for iid, itemDoc in tqdm(iid_itemDoc.items(), desc="Pad the item documents to MAX_DOC_LEN")}
 # ========== Convert user & item documents to corresponding wid ===========
+
+train = prepare_set(train_interactions, user_uid, item_iid, uid_userDocLen, iid_itemDocLen, "TRAINING", output_log)
+dev = prepare_set(dev_interactions, user_uid, item_iid, uid_userDocLen, iid_itemDocLen, "DEV", output_log)
+test = prepare_set(test_interactions, user_uid, item_iid, uid_userDocLen, iid_itemDocLen, "TESTING", output_log)
+
+# Some useful information
+info = {
+    'num_users': len(user_uid),
+    'num_items': len(item_iid),
+    'num_ratings': (len(train_interactions) + len(dev_interactions) + len(test_interactions)),
+    'train_size': len(train_interactions),
+    'dev_size': len(dev_interactions),
+    'test_size': len(test_interactions)
+}
+# info
+with open(output_info, "wb+") as f:
+    pickle.dump(info, f, protocol=2)
+append_to_file(output_log, "{:<21s} {}".format("Info:", output_info))
+
+del train_interactions
+del dev_interactions
+del test_interactions
+del info
+gc.collect()
+
+# Training set
+with open(output_split_train, "wb+") as f:
+    pickle.dump(train, f, protocol=2)
+append_to_file(output_log, "{:<21s} {}".format("Training Set:", output_split_train))
+# Validation set
+with open(output_split_dev, "wb+") as f:
+    pickle.dump(dev, f, protocol=2)
+append_to_file(output_log, "{:<21s} {}".format("Validation Set:", output_split_dev))
+# Testing set
+with open(output_split_test, "wb+") as f:
+    pickle.dump(test, f, protocol=2)
+append_to_file(output_log, "{:<21s} {}".format("Test Set:", output_split_test))
+del train
+del dev
+del test
+gc.collect()
+
 # User Documents
 append_to_file(output_log, "\nCreating numpy matrix for uid_userDoc..")
 uid_userDoc_Matrix = createNumpyMatrix(0, len(uid_userDoc), uid_userDoc)
@@ -656,6 +735,9 @@ gc.collect()
 
 
 # ========== Construct the user & item visual features ===========
+# load train_interactions
+train_interactions = load_pickle(output_train_interactions)
+
 users_visuals = defaultdict(list)
 items_visuals = defaultdict(list)
 
@@ -668,6 +750,9 @@ for interaction in tqdm(train_interactions, desc="Consolidating user/item visual
 
     users_visuals[user].append(vf)
     items_visuals[item].append(vf)
+
+del train_interactions
+gc.collect()
 
 users_vis = defaultdict(list)
 items_vis = defaultdict(list)
@@ -756,29 +841,6 @@ del iid_itemVis
 gc.collect()
 
 
-train = prepare_set(train_interactions, user_uid, item_iid, uid_userDocLen, iid_itemDocLen, "TRAINING", output_log)
-dev = prepare_set(dev_interactions, user_uid, item_iid, uid_userDocLen, iid_itemDocLen, "DEV", output_log)
-test = prepare_set(test_interactions, user_uid, item_iid, uid_userDocLen, iid_itemDocLen, "TESTING", output_log)
-# Training set
-with open(output_split_train, "wb+") as f:
-    pickle.dump(train, f, protocol=2)
-append_to_file(output_log, "{:<21s} {}".format("Training Set:", output_split_train))
-
-# Validation set
-with open(output_split_dev, "wb+") as f:
-    pickle.dump(dev, f, protocol=2)
-append_to_file(output_log, "{:<21s} {}".format("Validation Set:", output_split_dev))
-
-# Testing set
-with open(output_split_test, "wb+") as f:
-    pickle.dump(test, f, protocol=2)
-append_to_file(output_log, "{:<21s} {}".format("Test Set:", output_split_test))
-del train
-del dev
-del test
-gc.collect()
-
-
 # ========== Saving files ===========
 env = {
     # List of (word, frequency)
@@ -799,16 +861,6 @@ env = {
     'iid_itemVisLen': iid_itemVisLen
 }
 
-# Some useful information
-info = {
-    'num_users': len(user_uid),
-    'num_items': len(item_iid),
-    'num_ratings': (len(train_interactions) + len(dev_interactions) + len(test_interactions)),
-    'train_size': len(train_interactions),
-    'dev_size': len(dev_interactions),
-    'test_size': len(test_interactions)
-}
-
 append_to_file(output_log, "\nSaving all required files for \"{}\"..".format(CATEGORY))
 
 # env
@@ -816,14 +868,8 @@ with open(output_env, "wb+") as f:
     pickle.dump(env, f, protocol=2)
 append_to_file(output_log, "{:<21s} {}".format("Environment:", output_env))
 
-# info
-with open(output_info, "wb+") as f:
-    pickle.dump(info, f, protocol=2)
-append_to_file(output_log, "{:<21s} {}".format("Info:", output_info))
-
 # Force garbage collection
 del env
-del info
 gc.collect()
 
 append_to_file(output_log,
@@ -840,3 +886,4 @@ gc.collect()
 
 print("\nDone!!\n")
 exit()
+

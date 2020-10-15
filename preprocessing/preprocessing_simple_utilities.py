@@ -16,6 +16,8 @@ import random
 import argparse
 import array
 import gzip
+import sys
+sys.path.append("../")
 from FILEPATHS import *
 
 current_dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))

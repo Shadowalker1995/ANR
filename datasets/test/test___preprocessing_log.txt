@@ -1,9 +1,11 @@
 [args from argparse.ArgumentParser().parse_args()]
-command: /media/zzhenry/5a6fff39-6cef-4709-85ff-dcad27c4e770/zzhenry/Xulab/zzhenry/NLP/ANR/preprocessing/preprocessing_simple.py -d test -dev_test_in_train 1
+command: preprocessing_simple.py -d test
 dataset: test
-dataset_maximum_size: 5000000
-dev_test_in_train: True
+dataset_maximum_size: 1000000
+dev_test_in_train: False
 maxDL: 500
+maxVL: 500
+minImages: 1
 minReviews: 1
 minRL: 10
 random_seed: 1337
@@ -11,7 +13,7 @@ train_ratio: 0.8
 vocab: 50000
 
 [INPUT] Source Folder:       ../datasets/
-[INPUT] Reviews/Ratings:     ../datasets/test.json
+[INPUT] Reviews/Ratings:     ../datasets/reviews_test.json
 
 [OUTPUT] Category Folder:    ../datasets/test/
 [OUTPUT] env:                ../datasets/test/test_env.pkl
@@ -30,85 +32,3 @@ Top-50000 words in vocabulary being utilized!
 
 
 Initial pass of reviews to get the user-item interactions!
-[Initial stats] Users: 13,833, Items: 1,127, Ratings: 20,000, Density: 0.0012829
-
-
-No change in # of users or # of items!
-
-[Final stats] Users: 13,833, Items: 1,127, Ratings: 20,000, Density: 0.0012829
-
-
-Second pass of reviews to get the rating, date, and tokenized review!
-[Current stats] Users: 13,833, Items: 1,127, Ratings: 20,000, Density: 0.0012829
-
-Filtering user-item interactions based on minimum review length of 10 tokens..
-[Current stats] Users: 13,744, Items: 1,127, Ratings: 19,842, Density: 0.0012810
-
-
-No change in # of users or # of items!
-
-[Final stats] Users: 13,744, Items: 1,127, Ratings: 19,842, Density: 0.0012810
-
-
-80.0% of ALL reviews are RANDOMLY selected for TRAIN, another 10.0% RANDOMLY selected for DEV, and remaining 10.0% used for TEST.
-
-[Initial Stats] Total Interactions: 19,842, TRAIN: 15,873 (80.00%), DEV: 1,984 (10.00%), TEST: 1,985 (10.00%)
-
-
-Removing users & items who do not appear in the training set, from the dev and test sets..
-
-Removed 1,057 interactions from DEV and 1,045 interactions from TEST! (i.e. Those belonging to Users/Items which do not appear in TRAIN)
-
-[Current Stats] Total Interactions: 17,740, TRAIN: 15,873 (89.48%), DEV: 927 (5.23%), TEST: 940 (5.30%)
-
-
-[FINAL Stats] Users: 11,782, Items: 1,127, Ratings: 17,740, Density: 0.0013360
-
-[FINAL Stats] Total Interactions: 17,740, TRAIN: 15,873 (89.48%), DEV: 927 (5.23%), TEST: 940 (5.30%)
-
-[FINAL Stats][TRAIN] Users: 11,782, Items: 1,127, Ratings: 15,873
-[FINAL Stats][DEV]   Users: 873, Items: 487, Ratings: 927
-[FINAL Stats][TEST]  Users: 905, Items: 502, Ratings: 940
-
-
-
-Consolidating user/item reviews from TRAINING set
-
-Creating user docs from TRAINING set
-Creating item docs from TRAINING set
-
-Minimum User Doc Len: 10, Minimum Item Doc Len: 57
-
-Original number of words (based on USER & ITEM documents constructed from TRAINING set): 19,438
-For the vocabulary, we are only using the 50,000 most frequent words
-Current number of words: 19,438
-
-[TRAINING] Lowest Rating: 1.00, Highest Rating: 5.00, Average Rating: 4.298
-[TRAINING] [1.00: 589], [2.00: 830], [3.00: 1530], [4.00: 3234], [5.00: 9690]
-
-[DEV] Lowest Rating: 1.00, Highest Rating: 5.00, Average Rating: 4.339
-[DEV] [1.00: 30], [2.00: 41], [3.00: 92], [4.00: 186], [5.00: 578]
-
-[TESTING] Lowest Rating: 1.00, Highest Rating: 5.00, Average Rating: 4.311
-[TESTING] [1.00: 40], [2.00: 45], [3.00: 89], [4.00: 175], [5.00: 591]
-
-
-Saving all required files for "test"..
-Training Set:         ../datasets/test/test_split_train.pkl
-Validation Set:       ../datasets/test/test_split_dev.pkl
-Test Set:             ../datasets/test/test_split_test.pkl
-Environment:          ../datasets/test/test_env.pkl
-Info:                 ../datasets/test/test_info.pkl
-
-Creating numpy matrix for uid_userDoc..
-User Document Matrix: (11782, 500)
-User Document Matrix: ../datasets/test/test_uid_userDoc.npy
-
-Creating numpy matrix for iid_itemDoc..
-Item Document Matrix: (1127, 500)
-Item Document Matrix: ../datasets/test/test_iid_itemDoc.npy
-
-All required files for "test" successfully saved to '../datasets/test/'
-
-Preprocessing for "test" done after 932.55 seconds (15.54 minutes)
-
