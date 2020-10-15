@@ -160,16 +160,14 @@ if not (train_exist and dev_exist and test_exist):
 
 
     # ========== Second pass of visual features to get the item-feature interactions ==========
-    # item_features = []
     item_features = defaultdict(list)
     append_to_file(output_log, "\nSecond pass of visual features to get the item-feature interactions!")
     with codecs.open(VISUAL_JSON, 'r', encoding='utf-8', errors='ignore') as inFile:
         lines = inFile.readlines()
-        for line in tqdm(lines, "Initial pass of reviews for \"{}\"".format(CATEGORY)):
+        for line in tqdm(lines, "Second pass of visual features for \"{}\"".format(CATEGORY)):
             d = json.loads(line)
             item = d['asin']
             feature = d['feature']
-            # item_features.append([item, feature])
             item_features[item].append(feature)
 
     item_feature_count = feature_count(item_features)
@@ -268,7 +266,7 @@ if not (train_exist and dev_exist and test_exist):
     items_dict = dict(item_count)
 
     # Force garbage collection
-    interactions.clear()
+    del interactions
     gc.collect()
     # ========== filter away users & items based on the num of reviews ==========
 
@@ -409,9 +407,9 @@ if not (train_exist and dev_exist and test_exist):
         interactions = random.sample(interactions, args.dataset_maximum_size)
         append_to_file(output_log, "*** Current Dataset Size (i.e. num_ratings):  {:,}!".format(len(interactions)))
         append_to_file(output_log, "{}".format("*" * 125))
-    # sort interactions with the user-item pair index
+    # Sort interactions with the user-item pair index
     interactions = sorted(interactions, key=lambda x: x[5], reverse=False)
-    # get the real review text based on the index
+    # Get the real review text based on the index
     index = 0
     index_interation = 0
     for d in tqdm(read_gzip(REVIEW_GZIP), "Fourth pass of reviews for \"{}\"".format(CATEGORY)):
@@ -629,7 +627,6 @@ for user, user_doc in users_doc.items():
 for item, item_doc in items_doc.items():
     words += [word for word in item_doc]
 
-
 # Get unique words to form the vocabulary
 append_to_file(output_log,
                "\nOriginal number of words (based on USER & ITEM documents constructed from TRAINING set): {:,}".format(
@@ -640,7 +637,6 @@ append_to_file(output_log, "For the vocabulary, we are only using the {:,} most 
 words_count = Counter(words).most_common(VOCAB_SIZE)
 words = [w for w, c in words_count]
 append_to_file(output_log, "Current number of words: {:,}\n".format(len(words)))
-
 
 # Build word dictionary - PAD is 0, UNK (OOV) is 1
 word_wid = {word: (wid + 2) for wid, word in enumerate(words)}
@@ -712,6 +708,8 @@ del dev
 del test
 gc.collect()
 
+
+# ========== Construct the user & item documents matrix ===========
 # User Documents
 append_to_file(output_log, "\nCreating numpy matrix for uid_userDoc..")
 uid_userDoc_Matrix = createNumpyMatrix(0, len(uid_userDoc), uid_userDoc)
@@ -732,6 +730,7 @@ del uid_userDoc_Matrix
 del iid_itemDoc_Matrix
 # Force garbage collection
 gc.collect()
+# ========== Construct the user & item documents matrix ===========
 
 
 # ========== Construct the user & item visual features ===========

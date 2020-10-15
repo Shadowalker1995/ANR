@@ -1,0 +1,145 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  command: -d Baby -m ANRS -e 10 -p 1 -v 50000 -rs 1337 -gpu 0 -vb 1 -sm Baby_ANRS
+  ctx_win_size: 3
+  dataset: Baby
+  disable_initial_eval: 0
+  dropout_rate: 0.5
+  epochs: 10
+  gpu: 0
+  h1: 10
+  h2: 50
+  input_dir: ./datasets/Baby/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  model: ANRS
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Baby - ANRS/
+  pretrained_src: 1
+  random_seed: 1337
+  save_model: Baby_ANRS
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 446,248, # of Items: 58,586
+
+Creating model (Selected Model: ANRS)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 3.32s (0.06 minute)
+
+Loading uid_userDoc from "./datasets/Baby/Baby_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (446248, 500)]
+
+Loading iid_itemDoc from "./datasets/Baby/Baby_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (58586, 500)]
+
+Loading pretrained word embeddings from "./datasets/Baby/Baby_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (50002, 300)]
+
+Initialization Complete.. Elapsed Time: 21.57s (0.36 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 721,979, |DEV|: 47,357, |TEST|: 47,373
+Train/Dev/Test splits loaded! Elapsed Time: 21.83s (0.36 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 19.39680, MAE: 4.23507
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 19.36895, MAE: 4.23216
+
+Initial Evaluation Complete.. Elapsed Time: 29.01s (0.48 minute)
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 267,433,791
+# of Trainable Parameters: 16,191
+ANR (
+  (uid_userDoc): Embedding(446248, 500), weights = ((446248, 500),), parameters = 223,124,000
+  (iid_itemDoc): Embedding(58586, 500), weights = ((58586, 500),), parameters = 29,293,000
+  (wid_wEmbed): Embedding(50002, 300), weights = ((50002, 300),), parameters = 15,000,600
+  (shared_ANR_ARL): ANR_ARL(
+    (aspEmbed): Embedding(5, 30)
+    (aspProj): Parameter(5, 300, 10)
+  ), weights = ((5, 300, 10), (5, 30)), parameters = 15,150 (Trainable)
+  (ANRS_RatingPred): ANRS_RatingPred(
+    (userFC): Linear(in_features=50, out_features=10, bias=True)
+    (itemFC): Linear(in_features=50, out_features=10, bias=True)
+    (userFC_Dropout): Dropout(p=0.5, inplace=False)
+    (itemFC_Dropout): Dropout(p=0.5, inplace=False)
+    (prediction): Linear(in_features=20, out_features=1, bias=True)
+  ), weights = ((10, 50), (10,), (10, 50), (10,), (1, 20), (1,)), parameters = 1,041 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/10] Training Loss: 1.84617	Elapsed Time: 123.18s (0:02:03)
+[Epoch 1] [Dev]  MSE: 1.42444, MAE: 0.96781
+[Epoch 1] [Test] MSE: 1.42177, MAE: 0.96590
+
+*** MODEL has obtained the best DEV MSE of 1.42444 so far!
+*** MODEL saved to "./__saved_models__/Baby - ANRS/Baby_ANRS_1337.pth"
+
+[Epoch 2/10] Training Loss: 1.25130	Elapsed Time: 253.79s (0:04:13)
+[Epoch 2] [Dev]  MSE: 1.45137, MAE: 0.99459
+[Epoch 2] [Test] MSE: 1.44722, MAE: 0.99237
+
+[Epoch 3/10] Training Loss: 1.23282	Elapsed Time: 384.26s (0:06:24)
+[Epoch 3] [Dev]  MSE: 1.43128, MAE: 0.91609
+[Epoch 3] [Test] MSE: 1.42720, MAE: 0.91510
+
+[Epoch 4/10] Training Loss: 1.20760	Elapsed Time: 514.67s (0:08:34)
+[Epoch 4] [Dev]  MSE: 1.43506, MAE: 0.88867
+[Epoch 4] [Test] MSE: 1.42946, MAE: 0.88711
+
+[Epoch 5/10] Training Loss: 1.20252	Elapsed Time: 646.93s (0:10:46)
+[Epoch 5] [Dev]  MSE: 1.41283, MAE: 0.91721
+[Epoch 5] [Test] MSE: 1.41000, MAE: 0.91632
+
+*** MODEL has obtained the best DEV MSE of 1.41283 so far!
+*** MODEL saved to "./__saved_models__/Baby - ANRS/Baby_ANRS_1337.pth"
+
+[Epoch 6/10] Training Loss: 1.19826	Elapsed Time: 778.36s (0:12:58)
+[Epoch 6] [Dev]  MSE: 1.39750, MAE: 0.90148
+[Epoch 6] [Test] MSE: 1.39144, MAE: 0.89958
+
+*** MODEL has obtained the best DEV MSE of 1.39750 so far!
+*** MODEL saved to "./__saved_models__/Baby - ANRS/Baby_ANRS_1337.pth"
+
+[Epoch 7/10] Training Loss: 1.19695	Elapsed Time: 910.51s (0:15:10)
+[Epoch 7] [Dev]  MSE: 1.44367, MAE: 0.98557
+[Epoch 7] [Test] MSE: 1.43819, MAE: 0.98360
+
+[Epoch 8/10] Training Loss: 1.19326	Elapsed Time: 1,041.57s (0:17:21)
+[Epoch 8] [Dev]  MSE: 1.41285, MAE: 0.94141
+[Epoch 8] [Test] MSE: 1.40695, MAE: 0.93962
+
+[Epoch 9/10] Training Loss: 1.19124	Elapsed Time: 1,173.41s (0:19:33)
+[Epoch 9] [Dev]  MSE: 1.40657, MAE: 0.94776
+[Epoch 9] [Test] MSE: 1.40172, MAE: 0.94589
+
+[Epoch 10/10] Training Loss: 1.18953	Elapsed Time: 1,304.45s (0:21:44)
+[Epoch 10] [Dev]  MSE: 1.42592, MAE: 0.96070
+[Epoch 10] [Test] MSE: 1.42138, MAE: 0.95901
+
+[Training Loss]
+[1.84617, 1.2513, 1.23282, 1.2076, 1.20252, 1.19826, 1.19695, 1.19326, 1.19124, 1.18953]
+
+[Dev MSE]
+[1.42444, 1.45137, 1.43128, 1.43506, 1.41283, 1.3975, 1.44367, 1.41285, 1.40657, 1.42592]
+[Test MSE]
+[1.42177, 1.44722, 1.4272, 1.42946, 1.41, 1.39144, 1.43819, 1.40695, 1.40172, 1.42138]
+[Test MAE]
+[0.9659, 0.99237, 0.9151, 0.88711, 0.91632, 0.89958, 0.9836, 0.93962, 0.94589, 0.95901]
+
+
+Best Dev MSE: 1.39750 (Obtained during Evaluation #6)
+Test MSE: 1.39144, Test MAE: 0.89958
+
+End of Program! Elapsed Time: 1,340.60s (0:22:20)
