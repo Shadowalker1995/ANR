@@ -19,12 +19,12 @@ class ANR_ARL(nn.Module):
         self.args = args
 
         # Aspect Embeddings
-        self.aspEmbed = nn.Embedding(self.args.num_aspects, self.args.ctx_win_size * self.args.h1)
+        self.aspEmbed = nn.Embedding(self.args.num_aspects, self.args.ctx_win_size * self.args.h1)  # num_aspects x (ctx_win_size x h1)
         self.aspEmbed.weight.requires_grad = True
 
         # Aspect-Specific Projection Matrices, W_a
         self.aspProj = nn.Parameter(torch.Tensor(self.args.num_aspects, self.args.word_embed_dim, self.args.h1),
-                                    requires_grad=True)
+                                    requires_grad=True)                                             # num_aspects x word_embed_dim x h1
 
         # Initialize all weights using random uniform distribution from [-0.01, 0.01]
         self.aspEmbed.weight.data.uniform_(-0.01, 0.01)
@@ -38,7 +38,7 @@ class ANR_ARL(nn.Module):
         if verbose > 0:
             tqdm.write(
                 "\n============================== Aspect Representation Learning (ARL) ==============================")
-            tqdm.write("[Input] batch_docIn: {}".format(batch_docIn.size()))
+            tqdm.write("[Input] batch_docIn: {}".format(batch_docIn.size()))                        # bsz x max_doc_len x word_embed_dim
 
         # Loop over all aspects
         lst_batch_aspAttn = []
@@ -48,19 +48,20 @@ class ANR_ARL(nn.Module):
                 tqdm.write("\nAs an example, for <Aspect {}>:\n".format(a))
 
             # Aspect-Specific Projection of Input Word Embeddings: (bsz x max_doc_len x h1)
-            batch_aspProjDoc = torch.matmul(batch_docIn, self.aspProj[a])
+            # (bsz x max_doc_len x word_embed_dim) * (word_embed_dim x h1) -> bsz x max_doc_len x h1
+            batch_aspProjDoc = torch.matmul(batch_docIn, self.aspProj[a])                           # bsz x max_doc_len x h1
 
             if verbose > 0 and a == 0:
-                tqdm.write("\tbatch_docIn: {}".format(batch_docIn.size()))              # bsz x max_doc_len x word_embedding_dim
-                tqdm.write("\tself.aspProj[{}]: {}".format(a, self.aspProj[a].size()))  # word_embedding_dim x h1
-                tqdm.write("\tbatch_aspProjDoc: {}".format(batch_aspProjDoc.size()))    # bsz x max_doc_len x h1
+                tqdm.write("\tbatch_docIn: {}".format(batch_docIn.size()))                          # bsz x max_doc_len x word_embedding_dim
+                tqdm.write("\tself.aspProj[{}]: {}".format(a, self.aspProj[a].size()))              # word_embedding_dim x h1
+                tqdm.write("\tbatch_aspProjDoc: {}".format(batch_aspProjDoc.size()))                # bsz x max_doc_len x h1
 
-            # Aspect Embedding: (bsz x h1 x 1) after tranposing!
+            # Aspect Embedding: (bsz x (ctx_win_size x h1) x 1) after tranposing!
             bsz = batch_docIn.size()[0]
-            batch_aspEmbed = self.aspEmbed(to_var(torch.LongTensor(bsz, 1).fill_(a), use_cuda=self.args.use_cuda))
-            batch_aspEmbed = torch.transpose(batch_aspEmbed, 1, 2)
+            batch_aspEmbed = self.aspEmbed(to_var(torch.LongTensor(bsz, 1).fill_(a), use_cuda=self.args.use_cuda))  # bsz x 1 x (ctx_win_size x h1)
+            batch_aspEmbed = torch.transpose(batch_aspEmbed, 1, 2)                                                  # bsz x (ctx_win_size x h1) x 1
             if verbose > 0 and a == 0:
-                tqdm.write("\n\tbatch_aspEmbed: {}".format(batch_aspEmbed.size()))
+                tqdm.write("\n\tbatch_aspEmbed: {}".format(batch_aspEmbed.size()))                                  # bsz x (ctx_win_size x h1) x 1
 
             # Window Size (self.args.ctx_win_size) of 1: Calculate Attention based on the word itself!
             if self.args.ctx_win_size == 1:
@@ -78,21 +79,21 @@ class ANR_ARL(nn.Module):
                 pad_size = int((self.args.ctx_win_size - 1) / 2)
                 batch_aspProjDoc_padded = F.pad(batch_aspProjDoc, (0, 0, pad_size, pad_size), "constant", 0)
                 if verbose > 0 and a == 0:
-                    tqdm.write("\n\tbatch_aspProjDoc_padded [PADDED; Pad Size: {}]: {}".format(pad_size,
+                    tqdm.write("\n\tbatch_aspProjDoc_padded [PADDED; Pad Size: {}]: {}".format(pad_size,            # bsz x (max_doc_len+2) x h1
                                                                                                batch_aspProjDoc_padded.size()))
 
                 # Use "sliding window" using stride of 1 (word at a time) to generate word chunks of ctx_win_size
                 # (bsz x max_doc_len x h1) -> (bsz x max_doc_len x (ctx_win_size x h1))
                 batch_aspProjDoc_padded = batch_aspProjDoc_padded.unfold(1, self.args.ctx_win_size, 1)
                 if verbose > 0 and a == 0:
-                    tqdm.write("\tbatch_aspProjDoc_padded: {}".format(batch_aspProjDoc_padded.size()))
+                    tqdm.write("\tbatch_aspProjDoc_padded: {}".format(batch_aspProjDoc_padded.size()))  # bsz x max_doc_len x h1 x ctx_win_size
                 batch_aspProjDoc_padded = torch.transpose(batch_aspProjDoc_padded, 2, 3)    # why we need transpose? concat 3 word embedding vector
                 if verbose > 0 and a == 0:
-                    tqdm.write("\tbatch_aspProjDoc_padded: {}".format(batch_aspProjDoc_padded.size()))
+                    tqdm.write("\tbatch_aspProjDoc_padded: {}".format(batch_aspProjDoc_padded.size()))  # bsz x max_doc_len x ctx_win_size x h1
                 batch_aspProjDoc_padded = batch_aspProjDoc_padded.contiguous().view(-1, self.args.max_doc_len,
                                                                                     self.args.ctx_win_size * self.args.h1)
                 if verbose > 0 and a == 0:
-                    tqdm.write("\tbatch_aspProjDoc_padded: {}".format(batch_aspProjDoc_padded.size()))
+                    tqdm.write("\tbatch_aspProjDoc_padded: {}".format(batch_aspProjDoc_padded.size()))  # bsz x max_doc_len x (ctx_win_size x h1)
 
                 # Calculate Attention: Inner Product & Softmax
                 # (bsz x max_doc_len x (ctx_win_size x h1)) * (bsz x (ctx_win_size x h1) x 1) -> (bsz x max_doc_len x 1)
@@ -104,28 +105,28 @@ class ANR_ARL(nn.Module):
                         "\n\tbatch_aspAttn [Window Size: {}]: {}".format(self.args.ctx_win_size, batch_aspAttn.size()))
 
             # Weighted Sum: Broadcasted Element-wise Multiplication & Sum over Words
-            # (bsz x max_doc_len x 1) and (bsz x max_doc_len x h1) -> (bsz x h1)
+            # (bsz x max_doc_len x h1) and (bsz x max_doc_len x h1) -> (bsz x h1)
             batch_aspRep = batch_aspProjDoc * batch_aspAttn.expand_as(batch_aspProjDoc)
             if verbose > 0 and a == 0:
-                tqdm.write("\n\tbatch_aspRep: {}".format(batch_aspRep.size()))
+                tqdm.write("\n\tbatch_aspRep: {}".format(batch_aspRep.size()))          # bsz x max_doc_len x h1
             batch_aspRep = torch.sum(batch_aspRep, dim=1)
             if verbose > 0 and a == 0:
-                tqdm.write("\tbatch_aspRep: {}".format(batch_aspRep.size()))
+                tqdm.write("\tbatch_aspRep: {}".format(batch_aspRep.size()))            # bsz x h1
 
             # Store the results (Attention & Representation) for this aspect
-            lst_batch_aspAttn.append(torch.transpose(batch_aspAttn, 1, 2))
-            lst_batch_aspRep.append(torch.unsqueeze(batch_aspRep, 1))
+            lst_batch_aspAttn.append(torch.transpose(batch_aspAttn, 1, 2))              # bsz x 1 x max_doc_len
+            lst_batch_aspRep.append(torch.unsqueeze(batch_aspRep, 1))                   # bsz x 1 x h1
 
         # Reshape the Attentions & Representations
         # batch_aspAttn:        (bsz x num_aspects x max_doc_len)
         # batch_aspRep:         (bsz x num_aspects x h1)
-        batch_aspAttn = torch.cat(lst_batch_aspAttn, dim=1)  # userAspDoc, userAspRep等不同表述
-        batch_aspRep = torch.cat(lst_batch_aspRep, dim=1)  # P(u,a), Formula (4)
+        batch_aspAttn = torch.cat(lst_batch_aspAttn, dim=1)
+        batch_aspRep = torch.cat(lst_batch_aspRep, dim=1)
 
         if verbose > 0:
             tqdm.write("\n[Output] <All {} Aspects>".format(self.args.num_aspects))
-            tqdm.write("[Output] batch_aspAttn: {}".format(batch_aspAttn.size()))
-            tqdm.write("[Output] batch_aspRep: {}".format(batch_aspRep.size()))
+            tqdm.write("[Output] batch_aspAttn: {}".format(batch_aspAttn.size()))       # bsz x num_aspects x max_doc_len
+            tqdm.write("[Output] batch_aspRep: {}".format(batch_aspRep.size()))         # bsz x num_aspects x h1
             tqdm.write(
                 "============================== ==================================== ==============================\n")
 

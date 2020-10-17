@@ -82,7 +82,6 @@ class ANR_AIE(nn.Module):
 
         # (bsz x num_aspects x num_aspects) * (bsz x num_aspects x h2) -> bsz x num_aspects x h2
         H_u_2 = torch.matmul(torch.transpose(affinityMatrix, 1, 2), H_u_2)
-
         H_u = H_u_1 + H_u_2                                                         # bsz x num_aspects x h2
 
         # Non-Linearity: ReLU

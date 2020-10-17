@@ -180,7 +180,9 @@ for epoch_num in range(args.epochs):
         batch_iid = to_var(batch_iid, use_cuda=args.use_cuda)
         rating_true = to_var(batch_rating, use_cuda=args.use_cuda)
 
-        rating_pred = torch.squeeze(mdl(batch_uid, batch_iid, verbose=(args.verbose > 0 and epoch_num == 0 and batch_num == 0)))
+        # rating_pred = torch.squeeze(mdl(batch_uid, batch_iid, verbose=(args.verbose > 0 and epoch_num == 0 and batch_num == 0)))
+        rating_pred = mdl(batch_uid, batch_iid, verbose=(args.verbose > 0 and epoch_num == 0 and batch_num == 0))
+        rating_pred = rating_pred.squeeze(-1)
 
         loss = criterion(rating_pred.float(), rating_true.float())
 

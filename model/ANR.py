@@ -27,14 +27,14 @@ class ANR(nn.Module):
         self.num_items = num_items
 
         # User Documents & Item Documents (Input)
-        self.uid_userDoc = nn.Embedding(self.num_users, self.args.max_doc_len)
+        self.uid_userDoc = nn.Embedding(self.num_users, self.args.max_doc_len)              # num_users x max_doc_len
         self.uid_userDoc.weight.requires_grad = False
 
-        self.iid_itemDoc = nn.Embedding(self.num_items, self.args.max_doc_len)
+        self.iid_itemDoc = nn.Embedding(self.num_items, self.args.max_doc_len)              # num_items x max_doc_len
         self.iid_itemDoc.weight.requires_grad = False
 
         # Word Embeddings (Input)
-        self.wid_wEmbed = nn.Embedding(self.args.vocab_size, self.args.word_embed_dim)
+        self.wid_wEmbed = nn.Embedding(self.args.vocab_size, self.args.word_embed_dim)      # vocab_size x word_embed_dim
         self.wid_wEmbed.weight.requires_grad = False
 
         # Aspect Representation Learning - Single Aspect-based Attention Network (Shared between User & Item)
@@ -60,15 +60,15 @@ class ANR(nn.Module):
         batch_userDoc = self.uid_userDoc(batch_uid)
         batch_itemDoc = self.iid_itemDoc(batch_iid)
         if verbose > 0:
-            tqdm.write("batch_userDoc: {}".format(batch_userDoc.size()))
-            tqdm.write("batch_itemDoc: {}".format(batch_itemDoc.size()))
+            tqdm.write("batch_userDoc: {}".format(batch_userDoc.size()))                # bsz x max_doc_len
+            tqdm.write("batch_itemDoc: {}".format(batch_itemDoc.size()))                # bsz x max_doc_len
 
         # Embedding Layer
         batch_userDocEmbed = self.wid_wEmbed(batch_userDoc.long())
         batch_itemDocEmbed = self.wid_wEmbed(batch_itemDoc.long())
         if verbose > 0:
-            tqdm.write("batch_userDocEmbed: {}".format(batch_userDocEmbed.size()))
-            tqdm.write("batch_itemDocEmbed: {}".format(batch_itemDocEmbed.size()))
+            tqdm.write("batch_userDocEmbed: {}".format(batch_userDocEmbed.size()))      # bsz x max_doc_len x word_embed_dim
+            tqdm.write("batch_itemDocEmbed: {}".format(batch_itemDocEmbed.size()))      # bsz x max_doc_len x word_embed_dim
 
         # =========== User Aspect-Based Representations ===========
         # Aspect-based Representation Learning for User
@@ -77,8 +77,8 @@ class ANR(nn.Module):
 
         userAspAttn, userAspDoc = self.shared_ANR_ARL(batch_userDocEmbed, verbose=verbose)
         if verbose > 0:
-            tqdm.write("[Output of ARL] userAspAttn: {}".format(userAspAttn.size()))
-            tqdm.write("[Output of ARL] userAspDoc:  {}".format(userAspDoc.size()))
+            tqdm.write("[Output of ARL] userAspAttn: {}".format(userAspAttn.size()))    # bsz x num_aspects x max_doc_len
+            tqdm.write("[Output of ARL] userAspDoc:  {}".format(userAspDoc.size()))     # bsz x num_aspects x h1
         # =========== User Aspect-Based Representations ===========
 
         # =========== Item Aspect-Based Representations ===========
@@ -90,8 +90,8 @@ class ANR(nn.Module):
         itemAspAttn, itemAspDoc = self.shared_ANR_ARL(batch_itemDocEmbed, verbose=verbose)
         # print("ANR forward end")
         if verbose > 0:
-            tqdm.write("[Output of ARL] itemAspAttn: {}".format(itemAspAttn.size()))
-            tqdm.write("[Output of ARL] itemAspDoc:  {}".format(itemAspDoc.size()))
+            tqdm.write("[Output of ARL] itemAspAttn: {}".format(itemAspAttn.size()))    # bsz x num_aspects x max_doc_len
+            tqdm.write("[Output of ARL] itemAspDoc:  {}".format(itemAspDoc.size()))     # bsz x num_aspects x h1
         # =========== Item Aspect-Based Representations ===========
 
         if self.args.model == "ANR":

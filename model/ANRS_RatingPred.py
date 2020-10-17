@@ -18,8 +18,8 @@ class ANRS_RatingPred(nn.Module):
         self.args = args
 
         # User/Item FC to learn the abstract user & item representations, respectively
-        self.userFC = nn.Linear(self.args.num_aspects * self.args.h1, self.args.h1)
-        self.itemFC = nn.Linear(self.args.num_aspects * self.args.h1, self.args.h1)
+        self.userFC = nn.Linear(self.args.num_aspects * self.args.h1, self.args.h1)     # (num_aspects x h1) x h1
+        self.itemFC = nn.Linear(self.args.num_aspects * self.args.h1, self.args.h1)     # (num_aspects x h1) x h1
 
         # Dropout, using the specified dropout probability
         self.userFC_Dropout = nn.Dropout(p=self.args.dropout_rate)
@@ -30,7 +30,7 @@ class ANRS_RatingPred(nn.Module):
         self.user_item_rep_dim = self.args.h1
 
         # Prediction Layer
-        self.prediction = nn.Linear(2 * self.user_item_rep_dim, 1)
+        self.prediction = nn.Linear(2 * self.user_item_rep_dim, 1)                      # (h1 x 2) x 1
 
         # Initialize all weights using random uniform distribution from [-0.01, 0.01]
         self.userFC.weight.data.uniform_(-0.01, 0.01)
@@ -45,48 +45,52 @@ class ANRS_RatingPred(nn.Module):
         if verbose > 0:
             tqdm.write(
                 "\n\n============================== Aspect-Based BASIC Rating Predictor ==============================")
-            tqdm.write("[Input] userAspRep: {}".format(userAspRep.size()))
-            tqdm.write("[Input] itemAspRep: {}".format(itemAspRep.size()))
+            tqdm.write("[Input] userAspRep: {}".format(userAspRep.size()))                  # bsz x num_aspects x h1
+            tqdm.write("[Input] itemAspRep: {}".format(itemAspRep.size()))                  # bsz x num_aspects x h1
 
         # Concatenate all aspect-level representations into a single vector
         concatUserRep = userAspRep.view(-1, self.args.num_aspects * self.args.h1)
         concatItemRep = itemAspRep.view(-1, self.args.num_aspects * self.args.h1)
         if verbose > 0:
-            tqdm.write("\n[Concatenated] concatUserRep: {}".format(concatUserRep.size()))
-            tqdm.write("[Concatenated] concatItemRep: {}".format(concatItemRep.size()))
+            tqdm.write("\n[Concatenated] concatUserRep: {}".format(concatUserRep.size()))   # bsz x (num_aspects x h1)
+            tqdm.write("[Concatenated] concatItemRep: {}".format(concatItemRep.size()))     # bsz x (num_aspects x h1)
 
         # Fully-Connected (To get the abstract user & item representations)
         abstractUserRep = self.userFC(concatUserRep)
         abstractItemRep = self.itemFC(concatItemRep)
         if verbose > 0:
-            tqdm.write("\n[After FC, i.e. torch.nn.Linear] abstractUserRep: {}".format(abstractUserRep.size()))
-            tqdm.write("[After FC, i.e. torch.nn.Linear] abstractItemRep: {}".format(abstractItemRep.size()))
+            tqdm.write("\n[After FC, i.e. torch.nn.Linear] abstractUserRep: {}".format(abstractUserRep.size()))  # bsz x h1
+            tqdm.write("[After FC, i.e. torch.nn.Linear] abstractItemRep: {}".format(abstractItemRep.size()))    # bsz x h1
 
         # Non-Linearity: ReLU
         abstractUserRep = F.relu(abstractUserRep)
         abstractItemRep = F.relu(abstractItemRep)
         if verbose > 0:
-            tqdm.write("[After ReLU] abstractUserRep: {}".format(abstractUserRep.size()))
-            tqdm.write("[After ReLU] abstractItemRep: {}".format(abstractItemRep.size()))
+            tqdm.write("[After ReLU] abstractUserRep: {}".format(abstractUserRep.size()))   # bsz x h1
+            tqdm.write("[After ReLU] abstractItemRep: {}".format(abstractItemRep.size()))   # bsz x h1
 
         # Dropout
         abstractUserRep = self.userFC_Dropout(abstractUserRep)
         abstractItemRep = self.itemFC_Dropout(abstractItemRep)
         if verbose > 0:
+            # bsz x h1
             tqdm.write("[After Dropout (Dropout Rate of {:.1f})] abstractUserRep: {}".format(self.args.dropout_rate,
                                                                                              abstractUserRep.size()))
+            # bsz x h1
             tqdm.write("[After Dropout (Dropout Rate of {:.1f})] abstractItemRep: {}".format(self.args.dropout_rate,
                                                                                              abstractItemRep.size()))
 
         # Concatenate the user & item representations for prediction
         userItemRep = torch.cat((abstractUserRep, abstractItemRep), 1)
         if verbose > 0:
+            # bsz x (h1 x 2)
             tqdm.write("\n[Input to Final Prediction Layer] userItemRep: {}".format(userItemRep.size()))
 
         # Actual Rating Prediction
         # FC: Fully Connected, i.e. torch.nn.Linear
         rating_pred = self.prediction(userItemRep)
         if verbose > 0:
+            # bsz x 1
             tqdm.write("\n[ANRS_RatingPred Output] rating_pred: {}".format(rating_pred.size()))
             tqdm.write(
                 "============================== =================================== ==============================\n")
