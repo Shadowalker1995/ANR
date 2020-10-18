@@ -1,0 +1,148 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  command: -d Video_Games -m ANRS -e 10 -p 1 -v 50000 -rs 1337 -gpu 0 -vb 1 -sm Video_Games_ANRS
+  ctx_win_size: 3
+  dataset: Video_Games
+  disable_initial_eval: 0
+  dropout_rate: 0.5
+  epochs: 10
+  gpu: 0
+  h1: 10
+  h2: 50
+  input_dir: ./datasets/Video_Games/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  model: ANRS
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Video_Games - ANRS/
+  pretrained_src: 1
+  random_seed: 1337
+  save_model: Video_Games_ANRS
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 540,331, # of Items: 44,636
+
+Creating model (Selected Model: ANRS)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 3.62s (0.06 minute)
+
+Loading uid_userDoc from "./datasets/Video_Games/Video_Games_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (540331, 500)]
+
+Loading iid_itemDoc from "./datasets/Video_Games/Video_Games_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (44636, 500)]
+
+Loading pretrained word embeddings from "./datasets/Video_Games/Video_Games_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (50002, 300)]
+
+Initialization Complete.. Elapsed Time: 24.31s (0.41 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 800,000, |DEV|: 45,587, |TEST|: 45,469
+Train/Dev/Test splits loaded! Elapsed Time: 24.60s (0.41 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 17.94855, MAE: 4.03930
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 18.02069, MAE: 4.05161
+
+Initial Evaluation Complete.. Elapsed Time: 31.46s (0.52 minute)
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 307,500,291
+# of Trainable Parameters: 16,191
+ANR (
+  (uid_userDoc): Embedding(540331, 500), weights = ((540331, 500),), parameters = 270,165,500
+  (iid_itemDoc): Embedding(44636, 500), weights = ((44636, 500),), parameters = 22,318,000
+  (wid_wEmbed): Embedding(50002, 300), weights = ((50002, 300),), parameters = 15,000,600
+  (shared_ANR_ARL): ANR_ARL(
+    (aspEmbed): Embedding(5, 30)
+    (aspProj): Parameter(5, 300, 10)
+  ), weights = ((5, 300, 10), (5, 30)), parameters = 15,150 (Trainable)
+  (ANRS_RatingPred): ANRS_RatingPred(
+    (userFC): Linear(in_features=50, out_features=10, bias=True)
+    (itemFC): Linear(in_features=50, out_features=10, bias=True)
+    (userFC_Dropout): Dropout(p=0.5, inplace=False)
+    (itemFC_Dropout): Dropout(p=0.5, inplace=False)
+    (prediction): Linear(in_features=20, out_features=1, bias=True)
+  ), weights = ((10, 50), (10,), (10, 50), (10,), (1, 20), (1,)), parameters = 1,041 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/10] Training Loss: 2.06554	Elapsed Time: 137.27s (0:02:17)
+[Epoch 1] [Dev]  MSE: 1.51439, MAE: 0.98514
+[Epoch 1] [Test] MSE: 1.46670, MAE: 0.97006
+
+*** MODEL has obtained the best DEV MSE of 1.51439 so far!
+*** MODEL saved to "./__saved_models__/Video_Games - ANRS/Video_Games_ANRS_1337.pth"
+
+[Epoch 2/10] Training Loss: 1.47536	Elapsed Time: 281.26s (0:04:41)
+[Epoch 2] [Dev]  MSE: 1.52006, MAE: 1.00553
+[Epoch 2] [Test] MSE: 1.47519, MAE: 0.99126
+
+[Epoch 3/10] Training Loss: 1.45489	Elapsed Time: 426.85s (0:07:06)
+[Epoch 3] [Dev]  MSE: 1.47929, MAE: 0.95027
+[Epoch 3] [Test] MSE: 1.42802, MAE: 0.93432
+
+*** MODEL has obtained the best DEV MSE of 1.47929 so far!
+*** MODEL saved to "./__saved_models__/Video_Games - ANRS/Video_Games_ANRS_1337.pth"
+
+[Epoch 4/10] Training Loss: 1.42157	Elapsed Time: 573.28s (0:09:33)
+[Epoch 4] [Dev]  MSE: 1.44719, MAE: 0.96639
+[Epoch 4] [Test] MSE: 1.40057, MAE: 0.95106
+
+*** MODEL has obtained the best DEV MSE of 1.44719 so far!
+*** MODEL saved to "./__saved_models__/Video_Games - ANRS/Video_Games_ANRS_1337.pth"
+
+[Epoch 5/10] Training Loss: 1.40771	Elapsed Time: 719.50s (0:11:59)
+[Epoch 5] [Dev]  MSE: 1.46092, MAE: 0.96104
+[Epoch 5] [Test] MSE: 1.41029, MAE: 0.94428
+
+[Epoch 6/10] Training Loss: 1.40095	Elapsed Time: 865.75s (0:14:25)
+[Epoch 6] [Dev]  MSE: 1.46242, MAE: 0.98601
+[Epoch 6] [Test] MSE: 1.41769, MAE: 0.97115
+
+[Epoch 7/10] Training Loss: 1.39797	Elapsed Time: 1,012.12s (0:16:52)
+[Epoch 7] [Dev]  MSE: 1.45728, MAE: 0.93053
+[Epoch 7] [Test] MSE: 1.40266, MAE: 0.91327
+
+[Epoch 8/10] Training Loss: 1.39365	Elapsed Time: 1,156.53s (0:19:16)
+[Epoch 8] [Dev]  MSE: 1.51011, MAE: 1.02798
+[Epoch 8] [Test] MSE: 1.46801, MAE: 1.01400
+
+[Epoch 9/10] Training Loss: 1.39160	Elapsed Time: 1,304.59s (0:21:44)
+[Epoch 9] [Dev]  MSE: 1.44454, MAE: 0.96278
+[Epoch 9] [Test] MSE: 1.39637, MAE: 0.94692
+
+*** MODEL has obtained the best DEV MSE of 1.44454 so far!
+*** MODEL saved to "./__saved_models__/Video_Games - ANRS/Video_Games_ANRS_1337.pth"
+
+[Epoch 10/10] Training Loss: 1.30460	Elapsed Time: 1,450.98s (0:24:10)
+[Epoch 10] [Dev]  MSE: 1.46641, MAE: 0.94946
+[Epoch 10] [Test] MSE: 1.41050, MAE: 0.93156
+
+[Training Loss]
+[2.06554, 1.47536, 1.45489, 1.42157, 1.40771, 1.40095, 1.39797, 1.39365, 1.3916, 1.3046]
+
+[Dev MSE]
+[1.51439, 1.52006, 1.47929, 1.44719, 1.46092, 1.46242, 1.45728, 1.51011, 1.44454, 1.46641]
+[Test MSE]
+[1.4667, 1.47519, 1.42802, 1.40057, 1.41029, 1.41769, 1.40266, 1.46801, 1.39637, 1.4105]
+[Test MAE]
+[0.97006, 0.99126, 0.93432, 0.95106, 0.94428, 0.97115, 0.91327, 1.014, 0.94692, 0.93156]
+
+
+Best Dev MSE: 1.44454 (Obtained during Evaluation #9)
+Test MSE: 1.39637, Test MAE: 0.94692
+
+End of Program! Elapsed Time: 1,489.33s (0:24:49)

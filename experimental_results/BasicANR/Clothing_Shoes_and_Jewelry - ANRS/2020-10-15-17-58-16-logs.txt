@@ -1,0 +1,145 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  command: -d Clothing_Shoes_and_Jewelry -m ANRS -e 10 -p 1 -v 50000 -rs 1337 -gpu 0 -vb 1 -sm Clothing_Shoes_and_Jewelry_ANRS
+  ctx_win_size: 3
+  dataset: Clothing_Shoes_and_Jewelry
+  disable_initial_eval: 0
+  dropout_rate: 0.5
+  epochs: 10
+  gpu: 0
+  h1: 10
+  h2: 50
+  input_dir: ./datasets/Clothing_Shoes_and_Jewelry/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  model: ANRS
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Clothing_Shoes_and_Jewelry - ANRS/
+  pretrained_src: 1
+  random_seed: 1337
+  save_model: Clothing_Shoes_and_Jewelry_ANRS
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 669,835, # of Items: 335,585
+
+Creating model (Selected Model: ANRS)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 5.21s (0.09 minute)
+
+Loading uid_userDoc from "./datasets/Clothing_Shoes_and_Jewelry/Clothing_Shoes_and_Jewelry_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (669835, 500)]
+
+Loading iid_itemDoc from "./datasets/Clothing_Shoes_and_Jewelry/Clothing_Shoes_and_Jewelry_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (335585, 500)]
+
+Loading pretrained word embeddings from "./datasets/Clothing_Shoes_and_Jewelry/Clothing_Shoes_and_Jewelry_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (50002, 300)]
+
+Initialization Complete.. Elapsed Time: 41.65s (0.69 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 800,000, |DEV|: 17,754, |TEST|: 17,846
+Train/Dev/Test splits loaded! Elapsed Time: 41.92s (0.70 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 19.44506, MAE: 4.25960
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 19.52856, MAE: 4.27082
+
+Initial Evaluation Complete.. Elapsed Time: 44.74s (0.75 minute)
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 517,726,791
+# of Trainable Parameters: 16,191
+ANR (
+  (uid_userDoc): Embedding(669835, 500), weights = ((669835, 500),), parameters = 334,917,500
+  (iid_itemDoc): Embedding(335585, 500), weights = ((335585, 500),), parameters = 167,792,500
+  (wid_wEmbed): Embedding(50002, 300), weights = ((50002, 300),), parameters = 15,000,600
+  (shared_ANR_ARL): ANR_ARL(
+    (aspEmbed): Embedding(5, 30)
+    (aspProj): Parameter(5, 300, 10)
+  ), weights = ((5, 300, 10), (5, 30)), parameters = 15,150 (Trainable)
+  (ANRS_RatingPred): ANRS_RatingPred(
+    (userFC): Linear(in_features=50, out_features=10, bias=True)
+    (itemFC): Linear(in_features=50, out_features=10, bias=True)
+    (userFC_Dropout): Dropout(p=0.5, inplace=False)
+    (itemFC_Dropout): Dropout(p=0.5, inplace=False)
+    (prediction): Linear(in_features=20, out_features=1, bias=True)
+  ), weights = ((10, 50), (10,), (10, 50), (10,), (1, 20), (1,)), parameters = 1,041 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/10] Training Loss: 1.59481	Elapsed Time: 136.91s (0:02:16)
+[Epoch 1] [Dev]  MSE: 1.32548, MAE: 0.88868
+[Epoch 1] [Test] MSE: 1.33160, MAE: 0.88861
+
+*** MODEL has obtained the best DEV MSE of 1.32548 so far!
+*** MODEL saved to "./__saved_models__/Clothing_Shoes_and_Jewelry - ANRS/Clothing_Shoes_and_Jewelry_ANRS_1337.pth"
+
+[Epoch 2/10] Training Loss: 1.01707	Elapsed Time: 276.56s (0:04:36)
+[Epoch 2] [Dev]  MSE: 1.32059, MAE: 0.89613
+[Epoch 2] [Test] MSE: 1.32306, MAE: 0.89576
+
+*** MODEL has obtained the best DEV MSE of 1.32059 so far!
+*** MODEL saved to "./__saved_models__/Clothing_Shoes_and_Jewelry - ANRS/Clothing_Shoes_and_Jewelry_ANRS_1337.pth"
+
+[Epoch 3/10] Training Loss: 1.00563	Elapsed Time: 415.83s (0:06:55)
+[Epoch 3] [Dev]  MSE: 1.34313, MAE: 0.93110
+[Epoch 3] [Test] MSE: 1.34545, MAE: 0.93246
+
+[Epoch 4/10] Training Loss: 0.99420	Elapsed Time: 555.35s (0:09:15)
+[Epoch 4] [Dev]  MSE: 1.33880, MAE: 0.89334
+[Epoch 4] [Test] MSE: 1.33899, MAE: 0.89280
+
+[Epoch 5/10] Training Loss: 0.98861	Elapsed Time: 694.76s (0:11:34)
+[Epoch 5] [Dev]  MSE: 1.34869, MAE: 0.93575
+[Epoch 5] [Test] MSE: 1.35233, MAE: 0.93649
+
+[Epoch 6/10] Training Loss: 0.98616	Elapsed Time: 834.27s (0:13:54)
+[Epoch 6] [Dev]  MSE: 1.34159, MAE: 0.87977
+[Epoch 6] [Test] MSE: 1.34057, MAE: 0.87760
+
+[Epoch 7/10] Training Loss: 0.98274	Elapsed Time: 973.78s (0:16:13)
+[Epoch 7] [Dev]  MSE: 1.33101, MAE: 0.89324
+[Epoch 7] [Test] MSE: 1.32966, MAE: 0.89151
+
+[Epoch 8/10] Training Loss: 0.97937	Elapsed Time: 1,113.28s (0:18:33)
+[Epoch 8] [Dev]  MSE: 1.33170, MAE: 0.91726
+[Epoch 8] [Test] MSE: 1.33227, MAE: 0.91685
+
+[Epoch 9/10] Training Loss: 0.97812	Elapsed Time: 1,252.71s (0:20:52)
+[Epoch 9] [Dev]  MSE: 1.31281, MAE: 0.87513
+[Epoch 9] [Test] MSE: 1.30820, MAE: 0.87255
+
+*** MODEL has obtained the best DEV MSE of 1.31281 so far!
+*** MODEL saved to "./__saved_models__/Clothing_Shoes_and_Jewelry - ANRS/Clothing_Shoes_and_Jewelry_ANRS_1337.pth"
+
+[Epoch 10/10] Training Loss: 0.97686	Elapsed Time: 1,392.32s (0:23:12)
+[Epoch 10] [Dev]  MSE: 1.35899, MAE: 0.93246
+[Epoch 10] [Test] MSE: 1.35613, MAE: 0.93128
+
+[Training Loss]
+[1.59481, 1.01707, 1.00563, 0.9942, 0.98861, 0.98616, 0.98274, 0.97937, 0.97812, 0.97686]
+
+[Dev MSE]
+[1.32548, 1.32059, 1.34313, 1.3388, 1.34869, 1.34159, 1.33101, 1.3317, 1.31281, 1.35899]
+[Test MSE]
+[1.3316, 1.32306, 1.34545, 1.33899, 1.35233, 1.34057, 1.32966, 1.33227, 1.3082, 1.35613]
+[Test MAE]
+[0.88861, 0.89576, 0.93246, 0.8928, 0.93649, 0.8776, 0.89151, 0.91685, 0.87255, 0.93128]
+
+
+Best Dev MSE: 1.31281 (Obtained during Evaluation #9)
+Test MSE: 1.30820, Test MAE: 0.87255
+
+End of Program! Elapsed Time: 1,439.72s (0:23:59)

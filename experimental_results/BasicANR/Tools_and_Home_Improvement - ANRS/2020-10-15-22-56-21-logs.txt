@@ -1,0 +1,148 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  command: -d Tools_and_Home_Improvement -m ANRS -e 10 -p 1 -v 50000 -rs 1337 -gpu 0 -vb 1 -sm Tools_and_Home_Improvement_ANRS
+  ctx_win_size: 3
+  dataset: Tools_and_Home_Improvement
+  disable_initial_eval: 0
+  dropout_rate: 0.5
+  epochs: 10
+  gpu: 0
+  h1: 10
+  h2: 50
+  input_dir: ./datasets/Tools_and_Home_Improvement/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  model: ANRS
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Tools_and_Home_Improvement - ANRS/
+  pretrained_src: 1
+  random_seed: 1337
+  save_model: Tools_and_Home_Improvement_ANRS
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 604,303, # of Items: 167,536
+
+Creating model (Selected Model: ANRS)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 4.34s (0.07 minute)
+
+Loading uid_userDoc from "./datasets/Tools_and_Home_Improvement/Tools_and_Home_Improvement_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (604303, 500)]
+
+Loading iid_itemDoc from "./datasets/Tools_and_Home_Improvement/Tools_and_Home_Improvement_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (167536, 500)]
+
+Loading pretrained word embeddings from "./datasets/Tools_and_Home_Improvement/Tools_and_Home_Improvement_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (50002, 300)]
+
+Initialization Complete.. Elapsed Time: 30.86s (0.51 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 800,000, |DEV|: 32,887, |TEST|: 33,155
+Train/Dev/Test splits loaded! Elapsed Time: 31.14s (0.52 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 20.06879, MAE: 4.32472
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 20.09897, MAE: 4.33023
+
+Initial Evaluation Complete.. Elapsed Time: 36.24s (0.60 minute)
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 400,936,291
+# of Trainable Parameters: 16,191
+ANR (
+  (uid_userDoc): Embedding(604303, 500), weights = ((604303, 500),), parameters = 302,151,500
+  (iid_itemDoc): Embedding(167536, 500), weights = ((167536, 500),), parameters = 83,768,000
+  (wid_wEmbed): Embedding(50002, 300), weights = ((50002, 300),), parameters = 15,000,600
+  (shared_ANR_ARL): ANR_ARL(
+    (aspEmbed): Embedding(5, 30)
+    (aspProj): Parameter(5, 300, 10)
+  ), weights = ((5, 300, 10), (5, 30)), parameters = 15,150 (Trainable)
+  (ANRS_RatingPred): ANRS_RatingPred(
+    (userFC): Linear(in_features=50, out_features=10, bias=True)
+    (itemFC): Linear(in_features=50, out_features=10, bias=True)
+    (userFC_Dropout): Dropout(p=0.5, inplace=False)
+    (itemFC_Dropout): Dropout(p=0.5, inplace=False)
+    (prediction): Linear(in_features=20, out_features=1, bias=True)
+  ), weights = ((10, 50), (10,), (10, 50), (10,), (1, 20), (1,)), parameters = 1,041 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/10] Training Loss: 1.85157	Elapsed Time: 137.58s (0:02:17)
+[Epoch 1] [Dev]  MSE: 1.36116, MAE: 0.94306
+[Epoch 1] [Test] MSE: 1.36520, MAE: 0.94602
+
+*** MODEL has obtained the best DEV MSE of 1.36116 so far!
+*** MODEL saved to "./__saved_models__/Tools_and_Home_Improvement - ANRS/Tools_and_Home_Improvement_ANRS_1337.pth"
+
+[Epoch 2/10] Training Loss: 1.23077	Elapsed Time: 280.07s (0:04:40)
+[Epoch 2] [Dev]  MSE: 1.37401, MAE: 0.94571
+[Epoch 2] [Test] MSE: 1.37990, MAE: 0.94985
+
+[Epoch 3/10] Training Loss: 1.20628	Elapsed Time: 422.97s (0:07:02)
+[Epoch 3] [Dev]  MSE: 1.32748, MAE: 0.90712
+[Epoch 3] [Test] MSE: 1.32822, MAE: 0.90979
+
+*** MODEL has obtained the best DEV MSE of 1.32748 so far!
+*** MODEL saved to "./__saved_models__/Tools_and_Home_Improvement - ANRS/Tools_and_Home_Improvement_ANRS_1337.pth"
+
+[Epoch 4/10] Training Loss: 1.19922	Elapsed Time: 565.65s (0:09:25)
+[Epoch 4] [Dev]  MSE: 1.34109, MAE: 0.91242
+[Epoch 4] [Test] MSE: 1.34587, MAE: 0.91629
+
+[Epoch 5/10] Training Loss: 1.19364	Elapsed Time: 708.28s (0:11:48)
+[Epoch 5] [Dev]  MSE: 1.41372, MAE: 0.96588
+[Epoch 5] [Test] MSE: 1.42269, MAE: 0.97011
+
+[Epoch 6/10] Training Loss: 1.19148	Elapsed Time: 850.72s (0:14:10)
+[Epoch 6] [Dev]  MSE: 1.31711, MAE: 0.86543
+[Epoch 6] [Test] MSE: 1.31962, MAE: 0.86766
+
+*** MODEL has obtained the best DEV MSE of 1.31711 so far!
+*** MODEL saved to "./__saved_models__/Tools_and_Home_Improvement - ANRS/Tools_and_Home_Improvement_ANRS_1337.pth"
+
+[Epoch 7/10] Training Loss: 1.18882	Elapsed Time: 993.15s (0:16:33)
+[Epoch 7] [Dev]  MSE: 1.31295, MAE: 0.87773
+[Epoch 7] [Test] MSE: 1.31280, MAE: 0.88010
+
+*** MODEL has obtained the best DEV MSE of 1.31295 so far!
+*** MODEL saved to "./__saved_models__/Tools_and_Home_Improvement - ANRS/Tools_and_Home_Improvement_ANRS_1337.pth"
+
+[Epoch 8/10] Training Loss: 1.16638	Elapsed Time: 1,135.73s (0:18:55)
+[Epoch 8] [Dev]  MSE: 1.35694, MAE: 0.89469
+[Epoch 8] [Test] MSE: 1.36272, MAE: 0.89802
+
+[Epoch 9/10] Training Loss: 1.06265	Elapsed Time: 1,278.36s (0:21:18)
+[Epoch 9] [Dev]  MSE: 1.36393, MAE: 0.86374
+[Epoch 9] [Test] MSE: 1.36923, MAE: 0.86662
+
+[Epoch 10/10] Training Loss: 1.05717	Elapsed Time: 1,420.97s (0:23:40)
+[Epoch 10] [Dev]  MSE: 1.37065, MAE: 0.87259
+[Epoch 10] [Test] MSE: 1.37386, MAE: 0.87443
+
+[Training Loss]
+[1.85157, 1.23077, 1.20628, 1.19922, 1.19364, 1.19148, 1.18882, 1.16638, 1.06265, 1.05717]
+
+[Dev MSE]
+[1.36116, 1.37401, 1.32748, 1.34109, 1.41372, 1.31711, 1.31295, 1.35694, 1.36393, 1.37065]
+[Test MSE]
+[1.3652, 1.3799, 1.32822, 1.34587, 1.42269, 1.31962, 1.3128, 1.36272, 1.36923, 1.37386]
+[Test MAE]
+[0.94602, 0.94985, 0.90979, 0.91629, 0.97011, 0.86766, 0.8801, 0.89802, 0.86662, 0.87443]
+
+
+Best Dev MSE: 1.31295 (Obtained during Evaluation #7)
+Test MSE: 1.31280, Test MAE: 0.88010
+
+End of Program! Elapsed Time: 1,462.15s (0:24:22)

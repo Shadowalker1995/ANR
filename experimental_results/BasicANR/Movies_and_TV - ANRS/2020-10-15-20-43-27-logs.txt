@@ -1,0 +1,151 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  command: -d Movies_and_TV -m ANRS -e 10 -p 1 -v 50000 -rs 1337 -gpu 0 -vb 1 -sm Movies_and_TV_ANRS
+  ctx_win_size: 3
+  dataset: Movies_and_TV
+  disable_initial_eval: 0
+  dropout_rate: 0.5
+  epochs: 10
+  gpu: 0
+  h1: 10
+  h2: 50
+  input_dir: ./datasets/Movies_and_TV/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  model: ANRS
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Movies_and_TV - ANRS/
+  pretrained_src: 1
+  random_seed: 1337
+  save_model: Movies_and_TV_ANRS
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 541,405, # of Items: 106,040
+
+Creating model (Selected Model: ANRS)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 3.86s (0.06 minute)
+
+Loading uid_userDoc from "./datasets/Movies_and_TV/Movies_and_TV_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (541405, 500)]
+
+Loading iid_itemDoc from "./datasets/Movies_and_TV/Movies_and_TV_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (106040, 500)]
+
+Loading pretrained word embeddings from "./datasets/Movies_and_TV/Movies_and_TV_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (50002, 300)]
+
+Initialization Complete.. Elapsed Time: 26.44s (0.44 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 800,000, |DEV|: 40,918, |TEST|: 41,059
+Train/Dev/Test splits loaded! Elapsed Time: 26.74s (0.45 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 20.00589, MAE: 4.30938
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 20.00208, MAE: 4.30797
+
+Initial Evaluation Complete.. Elapsed Time: 33.03s (0.55 minute)
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 338,739,291
+# of Trainable Parameters: 16,191
+ANR (
+  (uid_userDoc): Embedding(541405, 500), weights = ((541405, 500),), parameters = 270,702,500
+  (iid_itemDoc): Embedding(106040, 500), weights = ((106040, 500),), parameters = 53,020,000
+  (wid_wEmbed): Embedding(50002, 300), weights = ((50002, 300),), parameters = 15,000,600
+  (shared_ANR_ARL): ANR_ARL(
+    (aspEmbed): Embedding(5, 30)
+    (aspProj): Parameter(5, 300, 10)
+  ), weights = ((5, 300, 10), (5, 30)), parameters = 15,150 (Trainable)
+  (ANRS_RatingPred): ANRS_RatingPred(
+    (userFC): Linear(in_features=50, out_features=10, bias=True)
+    (itemFC): Linear(in_features=50, out_features=10, bias=True)
+    (userFC_Dropout): Dropout(p=0.5, inplace=False)
+    (itemFC_Dropout): Dropout(p=0.5, inplace=False)
+    (prediction): Linear(in_features=20, out_features=1, bias=True)
+  ), weights = ((10, 50), (10,), (10, 50), (10,), (1, 20), (1,)), parameters = 1,041 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/10] Training Loss: 1.71890	Elapsed Time: 137.55s (0:02:17)
+[Epoch 1] [Dev]  MSE: 1.28407, MAE: 0.90874
+[Epoch 1] [Test] MSE: 1.30050, MAE: 0.91054
+
+*** MODEL has obtained the best DEV MSE of 1.28407 so far!
+*** MODEL saved to "./__saved_models__/Movies_and_TV - ANRS/Movies_and_TV_ANRS_1337.pth"
+
+[Epoch 2/10] Training Loss: 1.08527	Elapsed Time: 280.62s (0:04:40)
+[Epoch 2] [Dev]  MSE: 1.28883, MAE: 0.87890
+[Epoch 2] [Test] MSE: 1.30747, MAE: 0.88027
+
+[Epoch 3/10] Training Loss: 1.03853	Elapsed Time: 424.02s (0:07:04)
+[Epoch 3] [Dev]  MSE: 1.30736, MAE: 0.83471
+[Epoch 3] [Test] MSE: 1.32881, MAE: 0.83689
+
+[Epoch 4/10] Training Loss: 1.03021	Elapsed Time: 567.27s (0:09:27)
+[Epoch 4] [Dev]  MSE: 1.28981, MAE: 0.88899
+[Epoch 4] [Test] MSE: 1.30760, MAE: 0.89151
+
+[Epoch 5/10] Training Loss: 1.02327	Elapsed Time: 710.42s (0:11:50)
+[Epoch 5] [Dev]  MSE: 1.28148, MAE: 0.88986
+[Epoch 5] [Test] MSE: 1.29522, MAE: 0.89076
+
+*** MODEL has obtained the best DEV MSE of 1.28148 so far!
+*** MODEL saved to "./__saved_models__/Movies_and_TV - ANRS/Movies_and_TV_ANRS_1337.pth"
+
+[Epoch 6/10] Training Loss: 1.01838	Elapsed Time: 853.64s (0:14:13)
+[Epoch 6] [Dev]  MSE: 1.27039, MAE: 0.86301
+[Epoch 6] [Test] MSE: 1.28765, MAE: 0.86459
+
+*** MODEL has obtained the best DEV MSE of 1.27039 so far!
+*** MODEL saved to "./__saved_models__/Movies_and_TV - ANRS/Movies_and_TV_ANRS_1337.pth"
+
+[Epoch 7/10] Training Loss: 1.01392	Elapsed Time: 996.85s (0:16:36)
+[Epoch 7] [Dev]  MSE: 1.29883, MAE: 0.86868
+[Epoch 7] [Test] MSE: 1.31615, MAE: 0.87077
+
+[Epoch 8/10] Training Loss: 1.01296	Elapsed Time: 1,140.16s (0:19:00)
+[Epoch 8] [Dev]  MSE: 1.29372, MAE: 0.87696
+[Epoch 8] [Test] MSE: 1.30854, MAE: 0.87794
+
+[Epoch 9/10] Training Loss: 1.00966	Elapsed Time: 1,283.47s (0:21:23)
+[Epoch 9] [Dev]  MSE: 1.26743, MAE: 0.85568
+[Epoch 9] [Test] MSE: 1.28006, MAE: 0.85600
+
+*** MODEL has obtained the best DEV MSE of 1.26743 so far!
+*** MODEL saved to "./__saved_models__/Movies_and_TV - ANRS/Movies_and_TV_ANRS_1337.pth"
+
+[Epoch 10/10] Training Loss: 1.00718	Elapsed Time: 1,426.97s (0:23:46)
+[Epoch 10] [Dev]  MSE: 1.26515, MAE: 0.87976
+[Epoch 10] [Test] MSE: 1.28110, MAE: 0.88136
+
+*** MODEL has obtained the best DEV MSE of 1.26515 so far!
+*** MODEL saved to "./__saved_models__/Movies_and_TV - ANRS/Movies_and_TV_ANRS_1337.pth"
+
+[Training Loss]
+[1.7189, 1.08527, 1.03853, 1.03021, 1.02327, 1.01838, 1.01392, 1.01296, 1.00966, 1.00718]
+
+[Dev MSE]
+[1.28407, 1.28883, 1.30736, 1.28981, 1.28148, 1.27039, 1.29883, 1.29372, 1.26743, 1.26515]
+[Test MSE]
+[1.3005, 1.30747, 1.32881, 1.3076, 1.29522, 1.28765, 1.31615, 1.30854, 1.28006, 1.2811]
+[Test MAE]
+[0.91054, 0.88027, 0.83689, 0.89151, 0.89076, 0.86459, 0.87077, 0.87794, 0.856, 0.88136]
+
+
+Best Dev MSE: 1.26515 (Obtained during Evaluation #10)
+Test MSE: 1.28110, Test MAE: 0.88136
+
+End of Program! Elapsed Time: 1,466.15s (0:24:26)

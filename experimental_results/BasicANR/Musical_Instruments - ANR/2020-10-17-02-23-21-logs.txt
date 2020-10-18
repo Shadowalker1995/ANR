@@ -1,0 +1,190 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: Musical_Instruments_ANRS_1337
+  batch_size: 128
+  command: -d Musical_Instruments -m ANR -e 15 -p 1 -v 50000 -rs 1234 -gpu 0 -vb 1 -sm Musical_Instruments_ANR -ARL_path Musical_Instruments_ANRS_1337
+  ctx_win_size: 3
+  dataset: Musical_Instruments
+  disable_initial_eval: 0
+  dropout_rate: 0.5
+  epochs: 15
+  gpu: 0
+  h1: 10
+  h2: 50
+  input_dir: ./datasets/Musical_Instruments/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  model: ANR
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Musical_Instruments - ANR/
+  pretrained_src: 1
+  random_seed: 1234
+  save_model: Musical_Instruments_ANR
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 280,020, # of Items: 74,260
+
+Creating model (Selected Model: ANR)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 2.71s (0.05 minute)
+
+Loading uid_userDoc from "./datasets/Musical_Instruments/Musical_Instruments_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (280020, 500)]
+
+Loading iid_itemDoc from "./datasets/Musical_Instruments/Musical_Instruments_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (74260, 500)]
+
+Loading pretrained word embeddings from "./datasets/Musical_Instruments/Musical_Instruments_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (50002, 300)]
+
+Loading pretrained ARL weights of "ANR" for dataset "Musical_Instruments" from "./__saved_models__/Musical_Instruments - ANRS/Musical_Instruments_ANRS_1337.pth"!
+Loading pretrained ARL weights on GPU "0"!
+
+Loaded pretrained model states:
+
+	shared_ANR_ARL.aspProj
+	shared_ANR_ARL.aspEmbed.weight
+
+Pretrained model states transferred to current model!
+
+*** "shared_ANR_ARL.aspProj, shared_ANR_ARL.aspEmbed.weight" are FINE-TUNED!! ***
+
+
+Initialization Complete.. Elapsed Time: 14.70s (0.25 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 394,376, |DEV|: 18,487, |TEST|: 18,692
+Train/Dev/Test splits loaded! Elapsed Time: 14.83s (0.25 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 3.21828, MAE: 1.64439
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 3.22558, MAE: 1.64834
+
+Initial Evaluation Complete.. Elapsed Time: 17.93s (0.30 minute)
+
+Parameters that are fine-tuned using a smaller LR (LR: 2e-05):
+shared_ANR_ARL.aspProj, shared_ANR_ARL.aspEmbed.weight
+
+Parameters with L2 Regularization (Regularization Strength: 1e-06):
+ANR_RatingPred.uid_userOffset.weight, ANR_RatingPred.iid_itemOffset.weight
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 192,511,231
+# of Trainable Parameters: 370,631
+ANR (
+  (uid_userDoc): Embedding(280020, 500), weights = ((280020, 500),), parameters = 140,010,000
+  (iid_itemDoc): Embedding(74260, 500), weights = ((74260, 500),), parameters = 37,130,000
+  (wid_wEmbed): Embedding(50002, 300), weights = ((50002, 300),), parameters = 15,000,600
+  (shared_ANR_ARL): ANR_ARL(
+    (aspEmbed): Embedding(5, 30)
+    (aspProj): Parameter(5, 300, 10)
+  ), weights = ((5, 300, 10), (5, 30)), parameters = 15,150 (Trainable)
+  (ANR_AIE): ANR_AIE(  (W_a): Parameter(10, 10)
+    (W_u): Parameter(50, 10)
+    (w_hu): Parameter(50, 1)
+    (W_i): Parameter(50, 10)
+    (w_hi): Parameter(50, 1)
+  ), weights = ((10, 10), (50, 10), (50, 1), (50, 10), (50, 1)), parameters = 1,200 (Trainable)
+  (ANR_RatingPred): ANR_RatingPred(
+    (userAspRepDropout): Dropout(p=0.5, inplace=False)
+    (itemAspRepDropout): Dropout(p=0.5, inplace=False)
+    (uid_userOffset): Embedding(280020, 1)
+    (iid_itemOffset): Embedding(74260, 1)
+    (globalOffset): Parameter(1,)
+  ), weights = ((1,), (280020, 1), (74260, 1)), parameters = 354,281 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/15] Training Loss: 1.76684	Elapsed Time: 72.93s (0:01:12)
+[Epoch 1] [Dev]  MSE: 1.13191, MAE: 0.78276
+[Epoch 1] [Test] MSE: 1.11587, MAE: 0.77599
+
+*** MODEL has obtained the best DEV MSE of 1.13191 so far!
+*** MODEL saved to "./__saved_models__/Musical_Instruments - ANR/Musical_Instruments_ANR_1234.pth"
+
+[Epoch 2/15] Training Loss: 0.95486	Elapsed Time: 148.96s (0:02:28)
+[Epoch 2] [Dev]  MSE: 1.11842, MAE: 0.74340
+[Epoch 2] [Test] MSE: 1.09893, MAE: 0.73452
+
+*** MODEL has obtained the best DEV MSE of 1.11842 so far!
+*** MODEL saved to "./__saved_models__/Musical_Instruments - ANR/Musical_Instruments_ANR_1234.pth"
+
+[Epoch 3/15] Training Loss: 0.84594	Elapsed Time: 224.96s (0:03:44)
+[Epoch 3] [Dev]  MSE: 1.09729, MAE: 0.76822
+[Epoch 3] [Test] MSE: 1.07469, MAE: 0.75861
+
+*** MODEL has obtained the best DEV MSE of 1.09729 so far!
+*** MODEL saved to "./__saved_models__/Musical_Instruments - ANR/Musical_Instruments_ANR_1234.pth"
+
+[Epoch 4/15] Training Loss: 0.76707	Elapsed Time: 300.88s (0:05:00)
+[Epoch 4] [Dev]  MSE: 1.12143, MAE: 0.79725
+[Epoch 4] [Test] MSE: 1.09767, MAE: 0.78685
+
+[Epoch 5/15] Training Loss: 0.70369	Elapsed Time: 376.95s (0:06:16)
+[Epoch 5] [Dev]  MSE: 1.12303, MAE: 0.75975
+[Epoch 5] [Test] MSE: 1.09360, MAE: 0.74733
+
+[Epoch 6/15] Training Loss: 0.65670	Elapsed Time: 452.92s (0:07:32)
+[Epoch 6] [Dev]  MSE: 1.11711, MAE: 0.75507
+[Epoch 6] [Test] MSE: 1.08789, MAE: 0.74338
+
+[Epoch 7/15] Training Loss: 0.61549	Elapsed Time: 528.97s (0:08:48)
+[Epoch 7] [Dev]  MSE: 1.14743, MAE: 0.74287
+[Epoch 7] [Test] MSE: 1.11588, MAE: 0.73010
+
+[Epoch 8/15] Training Loss: 0.58113	Elapsed Time: 605.01s (0:10:05)
+[Epoch 8] [Dev]  MSE: 1.18124, MAE: 0.76124
+[Epoch 8] [Test] MSE: 1.14730, MAE: 0.74638
+
+[Epoch 9/15] Training Loss: 0.55198	Elapsed Time: 681.00s (0:11:21)
+[Epoch 9] [Dev]  MSE: 1.16861, MAE: 0.76001
+[Epoch 9] [Test] MSE: 1.13621, MAE: 0.74644
+
+[Epoch 10/15] Training Loss: 0.52922	Elapsed Time: 756.99s (0:12:36)
+[Epoch 10] [Dev]  MSE: 1.15790, MAE: 0.76273
+[Epoch 10] [Test] MSE: 1.12634, MAE: 0.75014
+
+[Epoch 11/15] Training Loss: 0.50642	Elapsed Time: 832.99s (0:13:52)
+[Epoch 11] [Dev]  MSE: 1.14582, MAE: 0.76694
+[Epoch 11] [Test] MSE: 1.11716, MAE: 0.75582
+
+[Epoch 12/15] Training Loss: 0.48675	Elapsed Time: 909.00s (0:15:08)
+[Epoch 12] [Dev]  MSE: 1.17048, MAE: 0.75555
+[Epoch 12] [Test] MSE: 1.14093, MAE: 0.74385
+
+[Epoch 13/15] Training Loss: 0.47098	Elapsed Time: 984.94s (0:16:24)
+[Epoch 13] [Dev]  MSE: 1.16490, MAE: 0.76053
+[Epoch 13] [Test] MSE: 1.13629, MAE: 0.74959
+
+[Epoch 14/15] Training Loss: 0.45572	Elapsed Time: 1,060.82s (0:17:40)
+[Epoch 14] [Dev]  MSE: 1.16386, MAE: 0.77356
+[Epoch 14] [Test] MSE: 1.13479, MAE: 0.76263
+
+[Epoch 15/15] Training Loss: 0.44246	Elapsed Time: 1,137.06s (0:18:57)
+[Epoch 15] [Dev]  MSE: 1.17784, MAE: 0.76102
+[Epoch 15] [Test] MSE: 1.14605, MAE: 0.74875
+
+[Training Loss]
+[1.76684, 0.95486, 0.84594, 0.76707, 0.70369, 0.6567, 0.61549, 0.58113, 0.55198, 0.52922, 0.50642, 0.48675, 0.47098, 0.45572, 0.44246]
+
+[Dev MSE]
+[1.13191, 1.11842, 1.09729, 1.12143, 1.12303, 1.11711, 1.14743, 1.18124, 1.16861, 1.1579, 1.14582, 1.17048, 1.1649, 1.16386, 1.17784]
+[Test MSE]
+[1.11587, 1.09893, 1.07469, 1.09767, 1.0936, 1.08789, 1.11588, 1.1473, 1.13621, 1.12634, 1.11716, 1.14093, 1.13629, 1.13479, 1.14605]
+[Test MAE]
+[0.77599, 0.73452, 0.75861, 0.78685, 0.74733, 0.74338, 0.7301, 0.74638, 0.74644, 0.75014, 0.75582, 0.74385, 0.74959, 0.76263, 0.74875]
+
+
+Best Dev MSE: 1.09729 (Obtained during Evaluation #3)
+Test MSE: 1.07469, Test MAE: 0.75861
+
+End of Program! Elapsed Time: 1,158.01s (0:19:18)

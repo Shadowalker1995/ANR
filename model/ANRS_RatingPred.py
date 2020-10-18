@@ -40,6 +40,7 @@ class ANRS_RatingPred(nn.Module):
     '''
     [Input]    userAspRep:        bsz x num_aspects x h1
     [Input]    itemAspRep:        bsz x num_aspects x h1
+    [Output]   rating_pred: bsz x 1
     '''
     def forward(self, userAspRep, itemAspRep, verbose=0):
         if verbose > 0:

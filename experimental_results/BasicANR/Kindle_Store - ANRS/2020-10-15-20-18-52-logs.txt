@@ -1,0 +1,151 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  command: -d Kindle_Store -m ANRS -e 10 -p 1 -v 50000 -rs 1337 -gpu 0 -vb 1 -sm Kindle_Store_ANRS
+  ctx_win_size: 3
+  dataset: Kindle_Store
+  disable_initial_eval: 0
+  dropout_rate: 0.5
+  epochs: 10
+  gpu: 0
+  h1: 10
+  h2: 50
+  input_dir: ./datasets/Kindle_Store/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  model: ANRS
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Kindle_Store - ANRS/
+  pretrained_src: 1
+  random_seed: 1337
+  save_model: Kindle_Store_ANRS
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 488,920, # of Items: 232,137
+
+Creating model (Selected Model: ANRS)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 4.12s (0.07 minute)
+
+Loading uid_userDoc from "./datasets/Kindle_Store/Kindle_Store_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (488920, 500)]
+
+Loading iid_itemDoc from "./datasets/Kindle_Store/Kindle_Store_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (232137, 500)]
+
+Loading pretrained word embeddings from "./datasets/Kindle_Store/Kindle_Store_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (50002, 300)]
+
+Initialization Complete.. Elapsed Time: 24.33s (0.41 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 800,000, |DEV|: 43,894, |TEST|: 43,882
+Train/Dev/Test splits loaded! Elapsed Time: 24.59s (0.41 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 18.61300, MAE: 4.19365
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 18.66301, MAE: 4.19998
+
+Initial Evaluation Complete.. Elapsed Time: 31.17s (0.52 minute)
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 375,545,291
+# of Trainable Parameters: 16,191
+ANR (
+  (uid_userDoc): Embedding(488920, 500), weights = ((488920, 500),), parameters = 244,460,000
+  (iid_itemDoc): Embedding(232137, 500), weights = ((232137, 500),), parameters = 116,068,500
+  (wid_wEmbed): Embedding(50002, 300), weights = ((50002, 300),), parameters = 15,000,600
+  (shared_ANR_ARL): ANR_ARL(
+    (aspEmbed): Embedding(5, 30)
+    (aspProj): Parameter(5, 300, 10)
+  ), weights = ((5, 300, 10), (5, 30)), parameters = 15,150 (Trainable)
+  (ANRS_RatingPred): ANRS_RatingPred(
+    (userFC): Linear(in_features=50, out_features=10, bias=True)
+    (itemFC): Linear(in_features=50, out_features=10, bias=True)
+    (userFC_Dropout): Dropout(p=0.5, inplace=False)
+    (itemFC_Dropout): Dropout(p=0.5, inplace=False)
+    (prediction): Linear(in_features=20, out_features=1, bias=True)
+  ), weights = ((10, 50), (10,), (10, 50), (10,), (1, 20), (1,)), parameters = 1,041 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/10] Training Loss: 1.60192	Elapsed Time: 136.84s (0:02:16)
+[Epoch 1] [Dev]  MSE: 0.90273, MAE: 0.74652
+[Epoch 1] [Test] MSE: 0.90141, MAE: 0.74795
+
+*** MODEL has obtained the best DEV MSE of 0.90273 so far!
+*** MODEL saved to "./__saved_models__/Kindle_Store - ANRS/Kindle_Store_ANRS_1337.pth"
+
+[Epoch 2/10] Training Loss: 0.88489	Elapsed Time: 280.18s (0:04:40)
+[Epoch 2] [Dev]  MSE: 0.88689, MAE: 0.73068
+[Epoch 2] [Test] MSE: 0.88333, MAE: 0.73120
+
+*** MODEL has obtained the best DEV MSE of 0.88689 so far!
+*** MODEL saved to "./__saved_models__/Kindle_Store - ANRS/Kindle_Store_ANRS_1337.pth"
+
+[Epoch 3/10] Training Loss: 0.87130	Elapsed Time: 423.29s (0:07:03)
+[Epoch 3] [Dev]  MSE: 0.91335, MAE: 0.75863
+[Epoch 3] [Test] MSE: 0.91296, MAE: 0.76097
+
+[Epoch 4/10] Training Loss: 0.86732	Elapsed Time: 566.52s (0:09:26)
+[Epoch 4] [Dev]  MSE: 0.87649, MAE: 0.71465
+[Epoch 4] [Test] MSE: 0.87504, MAE: 0.71561
+
+*** MODEL has obtained the best DEV MSE of 0.87649 so far!
+*** MODEL saved to "./__saved_models__/Kindle_Store - ANRS/Kindle_Store_ANRS_1337.pth"
+
+[Epoch 5/10] Training Loss: 0.86381	Elapsed Time: 709.63s (0:11:49)
+[Epoch 5] [Dev]  MSE: 0.87216, MAE: 0.70164
+[Epoch 5] [Test] MSE: 0.87057, MAE: 0.70239
+
+*** MODEL has obtained the best DEV MSE of 0.87216 so far!
+*** MODEL saved to "./__saved_models__/Kindle_Store - ANRS/Kindle_Store_ANRS_1337.pth"
+
+[Epoch 6/10] Training Loss: 0.85544	Elapsed Time: 852.87s (0:14:12)
+[Epoch 6] [Dev]  MSE: 0.87361, MAE: 0.70336
+[Epoch 6] [Test] MSE: 0.87244, MAE: 0.70437
+
+[Epoch 7/10] Training Loss: 0.83284	Elapsed Time: 998.77s (0:16:38)
+[Epoch 7] [Dev]  MSE: 0.86619, MAE: 0.70356
+[Epoch 7] [Test] MSE: 0.86705, MAE: 0.70568
+
+*** MODEL has obtained the best DEV MSE of 0.86619 so far!
+*** MODEL saved to "./__saved_models__/Kindle_Store - ANRS/Kindle_Store_ANRS_1337.pth"
+
+[Epoch 8/10] Training Loss: 0.82990	Elapsed Time: 1,145.67s (0:19:05)
+[Epoch 8] [Dev]  MSE: 0.86659, MAE: 0.70584
+[Epoch 8] [Test] MSE: 0.86481, MAE: 0.70669
+
+[Epoch 9/10] Training Loss: 0.82493	Elapsed Time: 1,291.03s (0:21:31)
+[Epoch 9] [Dev]  MSE: 0.86761, MAE: 0.69849
+[Epoch 9] [Test] MSE: 0.86633, MAE: 0.69982
+
+[Epoch 10/10] Training Loss: 0.81401	Elapsed Time: 1,436.18s (0:23:56)
+[Epoch 10] [Dev]  MSE: 0.87415, MAE: 0.72535
+[Epoch 10] [Test] MSE: 0.87266, MAE: 0.72674
+
+[Training Loss]
+[1.60192, 0.88489, 0.8713, 0.86732, 0.86381, 0.85544, 0.83284, 0.8299, 0.82493, 0.81401]
+
+[Dev MSE]
+[0.90273, 0.88689, 0.91335, 0.87649, 0.87216, 0.87361, 0.86619, 0.86659, 0.86761, 0.87415]
+[Test MSE]
+[0.90141, 0.88333, 0.91296, 0.87504, 0.87057, 0.87244, 0.86705, 0.86481, 0.86633, 0.87266]
+[Test MAE]
+[0.74795, 0.7312, 0.76097, 0.71561, 0.70239, 0.70437, 0.70568, 0.70669, 0.69982, 0.72674]
+
+
+Best Dev MSE: 0.86619 (Obtained during Evaluation #7)
+Test MSE: 0.86705, Test MAE: 0.70568
+
+End of Program! Elapsed Time: 1,473.93s (0:24:33)
