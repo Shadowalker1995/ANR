@@ -34,6 +34,8 @@ parser.add_argument("-dr", dest="dropout_rate", type=float, default=0.5, help="D
 # Dataset-Specific Settings (Document Length, Vocabulary Size, Dimensionality of the Embedding Layer, Source of Pretrained Word Embeddings)
 parser.add_argument("-MDL", dest="max_doc_len", type=int, default=500,
                     help="Maximum User/Item Document Length (Default: 500)")
+parser.add_argument("-MVL", dest="max_vis_len", type=int, default=500,
+                    help="Maximum User/Item Visual Feature Length (Default: 500)")
 parser.add_argument("-v", dest="vocab_size", type=int, default=50000,
                     help="Vocabulary Size (Default: 50000)")
 parser.add_argument("-WED", dest="word_embed_dim", type=int, default=300,
@@ -54,6 +56,16 @@ parser.add_argument("-h2", dest="h2", type=int, default=50,
                     help="Dimensionality of the Hidden Layers used for Aspect Importance Estimation (Default: 50)")
 parser.add_argument("-L2_reg", dest="L2_reg", type=float, default=1E-6,
                     help="L2 Regularization for User & Item Bias (Default: 1E-6)")
+
+# VANRA Hyperparameters
+parser.add_argument("-c_local", dest="channels_local", type=int, default=200,
+                    help="Local attention channels (Default: 200)")
+parser.add_argument("-c_global", dest="channels_global", type=int, default=100,
+                    help="Global attention channels (Default: 100)")
+parser.add_argument("-hiden_size", dest="hidden_size", type=int, default=500,
+                    help="hidden_size in the fcLayer of VANRA_VRL (Default: 500)")
+parser.add_argument("-output_size", dest="output_size", type=int, default=50,
+                    help="output_size in the fcLayer of VANRA_VRL (Default: 50)")
 
 # ANR Pretraining
 parser.add_argument("-ARL_path", dest="ARL_path", type=str, default="",
@@ -99,9 +111,12 @@ timer = Timer()
 timer.startTimer()
 
 uuid = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+argsString = "-bs{}-lr{}-v{}-c{}-K{}-h1{}-h2{}-c_local{}-c_global{}-hiden_size{}-output_size{}".format(
+    args.batch_size, args.learning_rate, args.vocab_size, args.ctx_win_size, args.num_aspects,
+    args.h1, args.h2, args.channels_local, args.channels_global, args.hidden_size, args.output_size)
 args.input_dir = "./datasets/{}/".format(args.dataset)
 args.out_dir = "./experimental_results/{} - {}/".format(args.dataset, args.model)
-log_path = "{}{}-{}".format(args.out_dir, uuid, 'logs.txt')
+log_path = "{}{}{}-{}".format(args.out_dir, uuid, argsString, '.log')
 logger = Logger(args.out_dir, log_path, args)
 
 # Optional: Saving Model
@@ -212,10 +227,21 @@ for epoch_num in range(args.epochs):
         if modelIsBest:
             logger.log("\n*** MODEL has obtained the best DEV MSE of {:.5f} so far!".format(devMSE))
 
+            # # DEBUG: print Model's stated_dict
+            # for param_name, param_tensor in mdl.state_dict().items():
+            #     logger.log("Model's stated_dict: {}, {}".format(param_name, param_tensor.size()))
+            # # DEBUG: print Optimizer's stated_dict
+            # for param_name, param_tensor in opt.state_dict().items():
+            #     logger.log("Optimizer's stated_dict: {}, {}".format(param_name, param_tensor))
+
             # Filter away uid_userDoc, iid_itemDoc, wid_wEmbed (These are always provided as the input, i.e. no point saving them)
             filter_list = ["uid_userDoc.weight", "iid_itemDoc.weight", "wid_wEmbed.weight"]
             filtered_mdl_state_dict = mdl.state_dict()
             filtered_mdl_state_dict = {k: v for k, v in filtered_mdl_state_dict.items() if k not in filter_list}
+
+            # # DEBUG: print New Model's stated_dict
+            # for param_name, param_tensor in mdl.state_dict().items():
+            #     logger.log("New Model's stated_dict: {}, {}".format(param_name, param_tensor.size()))
 
             model_states = {
                 "best_epoch": epoch_num + 1,

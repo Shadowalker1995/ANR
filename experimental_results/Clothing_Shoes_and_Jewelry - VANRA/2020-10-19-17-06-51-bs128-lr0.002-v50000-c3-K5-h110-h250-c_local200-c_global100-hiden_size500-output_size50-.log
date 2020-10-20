@@ -1,0 +1,233 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  channels_global: 100
+  channels_local: 200
+  command: -d Clothing_Shoes_and_Jewelry -m VANRA -e 15 -p 1 -v 50000 -K 5 -h1 10 -h2 50 -c_local 200 -c_global 100 -hiden_size 500 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm Clothing_Shoes_and_Jewelry_VANRA
+  ctx_win_size: 3
+  dataset: Clothing_Shoes_and_Jewelry
+  disable_initial_eval: 0
+  dropout_rate: 0.5
+  epochs: 15
+  gpu: 0
+  h1: 10
+  h2: 50
+  hidden_size: 500
+  input_dir: ./datasets/Clothing_Shoes_and_Jewelry/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: VANRA
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Clothing_Shoes_and_Jewelry - VANRA/
+  output_size: 50
+  pretrained_src: 1
+  random_seed: 1234
+  save_model: Clothing_Shoes_and_Jewelry_VANRA
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 669,835, # of Items: 335,585
+
+Creating model (Selected Model: VANRA)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 9.57s (0.16 minute)
+
+Loading uid_userDoc from "./datasets/Clothing_Shoes_and_Jewelry/Clothing_Shoes_and_Jewelry_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (669835, 500)]
+
+Loading iid_itemDoc from "./datasets/Clothing_Shoes_and_Jewelry/Clothing_Shoes_and_Jewelry_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (335585, 500)]
+
+Loading pretrained word embeddings from "./datasets/Clothing_Shoes_and_Jewelry/Clothing_Shoes_and_Jewelry_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (50002, 300)]
+
+Loading uid_userVis from "./datasets/Clothing_Shoes_and_Jewelry/Clothing_Shoes_and_Jewelry_uid_userVis.npy"..
+uid_userVis loaded! [uid_userVis: (669835, 500)]
+
+Loading iid_itemVis from "./datasets/Clothing_Shoes_and_Jewelry/Clothing_Shoes_and_Jewelry_iid_itemVis.npy"..
+iid_itemVis loaded! [iid_itemVis: (335585, 500)]
+
+Initialization Complete.. Elapsed Time: 79.16s (1.32 minutes)
+
+Train/Dev/Test splits loaded! |TRAIN|: 800,000, |DEV|: 17,754, |TEST|: 17,846
+Train/Dev/Test splits loaded! Elapsed Time: 79.43s (1.32 minutes)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 23293.62264, MAE: 122.87087
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 23322.12068, MAE: 122.62373
+
+Initial Evaluation Complete.. Elapsed Time: 85.70s (1.43 minutes)
+
+Parameters with L2 Regularization (Regularization Strength: 1e-06):
+VANRA_RatingPred.uid_userOffset.weight, VANRA_RatingPred.iid_itemOffset.weight
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 1,021,722,131
+# of Trainable Parameters: 1,301,531
+VANRA (
+  (uid_userDoc): Embedding(669835, 500), weights = ((669835, 500),), parameters = 334,917,500
+  (iid_itemDoc): Embedding(335585, 500), weights = ((335585, 500),), parameters = 167,792,500
+  (wid_wEmbed): Embedding(50002, 300), weights = ((50002, 300),), parameters = 15,000,600
+  (uid_userVis): Embedding(669835, 500), weights = ((669835, 500),), parameters = 334,917,500
+  (iid_itemVis): Embedding(335585, 500), weights = ((335585, 500),), parameters = 167,792,500
+  (shared_ANR_ARL): ANR_ARL(
+    (aspEmbed): Embedding(5, 30)
+    (aspProj): Parameter(5, 300, 10)
+  ), weights = ((5, 300, 10), (5, 30)), parameters = 15,150 (Trainable)
+  (ANR_AIE): ANR_AIE(  (W_a): Parameter(10, 10)
+    (W_u): Parameter(50, 10)
+    (w_hu): Parameter(50, 1)
+    (W_i): Parameter(50, 10)
+    (w_hi): Parameter(50, 1)
+  ), weights = ((10, 10), (50, 10), (50, 1), (50, 10), (50, 1)), parameters = 1,200 (Trainable)
+  (VANRA_VRL): VANRA_VRL(
+    (localAttentionLayer_user): LocalAttention(
+      (attention_layer): Sequential(
+        (0): Conv2d(1, 1, kernel_size=(3, 1), stride=(1, 1))
+        (1): Sigmoid()
+      )
+      (cnn): Sequential(
+        (0): Conv2d(1, 200, kernel_size=(1, 1), stride=(1, 1))
+        (1): ReLU()
+        (2): MaxPool2d(kernel_size=(500, 1), stride=(500, 1), padding=0, dilation=1, ceil_mode=False)
+      )
+    )
+    (globalAttentionLayer_user): GlobalAttention(
+      (attention_layer): Sequential(
+        (0): Conv2d(1, 1, kernel_size=(500, 1), stride=(1, 1))
+        (1): Sigmoid()
+      )
+      (cnn_1): Sequential(
+        (0): Conv2d(1, 100, kernel_size=(2, 1), stride=(1, 1))
+        (1): ReLU()
+        (2): MaxPool2d(kernel_size=(499, 1), stride=(499, 1), padding=0, dilation=1, ceil_mode=False)
+      )
+      (cnn_2): Sequential(
+        (0): Conv2d(1, 100, kernel_size=(3, 1), stride=(1, 1))
+        (1): ReLU()
+        (2): MaxPool2d(kernel_size=(498, 1), stride=(498, 1), padding=0, dilation=1, ceil_mode=False)
+      )
+      (cnn_3): Sequential(
+        (0): Conv2d(1, 100, kernel_size=(4, 1), stride=(1, 1))
+        (1): ReLU()
+        (2): MaxPool2d(kernel_size=(497, 1), stride=(497, 1), padding=0, dilation=1, ceil_mode=False)
+      )
+    )
+    (localAttentionLayer_item): LocalAttention(
+      (attention_layer): Sequential(
+        (0): Conv2d(1, 1, kernel_size=(3, 1), stride=(1, 1))
+        (1): Sigmoid()
+      )
+      (cnn): Sequential(
+        (0): Conv2d(1, 200, kernel_size=(1, 1), stride=(1, 1))
+        (1): ReLU()
+        (2): MaxPool2d(kernel_size=(500, 1), stride=(500, 1), padding=0, dilation=1, ceil_mode=False)
+      )
+    )
+    (globalAttentionLayer_item): GlobalAttention(
+      (attention_layer): Sequential(
+        (0): Conv2d(1, 1, kernel_size=(500, 1), stride=(1, 1))
+        (1): Sigmoid()
+      )
+      (cnn_1): Sequential(
+        (0): Conv2d(1, 100, kernel_size=(2, 1), stride=(1, 1))
+        (1): ReLU()
+        (2): MaxPool2d(kernel_size=(499, 1), stride=(499, 1), padding=0, dilation=1, ceil_mode=False)
+      )
+      (cnn_2): Sequential(
+        (0): Conv2d(1, 100, kernel_size=(3, 1), stride=(1, 1))
+        (1): ReLU()
+        (2): MaxPool2d(kernel_size=(498, 1), stride=(498, 1), padding=0, dilation=1, ceil_mode=False)
+      )
+      (cnn_3): Sequential(
+        (0): Conv2d(1, 100, kernel_size=(4, 1), stride=(1, 1))
+        (1): ReLU()
+        (2): MaxPool2d(kernel_size=(497, 1), stride=(497, 1), padding=0, dilation=1, ceil_mode=False)
+      )
+    )
+    (fcLayer): Sequential(
+      (0): Linear(in_features=500, out_features=500, bias=True)
+      (1): Dropout(p=0.5, inplace=False)
+      (2): ReLU()
+      (3): Linear(in_features=500, out_features=50, bias=True)
+    )
+  ), weights = ((1, 1, 3, 1), (1,), (200, 1, 1, 1), (200,), (1, 1, 500, 1), (1,), (100, 1, 2, 1), (100,), (100, 1, 3, 1), (100,), (100, 1, 4, 1), (100,), (1, 1, 3, 1), (1,), (200, 1, 1, 1), (200,), (1, 1, 500, 1), (1,), (100, 1, 2, 1), (100,), (100, 1, 3, 1), (100,), (100, 1, 4, 1), (100,), (500, 500), (500,), (50, 500), (50,)), parameters = 279,760 (Trainable)
+  (VANRA_RatingPred): VANRA_RatingPred(
+    (userAspRepDropout): Dropout(p=0.5, inplace=False)
+    (itemAspRepDropout): Dropout(p=0.5, inplace=False)
+    (uid_userOffset): Embedding(669835, 1)
+    (iid_itemOffset): Embedding(335585, 1)
+    (globalOffset): Parameter(1,)
+  ), weights = ((1,), (669835, 1), (335585, 1)), parameters = 1,005,421 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/15] Training Loss: 931.38953	Elapsed Time: 503.81s (0:08:23)
+[Epoch 1] [Dev]  MSE: 1.60892, MAE: 0.97349
+[Epoch 1] [Test] MSE: 1.61753, MAE: 0.97655
+
+*** MODEL has obtained the best DEV MSE of 1.60892 so far!
+*** MODEL saved to "./__saved_models__/Clothing_Shoes_and_Jewelry - VANRA/Clothing_Shoes_and_Jewelry_VANRA_1234.pth"
+
+[Epoch 2/15] Training Loss: 0.99242	Elapsed Time: 1,023.95s (0:17:03)
+[Epoch 2] [Dev]  MSE: 1.42621, MAE: 0.86197
+[Epoch 2] [Test] MSE: 1.43158, MAE: 0.86025
+
+*** MODEL has obtained the best DEV MSE of 1.42621 so far!
+*** MODEL saved to "./__saved_models__/Clothing_Shoes_and_Jewelry - VANRA/Clothing_Shoes_and_Jewelry_VANRA_1234.pth"
+
+[Epoch 3/15] Training Loss: 0.77647	Elapsed Time: 1,550.59s (0:25:50)
+[Epoch 3] [Dev]  MSE: 1.34561, MAE: 0.87040
+[Epoch 3] [Test] MSE: 1.35131, MAE: 0.86936
+
+*** MODEL has obtained the best DEV MSE of 1.34561 so far!
+*** MODEL saved to "./__saved_models__/Clothing_Shoes_and_Jewelry - VANRA/Clothing_Shoes_and_Jewelry_VANRA_1234.pth"
+
+[Epoch 4/15] Training Loss: 0.72535	Elapsed Time: 2,074.82s (0:34:34)
+[Epoch 4] [Dev]  MSE: 1.41622, MAE: 0.90069
+[Epoch 4] [Test] MSE: 1.42060, MAE: 0.90000
+
+[Epoch 5/15] Training Loss: 0.68997	Elapsed Time: 2,580.29s (0:43:00)
+[Epoch 5] [Dev]  MSE: 1.42876, MAE: 0.91126
+[Epoch 5] [Test] MSE: 1.42657, MAE: 0.90820
+
+[Epoch 6/15] Training Loss: 1.64768	Elapsed Time: 3,085.26s (0:51:25)
+[Epoch 6] [Dev]  MSE: 1.28048, MAE: 0.87610
+[Epoch 6] [Test] MSE: 1.28217, MAE: 0.87369
+
+*** MODEL has obtained the best DEV MSE of 1.28048 so far!
+*** MODEL saved to "./__saved_models__/Clothing_Shoes_and_Jewelry - VANRA/Clothing_Shoes_and_Jewelry_VANRA_1234.pth"
+
+[Epoch 7/15] Training Loss: 0.88467	Elapsed Time: 3,609.09s (1:00:09)
+[Epoch 7] [Dev]  MSE: 1.27937, MAE: 0.88755
+[Epoch 7] [Test] MSE: 1.27686, MAE: 0.88346
+
+*** MODEL has obtained the best DEV MSE of 1.27937 so far!
+*** MODEL saved to "./__saved_models__/Clothing_Shoes_and_Jewelry - VANRA/Clothing_Shoes_and_Jewelry_VANRA_1234.pth"
+
+[Epoch 8/15] Training Loss: 0.85395	Elapsed Time: 4,132.72s (1:08:52)
+[Epoch 8] [Dev]  MSE: 1.29065, MAE: 0.87081
+[Epoch 8] [Test] MSE: 1.28761, MAE: 0.86646
+
+[Epoch 9/15] Training Loss: 0.82962	Elapsed Time: 4,637.70s (1:17:17)
+[Epoch 9] [Dev]  MSE: 1.28176, MAE: 0.86946
+[Epoch 9] [Test] MSE: 1.27702, MAE: 0.86661
+
+[Epoch 10/15] Training Loss: 0.81276	Elapsed Time: 5,142.49s (1:25:42)
+[Epoch 10] [Dev]  MSE: 1.29947, MAE: 0.89658
+[Epoch 10] [Test] MSE: 1.28875, MAE: 0.89160
+
+[Epoch 11/15] Training Loss: 0.80522	Elapsed Time: 5,647.20s (1:34:07)
+[Epoch 11] [Dev]  MSE: 1.29562, MAE: 0.86082
+[Epoch 11] [Test] MSE: 1.28670, MAE: 0.85584

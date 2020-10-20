@@ -1,0 +1,124 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: Clothing_Shoes_and_Jewelry_ANRS_1337
+  batch_size: 128
+  command: -d Clothing_Shoes_and_Jewelry -m ANR -e 15 -p 1 -v 50000 -rs 1234 -gpu 0 -vb 1 -sm Clothing_Shoes_and_Jewelry_ANR -ARL_path Clothing_Shoes_and_Jewelry_ANRS_1337
+  ctx_win_size: 3
+  dataset: Clothing_Shoes_and_Jewelry
+  disable_initial_eval: 0
+  dropout_rate: 0.5
+  epochs: 15
+  gpu: 0
+  h1: 10
+  h2: 50
+  input_dir: ./datasets/Clothing_Shoes_and_Jewelry/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  model: ANR
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Clothing_Shoes_and_Jewelry - ANR/
+  pretrained_src: 1
+  random_seed: 1234
+  save_model: Clothing_Shoes_and_Jewelry_ANR
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 669,835, # of Items: 335,585
+
+Creating model (Selected Model: ANR)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 12.98s (0.22 minute)
+
+Loading uid_userDoc from "./datasets/Clothing_Shoes_and_Jewelry/Clothing_Shoes_and_Jewelry_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (669835, 500)]
+
+Loading iid_itemDoc from "./datasets/Clothing_Shoes_and_Jewelry/Clothing_Shoes_and_Jewelry_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (335585, 500)]
+
+Loading pretrained word embeddings from "./datasets/Clothing_Shoes_and_Jewelry/Clothing_Shoes_and_Jewelry_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (50002, 300)]
+
+Loading pretrained ARL weights of "ANR" for dataset "Clothing_Shoes_and_Jewelry" from "./__saved_models__/Clothing_Shoes_and_Jewelry - ANRS/Clothing_Shoes_and_Jewelry_ANRS_1337.pth"!
+Loading pretrained ARL weights on GPU "0"!
+
+Loaded pretrained model states:
+
+	shared_ANR_ARL.aspProj
+	shared_ANR_ARL.aspEmbed.weight
+
+Pretrained model states transferred to current model!
+
+*** "shared_ANR_ARL.aspProj, shared_ANR_ARL.aspEmbed.weight" are FINE-TUNED!! ***
+
+
+Initialization Complete.. Elapsed Time: 53.35s (0.89 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 800,000, |DEV|: 17,754, |TEST|: 17,846
+Train/Dev/Test splits loaded! Elapsed Time: 53.69s (0.89 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 3.74151, MAE: 1.73513
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 3.77471, MAE: 1.74650
+
+Initial Evaluation Complete.. Elapsed Time: 57.94s (0.97 minute)
+
+Parameters that are fine-tuned using a smaller LR (LR: 2e-05):
+shared_ANR_ARL.aspProj, shared_ANR_ARL.aspEmbed.weight
+
+Parameters with L2 Regularization (Regularization Strength: 1e-06):
+ANR_RatingPred.uid_userOffset.weight, ANR_RatingPred.iid_itemOffset.weight
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 518,732,371
+# of Trainable Parameters: 1,021,771
+ANR (
+  (uid_userDoc): Embedding(669835, 500), weights = ((669835, 500),), parameters = 334,917,500
+  (iid_itemDoc): Embedding(335585, 500), weights = ((335585, 500),), parameters = 167,792,500
+  (wid_wEmbed): Embedding(50002, 300), weights = ((50002, 300),), parameters = 15,000,600
+  (shared_ANR_ARL): ANR_ARL(
+    (aspEmbed): Embedding(5, 30)
+    (aspProj): Parameter(5, 300, 10)
+  ), weights = ((5, 300, 10), (5, 30)), parameters = 15,150 (Trainable)
+  (ANR_AIE): ANR_AIE(  (W_a): Parameter(10, 10)
+    (W_u): Parameter(50, 10)
+    (w_hu): Parameter(50, 1)
+    (W_i): Parameter(50, 10)
+    (w_hi): Parameter(50, 1)
+  ), weights = ((10, 10), (50, 10), (50, 1), (50, 10), (50, 1)), parameters = 1,200 (Trainable)
+  (ANR_RatingPred): ANR_RatingPred(
+    (userAspRepDropout): Dropout(p=0.5, inplace=False)
+    (itemAspRepDropout): Dropout(p=0.5, inplace=False)
+    (uid_userOffset): Embedding(669835, 1)
+    (iid_itemOffset): Embedding(335585, 1)
+    (globalOffset): Parameter(1,)
+  ), weights = ((1,), (669835, 1), (335585, 1)), parameters = 1,005,421 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/15] Training Loss: 1.56189	Elapsed Time: 147.71s (0:02:27)
+[Epoch 1] [Dev]  MSE: 1.31692, MAE: 0.87724
+[Epoch 1] [Test] MSE: 1.31550, MAE: 0.87521
+
+*** MODEL has obtained the best DEV MSE of 1.31692 so far!
+Model's stated_dict: uid_userDoc.weight, torch.Size([669835, 500])
+Model's stated_dict: iid_itemDoc.weight, torch.Size([335585, 500])
+Model's stated_dict: wid_wEmbed.weight, torch.Size([50002, 300])
+Model's stated_dict: shared_ANR_ARL.aspProj, torch.Size([5, 300, 10])
+Model's stated_dict: shared_ANR_ARL.aspEmbed.weight, torch.Size([5, 30])
+Model's stated_dict: ANR_AIE.W_a, torch.Size([10, 10])
+Model's stated_dict: ANR_AIE.W_u, torch.Size([50, 10])
+Model's stated_dict: ANR_AIE.w_hu, torch.Size([50, 1])
+Model's stated_dict: ANR_AIE.W_i, torch.Size([50, 10])
+Model's stated_dict: ANR_AIE.w_hi, torch.Size([50, 1])
+Model's stated_dict: ANR_RatingPred.globalOffset, torch.Size([1])
+Model's stated_dict: ANR_RatingPred.uid_userOffset.weight, torch.Size([669835, 1])
+Model's stated_dict: ANR_RatingPred.iid_itemOffset.weight, torch.Size([335585, 1])

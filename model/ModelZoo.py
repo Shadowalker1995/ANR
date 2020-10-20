@@ -5,6 +5,7 @@ from .utilities import *
 # from .DeepCoNN import DeepCoNN
 # from .DAttn import DAttn
 from .ANR import ANR
+from .VANRA import VANRA
 
 import numpy as np
 
@@ -34,9 +35,9 @@ class ModelZoo:
         if self.args.use_cuda:
             self.mdl.cuda()
             self.logger.log("[args.use_cuda: {}] Model is on the GPU! (args.gpu: {}, torch.cuda.current_device(): {})".format(
-                self.args.use_cuda, self.args.gpu, torch.cuda.current_device() ))
+                self.args.use_cuda, self.args.gpu, torch.cuda.current_device()))
 
-        self.logger.log("Model created! {}".format( self.timer.getElapsedTimeStr("init", conv2Mins=True) ))
+        self.logger.log("Model created! {}".format(self.timer.getElapsedTimeStr("init", conv2Mins=True)))
 
         '''
         Model Initialization
@@ -59,9 +60,11 @@ class ModelZoo:
 
         if self.args.model == "ANR" or self.args.model == "ANRS":
             self.mdl = ANR(self.logger, self.args, self.num_users, self.num_items)
-        # elif(self.args.model == "DeepCoNN"):
+        elif self.args.model == "VANRA":
+            self.mdl = VANRA(self.logger, self.args, self.num_users, self.num_items)
+        # elif self.args.model == "DeepCoNN":
         #     self.mdl = DeepCoNN(self.logger, self.args, self.num_users, self.num_items)
-        # elif(self.args.model == "DAttn"):
+        # elif self.args.model == "DAttn":
         #     self.mdl = DAttn(self.logger, self.args, self.num_users, self.num_items)
 
     def initModel(self):
@@ -69,20 +72,28 @@ class ModelZoo:
             self.initANR()
         elif self.args.model == "ANRS":
             self.initANRS()
+        elif self.args.model == "VANRA":
+            self.initVANRA()
         # elif(self.args.model == "DeepCoNN"):
         #     self.initDeepCoNN()
         # elif(self.args.model == "DAttn"):
         #     self.initDAttn()
 
-    # # DeepCoNN - Initialization (User Documents, Item Documents, Word Embeddings)
+    # DeepCoNN - Initialization (User Documents, Item Documents, Word Embeddings)
     def initDeepCoNN(self):
         self.loadDocs()
         self.loadWordEmbeddings()
 
-    # # DAttn - Initialization (User Documents, Item Documents, Word Embeddings)
+    # DAttn - Initialization (User Documents, Item Documents, Word Embeddings)
     def initDAttn(self):
         self.loadDocs()
         self.loadWordEmbeddings()
+
+    # VANRA - Initialization (User Documents, Item Documents, Word Embeddings, User Visual Features, Item Visual Features)
+    def initVANRA(self):
+        self.loadDocs()
+        self.loadWordEmbeddings()
+        self.loadVises()
 
     # ANR - Initialization (User Documents, Item Documents, Word Embeddings)
     # ANR - Optionally, Load the Pretrained Weights for ARL
@@ -173,6 +184,27 @@ class ModelZoo:
         # Ensures that the embeddings for <pad> and <unk> are always zero vectors
         self.mdl.wid_wEmbed.weight.data[PAD_idx].fill_(0)
         self.mdl.wid_wEmbed.weight.data[UNK_idx].fill_(0)
+
+    # Load the user & item visual features
+    def loadVises(self):
+        uid_userVis_path = "{}{}{}".format(self.args.input_dir, self.args.dataset, fp_uid_userVis)
+        iid_itemVis_path = "{}{}{}".format(self.args.input_dir, self.args.dataset, fp_iid_itemVis)
+
+        # User Visual Features
+        self.logger.log("\nLoading uid_userVis from \"{}\"..".format(uid_userVis_path))
+        np_uid_userVis = np.load(uid_userVis_path)
+
+        self.mdl.uid_userVis.weight.data.copy_(torch.from_numpy(np_uid_userVis).long())
+        self.logger.log("uid_userVis loaded! [uid_userVis: {}]".format(np_uid_userVis.shape))
+        del np_uid_userVis
+
+        # Item Visual features
+        self.logger.log("\nLoading iid_itemVis from \"{}\"..".format(iid_itemVis_path))
+        np_iid_itemVis = np.load(iid_itemVis_path)
+
+        self.mdl.iid_itemVis.weight.data.copy_(torch.from_numpy(np_iid_itemVis).long())
+        self.logger.log("iid_itemVis loaded! [iid_itemVis: {}]".format(np_iid_itemVis.shape))
+        del np_iid_itemVis
 
     '''
     Optimizer & Loss Function
