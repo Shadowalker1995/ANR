@@ -1,0 +1,32 @@
+
+Dataset: Tools_and_Home_Improvement
+
+[args from argparse.ArgumentParser().parse_args()]
+command: pretrained_vectors_simple.py -emb_dim 100 -d Tools_and_Home_Improvement
+dataset: Tools_and_Home_Improvement
+emb_dim: 100
+emb_rand_init: 0.01
+random_seed: 1337
+
+[INPUT] Source Folder:                 ../datasets/
+[INPUT] Category Folder:               ../datasets/Tools_and_Home_Improvement/
+[INPUT] env:                           ../datasets/Tools_and_Home_Improvement/Tools_and_Home_Improvement_env.pkl
+[INPUT] Pretrained Word Embeddings:    ../datasets/glove.twitter.word2vec.27B.100d.txt
+
+[OUTPUT] wid_wordEmbed:                ../datasets/Tools_and_Home_Improvement/Tools_and_Home_Improvement_wed100_wid_wordEmbed.npy
+
+Loading word-to-wid mappings (i.e. word_wid) from "../datasets/Tools_and_Home_Improvement/Tools_and_Home_Improvement_env.pkl"
+
+|V|: 50002
+
+Finished processing pretrained embeddings..
+# of words with pretrained embeddings: 35662
+
+Embedding Matrix=(50002, 100), |V|=50002
+# of Words w/ No Pretrained Embeddings=14340 (28.679%)
+
+Embeddings successfully saved to '../datasets/Tools_and_Home_Improvement/Tools_and_Home_Improvement_wed100_wid_wordEmbed.npy'
+
+
+Pretrained word embeddings for "Tools_and_Home_Improvement" obtained after 73.60 seconds (1.23 minutes)
+

@@ -1,0 +1,49 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  channels_global: 20
+  channels_local: 20
+  command: -d CDs_and_Vinyl -m DAttn -e 10 -p 1 -v 50000 -K 5 -h1 10 -h2 50 -WED 300 -c_local 20 -c_global 20 -hiden_size 200 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm CDs_and_Vinyl_DAttn
+  ctx_win_size: 3
+  dataset: CDs_and_Vinyl
+  disable_initial_eval: 0
+  dropout_rate: 0.5
+  epochs: 10
+  gpu: 0
+  h1: 10
+  h2: 50
+  hidden_size: 200
+  input_dir: ./datasets/CDs_and_Vinyl/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: DAttn
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/CDs_and_Vinyl - DAttn/
+  output_size: 50
+  pretrained_src: 1
+  random_seed: 1234
+  save_model: CDs_and_Vinyl_DAttn
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 488,046, # of Items: 237,480
+
+Creating model (Selected Model: DAttn)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 4.19s (0.07 minute)
+
+Loading uid_userDoc from "./datasets/CDs_and_Vinyl/CDs_and_Vinyl_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (488046, 500)]
+
+Loading iid_itemDoc from "./datasets/CDs_and_Vinyl/CDs_and_Vinyl_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (237480, 500)]
+
+Loading pretrained word embeddings from "./datasets/CDs_and_Vinyl/CDs_and_Vinyl_wid_wordEmbed.npy"..

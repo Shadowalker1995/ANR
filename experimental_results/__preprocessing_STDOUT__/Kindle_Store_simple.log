@@ -1,0 +1,207 @@
+╭─xulabzz ~/Dev/NLP/ANR/preprocessing ‹master*›
+╰─➤  $ python preprocessing_simple.py -d Kindle_Store -dev_test_in_train 1
+
+Dataset: Kindle_Store
+[args from argparse.ArgumentParser().parse_args()]
+command: preprocessing_simple.py -d Kindle_Store -dev_test_in_train 1
+dataset: Kindle_Store
+dataset_maximum_size: 1000000
+dev_test_in_train: True
+maxDL: 500
+maxVL: 500
+minImages: 1
+minReviews: 1
+minRL: 10
+random_seed: 1337
+train_ratio: 0.8
+vocab: 50000
+
+[INPUT] Source Folder:       ../datasets/
+[INPUT] Reviews/Ratings:     ../datasets/reviews_Kindle_Store.json
+
+[OUTPUT] Category Folder:    ../datasets/Kindle_Store/
+[OUTPUT] env:                ../datasets/Kindle_Store/Kindle_Store_env.pkl
+[OUTPUT] info:               ../datasets/Kindle_Store/Kindle_Store_info.pkl
+[OUTPUT] split_train:        ../datasets/Kindle_Store/Kindle_Store_train_interactions.pkl
+[OUTPUT] split_dev:          ../datasets/Kindle_Store/Kindle_Store_dev_interactions.pkl
+[OUTPUT] split_test:         ../datasets/Kindle_Store/Kindle_Store_test_interactions.pkl
+[OUTPUT] split_train:        ../datasets/Kindle_Store/Kindle_Store_split_train.pkl
+[OUTPUT] split_dev:          ../datasets/Kindle_Store/Kindle_Store_split_dev.pkl
+[OUTPUT] split_test:         ../datasets/Kindle_Store/Kindle_Store_split_test.pkl
+[OUTPUT] uid_userDoc:        ../datasets/Kindle_Store/Kindle_Store_uid_userDoc.npy
+[OUTPUT] iid_itemDoc:        ../datasets/Kindle_Store/Kindle_Store_iid_itemDoc.npy
+[OUTPUT] uid_userDoc:        ../datasets/Kindle_Store/Kindle_Store_uid_userVis.npy
+[OUTPUT] iid_itemDoc:        ../datasets/Kindle_Store/Kindle_Store_iid_itemVis.npy
+
+Preprocessing data for "Kindle_Store"
+
+[Settings]
+Min reviews for user/item: 1
+Min review length to qualify as an user-item interaction: 10
+Max words for user/item document: 500 (For truncating/padding to get a fixed-size representation)
+Top-50000 words in vocabulary being utilized!
+
+
+Initial pass of reviews to get the user-item interactions!
+Initial pass of reviews for "Kindle_Store": 3205467it [01:35, 33651.68it/s]
+[Initial stats] Users: 1,406,890, Items: 430,530, Ratings: 3,205,467, Density: 0.0000053
+
+
+Second pass of visual features to get the item-feature interactions!
+Initial pass of reviews for "Kindle_Store": 100%|██████████████████████████████████████████████████████████████████| 430456/430456 [00:06<00:00, 61650.86it/s]
+[Second stats] Items with image: 430,456, Images: 430,456, Density: 1.0000000
+
+
+Starting to filter away users & items based on thresold of 1 images!
+Updating interactions based on the num of images...
+Filtering interactions: 100%|██████████████████████████████████████████████████████████████████████████████████| 3205467/3205467 [00:00<00:00, 4302924.60it/s]
+
+Filtered users & items based on thresold of 1 images!
+Users: 1406890 -> 1385190, Items: 430530 -> 426322
+[Current stats] Users: 1385190, Items: 426322, Ratings: 3164666, Density: 0.0000054
+Updating interactions based on the num of images...
+Filtering interactions: 100%|██████████████████████████████████████████████████████████████████████████████████| 3164666/3164666 [00:00<00:00, 4273000.31it/s]
+
+Filtered users & items based on thresold of 1 images!
+Users: 1385190 -> 1385190, Items: 426322 -> 426322
+[Current stats] Users: 1385190, Items: 426322, Ratings: 3164666, Density: 0.0000054
+
+No change in # of users or # of items!
+
+[Final stats] Users: 1,385,190, Items: 426,322, Ratings: 3,164,666, Density: 0.0000054
+
+Elapsed time for "Kindle_Store": 113.69 seconds (1.89 minutes)
+
+Starting to filter away users & items based on thresold of 1 reviews!
+
+Filtered users & items based on thresold of 1 eviews!
+Users: 1385190 -> 1385190, Items: 426322 -> 426322
+
+No change in # of users or # of items!
+
+[Final stats] Users: 1,385,190, Items: 426,322, Ratings: 3,164,666, Density: 0.0000054
+
+Elapsed time for "Kindle_Store": 114.07 seconds (1.90 minutes)
+
+
+Third pass of reviews to get the rating, date, the num of tokenized review and index!
+Third pass of len of reviews for "Kindle_Store": 3205467it [02:43, 19607.99it/s]
+[Current stats] Users: 1,385,190, Items: 426,322, Ratings: 3,164,666, Density: 0.0000054
+
+Filtering user-item interactions based on minimum review length of 10 tokens..
+Filtering interactions: 100%|██████████████████████████████████████████████████████████████████████████████████| 3164666/3164666 [00:00<00:00, 4990587.83it/s]
+
+Filtered users & items based on minimum review length of 10 tokens!
+Users: 1,385,190 -> 1,373,928, Items: 426,322 -> 425,389
+[Current stats] Users: 1,373,928, Items: 425,389, Ratings: 3,144,134, Density: 0.0000054
+
+
+Starting to filter away users & items based on thresold of 1 reviews (after removing reviews with <= 10 tokens)!
+
+Filtered users & items based on thresold of 1 reviews!
+Users: 1,373,928 -> 1,373,928, Items: 425,389 -> 425,389
+
+No change in # of users or # of items!
+
+[Final stats] Users: 1,373,928, Items: 425,389, Ratings: 3,144,134, Density: 0.0000054
+
+*****************************************************************************************************************************
+*** Original Dataset Size (i.e. num_ratings): 3,144,134!
+*** Selecting a random subsample of 1,000,000 user-item interactions!
+*** Current Dataset Size (i.e. num_ratings):  1,000,000!
+*****************************************************************************************************************************
+Fourth pass of reviews for "Kindle_Store": 3205467it [02:07, 25185.73it/s]
+
+
+80.0% of ALL reviews are RANDOMLY selected for TRAIN, another 10.0% RANDOMLY selected for DEV, and remaining 10.0% used for TEST.
+
+[Initial Stats] Total Interactions: 1,000,000, TRAIN: 800,000 (80.00%), DEV: 100,000 (10.00%), TEST: 100,000 (10.00%)
+
+
+Removing users & items who do not appear in the training set, from the dev and test sets..
+Updating DEV interactions: 100%|██████████████████████████████████████████████████████████████████████████████████| 100000/100000 [00:00<00:00, 979458.09it/s]
+Updating TEST interactions: 100%|█████████████████████████████████████████████████████████████████████████████████| 100000/100000 [00:00<00:00, 961828.67it/s]
+
+Removed 56,106 interactions from DEV and 56,118 interactions from TEST! (i.e. Those belonging to Users/Items which do not appear in TRAIN)
+
+[Current Stats] Total Interactions: 887,776, TRAIN: 800,000 (90.11%), DEV: 43,894 (4.94%), TEST: 43,882 (4.94%)
+
+
+[FINAL Stats] Users: 488,920, Items: 232,137, Ratings: 887,776, Density: 0.0000078
+
+[FINAL Stats] Total Interactions: 887,776, TRAIN: 800,000 (90.11%), DEV: 43,894 (4.94%), TEST: 43,882 (4.94%)
+
+[FINAL Stats][TRAIN] Users: 488,920, Items: 232,137, Ratings: 800,000
+[FINAL Stats][DEV]   Users: 31,244, Items: 29,583, Ratings: 43,894
+[FINAL Stats][TEST]  Users: 31,292, Items: 29,625, Ratings: 43,882
+
+
+train_interactions:   ../datasets/Kindle_Store/Kindle_Store_train_interactions.pkl
+dev_interactions:     ../datasets/Kindle_Store/Kindle_Store_dev_interactions.pkl
+test_interactions:    ../datasets/Kindle_Store/Kindle_Store_test_interactions.pkl
+
+Consolidating user/item reviews from TRAINING set
+Consolidating user/item reviews from TRAINING set: 100%|██████████████████████████████████████████████████████████| 800000/800000 [00:01<00:00, 550283.57it/s]
+
+Creating user docs from TRAINING set
+Creating item docs from TRAINING set
+
+Minimum User Doc Len: 10, Minimum Item Doc Len: 10
+
+Original number of words (based on USER & ITEM documents constructed from TRAINING set): 274,404
+For the vocabulary, we are only using the 50,000 most frequent words
+Current number of words: 50,000
+
+For each user doc, converting words to wids using word_wid...: 100%|███████████████████████████████████████████████| 488920/488920 [00:06<00:00, 76954.20it/s]
+For each item doc, converting words to wids using word_wid...: 100%|███████████████████████████████████████████████| 232137/232137 [00:05<00:00, 40929.72it/s]
+Store the actual length of each user document (before padding): 100%|████████████████████████████████████████████| 488920/488920 [00:00<00:00, 3287040.07it/s]
+Store the actual length of each item document (before padding): 100%|████████████████████████████████████████████| 232137/232137 [00:00<00:00, 3227811.33it/s]
+Pad the user documents to MAX_DOC_LEN: 100%|██████████████████████████████████████████████████████████████████████| 488920/488920 [00:03<00:00, 140618.87it/s]
+Pad the item documents to MAX_DOC_LEN: 100%|██████████████████████████████████████████████████████████████████████| 232137/232137 [00:01<00:00, 137707.42it/s]
+Preparing the TRAINING set: 100%|█████████████████████████████████████████████████████████████████████████████████| 800000/800000 [00:00<00:00, 863071.02it/s]
+Preparing the DEV set: 100%|████████████████████████████████████████████████████████████████████████████████████████| 43894/43894 [00:00<00:00, 749536.00it/s]
+Preparing the TESTING set: 100%|████████████████████████████████████████████████████████████████████████████████████| 43882/43882 [00:00<00:00, 763958.66it/s]
+Info:                 ../datasets/Kindle_Store/Kindle_Store_info.pkl
+Training Set:         ../datasets/Kindle_Store/Kindle_Store_split_train.pkl
+Validation Set:       ../datasets/Kindle_Store/Kindle_Store_split_dev.pkl
+Test Set:             ../datasets/Kindle_Store/Kindle_Store_split_test.pkl
+
+Creating numpy matrix for uid_userDoc..
+User Document Matrix: (488920, 500)
+User Document Matrix: ../datasets/Kindle_Store/Kindle_Store_uid_userDoc.npy
+
+Creating numpy matrix for iid_itemDoc..
+Item Document Matrix: (232137, 500)
+Item Document Matrix: ../datasets/Kindle_Store/Kindle_Store_iid_itemDoc.npy
+
+Consolidating user/item visual features from TRAINING set
+Consolidating user/item visual features from TRAINING set: 100%|██████████████████████████████████████████████████| 800000/800000 [00:03<00:00, 265219.64it/s]
+
+Creating user visuals from TRAINING set
+Creating item visuals from TRAINING set
+
+Minimum User Vis Len: 50, Minimum Item Vis Len: 50
+Convert user to uid...: 100%|████████████████████████████████████████████████████████████████████████████████████| 488920/488920 [00:00<00:00, 1725154.53it/s]
+Convert item to iid...: 100%|████████████████████████████████████████████████████████████████████████████████████| 232137/232137 [00:00<00:00, 1683600.57it/s]
+Store the actual length of each user visual feature (before padding): 100%|██████████████████████████████████████| 488920/488920 [00:00<00:00, 3775536.94it/s]
+Store the actual length of each item visual feature (before padding): 100%|██████████████████████████████████████| 232137/232137 [00:00<00:00, 3356325.16it/s]
+Pad the user visual feature to MAX_VIS_LEN: 100%|██████████████████████████████████████████████████████████████████| 488920/488920 [00:05<00:00, 83544.87it/s]
+Pad the item visual feature to MAX_VIS_LEN: 100%|█████████████████████████████████████████████████████████████████| 232137/232137 [00:01<00:00, 156890.37it/s]
+
+Creating numpy matrix for uid_userVis..
+User Visual Feature Matrix: (488920, 500)
+User Visual Feature Matrix: ../datasets/Kindle_Store/Kindle_Store_uid_userDoc.npy
+
+Creating numpy matrix for iid_itemVis..
+Item Visual Feature Matrix: (232137, 500)
+Item Visual Feature Matrix: ../datasets/Kindle_Store/Kindle_Store_iid_itemDoc.npy
+
+Saving all required files for "Kindle_Store"..
+Environment:          ../datasets/Kindle_Store/Kindle_Store_env.pkl
+
+All required files for "Kindle_Store" successfully saved to '../datasets/Kindle_Store/'
+
+Preprocessing for "Kindle_Store" done after 621.52 seconds (10.36 minutes)
+
+
+Done!!

@@ -1,0 +1,201 @@
+╭─xulabzz ~/Dev/NLP/ANR/preprocessing ‹master*›
+╰─➤  $ python preprocessing_simple.py -d Patio_Lawn_and_Garden -dev_test_in_train 1
+
+Dataset: Patio_Lawn_and_Garden
+[args from argparse.ArgumentParser().parse_args()]
+command: preprocessing_simple.py -d Patio_Lawn_and_Garden -dev_test_in_train 1
+dataset: Patio_Lawn_and_Garden
+dataset_maximum_size: 1000000
+dev_test_in_train: True
+maxDL: 500
+maxVL: 500
+minImages: 1
+minReviews: 1
+minRL: 10
+random_seed: 1337
+train_ratio: 0.8
+vocab: 50000
+
+[INPUT] Source Folder:       ../datasets/
+[INPUT] Reviews/Ratings:     ../datasets/reviews_Patio_Lawn_and_Garden.json
+
+[OUTPUT] Category Folder:    ../datasets/Patio_Lawn_and_Garden/
+[OUTPUT] env:                ../datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_env.pkl
+[OUTPUT] info:               ../datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_info.pkl
+[OUTPUT] split_train:        ../datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_train_interactions.pkl
+[OUTPUT] split_dev:          ../datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_dev_interactions.pkl
+[OUTPUT] split_test:         ../datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_test_interactions.pkl
+[OUTPUT] split_train:        ../datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_split_train.pkl
+[OUTPUT] split_dev:          ../datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_split_dev.pkl
+[OUTPUT] split_test:         ../datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_split_test.pkl
+[OUTPUT] uid_userDoc:        ../datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_uid_userDoc.npy
+[OUTPUT] iid_itemDoc:        ../datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_iid_itemDoc.npy
+[OUTPUT] uid_userDoc:        ../datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_uid_userVis.npy
+[OUTPUT] iid_itemDoc:        ../datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_iid_itemVis.npy
+
+Preprocessing data for "Patio_Lawn_and_Garden"
+
+[Settings]
+Min reviews for user/item: 1
+Min review length to qualify as an user-item interaction: 10
+Max words for user/item document: 500 (For truncating/padding to get a fixed-size representation)
+Top-50000 words in vocabulary being utilized!
+
+
+Initial pass of reviews to get the user-item interactions!
+Initial pass of reviews for "Patio_Lawn_and_Garden": 993490it [00:28, 34541.46it/s]
+[Initial stats] Users: 714,791, Items: 105,984, Ratings: 993,490, Density: 0.0000131
+
+
+Second pass of visual features to get the item-feature interactions!
+Initial pass of reviews for "Patio_Lawn_and_Garden": 100%|█████████████████████████████████████████████████████████| 108245/108245 [00:01<00:00, 60344.00it/s]
+[Second stats] Items with image: 108,245, Images: 108,245, Density: 1.0000000
+
+
+Starting to filter away users & items based on thresold of 1 images!
+Updating interactions based on the num of images...
+Filtering interactions: 100%|████████████████████████████████████████████████████████████████████████████████████| 993490/993490 [00:00<00:00, 4066075.03it/s]
+
+Filtered users & items based on thresold of 1 images!
+Users: 714791 -> 709653, Items: 105984 -> 105153
+[Current stats] Users: 709653, Items: 105153, Ratings: 984699, Density: 0.0000132
+Updating interactions based on the num of images...
+Filtering interactions: 100%|████████████████████████████████████████████████████████████████████████████████████| 984699/984699 [00:00<00:00, 4062682.36it/s]
+
+Filtered users & items based on thresold of 1 images!
+Users: 709653 -> 709653, Items: 105153 -> 105153
+[Current stats] Users: 709653, Items: 105153, Ratings: 984699, Density: 0.0000132
+
+No change in # of users or # of items!
+
+[Finl stats] Users: 709,653, Items: 105,153, Ratings: 984,699, Density: 0.0000132
+
+Elapsed time for "Patio_Lawn_and_Garden": 33.85 seconds (0.56 minutes)
+
+Starting to filter away users & items based on thresold of 1 reviews!
+
+Filtered users & items based on thresold of 1 reviews!
+Users: 709653 -> 709653, Items: 105153 -> 105153
+
+No change in # of users or # of items!
+
+[Final stats] Users: 709,653, Items: 105,153, Ratings: 984,699, Density: 0.0000132
+
+Elapsed time for "Patio_Lawn_and_Garden": 34.00 seconds (0.57 minutes)
+
+
+Third pass of reviews to get the rating, date, the num of tokenized review and index!
+Third pass of len of reviews for "Patio_Lawn_and_Garden": 993490it [00:47, 20826.32it/s]
+[Current stats] Users: 709,653, Items: 105,153, Ratings: 984,699, Density: 0.0000132
+
+Filtering user-item interactions based on minimum review length of 10 tokens..
+Filtering interactions: 100%|████████████████████████████████████████████████████████████████████████████████████| 984699/984699 [00:00<00:00, 4477296.53it/s]
+
+Filtered users & items based on minimum review length of 10 tokens!
+Users: 709,653 -> 700,037, Items: 105,153 -> 104,250
+[Current stats] Users: 700,037, Items: 104,250, Ratings: 969,757, Density: 0.0000133
+
+
+Starting to filter away users & items based on thresold of 1 reviews (after removing reviews with <= 10 tokens)!
+
+Filtered users & items based on thresold of 1 reviews!
+Users: 700,037 -> 700,037, Items: 104,250 -> 104,250
+
+No change in # of users or # of items!
+
+[Final stats] Users: 700,037, Items: 104,250, Ratings: 969,757, Density: 0.0000133
+Fourth pass of reviews for "Patio_Lawn_and_Garden": 993490it [00:54, 18396.03it/s]
+
+
+80.0% of ALL reviews are RANDOMLY selected for TRAIN, another 10.0% RANDOMLY selected for DEV, and remaining 10.0% used for TEST.
+
+[Initial Stats] Total Interactions: 969,757, TRAIN: 775,805 (80.00%), DEV: 96,976 (10.00%), TEST: 96,976 (10.00%)
+
+
+Removing users & items who do not appear in the training set, from the dev and test sets..
+Updating DEV interactions: 100%|███████████████████████████████████████████████████████████████████████████████████| 96976/96976 [00:00<00:00, 1063540.54it/s]
+Updating TEST interactions: 100%|██████████████████████████████████████████████████████████████████████████████████| 96976/96976 [00:00<00:00, 1016089.75it/s]
+
+Removed 62,392 interactions from DEV and 62,258 interactions from TEST! (i.e. Those belonging to Users/Items which do not appear in TRAIN)
+
+[Current Stats] Total Interactions: 845,107, TRAIN: 775,805 (91.80%), DEV: 34,584 (4.09%), TEST: 34,718 (4.11%)
+
+
+[FINAL Stats] Users: 584,107, Items: 95,030, Ratings: 845,107, Density: 0.0000152
+
+[FINAL Stats] Total Interactions: 845,107, TRAIN: 775,805 (91.80%), DEV: 34,584 (4.09%), TEST: 34,718 (4.11%)
+
+[FINAL Stats][TRAIN] Users: 584,107, Items: 95,030, Ratings: 775,805
+[FINAL Stats][DEV]   Users: 30,531, Items: 15,997, Ratings: 34,584
+[FINAL Stats][TEST]  Users: 30,579, Items: 16,200, Ratings: 34,718
+
+
+train_interactions:   ../datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_train_interactions.pkl
+dev_interactions:     ../datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_dev_interactions.pkl
+test_interactions:    ../datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_test_interactions.pkl
+
+Consolidating user/item reviews from TRAINING set
+Consolidating user/item reviews from TRAINING set: 100%|██████████████████████████████████████████████████████████| 775805/775805 [00:04<00:00, 174513.60it/s]
+
+Creating user docs from TRAINING set
+Creating item docs from TRAINING set
+
+Minimum User Doc Len: 10, Minimum Item Doc Len: 10
+
+Original number of words (based on USER & ITEM documents constructed from TRAINING set): 183,875
+For the vocabulary, we are only using the 50,000 most frequent words
+Current number of words: 50,000
+
+For each user doc, converting words to wids using word_wid...: 100%|███████████████████████████████████████████████| 584107/584107 [00:07<00:00, 80799.16it/s]
+For each item doc, converting words to wids using word_wid...: 100%|█████████████████████████████████████████████████| 95030/95030 [00:06<00:00, 13694.50it/s]
+Store the actual length of each user document (before padding): 100%|████████████████████████████████████████████| 584107/584107 [00:00<00:00, 3265805.44it/s]
+Store the actual length of each item document (before padding): 100%|██████████████████████████████████████████████| 95030/95030 [00:00<00:00, 2842870.86it/s]
+Pad the user documents to MAX_DOC_LEN: 100%|██████████████████████████████████████████████████████████████████████| 584107/584107 [00:04<00:00, 134878.52it/s]
+Pad the item documents to MAX_DOC_LEN: 100%|█████████████████████████████████████████████████████████████████████████| 95030/95030 [00:05<00:00, 18274.33it/s]
+Preparing the TRAINING set: 100%|█████████████████████████████████████████████████████████████████████████████████| 775805/775805 [00:00<00:00, 881063.92it/s]
+Preparing the DEV set: 100%|████████████████████████████████████████████████████████████████████████████████████████| 34584/34584 [00:00<00:00, 727468.73it/s]
+Preparing the TESTING set: 100%|████████████████████████████████████████████████████████████████████████████████████| 34718/34718 [00:00<00:00, 644623.39it/s]
+Info:                 ../datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_info.pkl
+Training Set:         ../datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_split_train.pkl
+Validation Set:       ../datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_split_dev.pkl
+Test Set:             ../datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_split_test.pkl
+
+Creating numpy matrix for uid_userDoc..
+User Document Matrix: (584107, 500)
+User Document Matrix: ../datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_uid_userDoc.npy
+
+Creating numpy matrix for iid_itemDoc..
+Item Document Matrix: (95030, 500)
+Item Document Matrix: ../datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_iid_itemDoc.npy
+
+Consolidating user/item visual features from TRAINING set
+Consolidating user/item visual features from TRAINING set: 100%|██████████████████████████████████████████████████| 775805/775805 [00:02<00:00, 325799.22it/s]
+
+Creating user visuals from TRAINING set
+Creating item visuals from TRAINING set
+
+Minimum User Vis Len: 50, Minimum Item Vis Len: 50
+Convert user to uid...: 100%|████████████████████████████████████████████████████████████████████████████████████| 584107/584107 [00:00<00:00, 1807956.68it/s]
+Convert item to iid...: 100%|██████████████████████████████████████████████████████████████████████████████████████| 95030/95030 [00:00<00:00, 1446694.94it/s]
+Store the actual length of each user visual feature (before padding): 100%|██████████████████████████████████████| 584107/584107 [00:00<00:00, 3617013.09it/s]
+Store the actual length of each item visual feature (before padding): 100%|████████████████████████████████████████| 95030/95030 [00:00<00:00, 3194120.45it/s]
+Pad the user visual feature to MAX_VIS_LEN: 100%|██████████████████████████████████████████████████████████████████| 584107/584107 [00:08<00:00, 71189.55it/s]
+Pad the item visual feature to MAX_VIS_LEN: 100%|███████████████████████████████████████████████████████████████████| 95030/95030 [00:00<00:00, 149693.34it/s]
+
+Creating numpy matrix for uid_userVis..
+User Visual Feature Matrix: (584107, 500)
+User Visual Feature Matrix: ../datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_uid_userDoc.npy
+
+Creating numpy matrix for iid_itemVis..
+Item Visual Feature Matrix: (95030, 500)
+Item Visual Feature Matrix: ../datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_iid_itemDoc.npy
+
+Saving all required files for "Patio_Lawn_and_Garden"..
+Environment:          ../datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_env.pkl
+
+All required files for "Patio_Lawn_and_Garden" successfully saved to '../datasets/Patio_Lawn_and_Garden/'
+
+Preprocessing for "Patio_Lawn_and_Garden" done after 337.49 seconds (5.62 minutes)
+
+
+Done!!

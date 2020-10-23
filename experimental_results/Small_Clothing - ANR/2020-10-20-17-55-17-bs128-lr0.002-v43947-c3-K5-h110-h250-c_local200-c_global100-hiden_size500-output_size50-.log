@@ -1,0 +1,348 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: Small_Clothing_ANRS_1337
+  batch_size: 128
+  channels_global: 100
+  channels_local: 200
+  command: -d Small_Clothing -m ANR -e 50 -p 1 -v 43947 -rs 1234 -gpu 0 -vb 1 -sm Small_Clothing -ARL_path Small_Clothing_ANRS_1337
+  ctx_win_size: 3
+  dataset: Small_Clothing
+  disable_initial_eval: 0
+  dropout_rate: 0.5
+  epochs: 50
+  gpu: 0
+  h1: 10
+  h2: 50
+  hidden_size: 500
+  input_dir: ./datasets/Small_Clothing/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: ANR
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Small_Clothing - ANR/
+  output_size: 50
+  pretrained_src: 1
+  random_seed: 1234
+  save_model: Small_Clothing
+  use_cuda: True
+  verbose: 1
+  vocab_size: 43947
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 77,930, # of Items: 59,172
+
+Creating model (Selected Model: ANR)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 2.23s (0.04 minute)
+
+Loading uid_userDoc from "./datasets/Small_Clothing/Small_Clothing_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (77930, 500)]
+
+Loading iid_itemDoc from "./datasets/Small_Clothing/Small_Clothing_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (59172, 500)]
+
+Loading pretrained word embeddings from "./datasets/Small_Clothing/Small_Clothing_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (43949, 300)]
+
+Loading pretrained ARL weights of "ANR" for dataset "Small_Clothing" from "./__saved_models__/Small_Clothing - ANRS/Small_Clothing_ANRS_1337.pth"!
+Loading pretrained ARL weights on GPU "0"!
+
+Loaded pretrained model states:
+
+	shared_ANR_ARL.aspProj
+	shared_ANR_ARL.aspEmbed.weight
+
+Pretrained model states transferred to current model!
+
+*** "shared_ANR_ARL.aspProj, shared_ANR_ARL.aspEmbed.weight" are FINE-TUNED!! ***
+
+
+Initialization Complete.. Elapsed Time: 6.09s (0.10 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 80,000, |DEV|: 150, |TEST|: 166
+Train/Dev/Test splits loaded! Elapsed Time: 6.11s (0.10 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 3.62452, MAE: 1.64166
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 3.93428, MAE: 1.73583
+
+Initial Evaluation Complete.. Elapsed Time: 6.94s (0.12 minute)
+
+Parameters that are fine-tuned using a smaller LR (LR: 2e-05):
+shared_ANR_ARL.aspProj, shared_ANR_ARL.aspEmbed.weight
+
+Parameters with L2 Regularization (Regularization Strength: 1e-06):
+ANR_RatingPred.uid_userOffset.weight, ANR_RatingPred.iid_itemOffset.weight
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 81,889,153
+# of Trainable Parameters: 153,453
+ANR (
+  (uid_userDoc): Embedding(77930, 500), weights = ((77930, 500),), parameters = 38,965,000
+  (iid_itemDoc): Embedding(59172, 500), weights = ((59172, 500),), parameters = 29,586,000
+  (wid_wEmbed): Embedding(43949, 300), weights = ((43949, 300),), parameters = 13,184,700
+  (shared_ANR_ARL): ANR_ARL(
+    (aspEmbed): Embedding(5, 30)
+    (aspProj): Parameter(5, 300, 10)
+  ), weights = ((5, 300, 10), (5, 30)), parameters = 15,150 (Trainable)
+  (ANR_AIE): ANR_AIE(  (W_a): Parameter(10, 10)
+    (W_u): Parameter(50, 10)
+    (w_hu): Parameter(50, 1)
+    (W_i): Parameter(50, 10)
+    (w_hi): Parameter(50, 1)
+  ), weights = ((10, 10), (50, 10), (50, 1), (50, 10), (50, 1)), parameters = 1,200 (Trainable)
+  (ANR_RatingPred): ANR_RatingPred(
+    (userAspRepDropout): Dropout(p=0.5, inplace=False)
+    (itemAspRepDropout): Dropout(p=0.5, inplace=False)
+    (uid_userOffset): Embedding(77930, 1)
+    (iid_itemOffset): Embedding(59172, 1)
+    (globalOffset): Parameter(1,)
+  ), weights = ((1,), (77930, 1), (59172, 1)), parameters = 137,103 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/50] Training Loss: 2.60963	Elapsed Time: 15.01s (0:00:15)
+[Epoch 1] [Dev]  MSE: 1.45622, MAE: 0.97884
+[Epoch 1] [Test] MSE: 1.55016, MAE: 1.00757
+
+*** MODEL has obtained the best DEV MSE of 1.45622 so far!
+*** The Best MODEL saved to "./__saved_models__/Small_Clothing - ANR/Small_Clothing_1234.pth"
+
+[Epoch 2/50] Training Loss: 1.45109	Elapsed Time: 30.00s (0:00:29)
+[Epoch 2] [Dev]  MSE: 1.38850, MAE: 0.93997
+[Epoch 2] [Test] MSE: 1.56364, MAE: 0.99293
+
+*** MODEL has obtained the best DEV MSE of 1.38850 so far!
+*** The Best MODEL saved to "./__saved_models__/Small_Clothing - ANR/Small_Clothing_1234.pth"
+
+[Epoch 3/50] Training Loss: 1.01892	Elapsed Time: 44.93s (0:00:44)
+[Epoch 3] [Dev]  MSE: 1.34713, MAE: 0.87162
+[Epoch 3] [Test] MSE: 1.51483, MAE: 0.91872
+
+*** MODEL has obtained the best DEV MSE of 1.34713 so far!
+*** The Best MODEL saved to "./__saved_models__/Small_Clothing - ANR/Small_Clothing_1234.pth"
+
+[Epoch 4/50] Training Loss: 0.81657	Elapsed Time: 59.85s (0:00:59)
+[Epoch 4] [Dev]  MSE: 1.28230, MAE: 0.84396
+[Epoch 4] [Test] MSE: 1.41593, MAE: 0.87927
+
+*** MODEL has obtained the best DEV MSE of 1.28230 so far!
+*** The Best MODEL saved to "./__saved_models__/Small_Clothing - ANR/Small_Clothing_1234.pth"
+
+[Epoch 5/50] Training Loss: 0.70171	Elapsed Time: 74.73s (0:01:14)
+[Epoch 5] [Dev]  MSE: 1.27042, MAE: 0.83578
+[Epoch 5] [Test] MSE: 1.40978, MAE: 0.86715
+
+*** MODEL has obtained the best DEV MSE of 1.27042 so far!
+*** The Best MODEL saved to "./__saved_models__/Small_Clothing - ANR/Small_Clothing_1234.pth"
+
+[Epoch 6/50] Training Loss: 0.62913	Elapsed Time: 89.68s (0:01:29)
+[Epoch 6] [Dev]  MSE: 1.25139, MAE: 0.84461
+[Epoch 6] [Test] MSE: 1.38450, MAE: 0.88058
+
+*** MODEL has obtained the best DEV MSE of 1.25139 so far!
+*** The Best MODEL saved to "./__saved_models__/Small_Clothing - ANR/Small_Clothing_1234.pth"
+
+[Epoch 7/50] Training Loss: 0.56924	Elapsed Time: 104.64s (0:01:44)
+[Epoch 7] [Dev]  MSE: 1.28618, MAE: 0.82702
+[Epoch 7] [Test] MSE: 1.42733, MAE: 0.86639
+
+[Epoch 8/50] Training Loss: 0.51452	Elapsed Time: 119.55s (0:01:59)
+[Epoch 8] [Dev]  MSE: 1.23694, MAE: 0.82635
+[Epoch 8] [Test] MSE: 1.38280, MAE: 0.87336
+
+*** MODEL has obtained the best DEV MSE of 1.23694 so far!
+*** The Best MODEL saved to "./__saved_models__/Small_Clothing - ANR/Small_Clothing_1234.pth"
+
+[Epoch 9/50] Training Loss: 0.46334	Elapsed Time: 134.45s (0:02:14)
+[Epoch 9] [Dev]  MSE: 1.29236, MAE: 0.84026
+[Epoch 9] [Test] MSE: 1.43965, MAE: 0.87855
+
+[Epoch 10/50] Training Loss: 0.42407	Elapsed Time: 149.36s (0:02:29)
+[Epoch 10] [Dev]  MSE: 1.29198, MAE: 0.83001
+[Epoch 10] [Test] MSE: 1.41827, MAE: 0.86951
+
+[Epoch 11/50] Training Loss: 0.38345	Elapsed Time: 164.26s (0:02:44)
+[Epoch 11] [Dev]  MSE: 1.27455, MAE: 0.83620
+[Epoch 11] [Test] MSE: 1.43459, MAE: 0.88518
+
+[Epoch 12/50] Training Loss: 0.34644	Elapsed Time: 179.16s (0:02:59)
+[Epoch 12] [Dev]  MSE: 1.29765, MAE: 0.83112
+[Epoch 12] [Test] MSE: 1.46844, MAE: 0.88795
+
+[Epoch 13/50] Training Loss: 0.31339	Elapsed Time: 194.07s (0:03:14)
+[Epoch 13] [Dev]  MSE: 1.29824, MAE: 0.83763
+[Epoch 13] [Test] MSE: 1.46895, MAE: 0.89630
+
+[Epoch 14/50] Training Loss: 0.28332	Elapsed Time: 209.08s (0:03:29)
+[Epoch 14] [Dev]  MSE: 1.33574, MAE: 0.83137
+[Epoch 14] [Test] MSE: 1.50522, MAE: 0.88958
+
+[Epoch 15/50] Training Loss: 0.25909	Elapsed Time: 223.93s (0:03:43)
+[Epoch 15] [Dev]  MSE: 1.34293, MAE: 0.82972
+[Epoch 15] [Test] MSE: 1.54370, MAE: 0.90142
+
+[Epoch 16/50] Training Loss: 0.23624	Elapsed Time: 238.77s (0:03:58)
+[Epoch 16] [Dev]  MSE: 1.35166, MAE: 0.84578
+[Epoch 16] [Test] MSE: 1.58593, MAE: 0.91925
+
+[Epoch 17/50] Training Loss: 0.21320	Elapsed Time: 253.60s (0:04:13)
+[Epoch 17] [Dev]  MSE: 1.30046, MAE: 0.83817
+[Epoch 17] [Test] MSE: 1.54687, MAE: 0.92254
+
+[Epoch 18/50] Training Loss: 0.19631	Elapsed Time: 268.47s (0:04:28)
+[Epoch 18] [Dev]  MSE: 1.32843, MAE: 0.83759
+[Epoch 18] [Test] MSE: 1.55859, MAE: 0.91802
+
+[Epoch 19/50] Training Loss: 0.17750	Elapsed Time: 283.33s (0:04:43)
+[Epoch 19] [Dev]  MSE: 1.33494, MAE: 0.84254
+[Epoch 19] [Test] MSE: 1.58397, MAE: 0.92791
+
+[Epoch 20/50] Training Loss: 0.16151	Elapsed Time: 298.14s (0:04:58)
+[Epoch 20] [Dev]  MSE: 1.32172, MAE: 0.83774
+[Epoch 20] [Test] MSE: 1.59228, MAE: 0.92790
+
+[Epoch 21/50] Training Loss: 0.14866	Elapsed Time: 312.99s (0:05:12)
+[Epoch 21] [Dev]  MSE: 1.34284, MAE: 0.83460
+[Epoch 21] [Test] MSE: 1.60580, MAE: 0.92676
+
+[Epoch 22/50] Training Loss: 0.13495	Elapsed Time: 327.85s (0:05:27)
+[Epoch 22] [Dev]  MSE: 1.38232, MAE: 0.83822
+[Epoch 22] [Test] MSE: 1.65126, MAE: 0.94233
+
+[Epoch 23/50] Training Loss: 0.12366	Elapsed Time: 342.69s (0:05:42)
+[Epoch 23] [Dev]  MSE: 1.36664, MAE: 0.83600
+[Epoch 23] [Test] MSE: 1.62883, MAE: 0.93413
+
+[Epoch 24/50] Training Loss: 0.11187	Elapsed Time: 357.53s (0:05:57)
+[Epoch 24] [Dev]  MSE: 1.38837, MAE: 0.83370
+[Epoch 24] [Test] MSE: 1.65185, MAE: 0.93969
+
+[Epoch 25/50] Training Loss: 0.10294	Elapsed Time: 372.39s (0:06:12)
+[Epoch 25] [Dev]  MSE: 1.37503, MAE: 0.84624
+[Epoch 25] [Test] MSE: 1.63922, MAE: 0.94112
+
+[Epoch 26/50] Training Loss: 0.09460	Elapsed Time: 387.25s (0:06:27)
+[Epoch 26] [Dev]  MSE: 1.37730, MAE: 0.84383
+[Epoch 26] [Test] MSE: 1.66100, MAE: 0.94730
+
+[Epoch 27/50] Training Loss: 0.08620	Elapsed Time: 402.10s (0:06:42)
+[Epoch 27] [Dev]  MSE: 1.39890, MAE: 0.84943
+[Epoch 27] [Test] MSE: 1.68599, MAE: 0.95757
+
+[Epoch 28/50] Training Loss: 0.07861	Elapsed Time: 416.91s (0:06:56)
+[Epoch 28] [Dev]  MSE: 1.40063, MAE: 0.84715
+[Epoch 28] [Test] MSE: 1.66524, MAE: 0.94633
+
+[Epoch 29/50] Training Loss: 0.07256	Elapsed Time: 431.76s (0:07:11)
+[Epoch 29] [Dev]  MSE: 1.40973, MAE: 0.84650
+[Epoch 29] [Test] MSE: 1.66921, MAE: 0.95006
+
+[Epoch 30/50] Training Loss: 0.06698	Elapsed Time: 446.62s (0:07:26)
+[Epoch 30] [Dev]  MSE: 1.40054, MAE: 0.84279
+[Epoch 30] [Test] MSE: 1.66249, MAE: 0.94674
+
+[Epoch 31/50] Training Loss: 0.06166	Elapsed Time: 461.46s (0:07:41)
+[Epoch 31] [Dev]  MSE: 1.42419, MAE: 0.85172
+[Epoch 31] [Test] MSE: 1.65435, MAE: 0.94483
+
+[Epoch 32/50] Training Loss: 0.05631	Elapsed Time: 476.28s (0:07:56)
+[Epoch 32] [Dev]  MSE: 1.45227, MAE: 0.84895
+[Epoch 32] [Test] MSE: 1.67443, MAE: 0.94954
+
+[Epoch 33/50] Training Loss: 0.05163	Elapsed Time: 491.09s (0:08:11)
+[Epoch 33] [Dev]  MSE: 1.41065, MAE: 0.85399
+[Epoch 33] [Test] MSE: 1.65826, MAE: 0.94987
+
+[Epoch 34/50] Training Loss: 0.04762	Elapsed Time: 505.97s (0:08:25)
+[Epoch 34] [Dev]  MSE: 1.42385, MAE: 0.85000
+[Epoch 34] [Test] MSE: 1.68546, MAE: 0.96338
+
+[Epoch 35/50] Training Loss: 0.04361	Elapsed Time: 520.80s (0:08:40)
+[Epoch 35] [Dev]  MSE: 1.45494, MAE: 0.85277
+[Epoch 35] [Test] MSE: 1.67905, MAE: 0.95733
+
+[Epoch 36/50] Training Loss: 0.04067	Elapsed Time: 535.62s (0:08:55)
+[Epoch 36] [Dev]  MSE: 1.43796, MAE: 0.85296
+[Epoch 36] [Test] MSE: 1.69770, MAE: 0.97113
+
+[Epoch 37/50] Training Loss: 0.03737	Elapsed Time: 550.47s (0:09:10)
+[Epoch 37] [Dev]  MSE: 1.43089, MAE: 0.85392
+[Epoch 37] [Test] MSE: 1.68049, MAE: 0.96558
+
+[Epoch 38/50] Training Loss: 0.03443	Elapsed Time: 565.36s (0:09:25)
+[Epoch 38] [Dev]  MSE: 1.44765, MAE: 0.84828
+[Epoch 38] [Test] MSE: 1.70439, MAE: 0.96545
+
+[Epoch 39/50] Training Loss: 0.03217	Elapsed Time: 580.20s (0:09:40)
+[Epoch 39] [Dev]  MSE: 1.41969, MAE: 0.84466
+[Epoch 39] [Test] MSE: 1.69100, MAE: 0.96783
+
+[Epoch 40/50] Training Loss: 0.02941	Elapsed Time: 595.04s (0:09:55)
+[Epoch 40] [Dev]  MSE: 1.45466, MAE: 0.85489
+[Epoch 40] [Test] MSE: 1.70396, MAE: 0.96640
+
+[Epoch 41/50] Training Loss: 0.02738	Elapsed Time: 609.93s (0:10:09)
+[Epoch 41] [Dev]  MSE: 1.43677, MAE: 0.85474
+[Epoch 41] [Test] MSE: 1.69506, MAE: 0.96450
+
+[Epoch 42/50] Training Loss: 0.02533	Elapsed Time: 624.79s (0:10:24)
+[Epoch 42] [Dev]  MSE: 1.44184, MAE: 0.85720
+[Epoch 42] [Test] MSE: 1.66984, MAE: 0.95560
+
+[Epoch 43/50] Training Loss: 0.02357	Elapsed Time: 639.67s (0:10:39)
+[Epoch 43] [Dev]  MSE: 1.44575, MAE: 0.84964
+[Epoch 43] [Test] MSE: 1.68290, MAE: 0.96180
+
+[Epoch 44/50] Training Loss: 0.02208	Elapsed Time: 654.49s (0:10:54)
+[Epoch 44] [Dev]  MSE: 1.45711, MAE: 0.84805
+[Epoch 44] [Test] MSE: 1.70016, MAE: 0.96554
+
+[Epoch 45/50] Training Loss: 0.02029	Elapsed Time: 669.34s (0:11:09)
+[Epoch 45] [Dev]  MSE: 1.44848, MAE: 0.84429
+[Epoch 45] [Test] MSE: 1.70029, MAE: 0.97104
+
+[Epoch 46/50] Training Loss: 0.01929	Elapsed Time: 684.22s (0:11:24)
+[Epoch 46] [Dev]  MSE: 1.43320, MAE: 0.84482
+[Epoch 46] [Test] MSE: 1.70395, MAE: 0.96747
+
+[Epoch 47/50] Training Loss: 0.01785	Elapsed Time: 699.15s (0:11:39)
+[Epoch 47] [Dev]  MSE: 1.44633, MAE: 0.84473
+[Epoch 47] [Test] MSE: 1.69315, MAE: 0.96744
+
+[Epoch 48/50] Training Loss: 0.01671	Elapsed Time: 713.99s (0:11:53)
+[Epoch 48] [Dev]  MSE: 1.46085, MAE: 0.84865
+[Epoch 48] [Test] MSE: 1.69769, MAE: 0.96702
+
+[Epoch 49/50] Training Loss: 0.01619	Elapsed Time: 728.85s (0:12:08)
+[Epoch 49] [Dev]  MSE: 1.46804, MAE: 0.85472
+[Epoch 49] [Test] MSE: 1.71557, MAE: 0.97411
+
+[Epoch 50/50] Training Loss: 0.01494	Elapsed Time: 743.70s (0:12:23)
+[Epoch 50] [Dev]  MSE: 1.45944, MAE: 0.84755
+[Epoch 50] [Test] MSE: 1.70848, MAE: 0.96858
+*** The Last MODEL saved to "./__saved_models__/Small_Clothing - ANR/Small_Clothing_1234_50.pth"
+
+[Training Loss]
+[2.60963, 1.45109, 1.01892, 0.81657, 0.70171, 0.62913, 0.56924, 0.51452, 0.46334, 0.42407, 0.38345, 0.34644, 0.31339, 0.28332, 0.25909, 0.23624, 0.2132, 0.19631, 0.1775, 0.16151, 0.14866, 0.13495, 0.12366, 0.11187, 0.10294, 0.0946, 0.0862, 0.07861, 0.07256, 0.06698, 0.06166, 0.05631, 0.05163, 0.04762, 0.04361, 0.04067, 0.03737, 0.03443, 0.03217, 0.02941, 0.02738, 0.02533, 0.02357, 0.02208, 0.02029, 0.01929, 0.01785, 0.01671, 0.01619, 0.01494]
+
+[Dev MSE]
+[1.45622, 1.3885, 1.34713, 1.2823, 1.27042, 1.25139, 1.28618, 1.23694, 1.29236, 1.29198, 1.27455, 1.29765, 1.29824, 1.33574, 1.34293, 1.35166, 1.30046, 1.32843, 1.33494, 1.32172, 1.34284, 1.38232, 1.36664, 1.38837, 1.37503, 1.3773, 1.3989, 1.40063, 1.40973, 1.40054, 1.42419, 1.45227, 1.41065, 1.42385, 1.45494, 1.43796, 1.43089, 1.44765, 1.41969, 1.45466, 1.43677, 1.44184, 1.44575, 1.45711, 1.44848, 1.4332, 1.44633, 1.46085, 1.46804, 1.45944]
+[Test MSE]
+[1.55016, 1.56364, 1.51483, 1.41593, 1.40978, 1.3845, 1.42733, 1.3828, 1.43965, 1.41827, 1.43459, 1.46844, 1.46895, 1.50522, 1.5437, 1.58593, 1.54687, 1.55859, 1.58397, 1.59228, 1.6058, 1.65126, 1.62883, 1.65185, 1.63922, 1.661, 1.68599, 1.66524, 1.66921, 1.66249, 1.65435, 1.67443, 1.65826, 1.68546, 1.67905, 1.6977, 1.68049, 1.70439, 1.691, 1.70396, 1.69506, 1.66984, 1.6829, 1.70016, 1.70029, 1.70395, 1.69315, 1.69769, 1.71557, 1.70848]
+[Test MAE]
+[1.00757, 0.99293, 0.91872, 0.87927, 0.86715, 0.88058, 0.86639, 0.87336, 0.87855, 0.86951, 0.88518, 0.88795, 0.8963, 0.88958, 0.90142, 0.91925, 0.92254, 0.91802, 0.92791, 0.9279, 0.92676, 0.94233, 0.93413, 0.93969, 0.94112, 0.9473, 0.95757, 0.94633, 0.95006, 0.94674, 0.94483, 0.94954, 0.94987, 0.96338, 0.95733, 0.97113, 0.96558, 0.96545, 0.96783, 0.9664, 0.9645, 0.9556, 0.9618, 0.96554, 0.97104, 0.96747, 0.96744, 0.96702, 0.97411, 0.96858]
+
+
+Best Dev MSE: 1.23694 (Obtained during Evaluation #8)
+Test MSE: 1.38280, Test MAE: 0.87336
+
+End of Program! Elapsed Time: 750.69s (0:12:30)

@@ -1,0 +1,207 @@
+╭─xulabzz ~/Dev/NLP/ANR/preprocessing ‹master*›
+╰─➤  $ python preprocessing_simple.py -d Office_Products -dev_test_in_train 1
+
+Dataset: Office_Products
+[args from argparse.ArgumentParser().parse_args()]
+command: preprocessing_simple.py -d Office_Products -dev_test_in_train 1
+dataset: Office_Products
+dataset_maximum_size: 1000000
+dev_test_in_train: True
+maxDL: 500
+maxVL: 500
+minImages: 1
+minReviews: 1
+minRL: 10
+random_seed: 1337
+train_ratio: 0.8
+vocab: 50000
+
+[INPUT] Source Folder:       ../datasets/
+[INPUT] Reviews/Ratings:     ../datasets/reviews_Office_Products.json
+
+[OUTPUT] Category Folder:    ../datasets/Office_Products/
+[OUTPUT] env:                ../datasets/Office_Products/Office_Products_env.pkl
+[OUTPUT] info:               ../datasets/Office_Products/Office_Products_info.pkl
+[OUTPUT] split_train:        ../datasets/Office_Products/Office_Products_train_interactions.pkl
+[OUTPUT] split_dev:          ../datasets/Office_Products/Office_Products_dev_interactions.pkl
+[OUTPUT] split_test:         ../datasets/Office_Products/Office_Products_test_interactions.pkl
+[OUTPUT] split_train:        ../datasets/Office_Products/Office_Products_split_train.pkl
+[OUTPUT] split_dev:          ../datasets/Office_Products/Office_Products_split_dev.pkl
+[OUTPUT] split_test:         ../datasets/Office_Products/Office_Products_split_test.pkl
+[OUTPUT] uid_userDoc:        ../datasets/Office_Products/Office_Products_uid_userDoc.npy
+[OUTPUT] iid_itemDoc:        ../datasets/Office_Products/Office_Products_iid_itemDoc.npy
+[OUTPUT] uid_userDoc:        ../datasets/Office_Products/Office_Products_uid_userVis.npy
+[OUTPUT] iid_itemDoc:        ../datasets/Office_Products/Office_Products_iid_itemVis.npy
+
+Preprocessing data for "Office_Products"
+
+[Settings]
+Min reviews for user/item: 1
+Min review length to qualify as an user-item interaction: 10
+Max words for user/item document: 500 (For truncating/padding to get a fixed-size representation)
+Top-50000 words in vocabulary being utilized!
+
+
+Initial pass of reviews to get the user-item interactions!
+Initial pass of reviews for "Office_Products": 1243186it [00:36, 34157.39it/s]
+[Initial stats] Users: 909,314, Items: 130,006, Ratings: 1,243,186, Density: 0.0000105
+
+
+Second pass of visual features to get the item-feature interactions!
+Initial pass of reviews for "Office_Products": 100%|███████████████████████████████████████████████████████████████| 133871/133871 [00:02<00:00, 60084.04it/s]
+[Second stats] Items with image: 133,871, Images: 133,871, Density: 1.0000000
+
+
+Starting to filter away users & items based on thresold of 1 images!
+Updating interactions based on the num of images...
+Filtering interactions: 100%|██████████████████████████████████████████████████████████████████████████████████| 1243186/1243186 [00:00<00:00, 3958873.82it/s]
+
+Filtered users & items based on thresold of 1 images!
+Users: 909314 -> 904387, Items: 130006 -> 129067
+[Current stats] Users: 904387, Items: 129067, Ratings: 1235333, Density: 0.0000106
+Updating interactions based on the num of images...
+Filtering interactions: 100%|██████████████████████████████████████████████████████████████████████████████████| 1235333/1235333 [00:00<00:00, 3987184.45it/s]
+
+Filtered users & items based on thresold of 1 images!
+Users: 904387 -> 904387, Items: 129067 -> 129067
+[Current stats] Users: 904387, Items: 129067, Ratings: 1235333, Density: 0.0000106
+
+No change in # of users or # of items!
+
+[Final stats] Users: 904,387, Items: 129,067, Ratings: 1,235,333, Density: 0.0000106
+
+Elapsed time for "Office_Products": 43.04 seconds (0.72 minutes)
+
+Starting to filter away users & ites based on thresold of 1 reviews!
+
+Filtered users & items based on thresold of 1 reviews!
+Users: 904387 -> 904387, Items: 129067 -> 129067
+
+No change in # of users or # of items!
+
+[Final stats] Users: 904,387, Items: 129,067, Ratings: 1,235,333, Density: 0.0000106
+
+Elapsed time for "Office_Products": 43.23 seconds (0.72 minutes)
+
+
+Third pass of reviews to get the rating, date, the num of tokenized review and index!
+Third pass of len of reviews for "Office_Products": 1243186it [01:01, 20340.74it/s]
+[Current stats] Users: 904,387, Items: 129,067, Ratings: 1,235,333, Density: 0.0000106
+
+Filtering user-item interactions based on minimum review length of 10 tokens..
+Filtering interactions: 100%|██████████████████████████████████████████████████████████████████████████████████| 1235333/1235333 [00:00<00:00, 4369223.91it/s]
+
+Filtered users & items based on minimum review length of 10 tokens!
+Users: 904,387 -> 896,120, Items: 129,067 -> 128,202
+[Current stats] Users: 896,120, Items: 128,202, Ratings: 1,223,339, Density: 0.0000106
+
+
+Starting to filter away users & items based on thresold of 1 reviews (after removing reviews with <= 10 tokens)!
+
+Filtered users & items based on thresold of 1 reviews!
+Users: 896,120 -> 896,120, Items: 128,202 -> 128,202
+
+No change in # of users or # of items!
+
+[Final stats] Users: 896,120, Items: 128,202, Ratings: 1,223,339, Density: 0.0000106
+
+*****************************************************************************************************************************
+*** Original Dataset Size (i.e. num_ratings): 1,223,339!
+*** Selecting a random subsample of 1,000,000 user-item interactions!
+*** Current Dataset Size (i.e. num_ratings):  1,000,000!
+*****************************************************************************************************************************
+Fourth pass of reviews for "Office_Products": 1243186it [01:02, 19877.88it/s]
+
+
+80.0% of ALL reviews are RANDOMLY selected for TRAIN, another 10.0% RANDOMLY selected for DEV, and remaining 10.0% used for TEST.
+
+[Initial Stats] Total Interactions: 1,000,000, TRAIN: 800,000 (80.00%), DEV: 100,000 (10.00%), TEST: 100,000 (10.00%)
+
+
+Removing users & items who do not appear in the training set, from the dev and test sets..
+Updating DEV interactions: 100%|█████████████████████████████████████████████████████████████████████████████████| 100000/100000 [00:00<00:00, 1056220.40it/s]
+Updating TEST interactions: 100%|████████████████████████████████████████████████████████████████████████████████| 100000/100000 [00:00<00:00, 1070368.71it/s]
+
+Removed 69,235 interactions from DEV and 69,067 interactions from TEST! (i.e. Those belonging to Users/Items which do not appear in TRAIN)
+
+[Current Stats] Total Interactions: 861,698, TRAIN: 800,000 (92.84%), DEV: 30,765 (3.57%), TEST: 30,933 (3.59%)
+
+
+[FINAL Stats] Users: 628,512, Items: 105,406, Ratings: 861,698, Density: 0.0000130
+
+[FINAL Stats] Total Interactions: 861,698, TRAIN: 800,000 (92.84%), DEV: 30,765 (3.57%), TEST: 30,933 (3.59%)
+
+[FINAL Stats][TRAIN] Users: 628,512, Items: 105,406, Ratings: 800,000
+[FINAL Stats][DEV]   Users: 26,627, Items: 14,158, Ratings: 30,765
+[FINAL Stats][TEST]  Users: 26,707, Items: 14,358, Ratings: 30,933
+
+
+train_interactions:   ../datasets/Office_Products/Office_Products_train_interactions.pkl
+dev_interactions:     ../datasets/Office_Products/Office_Products_dev_interactions.pkl
+test_interactions:    ../datasets/Office_Products/Office_Products_test_interactions.pkl
+
+Consolidating user/item reviews from TRAINING set
+Consolidating user/item reviews from TRAINING set: 100%|██████████████████████████████████████████████████████████| 800000/800000 [00:04<00:00, 171696.56it/s]
+
+Creating user docs from TRAINING set
+Creating item docs from TRAINING set
+
+Minimum User Doc Len: 10, Minimum Item Doc Len: 10
+
+Original number of words (based on USER & ITEM documents constructed from TRAINING set): 189,877
+For the vocabulary, we are only using the 50,000 most frequent words
+Current number of words: 50,000
+
+For each user doc, converting words to wids using word_wid...: 100%|███████████████████████████████████████████████| 628512/628512 [00:07<00:00, 87931.28it/s]
+For each item doc, converting words to wids using word_wid...: 100%|███████████████████████████████████████████████| 105406/105406 [00:07<00:00, 15034.69it/s]
+Store the actual length of each user document (before padding): 100%|████████████████████████████████████████████| 628512/628512 [00:00<00:00, 3254234.05it/s]
+Store the actual length of each item document (before padding): 100%|████████████████████████████████████████████| 105406/105406 [00:00<00:00, 2949921.98it/s]
+Pad the user documents to MAX_DOC_LEN: 100%|██████████████████████████████████████████████████████████████████████| 628512/628512 [00:04<00:00, 138459.62it/s]
+Pad the item documents to MAX_DOC_LEN: 100%|███████████████████████████████████████████████████████████████████████| 105406/105406 [00:05<00:00, 19190.48it/s]
+Preparing the TRAINING set: 100%|█████████████████████████████████████████████████████████████████████████████████| 800000/800000 [00:00<00:00, 873651.34it/s]
+Preparing the DEV set: 100%|████████████████████████████████████████████████████████████████████████████████████████| 30765/30765 [00:00<00:00, 781980.70it/s]
+Preparing the TESTING set: 100%|████████████████████████████████████████████████████████████████████████████████████| 30933/30933 [00:00<00:00, 785033.01it/s]
+Info:                 ../datasets/Office_Products/Office_Products_info.pkl
+Training Set:         ../datasets/Office_Products/Office_Products_split_train.pkl
+Validation Set:       ../datasets/Office_Products/Office_Products_split_dev.pkl
+Test Set:             ../datasets/Office_Products/Office_Products_split_test.pkl
+
+Creating numpy matrix for uid_userDoc..
+User Document Matrix: (628512, 500)
+User Document Matrix: ../datasets/Office_Products/Office_Products_uid_userDoc.npy
+
+Creating numpy matrix for iid_itemDoc..
+Item Document Matrix: (105406, 500)
+Item Document Matrix: ../datasets/Office_Products/Office_Products_iid_itemDoc.npy
+
+Consolidating user/item visual features from TRAINING set
+Consolidating user/item visual features from TRAINING set: 100%|██████████████████████████████████████████████████| 800000/800000 [00:02<00:00, 318491.01it/s]
+
+Creating user visuals from TRAINING set
+Creating item visuals from TRAINING set
+
+Minimum User Vis Len: 50, Minimum Item Vis Len: 50
+Convert user to uid...: 100%|████████████████████████████████████████████████████████████████████████████████████| 628512/628512 [00:00<00:00, 1765315.53it/s]
+Convert item to iid...: 100%|████████████████████████████████████████████████████████████████████████████████████| 105406/105406 [00:00<00:00, 1488703.71it/s]
+Store the actual length of each user visual feature (before padding): 100%|██████████████████████████████████████| 628512/628512 [00:00<00:00, 3579866.04it/s]
+Store the actual length of each item visual feature (before padding): 100%|██████████████████████████████████████| 105406/105406 [00:00<00:00, 3321848.43it/s]
+Pad the user visual feature to MAX_VIS_LEN: 100%|██████████████████████████████████████████████████████████████████| 628512/628512 [00:08<00:00, 74229.62it/s]
+Pad the item visual feature to MAX_VIS_LEN: 100%|█████████████████████████████████████████████████████████████████| 105406/105406 [00:00<00:00, 148186.60it/s]
+
+Creating numpy matrix for uid_userVis..
+User Visual Feature Matrix: (628512, 500)
+User Visual Feature Matrix: ../datasets/Office_Products/Office_Products_uid_userDoc.npy
+
+Creating numpy matrix for iid_itemVis..
+Item Visual Feature Matrix: (105406, 500)
+Item Visual Feature Matrix: ../datasets/Office_Products/Office_Products_iid_itemDoc.npy
+
+Saving all required files for "Office_Products"..
+Environment:          ../datasets/Office_Products/Office_Products_env.pkl
+
+All required files for "Office_Products" successfully saved to '../datasets/Office_Products/'
+
+Preprocessing for "Office_Products" done after 386.76 seconds (6.45 minutes)
+
+
+Done!!

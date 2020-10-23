@@ -1,0 +1,215 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  channels_global: 20
+  channels_local: 20
+  command: -d Automotive -m DAttn -e 10 -p 1 -v 50000 -K 5 -h1 10 -h2 50 -WED 300 -c_local 20 -c_global 20 -hiden_size 200 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm Automotive_DAttn
+  ctx_win_size: 3
+  dataset: Automotive
+  disable_initial_eval: 0
+  dropout_rate: 0.5
+  epochs: 10
+  gpu: 0
+  h1: 10
+  h2: 50
+  hidden_size: 200
+  input_dir: ./datasets/Automotive/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: DAttn
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Automotive - DAttn/
+  output_size: 50
+  pretrained_src: 1
+  random_seed: 1234
+  save_model: Automotive_DAttn
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 561,942, # of Items: 233,577
+
+Creating model (Selected Model: DAttn)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 4.47s (0.07 minute)
+
+Loading uid_userDoc from "./datasets/Automotive/Automotive_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (561942, 500)]
+
+Loading iid_itemDoc from "./datasets/Automotive/Automotive_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (233577, 500)]
+
+Loading pretrained word embeddings from "./datasets/Automotive/Automotive_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (50002, 300)]
+
+Initialization Complete.. Elapsed Time: 16.24s (0.27 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 800,000, |DEV|: 35,546, |TEST|: 35,690
+Train/Dev/Test splits loaded! Elapsed Time: 16.45s (0.27 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 18.73305, MAE: 4.17725
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 18.70924, MAE: 4.17219
+
+Initial Evaluation Complete.. Elapsed Time: 53.60s (0.89 minute)
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 414,003,834
+# of Trainable Parameters: 1,243,734
+DAttn (
+  (uid_userDoc): Embedding(561942, 500), weights = ((561942, 500),), parameters = 280,971,000
+  (iid_itemDoc): Embedding(233577, 500), weights = ((233577, 500),), parameters = 116,788,500
+  (wid_wEmbed): Embedding(50002, 300), weights = ((50002, 300),), parameters = 15,000,600
+  (DAttn_RatingPred): DAttn_RatingPred(
+    (uid_userOffset): Embedding(561942, 1)
+    (iid_itemOffset): Embedding(233577, 1)
+    (globalOffset): Parameter(1,)
+  ), weights = ((1,), (561942, 1), (233577, 1)), parameters = 795,520 (Trainable)
+  (localAttentionLayer_user): LocalAttention(
+    (attention_layer): Sequential(
+      (0): Conv2d(1, 1, kernel_size=(3, 300), stride=(1, 1))
+      (1): Sigmoid()
+    )
+    (cnn): Sequential(
+      (0): Conv2d(1, 20, kernel_size=(1, 300), stride=(1, 1))
+      (1): Tanh()
+      (2): MaxPool2d(kernel_size=(500, 1), stride=(500, 1), padding=0, dilation=1, ceil_mode=False)
+    )
+  ), weights = ((1, 1, 3, 300), (1,), (20, 1, 1, 300), (20,)), parameters = 6,921 (Trainable)
+  (globalAttentionLayer_user): GlobalAttention(
+    (attention_layer): Sequential(
+      (0): Conv2d(1, 1, kernel_size=(500, 300), stride=(1, 1))
+      (1): Sigmoid()
+    )
+    (cnn_1): Sequential(
+      (0): Conv2d(1, 20, kernel_size=(2, 300), stride=(1, 1))
+      (1): Tanh()
+      (2): MaxPool2d(kernel_size=(499, 1), stride=(499, 1), padding=0, dilation=1, ceil_mode=False)
+    )
+    (cnn_2): Sequential(
+      (0): Conv2d(1, 20, kernel_size=(3, 300), stride=(1, 1))
+      (1): Tanh()
+      (2): MaxPool2d(kernel_size=(498, 1), stride=(498, 1), padding=0, dilation=1, ceil_mode=False)
+    )
+    (cnn_3): Sequential(
+      (0): Conv2d(1, 20, kernel_size=(4, 300), stride=(1, 1))
+      (1): Tanh()
+      (2): MaxPool2d(kernel_size=(497, 1), stride=(497, 1), padding=0, dilation=1, ceil_mode=False)
+    )
+  ), weights = ((1, 1, 500, 300), (1,), (20, 1, 2, 300), (20,), (20, 1, 3, 300), (20,), (20, 1, 4, 300), (20,)), parameters = 204,061 (Trainable)
+  (localAttentionLayer_item): LocalAttention(
+    (attention_layer): Sequential(
+      (0): Conv2d(1, 1, kernel_size=(3, 300), stride=(1, 1))
+      (1): Sigmoid()
+    )
+    (cnn): Sequential(
+      (0): Conv2d(1, 20, kernel_size=(1, 300), stride=(1, 1))
+      (1): Tanh()
+      (2): MaxPool2d(kernel_size=(500, 1), stride=(500, 1), padding=0, dilation=1, ceil_mode=False)
+    )
+  ), weights = ((1, 1, 3, 300), (1,), (20, 1, 1, 300), (20,)), parameters = 6,921 (Trainable)
+  (globalAttentionLayer_item): GlobalAttention(
+    (attention_layer): Sequential(
+      (0): Conv2d(1, 1, kernel_size=(500, 300), stride=(1, 1))
+      (1): Sigmoid()
+    )
+    (cnn_1): Sequential(
+      (0): Conv2d(1, 20, kernel_size=(2, 300), stride=(1, 1))
+      (1): Tanh()
+      (2): MaxPool2d(kernel_size=(499, 1), stride=(499, 1), padding=0, dilation=1, ceil_mode=False)
+    )
+    (cnn_2): Sequential(
+      (0): Conv2d(1, 20, kernel_size=(3, 300), stride=(1, 1))
+      (1): Tanh()
+      (2): MaxPool2d(kernel_size=(498, 1), stride=(498, 1), padding=0, dilation=1, ceil_mode=False)
+    )
+    (cnn_3): Sequential(
+      (0): Conv2d(1, 20, kernel_size=(4, 300), stride=(1, 1))
+      (1): Tanh()
+      (2): MaxPool2d(kernel_size=(497, 1), stride=(497, 1), padding=0, dilation=1, ceil_mode=False)
+    )
+  ), weights = ((1, 1, 500, 300), (1,), (20, 1, 2, 300), (20,), (20, 1, 3, 300), (20,), (20, 1, 4, 300), (20,)), parameters = 204,061 (Trainable)
+  (fcLayer): Sequential (
+    (0): Linear(in_features=80, out_features=200, bias=True), weights = ((200, 80), (200,)), parameters = 16,200 (Trainable)
+    (1): Dropout(p=0.5, inplace=False), weights = (), parameters = 0
+    (2): ReLU(), weights = (), parameters = 0
+    (3): Linear(in_features=200, out_features=50, bias=True), weights = ((50, 200), (50,)), parameters = 10,050 (Trainable)
+  ), weights = ((200, 80), (200,), (50, 200), (50,)), parameters = 26,250 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/10] Training Loss: 0.92105	Elapsed Time: 1,183.39s (0:19:43)
+[Epoch 1] [Dev]  MSE: 1.39892, MAE: 0.82001
+[Epoch 1] [Test] MSE: 1.42275, MAE: 0.82653
+
+*** MODEL has obtained the best DEV MSE of 1.39892 so far!
+*** The Best MODEL saved to "./__saved_models__/Automotive - DAttn/Automotive_DAttn_1234.pth"
+
+[Epoch 2/10] Training Loss: 0.71206	Elapsed Time: 2,403.25s (0:40:03)
+[Epoch 2] [Dev]  MSE: 1.36980, MAE: 0.80304
+[Epoch 2] [Test] MSE: 1.40303, MAE: 0.81150
+
+*** MODEL has obtained the best DEV MSE of 1.36980 so far!
+*** The Best MODEL saved to "./__saved_models__/Automotive - DAttn/Automotive_DAttn_1234.pth"
+
+[Epoch 3/10] Training Loss: 0.62178	Elapsed Time: 3,623.24s (1:00:23)
+[Epoch 3] [Dev]  MSE: 1.37236, MAE: 0.78842
+[Epoch 3] [Test] MSE: 1.39615, MAE: 0.79680
+
+[Epoch 4/10] Training Loss: 0.55576	Elapsed Time: 4,843.01s (1:20:43)
+[Epoch 4] [Dev]  MSE: 1.33210, MAE: 0.77634
+[Epoch 4] [Test] MSE: 1.35780, MAE: 0.78404
+
+*** MODEL has obtained the best DEV MSE of 1.33210 so far!
+*** The Best MODEL saved to "./__saved_models__/Automotive - DAttn/Automotive_DAttn_1234.pth"
+
+[Epoch 5/10] Training Loss: 0.50493	Elapsed Time: 6,063.08s (1:41:03)
+[Epoch 5] [Dev]  MSE: 1.45643, MAE: 0.82211
+[Epoch 5] [Test] MSE: 1.47783, MAE: 0.82917
+
+[Epoch 6/10] Training Loss: 0.46231	Elapsed Time: 7,283.04s (2:01:23)
+[Epoch 6] [Dev]  MSE: 1.42827, MAE: 0.81870
+[Epoch 6] [Test] MSE: 1.45183, MAE: 0.82581
+
+[Epoch 7/10] Training Loss: 0.42728	Elapsed Time: 8,503.10s (2:21:43)
+[Epoch 7] [Dev]  MSE: 1.39250, MAE: 0.80420
+[Epoch 7] [Test] MSE: 1.41959, MAE: 0.81281
+
+[Epoch 8/10] Training Loss: 0.39846	Elapsed Time: 9,722.92s (2:42:02)
+[Epoch 8] [Dev]  MSE: 1.42818, MAE: 0.82279
+[Epoch 8] [Test] MSE: 1.45036, MAE: 0.82993
+
+[Epoch 9/10] Training Loss: 0.37280	Elapsed Time: 10,942.97s (3:02:22)
+[Epoch 9] [Dev]  MSE: 1.40289, MAE: 0.81059
+[Epoch 9] [Test] MSE: 1.42505, MAE: 0.81700
+
+[Epoch 10/10] Training Loss: 0.35076	Elapsed Time: 12,162.82s (3:22:42)
+[Epoch 10] [Dev]  MSE: 1.41281, MAE: 0.81282
+[Epoch 10] [Test] MSE: 1.43527, MAE: 0.81927
+*** The Last MODEL saved to "./__saved_models__/Automotive - DAttn/Automotive_DAttn_1234_10.pth"
+
+[Training Loss]
+[0.92105, 0.71206, 0.62178, 0.55576, 0.50493, 0.46231, 0.42728, 0.39846, 0.3728, 0.35076]
+
+[Dev MSE]
+[1.39892, 1.3698, 1.37236, 1.3321, 1.45643, 1.42827, 1.3925, 1.42818, 1.40289, 1.41281]
+[Test MSE]
+[1.42275, 1.40303, 1.39615, 1.3578, 1.47783, 1.45183, 1.41959, 1.45036, 1.42505, 1.43527]
+[Test MAE]
+[0.82653, 0.8115, 0.7968, 0.78404, 0.82917, 0.82581, 0.81281, 0.82993, 0.817, 0.81927]
+
+
+Best Dev MSE: 1.33210 (Obtained during Evaluation #4)
+Test MSE: 1.35780, Test MAE: 0.78404
+
+End of Program! Elapsed Time: 12,253.04s (3:24:13)

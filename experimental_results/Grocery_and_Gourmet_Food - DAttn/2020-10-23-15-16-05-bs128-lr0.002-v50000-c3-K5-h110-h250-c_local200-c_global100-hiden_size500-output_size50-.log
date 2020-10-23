@@ -1,0 +1,184 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  channels_global: 100
+  channels_local: 200
+  command: -d Grocery_and_Gourmet_Food -m DAttn -e 10 -p 1 -v 50000 -K 5 -h1 10 -h2 50 -WED 100 -c_local 200 -c_global 100 -hiden_size 500 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm Grocery_and_Gourmet_Food_DAttn
+  ctx_win_size: 3
+  dataset: Grocery_and_Gourmet_Food
+  disable_initial_eval: 0
+  dropout_rate: 0.5
+  epochs: 10
+  filters_num: 100
+  gpu: 0
+  h1: 10
+  h2: 50
+  hidden_size: 500
+  input_dir: ./datasets/Grocery_and_Gourmet_Food/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: DAttn
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Grocery_and_Gourmet_Food - DAttn/
+  output_size: 50
+  pretrained_src: 1
+  random_seed: 1234
+  save_model: Grocery_and_Gourmet_Food_DAttn
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 100
+========================================================================================================================
+
+[INFO] # of Users: 528,374, # of Items: 134,221
+
+Creating model (Selected Model: DAttn)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 3.93s (0.07 minute)
+
+Loading uid_userDoc from "./datasets/Grocery_and_Gourmet_Food/Grocery_and_Gourmet_Food_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (528374, 500)]
+
+Loading iid_itemDoc from "./datasets/Grocery_and_Gourmet_Food/Grocery_and_Gourmet_Food_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (134221, 500)]
+
+Loading pretrained word embeddings from "./datasets/Grocery_and_Gourmet_Food/Grocery_and_Gourmet_Food_wed100_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (50002, 100)]
+
+Initialization Complete.. Elapsed Time: 22.08s (0.37 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 800,000, |DEV|: 43,464, |TEST|: 43,991
+Train/Dev/Test splits loaded! Elapsed Time: 22.33s (0.37 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 18.40444, MAE: 4.12673
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 18.48220, MAE: 4.13914
+
+Initial Evaluation Complete.. Elapsed Time: 41.85s (0.70 minute)
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 337,833,000
+# of Trainable Parameters: 1,535,300
+DAttn (
+  (uid_userDoc): Embedding(528374, 500), weights = ((528374, 500),), parameters = 264,187,000
+  (iid_itemDoc): Embedding(134221, 500), weights = ((134221, 500),), parameters = 67,110,500
+  (wid_wEmbed): Embedding(50002, 100), weights = ((50002, 100),), parameters = 5,000,200
+  (user_net): Net(
+    (localAttentionLayer): LocalAttention(
+      (attention_layer): Sequential(
+        (0): Conv2d(1, 1, kernel_size=(3, 100), stride=(1, 1), padding=(1, 0))
+        (1): Sigmoid()
+      )
+      (cnn): Sequential(
+        (0): Conv2d(1, 200, kernel_size=(1, 100), stride=(1, 1))
+        (1): Tanh()
+      )
+    )
+    (globalAttentionLayer): GlobalAttention(
+      (attention_layer): Sequential(
+        (0): Conv2d(1, 1, kernel_size=(500, 100), stride=(1, 1))
+        (1): Sigmoid()
+      )
+      (convs): ModuleList(
+        (0): Conv2d(1, 100, kernel_size=(2, 100), stride=(1, 1))
+        (1): Conv2d(1, 100, kernel_size=(3, 100), stride=(1, 1))
+        (2): Conv2d(1, 100, kernel_size=(4, 100), stride=(1, 1))
+      )
+    )
+    (fcLayer): Sequential(
+      (0): Linear(in_features=500, out_features=500, bias=True)
+      (1): Dropout(p=0.5, inplace=False)
+      (2): ReLU()
+      (3): Linear(in_features=500, out_features=50, bias=True)
+    )
+    (dropout): Dropout(p=0.5, inplace=False)
+  ), weights = ((1, 1, 3, 100), (1,), (200, 1, 1, 100), (200,), (1, 1, 500, 100), (1,), (100, 1, 2, 100), (100,), (100, 1, 3, 100), (100,), (100, 1, 4, 100), (100,), (500, 500), (500,), (50, 500), (50,)), parameters = 436,352 (Trainable)
+  (item_net): Net(
+    (localAttentionLayer): LocalAttention(
+      (attention_layer): Sequential(
+        (0): Conv2d(1, 1, kernel_size=(3, 100), stride=(1, 1), padding=(1, 0))
+        (1): Sigmoid()
+      )
+      (cnn): Sequential(
+        (0): Conv2d(1, 200, kernel_size=(1, 100), stride=(1, 1))
+        (1): Tanh()
+      )
+    )
+    (globalAttentionLayer): GlobalAttention(
+      (attention_layer): Sequential(
+        (0): Conv2d(1, 1, kernel_size=(500, 100), stride=(1, 1))
+        (1): Sigmoid()
+      )
+      (convs): ModuleList(
+        (0): Conv2d(1, 100, kernel_size=(2, 100), stride=(1, 1))
+        (1): Conv2d(1, 100, kernel_size=(3, 100), stride=(1, 1))
+        (2): Conv2d(1, 100, kernel_size=(4, 100), stride=(1, 1))
+      )
+    )
+    (fcLayer): Sequential(
+      (0): Linear(in_features=500, out_features=500, bias=True)
+      (1): Dropout(p=0.5, inplace=False)
+      (2): ReLU()
+      (3): Linear(in_features=500, out_features=50, bias=True)
+    )
+    (dropout): Dropout(p=0.5, inplace=False)
+  ), weights = ((1, 1, 3, 100), (1,), (200, 1, 1, 100), (200,), (1, 1, 500, 100), (1,), (100, 1, 2, 100), (100,), (100, 1, 3, 100), (100,), (100, 1, 4, 100), (100,), (500, 500), (500,), (50, 500), (50,)), parameters = 436,352 (Trainable)
+  (DAttn_RatingPred): DAttn_RatingPred(
+    (uid_userOffset): Embedding(528374, 1)
+    (iid_itemOffset): Embedding(134221, 1)
+    (globalOffset): Parameter(1,)
+  ), weights = ((1,), (528374, 1), (134221, 1)), parameters = 662,596 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/10] Training Loss: 1.13467	Elapsed Time: 595.73s (0:09:55)
+[Epoch 1] [Dev]  MSE: 1.43305, MAE: 0.87494
+[Epoch 1] [Test] MSE: 1.40400, MAE: 0.86507
+
+*** MODEL has obtained the best DEV MSE of 1.43305 so far!
+*** The Best MODEL saved to "./__saved_models__/Grocery_and_Gourmet_Food - DAttn/Grocery_and_Gourmet_Food_DAttn_1234.pth"
+
+[Epoch 2/10] Training Loss: 0.85371	Elapsed Time: 1,210.40s (0:20:10)
+[Epoch 2] [Dev]  MSE: 1.39494, MAE: 0.83865
+[Epoch 2] [Test] MSE: 1.36457, MAE: 0.82782
+
+*** MODEL has obtained the best DEV MSE of 1.39494 so far!
+*** The Best MODEL saved to "./__saved_models__/Grocery_and_Gourmet_Food - DAttn/Grocery_and_Gourmet_Food_DAttn_1234.pth"
+
+[Epoch 3/10] Training Loss: 0.76829	Elapsed Time: 1,825.06s (0:30:25)
+[Epoch 3] [Dev]  MSE: 1.38147, MAE: 0.82901
+[Epoch 3] [Test] MSE: 1.34868, MAE: 0.81752
+
+*** MODEL has obtained the best DEV MSE of 1.38147 so far!
+*** The Best MODEL saved to "./__saved_models__/Grocery_and_Gourmet_Food - DAttn/Grocery_and_Gourmet_Food_DAttn_1234.pth"
+
+[Epoch 4/10] Training Loss: 0.70393	Elapsed Time: 2,440.34s (0:40:40)
+[Epoch 4] [Dev]  MSE: 1.40041, MAE: 0.81322
+[Epoch 4] [Test] MSE: 1.36619, MAE: 0.80037
+
+[Epoch 5/10] Training Loss: 0.65364	Elapsed Time: 3,062.49s (0:51:02)
+[Epoch 5] [Dev]  MSE: 1.31213, MAE: 0.80625
+[Epoch 5] [Test] MSE: 1.28223, MAE: 0.79466
+
+*** MODEL has obtained the best DEV MSE of 1.31213 so far!
+*** The Best MODEL saved to "./__saved_models__/Grocery_and_Gourmet_Food - DAttn/Grocery_and_Gourmet_Food_DAttn_1234.pth"
+
+[Epoch 6/10] Training Loss: 0.61313	Elapsed Time: 3,685.71s (1:01:25)
+[Epoch 6] [Dev]  MSE: 1.36949, MAE: 0.80310
+[Epoch 6] [Test] MSE: 1.33679, MAE: 0.79094
+
+[Epoch 7/10] Training Loss: 0.57814	Elapsed Time: 4,302.09s (1:11:42)
+[Epoch 7] [Dev]  MSE: 1.37376, MAE: 0.80657
+[Epoch 7] [Test] MSE: 1.34024, MAE: 0.79468
+
+[Epoch 8/10] Training Loss: 0.54931	Elapsed Time: 4,919.90s (1:21:59)
+[Epoch 8] [Dev]  MSE: 1.40582, MAE: 0.83181
+[Epoch 8] [Test] MSE: 1.37290, MAE: 0.82000

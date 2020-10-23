@@ -1,0 +1,207 @@
+╭─xulabzz ~/Dev/NLP/ANR/preprocessing ‹master*›
+╰─➤  $ python preprocessing_simple.py -d Movies_and_TV -dev_test_in_train 1
+
+Dataset: Movies_and_TV
+[args from argparse.ArgumentParser().parse_args()]
+command: preprocessing_simple.py -d Movies_and_TV -dev_test_in_train 1
+dataset: Movies_and_TV
+dataset_maximum_size: 1000000
+dev_test_in_train: True
+maxDL: 500
+maxVL: 500
+minImages: 1
+minReviews: 1
+minRL: 10
+random_seed: 1337
+train_ratio: 0.8
+vocab: 50000
+
+[INPUT] Source Folder:       ../datasets/
+[INPUT] Reviews/Ratings:     ../datasets/reviews_Movies_and_TV.json
+
+[OUTPUT] Category Folder:    ../datasets/Movies_and_TV/
+[OUTPUT] env:                ../datasets/Movies_and_TV/Movies_and_TV_env.pkl
+[OUTPUT] info:               ../datasets/Movies_and_TV/Movies_and_TV_info.pkl
+[OUTPUT] split_train:        ../datasets/Movies_and_TV/Movies_and_TV_train_interactions.pkl
+[OUTPUT] split_dev:          ../datasets/Movies_and_TV/Movies_and_TV_dev_interactions.pkl
+[OUTPUT] split_test:         ../datasets/Movies_and_TV/Movies_and_TV_test_interactions.pkl
+[OUTPUT] split_train:        ../datasets/Movies_and_TV/Movies_and_TV_split_train.pkl
+[OUTPUT] split_dev:          ../datasets/Movies_and_TV/Movies_and_TV_split_dev.pkl
+[OUTPUT] split_test:         ../datasets/Movies_and_TV/Movies_and_TV_split_test.pkl
+[OUTPUT] uid_userDoc:        ../datasets/Movies_and_TV/Movies_and_TV_uid_userDoc.npy
+[OUTPUT] iid_itemDoc:        ../datasets/Movies_and_TV/Movies_and_TV_iid_itemDoc.npy
+[OUTPUT] uid_userDoc:        ../datasets/Movies_and_TV/Movies_and_TV_uid_userVis.npy
+[OUTPUT] iid_itemDoc:        ../datasets/Movies_and_TV/Movies_and_TV_iid_itemVis.npy
+
+Preprocessing data for "Movies_and_TV"
+
+[Settings]
+Min reviews for user/item: 1
+Min review length to qualify as an user-item interaction: 10
+Max words for user/item document: 500 (For truncating/padding to get a fixed-size representation)
+Top-50000 words in vocabulary being utilized!
+
+
+Initial pass of reviews to get the user-item interactions!
+Initial pass of reviews for "Movies_and_TV": 4607047it [02:29, 30852.22it/s]
+[Initial stats] Users: 2,088,620, Items: 200,941, Ratings: 4,607,047, Density: 0.0000110
+
+
+Second pass of visual features to get the item-feature interactions!
+Initial pass of reviews for "Movies_and_TV": 100%|█████████████████████████████████████████████████████████████████| 206426/206426 [00:03<00:00, 64895.49it/s]
+[Second stats] Items with image: 206,426, Images: 206,426, Density: 1.0000000
+
+
+Starting to filter away users & items based on thresold of 1 images!
+Updating interactions based on the num of images...
+Filtering interactions: 100%|██████████████████████████████████████████████████████████████████████████████████| 4607047/4607047 [00:00<00:00, 4968478.18it/s]
+
+Filtered users & items based on thresold of 1 images!
+Users: 2088620 -> 2077268, Items: 200941 -> 199113
+[Current stats] Users: 2077268, Items: 199113, Ratings: 4572429, Density: 0.0000111
+Updating interactions based on the num of images...
+Filtering interactions: 100%|██████████████████████████████████████████████████████████████████████████████████| 4572429/4572429 [00:00<00:00, 4939589.11it/s]
+
+Filtered users & items based on thresold of 1 images!
+Users: 2077268 -> 2077268, Items: 199113 -> 199113
+[Current stats] Users: 2077268, Items: 199113, Ratings: 4572429, Density: 0.0000111
+
+No change in # of users or # of items!
+
+[Final stats] Users: 2,077,268, Items: 199,113, Ratings: 4,572,429, Density: 0.0000111
+
+Elapsed time for "Movies_and_TV": 164.29 seconds (2.74 minutes)
+
+Starting to filter away users & items based on thresold of 1 reviews!
+
+Filtered users  items based on thresold of 1 reviews!
+Users: 2077268 -> 2077268, Items: 199113 -> 199113
+
+No change in # of users or # of items!
+
+[Final stats] Users: 2,077,268, Items: 199,113, Ratings: 4,572,429, Density: 0.0000111
+
+Elapsed time for "Movies_and_TV": 164.76 seconds (2.75 minutes)
+
+
+Third pass of reviews to get the rating, date, the num of tokenized review and index!
+Third pass of len of reviews for "Movies_and_TV": 4607047it [04:33, 16828.92it/s]
+[Current stats] Users: 2,077,268, Items: 199,113, Ratings: 4,572,429, Density: 0.0000111
+
+Filtering user-item interactions based on minimum review length of 10 tokens..
+Filtering interactions: 100%|██████████████████████████████████████████████████████████████████████████████████| 4572429/4572429 [00:00<00:00, 5031223.14it/s]
+
+Filtered users & items based on minimum review length of 10 tokens!
+Users: 2,077,268 -> 2,057,853, Items: 199,113 -> 198,648
+[Current stats] Users: 2,057,853, Items: 198,648, Ratings: 4,534,791, Density: 0.0000111
+
+
+Starting to filter away users & items based on thresold of 1 reviews (after removing reviews with <= 10 tokens)!
+
+Filtered users & items based on thresold of 1 reviews!
+Users: 2,057,853 -> 2,057,853, Items: 198,648 -> 198,648
+
+No change in # of users or # of items!
+
+[Final stats] Users: 2,057,853, Items: 198,648, Ratings: 4,534,791, Density: 0.0000111
+
+*****************************************************************************************************************************
+*** Original Dataset Size (i.e. num_ratings): 4,534,791!
+*** Selecting a random subsample of 1,000,000 user-item interactions!
+*** Current Dataset Size (i.e. num_ratings):  1,000,000!
+*****************************************************************************************************************************
+Fourth pass of reviews for "Movies_and_TV": 4607043it [03:07, 24527.31it/s]
+
+
+80.0% of ALL reviews are RANDOMLY selected for TRAIN, another 10.0% RANDOMLY selected for DEV, and remaining 10.0% used for TEST.
+
+[Initial Stats] Total Interactions: 1,000,000, TRAIN: 800,000 (80.00%), DEV: 100,000 (10.00%), TEST: 100,000 (10.00%)
+
+
+Removing users & items who do not appear in the training set, from the dev and test sets..
+Updating DEV interactions: 100%|█████████████████████████████████████████████████████████████████████████████████| 100000/100000 [00:00<00:00, 1033410.70it/s]
+Updating TEST interactions: 100%|█████████████████████████████████████████████████████████████████████████████████| 100000/100000 [00:00<00:00, 976903.06it/s]
+
+Removed 59,082 interactions from DEV and 58,941 interactions from TEST! (i.e. Those belonging to Users/Items which do not appear in TRAIN)
+
+[Current Stats] Total Interactions: 881,977, TRAIN: 800,000 (90.71%), DEV: 40,918 (4.64%), TEST: 41,059 (4.66%)
+
+
+[FINAL Stats] Users: 541,405, Items: 106,040, Ratings: 881,977, Density: 0.0000154
+
+[FINAL Stats] Total Interactions: 881,977, TRAIN: 800,000 (90.71%), DEV: 40,918 (4.64%), TEST: 41,059 (4.66%)
+
+[FINAL Stats][TRAIN] Users: 541,405, Items: 106,040, Ratings: 800,000
+[FINAL Stats][DEV]   Users: 28,934, Items: 19,492, Ratings: 40,918
+[FINAL Stats][TEST]  Users: 29,277, Items: 19,501, Ratings: 41,059
+
+
+train_interactions:   ../datasets/Movies_and_TV/Movies_and_TV_train_interactions.pkl
+dev_interactions:     ../datasets/Movies_and_TV/Movies_and_TV_dev_interactions.pkl
+test_interactions:    ../datasets/Movies_and_TV/Movies_and_TV_test_interactions.pkl
+
+Consolidating user/item reviews from TRAINING set
+Consolidating user/item reviews from TRAINING set: 100%|██████████████████████████████████████████████████████████| 800000/800000 [00:05<00:00, 145396.35it/s]
+
+Creating user docs from TRAINING set
+Creating item docs from TRAINING set
+
+Minimum User Doc Len: 10, Minimum Item Doc Len: 10
+
+Original number of words (based on USER & ITEM documents constructed from TRAINING set): 344,905
+For the vocabulary, we are only using the 50,000 most frequent words
+Current number of words: 50,000
+
+For each user doc, converting words to wids using word_wid...: 100%|███████████████████████████████████████████████| 541405/541405 [00:07<00:00, 71917.53it/s]
+For each item doc, converting words to wids using word_wid...: 100%|███████████████████████████████████████████████| 106040/106040 [00:03<00:00, 28656.66it/s]
+Store the actual length of each user document (before padding): 100%|████████████████████████████████████████████| 541405/541405 [00:00<00:00, 3299220.47it/s]
+Store the actual length of each item document (before padding): 100%|████████████████████████████████████████████| 106040/106040 [00:00<00:00, 3285980.23it/s]
+Pad the user documents to MAX_DOC_LEN: 100%|██████████████████████████████████████████████████████████████████████| 541405/541405 [00:03<00:00, 137896.39it/s]
+Pad the item documents to MAX_DOC_LEN: 100%|██████████████████████████████████████████████████████████████████████| 106040/106040 [00:00<00:00, 143939.55it/s]
+Preparing the TRAINING set: 100%|█████████████████████████████████████████████████████████████████████████████████| 800000/800000 [00:00<00:00, 887068.77it/s]
+Preparing the DEV set: 100%|████████████████████████████████████████████████████████████████████████████████████████| 40918/40918 [00:00<00:00, 776579.57it/s]
+Preparing the TESTING set: 100%|████████████████████████████████████████████████████████████████████████████████████| 41059/41059 [00:00<00:00, 718591.01it/s]
+Info:                 ../datasets/Movies_and_TV/Movies_and_TV_info.pkl
+Training Set:         ../datasets/Movies_and_TV/Movies_and_TV_split_train.pkl
+Validation Set:       ../datasets/Movies_and_TV/Movies_and_TV_split_dev.pkl
+Test Set:             ../datasets/Movies_and_TV/Movies_and_TV_split_test.pkl
+
+Creating numpy matrix for uid_userDoc..
+User Document Matrix: (541405, 500)
+User Document Matrix: ../datasets/Movies_and_TV/Movies_and_TV_uid_userDoc.npy
+
+Creating numpy matrix for iid_itemDoc..
+Item Document Matrix: (106040, 500)
+Item Document Matrix: ../datasets/Movies_and_TV/Movies_and_TV_iid_itemDoc.npy
+
+Consolidating user/item visual features from TRAINING set
+Consolidating user/item visual features from TRAINING set: 100%|██████████████████████████████████████████████████| 800000/800000 [00:02<00:00, 268875.03it/s]
+
+Creating user visuals from TRAINING set
+Creating item visuals from TRAINING set
+
+Minimum User Vis Len: 50, Minimum Item Vis Len: 50
+Convert user to uid...: 100%|████████████████████████████████████████████████████████████████████████████████████| 541405/541405 [00:00<00:00, 1643825.82it/s]
+Convert item to iid...: 100%|████████████████████████████████████████████████████████████████████████████████████| 106040/106040 [00:00<00:00, 1780259.44it/s]
+Store the actual length of each user visual feature (before padding): 100%|██████████████████████████████████████| 541405/541405 [00:00<00:00, 3788237.26it/s]
+Store the actual length of each item visual feature (before padding): 100%|██████████████████████████████████████| 106040/106040 [00:00<00:00, 3558823.73it/s]
+Pad the user visual feature to MAX_VIS_LEN: 100%|██████████████████████████████████████████████████████████████████| 541405/541405 [00:05<00:00, 98334.86it/s]
+Pad the item visual feature to MAX_VIS_LEN: 100%|██████████████████████████████████████████████████████████████████| 106040/106040 [00:02<00:00, 41192.67it/s]
+
+Creating numpy matrix for uid_userVis..
+User Visual Feature Matrix: (541405, 500)
+User Visual Feature Matrix: ../datasets/Movies_and_TV/Movies_and_TV_uid_userDoc.npy
+
+Creating numpy matrix for iid_itemVis..
+Item Visual Feature Matrix: (106040, 500)
+Item Visual Feature Matrix: ../datasets/Movies_and_TV/Movies_and_TV_iid_itemDoc.npy
+
+Saving all required files for "Movies_and_TV"..
+Environment:          ../datasets/Movies_and_TV/Movies_and_TV_env.pkl
+
+All required files for "Movies_and_TV" successfully saved to '../datasets/Movies_and_TV/'
+
+Preprocessing for "Movies_and_TV" done after 868.24 seconds (14.47 minutes)
+
+
+Done!!

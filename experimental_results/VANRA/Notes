@@ -1,0 +1,5 @@
+VANRA
+for the document model, using ANRS only (aspect-based representation but not aspect important estimation)
+for the visual model, using VANRA_VRL3 (remove global attention, just using the attention layer
+but not cnn layer of the local attention, followed by fclayer to reduce the dimension).
+I think that can preserve the original visual feature information.

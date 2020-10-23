@@ -1,0 +1,207 @@
+╭─xulabzz ~/Dev/NLP/ANR/preprocessing ‹master*›
+╰─➤  $ python preprocessing_simple.py -d Tools_and_Home_Improvement -dev_test_in_train 1
+
+Dataset: Tools_and_Home_Improvement
+[args from argparse.ArgumentParser().parse_args()]
+command: preprocessing_simple.py -d Tools_and_Home_Improvement -dev_test_in_train 1
+dataset: Tools_and_Home_Improvement
+dataset_maximum_size: 1000000
+dev_test_in_train: True
+maxDL: 500
+maxVL: 500
+minImages: 1
+minReviews: 1
+minRL: 10
+random_seed: 1337
+train_ratio: 0.8
+vocab: 50000
+
+[INPUT] Source Folder:       ../datasets/
+[INPUT] Reviews/Ratings:     ../datasets/reviews_Tools_and_Home_Improvement.json
+
+[OUTPUT] Category Folder:    ../datasets/Tools_and_Home_Improvement/
+[OUTPUT] env:                ../datasets/Tools_and_Home_Improvement/Tools_and_Home_Improvement_env.pkl
+[OUTPUT] info:               ../datasets/Tools_and_Home_Improvement/Tools_and_Home_Improvement_info.pkl
+[OUTPUT] split_train:        ../datasets/Tools_and_Home_Improvement/Tools_and_Home_Improvement_train_interactions.pkl
+[OUTPUT] split_dev:          ../datasets/Tools_and_Home_Improvement/Tools_and_Home_Improvement_dev_interactions.pkl
+[OUTPUT] split_test:         ../datasets/Tools_and_Home_Improvement/Tools_and_Home_Improvement_test_interactions.pkl
+[OUTPUT] split_train:        ../datasets/Tools_and_Home_Improvement/Tools_and_Home_Improvement_split_train.pkl
+[OUTPUT] split_dev:          ../datasets/Tools_and_Home_Improvement/Tools_and_Home_Improvement_split_dev.pkl
+[OUTPUT] split_test:         ../datasets/Tools_and_Home_Improvement/Tools_and_Home_Improvement_split_test.pkl
+[OUTPUT] uid_userDoc:        ../datasets/Tools_and_Home_Improvement/Tools_and_Home_Improvement_uid_userDoc.npy
+[OUTPUT] iid_itemDoc:        ../datasets/Tools_and_Home_Improvement/Tools_and_Home_Improvement_iid_itemDoc.npy
+[OUTPUT] uid_userDoc:        ../datasets/Tools_and_Home_Improvement/Tools_and_Home_Improvement_uid_userVis.npy
+[OUTPUT] iid_itemDoc:        ../datasets/Tools_and_Home_Improvement/Tools_and_Home_Improvement_iid_itemVis.npy
+
+Preprocessing data for "Tools_and_Home_Improvement"
+
+[Settings]
+Min reviews for user/item: 1
+Min review length to qualify as an user-item interaction: 10
+Max words for user/item document: 500 (For truncating/padding to get a fixed-size representation)
+Top-50000 words in vocabulary being utilized!
+
+
+Initial pass of reviews to get the user-item interactions!
+Initial pass of reviews for "Tools_and_Home_Improvement": 1926047it [00:56, 34390.17it/s]
+[Initial stats] Users: 1,212,468, Items: 260,659, Ratings: 1,926,047, Density: 0.0000061
+
+
+Second pass of visual features to get the item-feature interactions!
+Initial pass of reviews for "Tools_and_Home_Improvement": 100%|████████████████████████████████████████████████████| 267141/267141 [00:04<00:00, 60533.58it/s]
+[Second stats] Items with image: 267,141, Images: 267,141, Density: 1.0000000
+
+
+Starting to filter away users & items based on thresold of 1 images!
+Updating interactions based on the num of images...
+Filtering interactions: 100%|██████████████████████████████████████████████████████████████████████████████████| 1926047/1926047 [00:00<00:00, 4026903.08it/s]
+
+Filtered users & items based on thresold of 1 images!
+Users: 1212468 -> 1206985, Items: 260659 -> 258737
+[Current stats] Users: 1206985, Items: 258737, Ratings: 1914178, Density: 0.0000061
+Updating interactions based on the num of images...
+Filtering interactions: 100%|██████████████████████████████████████████████████████████████████████████████████| 1914178/1914178 [00:00<00:00, 4008517.89it/s]
+
+Filtered users & items based on thresold of 1 images!
+Users: 1206985 -> 1206985 Items: 258737 -> 258737
+[Current stats] Users: 1206985, Items: 258737, Ratings: 1914178, Density: 0.0000061
+
+No change in # of users or # of items!
+
+[Final stats] Users: 1,206,985, Items: 258,737, Ratings: 1,914,178, Density: 0.0000061
+
+Elapsed time for "Tools_and_Home_Improvement": 67.39 seconds (1.12 minutes)
+
+Starting to filter away users & items based on thresold of 1 reviews!
+
+Filtered users & items based on thresold of 1 reviews!
+Users: 1206985 -> 1206985, Items: 258737 -> 258737
+
+No change in # of users or # of items!
+
+[Final stats] Users: 1,206,985, Items: 258,737, Ratings: 1,914,178, Density: 0.0000061
+
+Elapsed time for "Tools_and_Home_Improvement": 67.67 seconds (1.13 minutes)
+
+
+Third pass of reviews to get the rating, date, the num of tokenized review and index!
+Third pass of len of reviews for "Tools_and_Home_Improvement": 1926047it [01:32, 20883.89it/s]
+[Current stats] Users: 1,206,985, Items: 258,737, Ratings: 1,914,178, Density: 0.0000061
+
+Filtering user-item interactions based on minimum review length of 10 tokens..
+Filtering interactions: 100%|██████████████████████████████████████████████████████████████████████████████████| 1914178/1914178 [00:00<00:00, 4583561.61it/s]
+
+Filtered users & items based on minimum review length of 10 tokens!
+Users: 1,206,985 -> 1,194,374, Items: 258,737 -> 256,895
+[Current stats] Users: 1,194,374, Items: 256,895, Ratings: 1,893,225, Density: 0.0000062
+
+
+Starting to filter away users & items based on thresold of 1 reviews (after removing reviews with <= 10 tokens)!
+
+Filtered users & items based on thresold of 1 reviews!
+Users: 1,194,374 -> 1,194,374, Items: 256,895 -> 256,895
+
+No change in # of users or # of items!
+
+[Final stats] Users: 1,194,374, Items: 256,895, Ratings: 1,893,225, Density: 0.0000062
+
+*****************************************************************************************************************************
+*** Original Dataset Size (i.e. num_ratings): 1,893,225!
+*** Selecting a random subsample of 1,000,000 user-item interactions!
+*** Current Dataset Size (i.e. num_ratings):  1,000,000!
+*****************************************************************************************************************************
+Fourth pass of reviews for "Tools_and_Home_Improvement": 1926047it [01:22, 23263.04it/s]
+
+
+80.0% of ALL reviews are RANDOMLY selected for TRAIN, another 10.0% RANDOMLY selected for DEV, and remaining 10.0% used for TEST.
+
+[Initial Stats] Total Interactions: 1,000,000, TRAIN: 800,000 (80.00%), DEV: 100,000 (10.00%), TEST: 100,000 (10.00%)
+
+
+Removing users & items who do not appear in the training set, from the dev and test sets..
+Updating DEV interactions: 100%|█████████████████████████████████████████████████████████████████████████████████| 100000/100000 [00:00<00:00, 1023210.61it/s]
+Updating TEST interactions: 100%|████████████████████████████████████████████████████████████████████████████████| 100000/100000 [00:00<00:00, 1011438.51it/s]
+
+Removed 67,113 interactions from DEV and 66,845 interactions from TEST! (i.e. Those belonging to Users/Items which do not appear in TRAIN)
+
+[Current Stats] Total Interactions: 866,042, TRAIN: 800,000 (92.37%), DEV: 32,887 (3.80%), TEST: 33,155 (3.83%)
+
+
+[FINAL Stats] Users: 604,303, Items: 167,536, Ratings: 866,042, Density: 0.0000086
+
+[FINAL Stats] Total Interactions: 866,042, TRAIN: 800,000 (92.37%), DEV: 32,887 (3.80%), TEST: 33,155 (3.83%)
+
+[FINAL Stats][TRAIN] Users: 604,303, Items: 167,536, Ratings: 800,000
+[FINAL Stats][DEV]   Users: 28,684, Items: 19,322, Ratings: 32,887
+[FINAL Stats][TEST]  Users: 29,069, Items: 19,655, Ratings: 33,155
+
+
+train_interactions:   ../datasets/Tools_and_Home_Improvement/Tools_and_Home_Improvement_train_interactions.pkl
+dev_interactions:     ../datasets/Tools_and_Home_Improvement/Tools_and_Home_Improvement_dev_interactions.pkl
+test_interactions:    ../datasets/Tools_and_Home_Improvement/Tools_and_Home_Improvement_test_interactions.pkl
+
+Consolidating user/item reviews from TRAINING set
+Consolidating user/item reviews from TRAINING set: 100%|██████████████████████████████████████████████████████████| 800000/800000 [00:04<00:00, 165292.15it/s]
+
+Creating user docs from TRAINING set
+Creating item docs from TRAINING set
+
+Minimum User Doc Len: 10, Minimum Item Doc Len: 10
+
+Original number of words (based on USER & ITEM documents constructed from TRAINING set): 202,948
+For the vocabulary, we are only using the 50,000 most frequent words
+Current number of words: 50,000
+
+For each user doc, converting words to wids using word_wid...: 100%|███████████████████████████████████████████████| 604303/604303 [00:07<00:00, 83665.15it/s]
+For each item doc, converting words to wids using word_wid...: 100%|███████████████████████████████████████████████| 167536/167536 [00:08<00:00, 19642.50it/s]
+Store the actual length of each user document (before padding): 100%|████████████████████████████████████████████| 604303/604303 [00:00<00:00, 3293687.01it/s]
+Store the actual length of each item document (before padding): 100%|████████████████████████████████████████████| 167536/167536 [00:00<00:00, 3126362.71it/s]
+Pad the user documents to MAX_DOC_LEN: 100%|██████████████████████████████████████████████████████████████████████| 604303/604303 [00:04<00:00, 140449.04it/s]
+Pad the item documents to MAX_DOC_LEN: 100%|███████████████████████████████████████████████████████████████████████| 167536/167536 [00:06<00:00, 27007.90it/s]
+Preparing the TRAINING set: 100%|█████████████████████████████████████████████████████████████████████████████████| 800000/800000 [00:00<00:00, 904196.94it/s]
+Preparing the DEV set: 100%|████████████████████████████████████████████████████████████████████████████████████████| 32887/32887 [00:00<00:00, 741263.81it/s]
+Preparing the TESTING set: 100%|████████████████████████████████████████████████████████████████████████████████████| 33155/33155 [00:00<00:00, 605260.14it/s]
+Info:                 ../datasets/Tools_and_Home_Improvement/Tools_and_Home_Improvement_info.pkl
+Training Set:         ../datasets/Tools_and_Home_Improvement/Tools_and_Home_Improvement_split_train.pkl
+Validation Set:       ../datasets/Tools_and_Home_Improvement/Tools_and_Home_Improvement_split_dev.pkl
+Test Set:             ../datasets/Tools_and_Home_Improvement/Tools_and_Home_Improvement_split_test.pkl
+
+Creating numpy matrix for uid_userDoc..
+User Document Matrix: (604303, 500)
+User Document Matrix: ../datasets/Tools_and_Home_Improvement/Tools_and_Home_Improvement_uid_userDoc.npy
+
+Creating numpy matrix for iid_itemDoc..
+Item Document Matrix: (167536, 500)
+Item Document Matrix: ../datasets/Tools_and_Home_Improvement/Tools_and_Home_Improvement_iid_itemDoc.npy
+
+Consolidating user/item visual features from TRAINING set
+Consolidating user/item visual features from TRAINING set: 100%|██████████████████████████████████████████████████| 800000/800000 [00:02<00:00, 295005.28it/s]
+
+Creating user visuals from TRAINING set
+Creating item visuals from TRAINING set
+
+Minimum User Vis Len: 50, Minimum Item Vis Len: 50
+Convert user to uid...: 100%|████████████████████████████████████████████████████████████████████████████████████| 604303/604303 [00:00<00:00, 1751367.95it/s]
+Convert item to iid...: 100%|████████████████████████████████████████████████████████████████████████████████████| 167536/167536 [00:00<00:00, 1617983.98it/s]
+Store the actual length of each user visual feature (before padding): 100%|██████████████████████████████████████| 604303/604303 [00:00<00:00, 3574100.41it/s]
+Store the actual length of each item visual feature (before padding): 100%|██████████████████████████████████████| 167536/167536 [00:00<00:00, 3034752.39it/s]
+Pad the user visual feature to MAX_VIS_LEN: 100%|██████████████████████████████████████████████████████████████████| 604303/604303 [00:06<00:00, 93797.02it/s]
+Pad the item visual feature to MAX_VIS_LEN: 100%|██████████████████████████████████████████████████████████████████| 167536/167536 [00:03<00:00, 48858.39it/s]
+
+Creating numpy matrix for uid_userVis..
+User Visual Feature Matrix: (604303, 500)
+User Visual Feature Matrix: ../datasets/Tools_and_Home_Improvement/Tools_and_Home_Improvement_uid_userDoc.npy
+
+Creating numpy matrix for iid_itemVis..
+Item Visual Feature Matrix: (167536, 500)
+Item Visual Feature Matrix: ../datasets/Tools_and_Home_Improvement/Tools_and_Home_Improvement_iid_itemDoc.npy
+
+Saving all required files for "Tools_and_Home_Improvement"..
+Environment:          ../datasets/Tools_and_Home_Improvement/Tools_and_Home_Improvement_env.pkl
+
+All required files for "Tools_and_Home_Improvement" successfully saved to '../datasets/Tools_and_Home_Improvement/'
+
+Preprocessing for "Tools_and_Home_Improvement" done after 480.62 seconds (8.01 minutes)
+
+
+Done!!

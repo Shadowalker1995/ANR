@@ -1,0 +1,32 @@
+
+Dataset: Kindle_Store
+
+[args from argparse.ArgumentParser().parse_args()]
+command: pretrained_vectors_simple.py -emb_dim 100 -d Kindle_Store
+dataset: Kindle_Store
+emb_dim: 100
+emb_rand_init: 0.01
+random_seed: 1337
+
+[INPUT] Source Folder:                 ../datasets/
+[INPUT] Category Folder:               ../datasets/Kindle_Store/
+[INPUT] env:                           ../datasets/Kindle_Store/Kindle_Store_env.pkl
+[INPUT] Pretrained Word Embeddings:    ../datasets/glove.twitter.word2vec.27B.100d.txt
+
+[OUTPUT] wid_wordEmbed:                ../datasets/Kindle_Store/Kindle_Store_wed100_wid_wordEmbed.npy
+
+Loading word-to-wid mappings (i.e. word_wid) from "../datasets/Kindle_Store/Kindle_Store_env.pkl"
+
+|V|: 50002
+
+Finished processing pretrained embeddings..
+# of words with pretrained embeddings: 45295
+
+Embedding Matrix=(50002, 100), |V|=50002
+# of Words w/ No Pretrained Embeddings=4707 (9.414%)
+
+Embeddings successfully saved to '../datasets/Kindle_Store/Kindle_Store_wed100_wid_wordEmbed.npy'
+
+
+Pretrained word embeddings for "Kindle_Store" obtained after 74.58 seconds (1.24 minutes)
+

@@ -1,0 +1,208 @@
+╭─xulabzz ~/Dev/NLP/ANR/preprocessing ‹master*›
+╰─➤  $ python preprocessing_simple.py -d Health_and_Personal_Care -dev_test_in_train 1
+
+
+Dataset: Health_and_Personal_Care
+[args from argparse.ArgumentParser().parse_args()]
+command: preprocessing_simple.py -d Health_and_Personal_Care -dev_test_in_train 1
+dataset: Health_and_Personal_Care
+dataset_maximum_size: 1000000
+dev_test_in_train: True
+maxDL: 500
+maxVL: 500
+minImages: 1
+minReviews: 1
+minRL: 10
+random_seed: 1337
+train_ratio: 0.8
+vocab: 50000
+
+[INPUT] Source Folder:       ../datasets/
+[INPUT] Reviews/Ratings:     ../datasets/reviews_Health_and_Personal_Care.json
+
+[OUTPUT] Category Folder:    ../datasets/Health_and_Personal_Care/
+[OUTPUT] env:                ../datasets/Health_and_Personal_Care/Health_and_Personal_Care_env.pkl
+[OUTPUT] info:               ../datasets/Health_and_Personal_Care/Health_and_Personal_Care_info.pkl
+[OUTPUT] split_train:        ../datasets/Health_and_Personal_Care/Health_and_Personal_Care_train_interactions.pkl
+[OUTPUT] split_dev:          ../datasets/Health_and_Personal_Care/Health_and_Personal_Care_dev_interactions.pkl
+[OUTPUT] split_test:         ../datasets/Health_and_Personal_Care/Health_and_Personal_Care_test_interactions.pkl
+[OUTPUT] split_train:        ../datasets/Health_and_Personal_Care/Health_and_Personal_Care_split_train.pkl
+[OUTPUT] split_dev:          ../datasets/Health_and_Personal_Care/Health_and_Personal_Care_split_dev.pkl
+[OUTPUT] split_test:         ../datasets/Health_and_Personal_Care/Health_and_Personal_Care_split_test.pkl
+[OUTPUT] uid_userDoc:        ../datasets/Health_and_Personal_Care/Health_and_Personal_Care_uid_userDoc.npy
+[OUTPUT] iid_itemDoc:        ../datasets/Health_and_Personal_Care/Health_and_Personal_Care_iid_itemDoc.npy
+[OUTPUT] uid_userDoc:        ../datasets/Health_and_Personal_Care/Health_and_Personal_Care_uid_userVis.npy
+[OUTPUT] iid_itemDoc:        ../datasets/Health_and_Personal_Care/Health_and_Personal_Care_iid_itemVis.npy
+
+Preprocessing data for "Health_and_Personal_Care"
+
+[Settings]
+Min reviews for user/item: 1
+Min review length to qualify as an user-item interaction: 10
+Max words for user/item document: 500 (For truncating/padding to get a fixed-size representation)
+Top-50000 words in vocabulary being utilized!
+
+
+Initial pass of reviews to get the user-item interactions!
+Initial pass of reviews for "Health_and_Personal_Care": 2982326it [01:25, 34700.11it/s]
+[Initial stats] Users: 1,851,132, Items: 252,331, Ratings: 2,982,326, Density: 0.0000064
+
+
+Second pass of visual features to get the item-feature interactions!
+Initial pass of reviews for "Health_and_Personal_Care": 100%|██████████████████████████████████████████████████████| 260842/260842 [00:04<00:00, 58748.45it/s]
+[Second stats] Items with image: 260,842, Images: 260,842, Density: 1.0000000
+
+
+Starting to filter away users & items based on thresold of 1 images!
+Updating interactions based on the num of images...
+Filtering interactions: 100%|██████████████████████████████████████████████████████████████████████████████████| 2982326/2982326 [00:00<00:00, 4458268.32it/s]
+
+Filtered users & items based on thresold of 1 images!
+Users: 1851132 -> 1839023, Items: 252331 -> 250241
+[Current stats] Users: 1839023, Items: 250241, Ratings: 2956264, Density: 0.0000064
+Updating interactions based on the num of images...
+Filtering interactions: 100%|██████████████████████████████████████████████████████████████████████████████████| 2956264/2956264 [00:00<00:00, 4450839.78it/s]
+
+Filtered users & items based on thresold of 1 images!
+Users: 1839023 -> 1839023, Items: 250241 -> 250241
+[Current stats] Users: 1839023, Iems: 250241, Ratings: 2956264, Density: 0.0000064
+
+No change in # of users or # of items!
+
+[Final stats] Users: 1,839,023, Items: 250,241, Ratings: 2,956,264, Density: 0.0000064
+
+Elapsed time for "Health_and_Personal_Care": 99.61 seconds (1.66 minutes)
+
+Starting to filter away users & items based on thresold of 1 reviews!
+
+Filtered users & items based on thresold of 1 reviews!
+Users: 1839023 -> 1839023, Items: 250241 -> 250241
+
+No change in # of users or # of items!
+
+[Final stats] Users: 1,839,023, Items: 250,241, Ratings: 2,956,264, Density: 0.0000064
+
+Elapsed time for "Health_and_Personal_Care": 100.02 seconds (1.67 minutes)
+
+
+Third pass of reviews to get the rating, date, the num of tokenized review and index!
+Third pass of len of reviews for "Health_and_Personal_Care": 2982326it [02:20, 21282.54it/s]
+[Current stats] Users: 1,839,023, Items: 250,241, Ratings: 2,956,264, Density: 0.0000064
+
+Filtering user-item interactions based on minimum review length of 10 tokens..
+Filtering interactions: 100%|██████████████████████████████████████████████████████████████████████████████████| 2956264/2956264 [00:00<00:00, 4822328.46it/s]
+
+Filtered users & items based on minimum review length of 10 tokens!
+Users: 1,839,023 -> 1,819,414, Items: 250,241 -> 248,443
+[Current stats] Users: 1,819,414, Items: 248,443, Ratings: 2,922,568, Density: 0.0000065
+
+
+Starting to filter away users & items based on thresold of 1 reviews (after removing reviews with <= 10 tokens)!
+
+Filtered users & items based on thresold of 1 reviews!
+Users: 1,819,414 -> 1,819,414, Items: 248,443 -> 248,443
+
+No change in # of users or # of items!
+
+[Final stats] Users: 1,819,414, Items: 248,443, Ratings: 2,922,568, Density: 0.0000065
+
+*****************************************************************************************************************************
+*** Original Dataset Size (i.e. num_ratings): 2,922,568!
+*** Selecting a random subsample of 1,000,000 user-item interactions!
+*** Current Dataset Size (i.e. num_ratings):  1,000,000!
+*****************************************************************************************************************************
+Fourth pass of reviews for "Health_and_Personal_Care": 2982324it [01:52, 26508.58it/s]
+
+
+80.0% of ALL reviews are RANDOMLY selected for TRAIN, another 10.0% RANDOMLY selected for DEV, and remaining 10.0% used for TEST.
+
+[Initial Stats] Total Interactions: 1,000,000, TRAIN: 800,000 (80.00%), DEV: 100,000 (10.00%), TEST: 100,000 (10.00%)
+
+
+Removing users & items who do not appear in the training set, from the dev and test sets..
+Updating DEV interactions: 100%|█████████████████████████████████████████████████████████████████████████████████| 100000/100000 [00:00<00:00, 1035272.75it/s]
+Updating TEST interactions: 100%|█████████████████████████████████████████████████████████████████████████████████| 100000/100000 [00:00<00:00, 988371.80it/s]
+
+Removed 71,421 interactions from DEV and 71,594 interactions from TEST! (i.e. Those belonging to Users/Items which do not appear in TRAIN)
+
+[Current Stats] Total Interactions: 856,985, TRAIN: 800,000 (93.35%), DEV: 28,579 (3.33%), TEST: 28,406 (3.31%)
+
+
+[FINAL Stats] Users: 640,558, Items: 140,129, Ratings: 856,985, Density: 0.0000095
+
+[FINAL Stats] Total Interactions: 856,985, TRAIN: 800,000 (93.35%), DEV: 28,579 (3.33%), TEST: 28,406 (3.31%)
+
+[FINAL Stats][TRAIN] Users: 640,558, Items: 140,129, Ratings: 800,000
+[FINAL Stats][DEV]   Users: 25,174, Items: 16,728, Ratings: 28,579
+[FINAL Stats][TEST]  Users: 24,927, Items: 16,508, Ratings: 28,406
+
+
+train_interactions:   ../datasets/Health_and_Personal_Care/Health_and_Personal_Care_train_interactions.pkl
+dev_interactions:     ../datasets/Health_and_Personal_Care/Health_and_Personal_Care_dev_interactions.pkl
+test_interactions:    ../datasets/Health_and_Personal_Care/Health_and_Personal_Care_test_interactions.pkl
+
+Consolidating user/item reviews from TRAINING set
+Consolidating user/item reviews from TRAINING set: 100%|██████████████████████████████████████████████████████████| 800000/800000 [00:04<00:00, 165226.82it/s]
+
+Creating user docs from TRAINING set
+Creating item docs from TRAINING set
+
+Minimum User Doc Len: 10, Minimum Item Doc Len: 10
+
+Original number of words (based on USER & ITEM documents constructed from TRAINING set): 197,249
+For the vocabulary, we are only using the 50,000 most frequent words
+Current number of words: 50,000
+
+For each user doc, converting words to wids using word_wid...: 100%|███████████████████████████████████████████████| 640558/640558 [00:07<00:00, 89367.62it/s]
+For each item doc, converting words to wids using word_wid...: 100%|███████████████████████████████████████████████| 140129/140129 [00:08<00:00, 17441.76it/s]
+Store the actual length of each user document (before padding): 100%|████████████████████████████████████████████| 640558/640558 [00:00<00:00, 3396288.29it/s]
+Store the actual length of each item document (before padding): 100%|████████████████████████████████████████████| 140129/140129 [00:00<00:00, 2908210.99it/s]
+Pad the user documents to MAX_DOC_LEN: 100%|██████████████████████████████████████████████████████████████████████| 640558/640558 [00:04<00:00, 138453.06it/s]
+Pad the item documents to MAX_DOC_LEN: 100%|███████████████████████████████████████████████████████████████████████| 140129/140129 [00:05<00:00, 23522.89it/s]
+Preparing the TRAINING set: 100%|█████████████████████████████████████████████████████████████████████████████████| 800000/800000 [00:00<00:00, 892343.16it/s]
+Preparing the DEV set: 100%|████████████████████████████████████████████████████████████████████████████████████████| 28579/28579 [00:00<00:00, 740622.52it/s]
+Preparing the TESTING set: 100%|████████████████████████████████████████████████████████████████████████████████████| 28406/28406 [00:00<00:00, 604003.93it/s]
+Info:                 ../datasets/Health_and_Personal_Care/Health_and_Personal_Care_info.pkl
+Training Set:         ../datasets/Health_and_Personal_Care/Health_and_Personal_Care_split_train.pkl
+Validation Set:       ../datasets/Health_and_Personal_Care/Health_and_Personal_Care_split_dev.pkl
+Test Set:             ../datasets/Health_and_Personal_Care/Health_and_Personal_Care_split_test.pkl
+
+Creating numpy matrix for uid_userDoc..
+User Document Matrix: (640558, 500)
+User Document Matrix: ../datasets/Health_and_Personal_Care/Health_and_Personal_Care_uid_userDoc.npy
+
+Creating numpy matrix for iid_itemDoc..
+Item Document Matrix: (140129, 500)
+Item Document Matrix: ../datasets/Health_and_Personal_Care/Health_and_Personal_Care_iid_itemDoc.npy
+
+Consolidating user/item visual features from TRAINING set
+Consolidating user/item visual features from TRAINING set: 100%|██████████████████████████████████████████████████| 800000/800000 [00:02<00:00, 303523.69it/s]
+
+Creating user visuals from TRAINING set
+Creating item visuals from TRAINING set
+
+Minimum User Vis Len: 50, Minimum Item Vis Len: 50
+Convert user to uid...: 100%|████████████████████████████████████████████████████████████████████████████████████| 640558/640558 [00:00<00:00, 1776814.78it/s]
+Convert item to iid...: 100%|████████████████████████████████████████████████████████████████████████████████████| 140129/140129 [00:00<00:00, 1687492.82it/s]
+Store the actual length of each user visual feature (before padding): 100%|██████████████████████████████████████| 640558/640558 [00:00<00:00, 3509941.15it/s]
+Store the actual length of each item visual feature (before padding): 100%|██████████████████████████████████████| 140129/140129 [00:00<00:00, 3406873.67it/s]
+Pad the user visual feature to MAX_VIS_LEN: 100%|██████████████████████████████████████████████████████████████████| 640558/640558 [00:06<00:00, 98021.38it/s]
+Pad the item visual feature to MAX_VIS_LEN: 100%|██████████████████████████████████████████████████████████████████| 140129/140129 [00:03<00:00, 43563.41it/s]
+
+Creating numpy matrix for uid_userVis..
+User Visual Feature Matrix: (640558, 500)
+User Visual Feature Matrix: ../datasets/Health_and_Personal_Care/Health_and_Personal_Care_uid_userDoc.npy
+
+Creating numpy matrix for iid_itemVis..
+Item Visual Feature Matrix: (140129, 500)
+Item Visual Feature Matrix: ../datasets/Health_and_Personal_Care/Health_and_Personal_Care_iid_itemDoc.npy
+
+Saving all required files for "Health_and_Personal_Care"..
+Environment:          ../datasets/Health_and_Personal_Care/Health_and_Personal_Care_env.pkl
+
+All required files for "Health_and_Personal_Care" successfully saved to '../datasets/Health_and_Personal_Care/'
+
+Preprocessing for "Health_and_Personal_Care" done after 603.44 seconds (10.06 minutes)
+
+
+Done!!

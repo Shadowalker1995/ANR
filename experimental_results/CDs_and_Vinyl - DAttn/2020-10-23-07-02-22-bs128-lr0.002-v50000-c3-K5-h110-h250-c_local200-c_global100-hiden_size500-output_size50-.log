@@ -1,0 +1,203 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  channels_global: 100
+  channels_local: 200
+  command: -d CDs_and_Vinyl -m DAttn -e 10 -p 1 -v 50000 -K 5 -h1 10 -h2 50 -WED 100 -c_local 200 -c_global 100 -hiden_size 500 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm CDs_and_Vinyl_DAttn
+  ctx_win_size: 3
+  dataset: CDs_and_Vinyl
+  disable_initial_eval: 0
+  dropout_rate: 0.5
+  epochs: 10
+  filters_num: 100
+  gpu: 0
+  h1: 10
+  h2: 50
+  hidden_size: 500
+  input_dir: ./datasets/CDs_and_Vinyl/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: DAttn
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/CDs_and_Vinyl - DAttn/
+  output_size: 50
+  pretrained_src: 1
+  random_seed: 1234
+  save_model: CDs_and_Vinyl_DAttn
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 100
+========================================================================================================================
+
+[INFO] # of Users: 488,046, # of Items: 237,480
+
+Creating model (Selected Model: DAttn)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 4.10s (0.07 minute)
+
+Loading uid_userDoc from "./datasets/CDs_and_Vinyl/CDs_and_Vinyl_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (488046, 500)]
+
+Loading iid_itemDoc from "./datasets/CDs_and_Vinyl/CDs_and_Vinyl_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (237480, 500)]
+
+Loading pretrained word embeddings from "./datasets/CDs_and_Vinyl/CDs_and_Vinyl_wed100_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (50002, 100)]
+
+Initialization Complete.. Elapsed Time: 28.04s (0.47 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 800,000, |DEV|: 41,001, |TEST|: 41,018
+Train/Dev/Test splits loaded! Elapsed Time: 28.31s (0.47 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 19.21460, MAE: 4.25114
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 19.24499, MAE: 4.25624
+
+Initial Evaluation Complete.. Elapsed Time: 46.52s (0.78 minute)
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 369,361,431
+# of Trainable Parameters: 1,598,231
+DAttn (
+  (uid_userDoc): Embedding(488046, 500), weights = ((488046, 500),), parameters = 244,023,000
+  (iid_itemDoc): Embedding(237480, 500), weights = ((237480, 500),), parameters = 118,740,000
+  (wid_wEmbed): Embedding(50002, 100), weights = ((50002, 100),), parameters = 5,000,200
+  (user_net): Net(
+    (localAttentionLayer): LocalAttention(
+      (attention_layer): Sequential(
+        (0): Conv2d(1, 1, kernel_size=(3, 100), stride=(1, 1), padding=(1, 0))
+        (1): Sigmoid()
+      )
+      (cnn): Sequential(
+        (0): Conv2d(1, 200, kernel_size=(1, 100), stride=(1, 1))
+        (1): Tanh()
+      )
+    )
+    (globalAttentionLayer): GlobalAttention(
+      (attention_layer): Sequential(
+        (0): Conv2d(1, 1, kernel_size=(500, 100), stride=(1, 1))
+        (1): Sigmoid()
+      )
+      (convs): ModuleList(
+        (0): Conv2d(1, 100, kernel_size=(2, 100), stride=(1, 1))
+        (1): Conv2d(1, 100, kernel_size=(3, 100), stride=(1, 1))
+        (2): Conv2d(1, 100, kernel_size=(4, 100), stride=(1, 1))
+      )
+    )
+    (fcLayer): Sequential(
+      (0): Linear(in_features=500, out_features=500, bias=True)
+      (1): Dropout(p=0.5, inplace=False)
+      (2): ReLU()
+      (3): Linear(in_features=500, out_features=50, bias=True)
+    )
+    (dropout): Dropout(p=0.5, inplace=False)
+  ), weights = ((1, 1, 3, 100), (1,), (200, 1, 1, 100), (200,), (1, 1, 500, 100), (1,), (100, 1, 2, 100), (100,), (100, 1, 3, 100), (100,), (100, 1, 4, 100), (100,), (500, 500), (500,), (50, 500), (50,)), parameters = 436,352 (Trainable)
+  (item_net): Net(
+    (localAttentionLayer): LocalAttention(
+      (attention_layer): Sequential(
+        (0): Conv2d(1, 1, kernel_size=(3, 100), stride=(1, 1), padding=(1, 0))
+        (1): Sigmoid()
+      )
+      (cnn): Sequential(
+        (0): Conv2d(1, 200, kernel_size=(1, 100), stride=(1, 1))
+        (1): Tanh()
+      )
+    )
+    (globalAttentionLayer): GlobalAttention(
+      (attention_layer): Sequential(
+        (0): Conv2d(1, 1, kernel_size=(500, 100), stride=(1, 1))
+        (1): Sigmoid()
+      )
+      (convs): ModuleList(
+        (0): Conv2d(1, 100, kernel_size=(2, 100), stride=(1, 1))
+        (1): Conv2d(1, 100, kernel_size=(3, 100), stride=(1, 1))
+        (2): Conv2d(1, 100, kernel_size=(4, 100), stride=(1, 1))
+      )
+    )
+    (fcLayer): Sequential(
+      (0): Linear(in_features=500, out_features=500, bias=True)
+      (1): Dropout(p=0.5, inplace=False)
+      (2): ReLU()
+      (3): Linear(in_features=500, out_features=50, bias=True)
+    )
+    (dropout): Dropout(p=0.5, inplace=False)
+  ), weights = ((1, 1, 3, 100), (1,), (200, 1, 1, 100), (200,), (1, 1, 500, 100), (1,), (100, 1, 2, 100), (100,), (100, 1, 3, 100), (100,), (100, 1, 4, 100), (100,), (500, 500), (500,), (50, 500), (50,)), parameters = 436,352 (Trainable)
+  (DAttn_RatingPred): DAttn_RatingPred(
+    (uid_userOffset): Embedding(488046, 1)
+    (iid_itemOffset): Embedding(237480, 1)
+    (globalOffset): Parameter(1,)
+  ), weights = ((1,), (488046, 1), (237480, 1)), parameters = 725,527 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/10] Training Loss: 0.95088	Elapsed Time: 593.95s (0:09:53)
+[Epoch 1] [Dev]  MSE: 1.04110, MAE: 0.75068
+[Epoch 1] [Test] MSE: 1.03400, MAE: 0.74910
+
+*** MODEL has obtained the best DEV MSE of 1.04110 so far!
+*** The Best MODEL saved to "./__saved_models__/CDs_and_Vinyl - DAttn/CDs_and_Vinyl_DAttn_1234.pth"
+
+[Epoch 2/10] Training Loss: 0.70401	Elapsed Time: 1,206.03s (0:20:06)
+[Epoch 2] [Dev]  MSE: 1.01825, MAE: 0.69759
+[Epoch 2] [Test] MSE: 1.00635, MAE: 0.69414
+
+*** MODEL has obtained the best DEV MSE of 1.01825 so far!
+*** The Best MODEL saved to "./__saved_models__/CDs_and_Vinyl - DAttn/CDs_and_Vinyl_DAttn_1234.pth"
+
+[Epoch 3/10] Training Loss: 0.61941	Elapsed Time: 1,818.16s (0:30:18)
+[Epoch 3] [Dev]  MSE: 1.06714, MAE: 0.71001
+[Epoch 3] [Test] MSE: 1.06107, MAE: 0.70729
+
+[Epoch 4/10] Training Loss: 0.56156	Elapsed Time: 2,430.27s (0:40:30)
+[Epoch 4] [Dev]  MSE: 1.02449, MAE: 0.69393
+[Epoch 4] [Test] MSE: 1.01495, MAE: 0.69121
+
+[Epoch 5/10] Training Loss: 0.51557	Elapsed Time: 3,042.44s (0:50:42)
+[Epoch 5] [Dev]  MSE: 1.07870, MAE: 0.74424
+[Epoch 5] [Test] MSE: 1.07794, MAE: 0.74210
+
+[Epoch 6/10] Training Loss: 0.47658	Elapsed Time: 3,654.62s (1:00:54)
+[Epoch 6] [Dev]  MSE: 1.04293, MAE: 0.72454
+[Epoch 6] [Test] MSE: 1.03924, MAE: 0.72286
+
+[Epoch 7/10] Training Loss: 0.44562	Elapsed Time: 4,266.85s (1:11:06)
+[Epoch 7] [Dev]  MSE: 1.06828, MAE: 0.72093
+[Epoch 7] [Test] MSE: 1.06673, MAE: 0.71969
+
+[Epoch 8/10] Training Loss: 0.41827	Elapsed Time: 4,879.08s (1:21:19)
+[Epoch 8] [Dev]  MSE: 1.06701, MAE: 0.72704
+[Epoch 8] [Test] MSE: 1.06619, MAE: 0.72611
+
+[Epoch 9/10] Training Loss: 0.39419	Elapsed Time: 5,491.28s (1:31:31)
+[Epoch 9] [Dev]  MSE: 1.06852, MAE: 0.72387
+[Epoch 9] [Test] MSE: 1.06543, MAE: 0.72240
+
+[Epoch 10/10] Training Loss: 0.37479	Elapsed Time: 6,103.48s (1:41:43)
+[Epoch 10] [Dev]  MSE: 1.05852, MAE: 0.72844
+[Epoch 10] [Test] MSE: 1.05415, MAE: 0.72631
+*** The Last MODEL saved to "./__saved_models__/CDs_and_Vinyl - DAttn/CDs_and_Vinyl_DAttn_1234_10.pth"
+
+[Training Loss]
+[0.95088, 0.70401, 0.61941, 0.56156, 0.51557, 0.47658, 0.44562, 0.41827, 0.39419, 0.37479]
+
+[Dev MSE]
+[1.0411, 1.01825, 1.06714, 1.02449, 1.0787, 1.04293, 1.06828, 1.06701, 1.06852, 1.05852]
+[Test MSE]
+[1.034, 1.00635, 1.06107, 1.01495, 1.07794, 1.03924, 1.06673, 1.06619, 1.06543, 1.05415]
+[Test MAE]
+[0.7491, 0.69414, 0.70729, 0.69121, 0.7421, 0.72286, 0.71969, 0.72611, 0.7224, 0.72631]
+
+
+Best Dev MSE: 1.01825 (Obtained during Evaluation #2)
+Test MSE: 1.00635, Test MAE: 0.69414
+
+End of Program! Elapsed Time: 6,168.15s (1:42:48)

@@ -1,0 +1,207 @@
+╭─xulabzz ~/Dev/NLP/ANR/preprocessing ‹master*›
+╰─➤  $ python preprocessing_simple.py -d Toys_and_Games -dev_test_in_train 1
+
+Dataset: Toys_and_Games
+[args from argparse.ArgumentParser().parse_args()]
+command: preprocessing_simple.py -d Toys_and_Games -dev_test_in_train 1
+dataset: Toys_and_Games
+dataset_maximum_size: 1000000
+dev_test_in_train: True
+maxDL: 500
+maxVL: 500
+minImages: 1
+minReviews: 1
+minRL: 10
+random_seed: 1337
+train_ratio: 0.8
+vocab: 50000
+
+[INPUT] Source Folder:       ../datasets/
+[INPUT] Reviews/Ratings:     ../datasets/reviews_Toys_and_Games.json
+
+[OUTPUT] Category Folder:    ../datasets/Toys_and_Games/
+[OUTPUT] env:                ../datasets/Toys_and_Games/Toys_and_Games_env.pkl
+[OUTPUT] info:               ../datasets/Toys_and_Games/Toys_and_Games_info.pkl
+[OUTPUT] split_train:        ../datasets/Toys_and_Games/Toys_and_Games_train_interactions.pkl
+[OUTPUT] split_dev:          ../datasets/Toys_and_Games/Toys_and_Games_dev_interactions.pkl
+[OUTPUT] split_test:         ../datasets/Toys_and_Games/Toys_and_Games_test_interactions.pkl
+[OUTPUT] split_train:        ../datasets/Toys_and_Games/Toys_and_Games_split_train.pkl
+[OUTPUT] split_dev:          ../datasets/Toys_and_Games/Toys_and_Games_split_dev.pkl
+[OUTPUT] split_test:         ../datasets/Toys_and_Games/Toys_and_Games_split_test.pkl
+[OUTPUT] uid_userDoc:        ../datasets/Toys_and_Games/Toys_and_Games_uid_userDoc.npy
+[OUTPUT] iid_itemDoc:        ../datasets/Toys_and_Games/Toys_and_Games_iid_itemDoc.npy
+[OUTPUT] uid_userDoc:        ../datasets/Toys_and_Games/Toys_and_Games_uid_userVis.npy
+[OUTPUT] iid_itemDoc:        ../datasets/Toys_and_Games/Toys_and_Games_iid_itemVis.npy
+
+Preprocessing data for "Toys_and_Games"
+
+[Settings]
+Min reviews for user/item: 1
+Min review length to qualify as an user-item interaction: 10
+Max words for user/item document: 500 (For truncating/padding to get a fixed-size representation)
+Top-50000 words in vocabulary being utilized!
+
+
+Initial pass of reviews to get the user-item interactions!
+Initial pass of reviews for "Toys_and_Games": 2252771it [01:05, 34535.14it/s]
+[Initial stats] Users: 1,342,911, Items: 327,698, Ratings: 2,252,771, Density: 0.0000051
+
+
+Second pass of visual features to get the item-feature interactions!
+Initial pass of reviews for "Toys_and_Games": 100%|████████████████████████████████████████████████████████████████| 333329/333329 [00:05<00:00, 59142.77it/s]
+[Second stats] Items with image: 333,329, Images: 333,329, Density: 1.0000000
+
+
+Starting to filter away users & items based on thresold of 1 images!
+Updating interactions based on the num of images...
+Filtering interactions: 100%|██████████████████████████████████████████████████████████████████████████████████| 2252771/2252771 [00:00<00:00, 4120362.23it/s]
+
+Filtered users & items based on thresold of 1 images!
+Users: 1342911 -> 1335809, Items: 327698 -> 325026
+[Current stats] Users: 1335809, Items: 325026, Ratings: 2236301, Density: 0.0000052
+Updating interactions based on the num of images...
+Filtering interactions: 100%|██████████████████████████████████████████████████████████████████████████████████| 2236301/2236301 [00:00<00:00, 4040155.59it/s]
+
+Filtered users & items based on thresold of 1 images!
+Users: 1335809 -> 1335809, Items: 325026 -> 325026
+[Current stats] Users: 1335809, Items: 325026, Ratings: 2236301, Density: 0.0000052
+
+No change in # of users or # of items!
+
+[Final stats] Users: 1,335,809, Items: 325,026, Ratings: 2,236,301, Density: 0.0000052
+
+Elapsed time for "Toys_and_Games": 79.38 seconds (1.32 minutes)
+
+Starting to filter away users & items based on thresold f 1 reviews!
+
+Filtered users & items based on thresold of 1 reviews!
+Users: 1335809 -> 1335809, Items: 325026 -> 325026
+
+No change in # of users or # of items!
+
+[Final stats] Users: 1,335,809, Items: 325,026, Ratings: 2,236,301, Density: 0.0000052
+
+Elapsed time for "Toys_and_Games": 79.71 seconds (1.33 minutes)
+
+
+Third pass of reviews to get the rating, date, the num of tokenized review and index!
+Third pass of len of reviews for "Toys_and_Games": 2252771it [01:46, 21125.62it/s]
+[Current stats] Users: 1,335,809, Items: 325,026, Ratings: 2,236,301, Density: 0.0000052
+
+Filtering user-item interactions based on minimum review length of 10 tokens..
+Filtering interactions: 100%|██████████████████████████████████████████████████████████████████████████████████| 2236301/2236301 [00:00<00:00, 4818027.46it/s]
+
+Filtered users & items based on minimum review length of 10 tokens!
+Users: 1,335,809 -> 1,324,641, Items: 325,026 -> 323,317
+[Current stats] Users: 1,324,641, Items: 323,317, Ratings: 2,215,761, Density: 0.0000052
+
+
+Starting to filter away users & items based on thresold of 1 reviews (after removing reviews with <= 10 tokens)!
+
+Filtered users & items based on thresold of 1 reviews!
+Users: 1,324,641 -> 1,324,641, Items: 323,317 -> 323,317
+
+No change in # of users or # of items!
+
+[Final stats] Users: 1,324,641, Items: 323,317, Ratings: 2,215,761, Density: 0.0000052
+
+*****************************************************************************************************************************
+*** Original Dataset Size (i.e. num_ratings): 2,215,761!
+*** Selecting a random subsample of 1,000,000 user-item interactions!
+*** Current Dataset Size (i.e. num_ratings):  1,000,000!
+*****************************************************************************************************************************
+Fourth pass of reviews for "Toys_and_Games": 2252770it [01:32, 24358.20it/s]
+
+
+80.0% of ALL reviews are RANDOMLY selected for TRAIN, another 10.0% RANDOMLY selected for DEV, and remaining 10.0% used for TEST.
+
+[Initial Stats] Total Interactions: 1,000,000, TRAIN: 800,000 (80.00%), DEV: 100,000 (10.00%), TEST: 100,000 (10.00%)
+
+
+Removing users & items who do not appear in the training set, from the dev and test sets..
+Updating DEV interactions: 100%|█████████████████████████████████████████████████████████████████████████████████| 100000/100000 [00:00<00:00, 1045569.99it/s]
+Updating TEST interactions: 100%|████████████████████████████████████████████████████████████████████████████████| 100000/100000 [00:00<00:00, 1021366.79it/s]
+
+Removed 67,413 interactions from DEV and 67,701 interactions from TEST! (i.e. Those belonging to Users/Items which do not appear in TRAIN)
+
+[Current Stats] Total Interactions: 864,886, TRAIN: 800,000 (92.50%), DEV: 32,587 (3.77%), TEST: 32,299 (3.73%)
+
+
+[FINAL Stats] Users: 598,485, Items: 197,223, Ratings: 864,886, Density: 0.0000073
+
+[FINAL Stats] Total Interactions: 864,886, TRAIN: 800,000 (92.50%), DEV: 32,587 (3.77%), TEST: 32,299 (3.73%)
+
+[FINAL Stats][TRAIN] Users: 598,485, Items: 197,223, Ratings: 800,000
+[FINAL Stats][DEV]   Users: 28,406, Items: 21,260, Ratings: 32,587
+[FINAL Stats][TEST]  Users: 28,089, Items: 21,200, Ratings: 32,299
+
+
+train_interactions:   ../datasets/Toys_and_Games/Toys_and_Games_train_interactions.pkl
+dev_interactions:     ../datasets/Toys_and_Games/Toys_and_Games_dev_interactions.pkl
+test_interactions:    ../datasets/Toys_and_Games/Toys_and_Games_test_interactions.pkl
+
+Consolidating user/item reviews from TRAINING set
+Consolidating user/item reviews from TRAINING set: 100%|██████████████████████████████████████████████████████████| 800000/800000 [00:04<00:00, 161365.54it/s]
+
+Creating user docs from TRAINING set
+Creating item docs from TRAINING set
+
+Minimum User Doc Len: 10, Minimum Item Doc Len: 10
+
+Original number of words (based on USER & ITEM documents constructed from TRAINING set): 192,180
+For the vocabulary, we are only using the 50,000 most frequent words
+Current number of words: 50,000
+
+For each user doc, converting words to wids using word_wid...: 100%|███████████████████████████████████████████████| 598485/598485 [00:06<00:00, 88326.81it/s]
+For each item doc, converting words to wids using word_wid...: 100%|███████████████████████████████████████████████| 197223/197223 [00:03<00:00, 51125.77it/s]
+Store the actual length of each user document (before padding): 100%|████████████████████████████████████████████| 598485/598485 [00:00<00:00, 3336170.41it/s]
+Store the actual length of each item document (before padding): 100%|████████████████████████████████████████████| 197223/197223 [00:00<00:00, 3125380.53it/s]
+Pad the user documents to MAX_DOC_LEN: 100%|██████████████████████████████████████████████████████████████████████| 598485/598485 [00:04<00:00, 138659.48it/s]
+Pad the item documents to MAX_DOC_LEN: 100%|██████████████████████████████████████████████████████████████████████| 197223/197223 [00:01<00:00, 140944.44it/s]
+Preparing the TRAINING set: 100%|█████████████████████████████████████████████████████████████████████████████████| 800000/800000 [00:00<00:00, 873305.27it/s]
+Preparing the DEV set: 100%|████████████████████████████████████████████████████████████████████████████████████████| 32587/32587 [00:00<00:00, 727604.54it/s]
+Preparing the TESTING set: 100%|████████████████████████████████████████████████████████████████████████████████████| 32299/32299 [00:00<00:00, 745140.86it/s]
+Info:                 ../datasets/Toys_and_Games/Toys_and_Games_info.pkl
+Training Set:         ../datasets/Toys_and_Games/Toys_and_Games_split_train.pkl
+Validation Set:       ../datasets/Toys_and_Games/Toys_and_Games_split_dev.pkl
+Test Set:             ../datasets/Toys_and_Games/Toys_and_Games_split_test.pkl
+
+Creating numpy matrix for uid_userDoc..
+User Document Matrix: (598485, 500)
+User Document Matrix: ../datasets/Toys_and_Games/Toys_and_Games_uid_userDoc.npy
+
+Creating numpy matrix for iid_itemDoc..
+Item Document Matrix: (197223, 500)
+Item Document Matrix: ../datasets/Toys_and_Games/Toys_and_Games_iid_itemDoc.npy
+
+Consolidating user/item visual features from TRAINING set
+Consolidating user/item visual features from TRAINING set: 100%|██████████████████████████████████████████████████| 800000/800000 [00:02<00:00, 290412.40it/s]
+
+Creating user visuals from TRAINING set
+Creating item visuals from TRAINING set
+
+Minimum User Vis Len: 50, Minimum Item Vis Len: 50
+Convert user to uid...: 100%|████████████████████████████████████████████████████████████████████████████████████| 598485/598485 [00:00<00:00, 1743280.49it/s]
+Convert item to iid...: 100%|████████████████████████████████████████████████████████████████████████████████████| 197223/197223 [00:00<00:00, 1549485.95it/s]
+Store the actual length of each user visual feature (before padding): 100%|██████████████████████████████████████| 598485/598485 [00:00<00:00, 3719153.87it/s]
+Store the actual length of each item visual feature (before padding): 100%|██████████████████████████████████████| 197223/197223 [00:00<00:00, 3202913.31it/s]
+Pad the user visual feature to MAX_VIS_LEN: 100%|██████████████████████████████████████████████████████████████████| 598485/598485 [00:06<00:00, 91751.96it/s]
+Pad the item visual feature to MAX_VIS_LEN: 100%|█████████████████████████████████████████████████████████████████| 197223/197223 [00:01<00:00, 152760.78it/s]
+
+Creating numpy matrix for uid_userVis..
+User Visual Feature Matrix: (598485, 500)
+User Visual Feature Matrix: ../datasets/Toys_and_Games/Toys_and_Games_uid_userDoc.npy
+
+Creating numpy matrix for iid_itemVis..
+Item Visual Feature Matrix: (197223, 500)
+Item Visual Feature Matrix: ../datasets/Toys_and_Games/Toys_and_Games_iid_itemDoc.npy
+
+Saving all required files for "Toys_and_Games"..
+Environment:          ../datasets/Toys_and_Games/Toys_and_Games_env.pkl
+
+All required files for "Toys_and_Games" successfully saved to '../datasets/Toys_and_Games/'
+
+Preprocessing for "Toys_and_Games" done after 507.48 seconds (8.46 minutes)
+
+
+Done!!

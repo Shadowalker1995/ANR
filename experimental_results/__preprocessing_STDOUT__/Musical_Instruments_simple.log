@@ -1,0 +1,201 @@
+╭─xulabzz ~/Dev/NLP/ANR/preprocessing ‹master*›
+╰─➤  $ python preprocessing_simple.py -d Musical_Instruments -dev_test_in_train 1
+
+Dataset: Musical_Instruments
+[args from argparse.ArgumentParser().parse_args()]
+command: preprocessing_simple.py -d Musical_Instruments -dev_test_in_train 1
+dataset: Musical_Instruments
+dataset_maximum_size: 1000000
+dev_test_in_train: True
+maxDL: 500
+maxVL: 500
+minImages: 1
+minReviews: 1
+minRL: 10
+random_seed: 1337
+train_ratio: 0.8
+vocab: 50000
+
+[INPUT] Source Folder:       ../datasets/
+[INPUT] Reviews/Ratings:     ../datasets/reviews_Musical_Instruments.json
+
+[OUTPUT] Category Folder:    ../datasets/Musical_Instruments/
+[OUTPUT] env:                ../datasets/Musical_Instruments/Musical_Instruments_env.pkl
+[OUTPUT] info:               ../datasets/Musical_Instruments/Musical_Instruments_info.pkl
+[OUTPUT] split_train:        ../datasets/Musical_Instruments/Musical_Instruments_train_interactions.pkl
+[OUTPUT] split_dev:          ../datasets/Musical_Instruments/Musical_Instruments_dev_interactions.pkl
+[OUTPUT] split_test:         ../datasets/Musical_Instruments/Musical_Instruments_test_interactions.pkl
+[OUTPUT] split_train:        ../datasets/Musical_Instruments/Musical_Instruments_split_train.pkl
+[OUTPUT] split_dev:          ../datasets/Musical_Instruments/Musical_Instruments_split_dev.pkl
+[OUTPUT] split_test:         ../datasets/Musical_Instruments/Musical_Instruments_split_test.pkl
+[OUTPUT] uid_userDoc:        ../datasets/Musical_Instruments/Musical_Instruments_uid_userDoc.npy
+[OUTPUT] iid_itemDoc:        ../datasets/Musical_Instruments/Musical_Instruments_iid_itemDoc.npy
+[OUTPUT] uid_userDoc:        ../datasets/Musical_Instruments/Musical_Instruments_uid_userVis.npy
+[OUTPUT] iid_itemDoc:        ../datasets/Musical_Instruments/Musical_Instruments_iid_itemVis.npy
+
+Preprocessing data for "Musical_Instruments"
+
+[Settings]
+Min reviews for user/item: 1
+Min review length to qualify as an user-item interaction: 10
+Max words for user/item document: 500 (For truncating/padding to get a fixed-size representation)
+Top-50000 words in vocabulary being utilized!
+
+
+Initial pass of reviews to get the user-item interactions!
+Initial pass of reviews for "Musical_Instruments": 500176it [00:15, 32271.94it/s]
+[Initial stats] Users: 339,231, Items: 83,046, Ratings: 500,176, Density: 0.0000178
+
+
+Second pass of visual features to get the item-feature interactions!
+Initial pass of reviews for "Musical_Instruments": 100%|█████████████████████████████████████████████████████████████| 84283/84283 [00:01<00:00, 62245.58it/s]
+[Second stats] Items with image: 84,283, Images: 84,283, Density: 1.0000000
+
+
+Starting to filter away users & items based on thresold of 1 images!
+Updating interactions based on the num of images...
+Filtering interactions: 100%|████████████████████████████████████████████████████████████████████████████████████| 500176/500176 [00:00<00:00, 3596872.37it/s]
+
+Filtered users & items based on thresold of 1 images!
+Users: 339231 -> 337830, Items: 83046 -> 82444
+[Current stats] Users: 337830, Items: 82444, Ratings: 497155, Density: 0.0000178
+Updating interactions based on the num of images...
+Filtering interactions: 100%|████████████████████████████████████████████████████████████████████████████████████| 497155/497155 [00:00<00:00, 4116406.46it/s]
+
+Filtered users & items based on thresold of 1 images!
+Users: 337830 -> 337830, Items: 82444 -> 82444
+[Current stats] Users: 337830, Items: 82444, Ratings: 497155, Density: 0.0000178
+
+No change in # of users or # of items!
+
+[Final stats] Users: 337,830, Items: 82,444, Ratings: 497,155, Densit: 0.0000178
+
+Elapsed time for "Musical_Instruments": 19.10 seconds (0.32 minutes)
+
+Starting to filter away users & items based on thresold of 1 reviews!
+
+Filtered users & items based on thresold of 1 reviews!
+Users: 337830 -> 337830, Items: 82444 -> 82444
+
+No change in # of users or # of items!
+
+[Final stats] Users: 337,830, Items: 82,444, Ratings: 497,155, Density: 0.0000178
+
+Elapsed time for "Musical_Instruments": 19.17 seconds (0.32 minutes)
+
+
+Third pass of reviews to get the rating, date, the num of tokenized review and index!
+Third pass of len of reviews for "Musical_Instruments": 500176it [00:26, 18643.17it/s]
+[Current stats] Users: 337,830, Items: 82,444, Ratings: 497,155, Density: 0.0000178
+
+Filtering user-item interactions based on minimum review length of 10 tokens..
+Filtering interactions: 100%|████████████████████████████████████████████████████████████████████████████████████| 497155/497155 [00:00<00:00, 4579235.96it/s]
+
+Filtered users & items based on minimum review length of 10 tokens!
+Users: 337,830 -> 335,081, Items: 82,444 -> 82,137
+[Current stats] Users: 335,081, Items: 82,137, Ratings: 492,970, Density: 0.0000179
+
+
+Starting to filter away users & items based on thresold of 1 reviews (after removing reviews with <= 10 tokens)!
+
+Filtered users & items based on thresold of 1 reviews!
+Users: 335,081 -> 335,081, Items: 82,137 -> 82,137
+
+No change in # of users or # of items!
+
+[Final stats] Users: 335,081, Items: 82,137, Ratings: 492,970, Density: 0.0000179
+Fourth pass of reviews for "Musical_Instruments": 500176it [00:30, 16346.23it/s]
+
+
+80.0% of ALL reviews are RANDOMLY selected for TRAIN, another 10.0% RANDOMLY selected for DEV, and remaining 10.0% used for TEST.
+
+[Initial Stats] Total Interactions: 492,970, TRAIN: 394,376 (80.00%), DEV: 49,297 (10.00%), TEST: 49,297 (10.00%)
+
+
+Removing users & items who do not appear in the training set, from the dev and test sets..
+Updating DEV interactions: 100%|███████████████████████████████████████████████████████████████████████████████████| 49297/49297 [00:00<00:00, 1084318.91it/s]
+Updating TEST interactions: 100%|██████████████████████████████████████████████████████████████████████████████████| 49297/49297 [00:00<00:00, 1120850.23it/s]
+
+Removed 30,810 interactions from DEV and 30,605 interactions from TEST! (i.e. Those belonging to Users/Items which do not appear in TRAIN)
+
+[Current Stats] Total Interactions: 431,555, TRAIN: 394,376 (91.38%), DEV: 18,487 (4.28%), TEST: 18,692 (4.33%)
+
+
+[FINAL Stats] Users: 280,020, Items: 74,260, Ratings: 431,555, Density: 0.0000208
+
+[FINAL Stats] Total Interactions: 431,555, TRAIN: 394,376 (91.38%), DEV: 18,487 (4.28%), TEST: 18,692 (4.33%)
+
+[FINAL Stats][TRAIN] Users: 280,020, Items: 74,260, Ratings: 394,376
+[FINAL Stats][DEV]   Users: 15,455, Items: 10,317, Ratings: 18,487
+[FINAL Stats][TEST]  Users: 15,519, Items: 10,413, Ratings: 18,692
+
+
+train_interactions:   ../datasets/Musical_Instruments/Musical_Instruments_train_interactions.pkl
+dev_interactions:     ../datasets/Musical_Instruments/Musical_Instruments_dev_interactions.pkl
+test_interactions:    ../datasets/Musical_Instruments/Musical_Instruments_test_interactions.pkl
+
+Consolidating user/item reviews from TRAINING set
+Consolidating user/item reviews from TRAINING set: 100%|██████████████████████████████████████████████████████████| 394376/394376 [00:02<00:00, 174825.82it/s]
+
+Creating user docs from TRAINING set
+Creating item docs from TRAINING set
+
+Minimum User Doc Len: 10, Minimum Item Doc Len: 10
+
+Original number of words (based on USER & ITEM documents constructed from TRAINING set): 200,664
+For the vocabulary, we are only using the 50,000 most frequent words
+Current number of words: 50,000
+
+For each user doc, converting words to wids using word_wid...: 100%|███████████████████████████████████████████████| 280020/280020 [00:03<00:00, 72952.37it/s]
+For each item doc, converting words to wids using word_wid...: 100%|█████████████████████████████████████████████████| 74260/74260 [00:02<00:00, 36061.84it/s]
+Store the actual length of each user document (before padding): 100%|████████████████████████████████████████████| 280020/280020 [00:00<00:00, 3246274.16it/s]
+Store the actual length of each item document (before padding): 100%|██████████████████████████████████████████████| 74260/74260 [00:00<00:00, 3493763.49it/s]
+Pad the user documents to MAX_DOC_LEN: 100%|██████████████████████████████████████████████████████████████████████| 280020/280020 [00:02<00:00, 135699.77it/s]
+Pad the item documents to MAX_DOC_LEN: 100%|████████████████████████████████████████████████████████████████████████| 74260/74260 [00:00<00:00, 134415.01it/s]
+Preparing the TRAINING set: 100%|█████████████████████████████████████████████████████████████████████████████████| 394376/394376 [00:00<00:00, 944019.59it/s]
+Preparing the DEV set: 100%|████████████████████████████████████████████████████████████████████████████████████████| 18487/18487 [00:00<00:00, 788049.17it/s]
+Preparing the TESTING set: 100%|████████████████████████████████████████████████████████████████████████████████████| 18692/18692 [00:00<00:00, 909037.40it/s]
+Info:                 ../datasets/Musical_Instruments/Musical_Instruments_info.pkl
+Training Set:         ../datasets/Musical_Instruments/Musical_Instruments_split_train.pkl
+Validation Set:       ../datasets/Musical_Instruments/Musical_Instruments_split_dev.pkl
+Test Set:             ../datasets/Musical_Instruments/Musical_Instruments_split_test.pkl
+
+Creating numpy matrix for uid_userDoc..
+User Document Matrix: (280020, 500)
+User Document Matrix: ../datasets/Musical_Instruments/Musical_Instruments_uid_userDoc.npy
+
+Creating numpy matrix for iid_itemDoc..
+Item Document Matrix: (74260, 500)
+Item Document Matrix: ../datasets/Musical_Instruments/Musical_Instruments_iid_itemDoc.npy
+
+Consolidating user/item visual features from TRAINING set
+Consolidating user/item visual features from TRAINING set: 100%|██████████████████████████████████████████████████| 394376/394376 [00:01<00:00, 295754.04it/s]
+
+Creating user visuals from TRAINING set
+Creating item visuals from TRAINING set
+
+Minimum User Vis Len: 50, Minimum Item Vis Len: 50
+Convert user to uid...: 100%|████████████████████████████████████████████████████████████████████████████████████| 280020/280020 [00:00<00:00, 1784783.09it/s]
+Convert item to iid...: 100%|██████████████████████████████████████████████████████████████████████████████████████| 74260/74260 [00:00<00:00, 1622352.75it/s]
+Store the actual length of each user visual feature (before padding): 100%|██████████████████████████████████████| 280020/280020 [00:00<00:00, 3638441.78it/s]
+Store the actual length of each item visual feature (before padding): 100%|████████████████████████████████████████| 74260/74260 [00:00<00:00, 3550151.77it/s]
+Pad the user visual feature to MAX_VIS_LEN: 100%|██████████████████████████████████████████████████████████████████| 280020/280020 [00:02<00:00, 96263.78it/s]
+Pad the item visual feature to MAX_VIS_LEN: 100%|████████████████████████████████████████████████████████████████████| 74260/74260 [00:01<00:00, 50551.25it/s]
+
+Creating numpy matrix for uid_userVis..
+User Visual Feature Matrix: (280020, 500)
+User Visual Feature Matrix: ../datasets/Musical_Instruments/Musical_Instruments_uid_userDoc.npy
+
+Creating numpy matrix for iid_itemVis..
+Item Visual Feature Matrix: (74260, 500)
+Item Visual Feature Matrix: ../datasets/Musical_Instruments/Musical_Instruments_iid_itemDoc.npy
+
+Saving all required files for "Musical_Instruments"..
+Environment:          ../datasets/Musical_Instruments/Musical_Instruments_env.pkl
+
+All required files for "Musical_Instruments" successfully saved to '../datasets/Musical_Instruments/'
+
+Preprocessing for "Musical_Instruments" done after 161.61 seconds (2.69 minutes)
+
+
+Done!!

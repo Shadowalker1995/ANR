@@ -1,0 +1,218 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  channels_global: 20
+  channels_local: 20
+  command: -d Small_Clothing -m DAttn -e 10 -dr 0.9 -p 1 -v 43947 -K 5 -h1 10 -h2 50 -c_local 20 -c_global 20 -hiden_size 200 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm Small_Clothing_DAttn
+  ctx_win_size: 3
+  dataset: Small_Clothing
+  disable_initial_eval: 0
+  dropout_rate: 0.9
+  epochs: 10
+  gpu: 0
+  h1: 10
+  h2: 50
+  hidden_size: 200
+  input_dir: ./datasets/Small_Clothing/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: DAttn
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Small_Clothing - DAttn/
+  output_size: 50
+  pretrained_src: 1
+  random_seed: 1234
+  save_model: Small_Clothing_DAttn
+  use_cuda: True
+  verbose: 1
+  vocab_size: 43947
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 77,930, # of Items: 59,172
+
+Creating model (Selected Model: DAttn)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 1.87s (0.03 minute)
+
+Loading uid_userDoc from "./datasets/Small_Clothing/Small_Clothing_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (77930, 500)]
+
+Loading iid_itemDoc from "./datasets/Small_Clothing/Small_Clothing_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (59172, 500)]
+
+Loading pretrained word embeddings from "./datasets/Small_Clothing/Small_Clothing_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (43949, 300)]
+
+Initialization Complete.. Elapsed Time: 2.12s (0.04 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 80,000, |DEV|: 150, |TEST|: 166
+Train/Dev/Test splits loaded! Elapsed Time: 2.14s (0.04 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 1.13003, MAE: 0.87549
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 1.09652, MAE: 0.85977
+
+Initial Evaluation Complete.. Elapsed Time: 2.29s (0.04 minute)
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 81,900,923
+# of Trainable Parameters: 165,223
+DAttn (
+  (uid_userDoc): Embedding(77930, 500), weights = ((77930, 500),), parameters = 38,965,000
+  (iid_itemDoc): Embedding(59172, 500), weights = ((59172, 500),), parameters = 29,586,000
+  (wid_wEmbed): Embedding(43949, 300), weights = ((43949, 300),), parameters = 13,184,700
+  (DAttn_RatingPred): DAttn_RatingPred(
+    (uid_userOffset): Embedding(77930, 1)
+    (iid_itemOffset): Embedding(59172, 1)
+    (globalOffset): Parameter(1,)
+  ), weights = ((1,), (77930, 1), (59172, 1)), parameters = 137,103 (Trainable)
+  (localAttentionLayer_user): LocalAttention(
+    (attention_layer): Sequential(
+      (0): Conv2d(1, 1, kernel_size=(3, 1), stride=(1, 1))
+      (1): Softmax(dim=2)
+    )
+    (cnn): Sequential(
+      (0): Conv2d(1, 20, kernel_size=(1, 1), stride=(1, 1))
+      (1): Tanh()
+      (2): MaxPool2d(kernel_size=(500, 1), stride=(500, 1), padding=0, dilation=1, ceil_mode=False)
+    )
+  ), weights = ((1, 1, 3, 1), (1,), (20, 1, 1, 1), (20,)), parameters = 44 (Trainable)
+  (globalAttentionLayer_user): GlobalAttention(
+    (attention_layer): Sequential(
+      (0): Conv2d(1, 1, kernel_size=(500, 1), stride=(1, 1))
+      (1): Sigmoid()
+    )
+    (cnn_1): Sequential(
+      (0): Conv2d(1, 20, kernel_size=(2, 1), stride=(1, 1))
+      (1): Tanh()
+      (2): MaxPool2d(kernel_size=(499, 1), stride=(499, 1), padding=0, dilation=1, ceil_mode=False)
+    )
+    (cnn_2): Sequential(
+      (0): Conv2d(1, 20, kernel_size=(3, 1), stride=(1, 1))
+      (1): Tanh()
+      (2): MaxPool2d(kernel_size=(498, 1), stride=(498, 1), padding=0, dilation=1, ceil_mode=False)
+    )
+    (cnn_3): Sequential(
+      (0): Conv2d(1, 20, kernel_size=(4, 1), stride=(1, 1))
+      (1): Tanh()
+      (2): MaxPool2d(kernel_size=(497, 1), stride=(497, 1), padding=0, dilation=1, ceil_mode=False)
+    )
+  ), weights = ((1, 1, 500, 1), (1,), (20, 1, 2, 1), (20,), (20, 1, 3, 1), (20,), (20, 1, 4, 1), (20,)), parameters = 741 (Trainable)
+  (localAttentionLayer_item): LocalAttention(
+    (attention_layer): Sequential(
+      (0): Conv2d(1, 1, kernel_size=(3, 1), stride=(1, 1))
+      (1): Softmax(dim=2)
+    )
+    (cnn): Sequential(
+      (0): Conv2d(1, 20, kernel_size=(1, 1), stride=(1, 1))
+      (1): Tanh()
+      (2): MaxPool2d(kernel_size=(500, 1), stride=(500, 1), padding=0, dilation=1, ceil_mode=False)
+    )
+  ), weights = ((1, 1, 3, 1), (1,), (20, 1, 1, 1), (20,)), parameters = 44 (Trainable)
+  (globalAttentionLayer_item): GlobalAttention(
+    (attention_layer): Sequential(
+      (0): Conv2d(1, 1, kernel_size=(500, 1), stride=(1, 1))
+      (1): Sigmoid()
+    )
+    (cnn_1): Sequential(
+      (0): Conv2d(1, 20, kernel_size=(2, 1), stride=(1, 1))
+      (1): Tanh()
+      (2): MaxPool2d(kernel_size=(499, 1), stride=(499, 1), padding=0, dilation=1, ceil_mode=False)
+    )
+    (cnn_2): Sequential(
+      (0): Conv2d(1, 20, kernel_size=(3, 1), stride=(1, 1))
+      (1): Tanh()
+      (2): MaxPool2d(kernel_size=(498, 1), stride=(498, 1), padding=0, dilation=1, ceil_mode=False)
+    )
+    (cnn_3): Sequential(
+      (0): Conv2d(1, 20, kernel_size=(4, 1), stride=(1, 1))
+      (1): Tanh()
+      (2): MaxPool2d(kernel_size=(497, 1), stride=(497, 1), padding=0, dilation=1, ceil_mode=False)
+    )
+  ), weights = ((1, 1, 500, 1), (1,), (20, 1, 2, 1), (20,), (20, 1, 3, 1), (20,), (20, 1, 4, 1), (20,)), parameters = 741 (Trainable)
+  (fcLayer): Sequential (
+    (0): Linear(in_features=80, out_features=200, bias=True), weights = ((200, 80), (200,)), parameters = 16,200 (Trainable)
+    (1): Dropout(p=0.9, inplace=False), weights = (), parameters = 0
+    (2): ReLU(), weights = (), parameters = 0
+    (3): Linear(in_features=200, out_features=50, bias=True), weights = ((50, 200), (50,)), parameters = 10,050 (Trainable)
+  ), weights = ((200, 80), (200,), (50, 200), (50,)), parameters = 26,250 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/10] Training Loss: 2.46577	Elapsed Time: 19.06s (0:00:19)
+[Epoch 1] [Dev]  MSE: 1.07284, MAE: 0.84552
+[Epoch 1] [Test] MSE: 1.02903, MAE: 0.82544
+
+*** MODEL has obtained the best DEV MSE of 1.07284 so far!
+*** The Best MODEL saved to "./__saved_models__/Small_Clothing - DAttn/Small_Clothing_DAttn_1234.pth"
+
+[Epoch 2/10] Training Loss: 1.40978	Elapsed Time: 37.91s (0:00:37)
+[Epoch 2] [Dev]  MSE: 1.05106, MAE: 0.82859
+[Epoch 2] [Test] MSE: 1.02460, MAE: 0.81943
+
+*** MODEL has obtained the best DEV MSE of 1.05106 so far!
+*** The Best MODEL saved to "./__saved_models__/Small_Clothing - DAttn/Small_Clothing_DAttn_1234.pth"
+
+[Epoch 3/10] Training Loss: 1.28150	Elapsed Time: 56.75s (0:00:56)
+[Epoch 3] [Dev]  MSE: 1.05674, MAE: 0.83906
+[Epoch 3] [Test] MSE: 1.06764, MAE: 0.85506
+
+[Epoch 4/10] Training Loss: 1.15837	Elapsed Time: 76.81s (0:01:16)
+[Epoch 4] [Dev]  MSE: 1.03732, MAE: 0.81810
+[Epoch 4] [Test] MSE: 1.04235, MAE: 0.83401
+
+*** MODEL has obtained the best DEV MSE of 1.03732 so far!
+*** The Best MODEL saved to "./__saved_models__/Small_Clothing - DAttn/Small_Clothing_DAttn_1234.pth"
+
+[Epoch 5/10] Training Loss: 1.04169	Elapsed Time: 95.59s (0:01:35)
+[Epoch 5] [Dev]  MSE: 1.02887, MAE: 0.78542
+[Epoch 5] [Test] MSE: 1.02632, MAE: 0.80129
+
+*** MODEL has obtained the best DEV MSE of 1.02887 so far!
+*** The Best MODEL saved to "./__saved_models__/Small_Clothing - DAttn/Small_Clothing_DAttn_1234.pth"
+
+[Epoch 6/10] Training Loss: 0.93388	Elapsed Time: 114.35s (0:01:54)
+[Epoch 6] [Dev]  MSE: 1.04084, MAE: 0.81160
+[Epoch 6] [Test] MSE: 1.07134, MAE: 0.84736
+
+[Epoch 7/10] Training Loss: 0.83459	Elapsed Time: 133.45s (0:02:13)
+[Epoch 7] [Dev]  MSE: 1.03942, MAE: 0.78853
+[Epoch 7] [Test] MSE: 1.07211, MAE: 0.82766
+
+[Epoch 8/10] Training Loss: 0.74275	Elapsed Time: 152.23s (0:02:32)
+[Epoch 8] [Dev]  MSE: 1.07018, MAE: 0.82933
+[Epoch 8] [Test] MSE: 1.14272, MAE: 0.88491
+
+[Epoch 9/10] Training Loss: 0.66037	Elapsed Time: 170.98s (0:02:50)
+[Epoch 9] [Dev]  MSE: 1.06575, MAE: 0.77969
+[Epoch 9] [Test] MSE: 1.11729, MAE: 0.83398
+
+[Epoch 10/10] Training Loss: 0.58478	Elapsed Time: 189.73s (0:03:09)
+[Epoch 10] [Dev]  MSE: 1.08958, MAE: 0.80410
+[Epoch 10] [Test] MSE: 1.16676, MAE: 0.86805
+*** The Last MODEL saved to "./__saved_models__/Small_Clothing - DAttn/Small_Clothing_DAttn_1234_10.pth"
+
+[Training Loss]
+[2.46577, 1.40978, 1.2815, 1.15837, 1.04169, 0.93388, 0.83459, 0.74275, 0.66037, 0.58478]
+
+[Dev MSE]
+[1.07284, 1.05106, 1.05674, 1.03732, 1.02887, 1.04084, 1.03942, 1.07018, 1.06575, 1.08958]
+[Test MSE]
+[1.02903, 1.0246, 1.06764, 1.04235, 1.02632, 1.07134, 1.07211, 1.14272, 1.11729, 1.16676]
+[Test MAE]
+[0.82544, 0.81943, 0.85506, 0.83401, 0.80129, 0.84736, 0.82766, 0.88491, 0.83398, 0.86805]
+
+
+Best Dev MSE: 1.02887 (Obtained during Evaluation #5)
+Test MSE: 1.02632, Test MAE: 0.80129
+
+End of Program! Elapsed Time: 192.05s (0:03:12)

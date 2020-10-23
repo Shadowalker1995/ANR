@@ -1,0 +1,207 @@
+╭─xulabzz ~/Dev/NLP/ANR/preprocessing ‹master*›
+╰─➤  $ python preprocessing_simple.py -d CDs_and_Vinyl -dev_test_in_train 1
+
+Dataset: CDs_and_Vinyl
+[args from argparse.ArgumentParser().parse_args()]
+command: preprocessing_simple.py -d CDs_and_Vinyl -dev_test_in_train 1
+dataset: CDs_and_Vinyl
+dataset_maximum_size: 1000000
+dev_test_in_train: True
+maxDL: 500
+maxVL: 500
+minImages: 1
+minReviews: 1
+minRL: 10
+random_seed: 1337
+train_ratio: 0.8
+vocab: 50000
+
+[INPUT] Source Folder:       ../datasets/
+[INPUT] Reviews/Ratings:     ../datasets/reviews_CDs_and_Vinyl.json
+
+[OUTPUT] Category Folder:    ../datasets/CDs_and_Vinyl/
+[OUTPUT] env:                ../datasets/CDs_and_Vinyl/CDs_and_Vinyl_env.pkl
+[OUTPUT] info:               ../datasets/CDs_and_Vinyl/CDs_and_Vinyl_info.pkl
+[OUTPUT] split_train:        ../datasets/CDs_and_Vinyl/CDs_and_Vinyl_train_interactions.pkl
+[OUTPUT] split_dev:          ../datasets/CDs_and_Vinyl/CDs_and_Vinyl_dev_interactions.pkl
+[OUTPUT] split_test:         ../datasets/CDs_and_Vinyl/CDs_and_Vinyl_test_interactions.pkl
+[OUTPUT] split_train:        ../datasets/CDs_and_Vinyl/CDs_and_Vinyl_split_train.pkl
+[OUTPUT] split_dev:          ../datasets/CDs_and_Vinyl/CDs_and_Vinyl_split_dev.pkl
+[OUTPUT] split_test:         ../datasets/CDs_and_Vinyl/CDs_and_Vinyl_split_test.pkl
+[OUTPUT] uid_userDoc:        ../datasets/CDs_and_Vinyl/CDs_and_Vinyl_uid_userDoc.npy
+[OUTPUT] iid_itemDoc:        ../datasets/CDs_and_Vinyl/CDs_and_Vinyl_iid_itemDoc.npy
+[OUTPUT] uid_userDoc:        ../datasets/CDs_and_Vinyl/CDs_and_Vinyl_uid_userVis.npy
+[OUTPUT] iid_itemDoc:        ../datasets/CDs_and_Vinyl/CDs_and_Vinyl_iid_itemVis.npy
+
+Preprocessing data for "CDs_and_Vinyl"
+
+[Settings]
+Min reviews for user/item: 1
+Min review length to qualify as an user-item interaction: 10
+Max words for user/item document: 500 (For truncating/padding to get a fixed-size representation)
+Top-50000 words in vocabulary being utilized!
+
+
+Initial pass of reviews to get the user-item interactions!
+Initial pass of reviews for "CDs_and_Vinyl": 3749004it [02:06, 29644.58it/s]
+[Initial stats] Users: 1,578,597, Items: 486,360, Ratings: 3,749,004, Density: 0.0000049
+
+
+Second pass of visual features to get the item-feature interactions!
+Initial pass of reviews for "CDs_and_Vinyl": 100%|█████████████████████████████████████████████████████████████████| 490077/490077 [00:08<00:00, 60584.90it/s]
+[Second stats] Items with image: 490,077, Images: 490,077, Density: 1.0000000
+
+
+Starting to filter away users & items based on thresold of 1 images!
+Updating interactions based on the num of images...
+Filtering interactions: 100%|██████████████████████████████████████████████████████████████████████████████████| 3749004/3749004 [00:00<00:00, 4418766.24it/s]
+
+Filtered users & items based on thresold of 1 images!
+Users: 1578597 -> 1573030, Items: 486360 -> 483687
+[Current stats] Users: 1573030, Items: 483687, Ratings: 3730759, Density: 0.0000049
+Updating interactions based on the num of images...
+Filtering interactions: 100%|██████████████████████████████████████████████████████████████████████████████████| 3730759/3730759 [00:00<00:00, 4368492.96it/s]
+
+Filtered users & items based on thresold of 1 images!
+Users: 1573030 -> 1573030, Items: 483687 -> 483687
+[Current stats] Users: 1573030, Items: 483687, Ratings: 3730759, Density: 0.0000049
+
+No change in # of users or # of items!
+
+[Final stats] Users: 1,573,030, Items: 483,687, Ratings: 3,730,759, Density: 0.0000049
+
+Elapsed time for "CDs_and_Vinyl": 147.67 seconds (2.46 minutes)
+
+Starting to filter away users & items based on thresold of 1 reviews!
+
+Filtered users  items based on thresold of 1 reviews!
+Users: 1573030 -> 1573030, Items: 483687 -> 483687
+
+No change in # of users or # of items!
+
+[Final stats] Users: 1,573,030, Items: 483,687, Ratings: 3,730,759, Density: 0.0000049
+
+Elapsed time for "CDs_and_Vinyl": 148.09 seconds (2.47 minutes)
+
+
+Third pass of reviews to get the rating, date, the num of tokenized review and index!
+Third pass of len of reviews for "CDs_and_Vinyl": 3749004it [04:03, 15377.12it/s]
+[Current stats] Users: 1,573,030, Items: 483,687, Ratings: 3,730,759, Density: 0.0000049
+
+Filtering user-item interactions based on minimum review length of 10 tokens..
+Filtering interactions: 100%|██████████████████████████████████████████████████████████████████████████████████| 3730759/3730759 [00:00<00:00, 5038561.31it/s]
+
+Filtered users & items based on minimum review length of 10 tokens!
+Users: 1,573,030 -> 1,564,096, Items: 483,687 -> 482,993
+[Current stats] Users: 1,564,096, Items: 482,993, Ratings: 3,712,556, Density: 0.0000049
+
+
+Starting to filter away users & items based on thresold of 1 reviews (after removing reviews with <= 10 tokens)!
+
+Filtered users & items based on thresold of 1 reviews!
+Users: 1,564,096 -> 1,564,096, Items: 482,993 -> 482,993
+
+No change in # of users or # of items!
+
+[Final stats] Users: 1,564,096, Items: 482,993, Ratings: 3,712,556, Density: 0.0000049
+
+*****************************************************************************************************************************
+*** Original Dataset Size (i.e. num_ratings): 3,712,556!
+*** Selecting a random subsample of 1,000,000 user-item interactions!
+*** Current Dataset Size (i.e. num_ratings):  1,000,000!
+*****************************************************************************************************************************
+Fourth pass of reviews for "CDs_and_Vinyl": 3748997it [02:50, 21931.45it/s]
+
+
+80.0% of ALL reviews are RANDOMLY selected for TRAIN, another 10.0% RANDOMLY selected for DEV, and remaining 10.0% used for TEST.
+
+[Initial Stats] Total Interactions: 1,000,000, TRAIN: 800,000 (80.00%), DEV: 100,000 (10.00%), TEST: 100,000 (10.00%)
+
+
+Removing users & items who do not appear in the training set, from the dev and test sets..
+Updating DEV interactions: 100%|██████████████████████████████████████████████████████████████████████████████████| 100000/100000 [00:00<00:00, 994641.56it/s]
+Updating TEST interactions: 100%|█████████████████████████████████████████████████████████████████████████████████| 100000/100000 [00:00<00:00, 905554.92it/s]
+
+Removed 58,999 interactions from DEV and 58,982 interactions from TEST! (i.e. Those belonging to Users/Items which do not appear in TRAIN)
+
+[Current Stats] Total Interactions: 882,019, TRAIN: 800,000 (90.70%), DEV: 41,001 (4.65%), TEST: 41,018 (4.65%)
+
+
+[FINAL Stats] Users: 488,046, Items: 237,480, Ratings: 882,019, Density: 0.0000076
+
+[FINAL Stats] Total Interactions: 882,019, TRAIN: 800,000 (90.70%), DEV: 41,001 (4.65%), TEST: 41,018 (4.65%)
+
+[FINAL Stats][TRAIN] Users: 488,046, Items: 237,480, Ratings: 800,000
+[FINAL Stats][DEV]   Users: 28,300, Items: 27,832, Ratings: 41,001
+[FINAL Stats][TEST]  Users: 28,211, Items: 27,920, Ratings: 41,018
+
+
+train_interactions:   ../datasets/CDs_and_Vinyl/CDs_and_Vinyl_train_interactions.pkl
+dev_interactions:     ../datasets/CDs_and_Vinyl/CDs_and_Vinyl_dev_interactions.pkl
+test_interactions:    ../datasets/CDs_and_Vinyl/CDs_and_Vinyl_test_interactions.pkl
+
+Consolidating user/item reviews from TRAINING set
+Consolidating user/item reviews from TRAINING set: 100%|██████████████████████████████████████████████████████████| 800000/800000 [00:05<00:00, 140370.29it/s]
+
+Creating user docs from TRAINING set
+Creating item docs from TRAINING set
+
+Minimum User Doc Len: 10, Minimum Item Doc Len: 10
+
+Original number of words (based on USER & ITEM documents constructed from TRAINING set): 481,348
+For the vocabulary, we are only using the 50,000 most frequent words
+Current number of words: 50,000
+
+For each user doc, converting words to wids using word_wid...: 100%|███████████████████████████████████████████████| 488046/488046 [00:13<00:00, 36622.97it/s]
+For each item doc, converting words to wids using word_wid...: 100%|███████████████████████████████████████████████| 237480/237480 [00:08<00:00, 29411.25it/s]
+Store the actual length of each user document (before padding): 100%|████████████████████████████████████████████| 488046/488046 [00:00<00:00, 3424055.36it/s]
+Store the actual length of each item document (before padding): 100%|████████████████████████████████████████████| 237480/237480 [00:00<00:00, 3138779.15it/s]
+Pad the user documents to MAX_DOC_LEN: 100%|██████████████████████████████████████████████████████████████████████| 488046/488046 [00:03<00:00, 142667.06it/s]
+Pad the item documents to MAX_DOC_LEN: 100%|███████████████████████████████████████████████████████████████████████| 237480/237480 [00:03<00:00, 64217.06it/s]
+Preparing the TRAINING set: 100%|███████████████████████████████████████████████████████████████████████████████████| 800000/800000 [03:22<00:00, 3946.46it/s]
+Preparing the DEV set: 100%|██████████████████████████████████████████████████████████████████████████████████████████| 41001/41001 [00:08<00:00, 4813.16it/s]
+Preparing the TESTING set: 100%|██████████████████████████████████████████████████████████████████████████████████████| 41018/41018 [00:08<00:00, 5036.06it/s]
+Info:                 ../datasets/CDs_and_Vinyl/CDs_and_Vinyl_info.pkl
+Training Set:         ../datasets/CDs_and_Vinyl/CDs_and_Vinyl_split_train.pkl
+Validation Set:       ../datasets/CDs_and_Vinyl/CDs_and_Vinyl_split_dev.pkl
+Test Set:             ../datasets/CDs_and_Vinyl/CDs_and_Vinyl_split_test.pkl
+
+Creating numpy matrix for uid_userDoc..
+User Document Matrix: (488046, 500)
+User Document Matrix: ../datasets/CDs_and_Vinyl/CDs_and_Vinyl_uid_userDoc.npy
+
+Creating numpy matrix for iid_itemDoc..
+Item Document Matrix: (237480, 500)
+Item Document Matrix: ../datasets/CDs_and_Vinyl/CDs_and_Vinyl_iid_itemDoc.npy
+
+Consolidating user/item visual features from TRAINING set
+Consolidating user/item visual features from TRAINING set: 100%|████████████████████████████████████████████████████| 800000/800000 [04:15<00:00, 3134.21it/s]
+
+Creating user visuals from TRAINING set
+Creating item visuals from TRAINING set
+
+Minimum User Vis Len: 50, Minimum Item Vis Len: 50
+Convert user to uid...: 100%|████████████████████████████████████████████████████████████████████████████████████| 488046/488046 [00:00<00:00, 1715908.21it/s]
+Convert item to iid...: 100%|████████████████████████████████████████████████████████████████████████████████████| 237480/237480 [00:00<00:00, 1631360.94it/s]
+Store the actual length of each user visual feature (before padding): 100%|██████████████████████████████████████| 488046/488046 [00:00<00:00, 3993891.73it/s]
+Store the actual length of each item visual feature (before padding): 100%|██████████████████████████████████████| 237480/237480 [00:00<00:00, 3629677.34it/s]
+Pad the user visual feature to MAX_VIS_LEN: 100%|███████████████████████████████████████████████████████████████████| 488046/488046 [00:53<00:00, 9119.00it/s]
+Pad the item visual feature to MAX_VIS_LEN: 100%|█████████████████████████████████████████████████████████████████| 237480/237480 [00:01<00:00, 149509.00it/s]
+
+Creating numpy matrix for uid_userVis..
+User Visual Feature Matrix: (488046, 500)
+User Visual Feature Matrix: ../datasets/CDs_and_Vinyl/CDs_and_Vinyl_uid_userDoc.npy
+
+Creating numpy matrix for iid_itemVis..
+Item Visual Feature Matrix: (237480, 500)
+Item Visual Feature Matrix: ../datasets/CDs_and_Vinyl/CDs_and_Vinyl_iid_itemDoc.npy
+
+Saving all required files for "CDs_and_Vinyl"..
+Environment:          ../datasets/CDs_and_Vinyl/CDs_and_Vinyl_env.pkl
+
+All required files for "CDs_and_Vinyl" successfully saved to '../datasets/CDs_and_Vinyl/'
+
+Preprocessing for "CDs_and_Vinyl" done after 7671.84 seconds (127.86 minutes)
+
+
+Done!!

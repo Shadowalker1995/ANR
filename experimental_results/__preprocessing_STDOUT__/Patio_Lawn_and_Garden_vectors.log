@@ -1,0 +1,32 @@
+
+Dataset: Patio_Lawn_and_Garden
+
+[args from argparse.ArgumentParser().parse_args()]
+command: pretrained_vectors_simple.py -d Patio_Lawn_and_Garden
+dataset: Patio_Lawn_and_Garden
+emb_dim: 300
+emb_rand_init: 0.01
+random_seed: 1337
+
+[INPUT] Source Folder:                 ../datasets/
+[INPUT] Category Folder:               ../datasets/Patio_Lawn_and_Garden/
+[INPUT] env:                           ../datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_env.pkl
+[INPUT] Pretrained Word Embeddings:    ../datasets/GoogleNews-vectors-negative300.bin
+
+[OUTPUT] wid_wordEmbed:                ../datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_wid_wordEmbed.npy
+
+Loading word-to-wid mappings (i.e. word_wid) from "../datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_env.pkl"
+
+|V|: 50002
+
+Finished processing pretrained embeddings..
+# of words with pretrained embeddings: 38134
+
+Embedding Matrix=(50002, 300), |V|=50002
+# of Words w/ No Pretrained Embeddings=11868 (23.735%)
+
+Embeddings successfully saved to '../datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_wid_wordEmbed.npy'
+
+
+Pretrained word embeddings for "Patio_Lawn_and_Garden" obtained after 16.71 seconds (0.28 minutes)
+

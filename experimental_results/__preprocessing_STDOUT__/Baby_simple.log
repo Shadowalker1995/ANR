@@ -1,0 +1,201 @@
+╭─xulabzz ~/Dev/NLP/ANR/preprocessing ‹master*›
+╰─➤  $ python preprocessing_simple.py -d Baby -dev_test_in_train 1
+
+Dataset: Baby
+[args from argparse.ArgumentParser().parse_args()]
+command: preprocessing_simple.py -d Baby -dev_test_in_train 1
+dataset: Baby
+dataset_maximum_size: 1000000
+dev_test_in_train: True
+maxDL: 500
+maxVL: 500
+minImages: 1
+minReviews: 1
+minRL: 10
+random_seed: 1337
+train_ratio: 0.8
+vocab: 50000
+
+[INPUT] Source Folder:       ../datasets/
+[INPUT] Reviews/Ratings:     ../datasets/reviews_Baby.json
+
+[OUTPUT] Category Folder:    ../datasets/Baby/
+[OUTPUT] env:                ../datasets/Baby/Baby_env.pkl
+[OUTPUT] info:               ../datasets/Baby/Baby_info.pkl
+[OUTPUT] split_train:        ../datasets/Baby/Baby_train_interactions.pkl
+[OUTPUT] split_dev:          ../datasets/Baby/Baby_dev_interactions.pkl
+[OUTPUT] split_test:         ../datasets/Baby/Baby_test_interactions.pkl
+[OUTPUT] split_train:        ../datasets/Baby/Baby_split_train.pkl
+[OUTPUT] split_dev:          ../datasets/Baby/Baby_split_dev.pkl
+[OUTPUT] split_test:         ../datasets/Baby/Baby_split_test.pkl
+[OUTPUT] uid_userDoc:        ../datasets/Baby/Baby_uid_userDoc.npy
+[OUTPUT] iid_itemDoc:        ../datasets/Baby/Baby_iid_itemDoc.npy
+[OUTPUT] uid_userDoc:        ../datasets/Baby/Baby_uid_userVis.npy
+[OUTPUT] iid_itemDoc:        ../datasets/Baby/Baby_iid_itemVis.npy
+
+Preprocessing data for "Baby"
+
+[Settings]
+Min reviews for user/item: 1
+Min review length to qualify as an user-item interaction: 10
+Max words for user/item document: 500 (For truncating/padding to get a fixed-size representation)
+Top-50000 words in vocabulary being utilized!
+
+
+Initial pass of reviews to get the user-item interactions!
+Initial pass of reviews for "Baby": 915446it [00:27, 33304.69it/s]
+[Initial stats] Users: 531,890, Items: 64,426, Ratings: 915,446, Density: 0.0000267
+
+
+Second pass of visual features to get the item-feature interactions!
+Initial pass of reviews for "Baby": 100%|████████████████████████████████████████████████████████████████████████████| 70716/70716 [00:01<00:00, 65659.77it/s]
+[Second stats] Items with image: 70,716, Images: 70,716, Density: 1.0000000
+
+
+Starting to filter away users & items based on thresold of 1 images!
+Updating interactions based on the num of images...
+Filtering interactions: 100%|████████████████████████████████████████████████████████████████████████████████████| 915446/915446 [00:00<00:00, 4173982.28it/s]
+
+Filtered users & items based on thresold of 1 images!
+Users: 531890 -> 528937, Items: 64426 -> 63891
+[Current stats] Users: 528937, Items: 63891, Ratings: 908179, Density: 0.0000269
+Updating interactions based on the num of images...
+Filtering interactions: 100%|████████████████████████████████████████████████████████████████████████████████████| 908179/908179 [00:00<00:00, 4047228.71it/s]
+
+Filtered users & items based on thresold of 1 images!
+Users: 528937 -> 528937, Items: 63891 -> 63891
+[Current stats] Users: 528937, Items: 63891, Ratings: 908179, Density: 0.0000269
+
+No change in # of users or # of items!
+
+[Final stats] Users: 528,937, Items: 63,891, Ratings: 908,179, Density: 0.0000269
+
+Elapsed time for "Baby": 31.20 seconds (0.52 minutes)
+
+Starting to filter away users & items based on thresold of 1 reviews!
+
+Filtered users & items based on thresold of 1 reviews!
+Users: 528937 -> 528937, Items: 63891 -> 63891
+
+No change in # of users or # of items!
+
+[Final stats] Users: 528,937, Items: 63,891, Ratings: 908,179, Density: 0.0000269
+
+Elapsed time for "Baby": 31.32 seconds (0.52 minutes)
+
+
+Third pass of reviews to getthe rating, date, the num of tokenized review and index!
+Third pass of len of reviews for "Baby": 915446it [00:46, 19889.62it/s]
+[Current stats] Users: 528,937, Items: 63,891, Ratings: 908,179, Density: 0.0000269
+
+Filtering user-item interactions based on minimum review length of 10 tokens..
+Filtering interactions: 100%|████████████████████████████████████████████████████████████████████████████████████| 908179/908179 [00:00<00:00, 4402962.31it/s]
+
+Filtered users & items based on minimum review length of 10 tokens!
+Users: 528,937 -> 525,592, Items: 63,891 -> 63,557
+[Current stats] Users: 525,592, Items: 63,557, Ratings: 902,474, Density: 0.0000270
+
+
+Starting to filter away users & items based on thresold of 1 reviews (after removing reviews with <= 10 tokens)!
+
+Filtered users & items based on thresold of 1 reviews!
+Users: 525,592 -> 525,592, Items: 63,557 -> 63,557
+
+No change in # of users or # of items!
+
+[Final stats] Users: 525,592, Items: 63,557, Ratings: 902,474, Density: 0.0000270
+Fourth pass of reviews for "Baby": 915446it [00:52, 17573.97it/s]
+
+
+80.0% of ALL reviews are RANDOMLY selected for TRAIN, another 10.0% RANDOMLY selected for DEV, and remaining 10.0% used for TEST.
+
+[Initial Stats] Total Interactions: 902,474, TRAIN: 721,979 (80.00%), DEV: 90,247 (10.00%), TEST: 90,248 (10.00%)
+
+
+Removing users & items who do not appear in the training set, from the dev and test sets..
+Updating DEV interactions: 100%|███████████████████████████████████████████████████████████████████████████████████| 90247/90247 [00:00<00:00, 1076475.84it/s]
+Updating TEST interactions: 100%|██████████████████████████████████████████████████████████████████████████████████| 90248/90248 [00:00<00:00, 1039202.82it/s]
+
+Removed 42,890 interactions from DEV and 42,875 interactions from TEST! (i.e. Those belonging to Users/Items which do not appear in TRAIN)
+
+[Current Stats] Total Interactions: 816,709, TRAIN: 721,979 (88.40%), DEV: 47,357 (5.80%), TEST: 47,373 (5.80%)
+
+
+[FINAL Stats] Users: 446,248, Items: 58,586, Ratings: 816,709, Density: 0.0000312
+
+[FINAL Stats] Total Interactions: 816,709, TRAIN: 721,979 (88.40%), DEV: 47,357 (5.80%), TEST: 47,373 (5.80%)
+
+[FINAL Stats][TRAIN] Users: 446,248, Items: 58,586, Ratings: 721,979
+[FINAL Stats][DEV]   Users: 38,142, Items: 14,186, Ratings: 47,357
+[FINAL Stats][TEST]  Users: 38,320, Items: 14,120, Ratings: 47,373
+
+
+train_interactions:   ../datasets/Baby/Baby_train_interactions.pkl
+dev_interactions:     ../datasets/Baby/Baby_dev_interactions.pkl
+test_interactions:    ../datasets/Baby/Baby_test_interactions.pkl
+
+Consolidating user/item reviews from TRAINING set
+Consolidating user/item reviews from TRAINING set: 100%|██████████████████████████████████████████████████████████| 721979/721979 [00:04<00:00, 170800.73it/s]
+
+Creating user docs from TRAINING set
+Creating item docs from TRAINING set
+
+Minimum User Doc Len: 10, Minimum Item Doc Len: 10
+
+Original number of words (based on USER & ITEM documents constructed from TRAINING set): 131,536
+For the vocabulary, we are only using the 50,000 most frequent words
+Current number of words: 50,000
+
+For each user doc, converting words to wids using word_wid...: 100%|███████████████████████████████████████████████| 446248/446248 [00:06<00:00, 68218.74it/s]
+For each item doc, converting words to wids using word_wid...: 100%|█████████████████████████████████████████████████| 58586/58586 [00:01<00:00, 37060.66it/s]
+Store the actual length of each user document (before padding): 100%|████████████████████████████████████████████| 446248/446248 [00:00<00:00, 3379544.29it/s]
+Store the actual length of each item document (before padding): 100%|██████████████████████████████████████████████| 58586/58586 [00:00<00:00, 3043969.65it/s]
+Pad the user documents to MAX_DOC_LEN: 100%|██████████████████████████████████████████████████████████████████████| 446248/446248 [00:03<00:00, 134932.44it/s]
+Pad the item documents to MAX_DOC_LEN: 100%|████████████████████████████████████████████████████████████████████████| 58586/58586 [00:00<00:00, 149972.38it/s]
+Preparing the TRAINING set: 100%|█████████████████████████████████████████████████████████████████████████████████| 721979/721979 [00:00<00:00, 957900.82it/s]
+Preparing the DEV set: 100%|████████████████████████████████████████████████████████████████████████████████████████| 47357/47357 [00:00<00:00, 852078.21it/s]
+Preparing the TESTING set: 100%|████████████████████████████████████████████████████████████████████████████████████| 47373/47373 [00:00<00:00, 727616.42it/s]
+Info:                 ../datasets/Baby/Baby_info.pkl
+Training Set:         ../datasets/Baby/Baby_split_train.pkl
+Validation Set:       ../datasets/Baby/Baby_split_dev.pkl
+Test Set:             ../datasets/Baby/Baby_split_test.pkl
+
+Creating numpy matrix for uid_userDoc..
+User Document Matrix: (446248, 500)
+User Document Matrix: ../datasets/Baby/Baby_uid_userDoc.npy
+
+Creating numpy matrix for iid_itemDoc..
+Item Document Matrix: (58586, 500)
+Item Document Matrix: ../datasets/Baby/Baby_iid_itemDoc.npy
+
+Consolidating user/item visual features from TRAINING set
+Consolidating user/item visual features from TRAINING set: 100%|██████████████████████████████████████████████████| 721979/721979 [00:02<00:00, 305730.16it/s]
+
+Creating user visuals from TRAINING set
+Creating item visuals from TRAINING set
+
+Minimum User Vis Len: 50, Minimum Item Vis Len: 50
+Convert user to uid...: 100%|████████████████████████████████████████████████████████████████████████████████████| 446248/446248 [00:00<00:00, 1869195.05it/s]
+Convert item to iid...: 100%|██████████████████████████████████████████████████████████████████████████████████████| 58586/58586 [00:00<00:00, 1867428.86it/s]
+Store the actual length of each user visual feature (before padding): 100%|██████████████████████████████████████| 446248/446248 [00:00<00:00, 3844999.82it/s]
+Store the actual length of each item visual feature (before padding): 100%|████████████████████████████████████████| 58586/58586 [00:00<00:00, 3501139.76it/s]
+Pad the user visual feature to MAX_VIS_LEN: 100%|██████████████████████████████████████████████████████████████████| 446248/446248 [00:06<00:00, 70364.33it/s]
+Pad the item visual feature to MAX_VIS_LEN: 100%|███████████████████████████████████████████████████████████████████| 58586/58586 [00:00<00:00, 143334.74it/s]
+
+Creating numpy matrix for uid_userVis..
+User Visual Feature Matrix: (446248, 500)
+User Visual Feature Matrix: ../datasets/Baby/Baby_uid_userDoc.npy
+
+Creating numpy matrix for iid_itemVis..
+Item Visual Feature Matrix: (58586, 500)
+Item Visual Feature Matrix: ../datasets/Baby/Baby_iid_itemDoc.npy
+
+Saving all required files for "Baby"..
+Environment:          ../datasets/Baby/Baby_env.pkl
+
+All required files for "Baby" successfully saved to '../datasets/Baby/'
+
+Preprocessing for "Baby" done after 291.10 seconds (4.85 minutes)
+
+
+Done!!

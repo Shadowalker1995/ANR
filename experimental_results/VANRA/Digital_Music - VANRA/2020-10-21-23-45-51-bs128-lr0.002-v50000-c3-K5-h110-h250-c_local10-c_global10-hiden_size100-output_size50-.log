@@ -1,0 +1,223 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  channels_global: 10
+  channels_local: 10
+  command: -d Digital_Music -m VANRA -e 15 -dr 0.9 -p 1 -v 50000 -K 5 -h1 10 -h2 50 -c_local 10 -c_global 10 -hiden_size 100 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm Digital_Music_VANRA
+  ctx_win_size: 3
+  dataset: Digital_Music
+  disable_initial_eval: 0
+  dropout_rate: 0.9
+  epochs: 15
+  gpu: 0
+  h1: 10
+  h2: 50
+  hidden_size: 100
+  input_dir: ./datasets/Digital_Music/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: VANRA
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Digital_Music - VANRA/
+  output_size: 50
+  pretrained_src: 1
+  random_seed: 1234
+  save_model: Digital_Music_VANRA
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 397,514, # of Items: 223,577
+
+Creating model (Selected Model: VANRA)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 8.43s (0.14 minute)
+
+Loading uid_userDoc from "./datasets/Digital_Music/Digital_Music_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (397514, 500)]
+
+Loading iid_itemDoc from "./datasets/Digital_Music/Digital_Music_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (223577, 500)]
+
+Loading pretrained word embeddings from "./datasets/Digital_Music/Digital_Music_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (50002, 300)]
+
+Loading uid_userVis from "./datasets/Digital_Music/Digital_Music_uid_userVis.npy"..
+uid_userVis loaded! [uid_userVis: (397514, 500)]
+
+Loading iid_itemVis from "./datasets/Digital_Music/Digital_Music_iid_itemVis.npy"..
+iid_itemVis loaded! [iid_itemVis: (223577, 500)]
+
+Initialization Complete.. Elapsed Time: 41.40s (0.69 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 656,657, |DEV|: 31,464, |TEST|: 31,775
+Train/Dev/Test splits loaded! Elapsed Time: 41.62s (0.69 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 21.24371, MAE: 4.50897
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 21.25357, MAE: 4.50904
+
+Initial Evaluation Complete.. Elapsed Time: 47.45s (0.79 minute)
+
+Parameters with L2 Regularization (Regularization Strength: 1e-06):
+VANRA_RatingPred.uid_userOffset.weight, VANRA_RatingPred.iid_itemOffset.weight
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 636,839,350
+# of Trainable Parameters: 747,750
+VANRA (
+  (uid_userDoc): Embedding(397514, 500), weights = ((397514, 500),), parameters = 198,757,000
+  (iid_itemDoc): Embedding(223577, 500), weights = ((223577, 500),), parameters = 111,788,500
+  (wid_wEmbed): Embedding(50002, 300), weights = ((50002, 300),), parameters = 15,000,600
+  (uid_userVis): Embedding(397514, 500), weights = ((397514, 500),), parameters = 198,757,000
+  (iid_itemVis): Embedding(223577, 500), weights = ((223577, 500),), parameters = 111,788,500
+  (shared_ANR_ARL): ANR_ARL(
+    (aspEmbed): Embedding(5, 30)
+    (aspProj): Parameter(5, 300, 10)
+  ), weights = ((5, 300, 10), (5, 30)), parameters = 15,150 (Trainable)
+  (ANR_AIE): ANR_AIE(  (W_a): Parameter(10, 10)
+    (W_u): Parameter(50, 10)
+    (w_hu): Parameter(50, 1)
+    (W_i): Parameter(50, 10)
+    (w_hi): Parameter(50, 1)
+  ), weights = ((10, 10), (50, 10), (50, 1), (50, 10), (50, 1)), parameters = 1,200 (Trainable)
+  (VANRA_VRL): VANRA_VRL(
+    (localAttentionLayer_user): LocalAttention(
+      (attention_layer): Sequential(
+        (0): Conv2d(1, 1, kernel_size=(3, 1), stride=(1, 1))
+        (1): Softmax(dim=2)
+      )
+      (fcLayer): Sequential(
+        (0): Linear(in_features=500, out_features=100, bias=True)
+        (1): Dropout(p=0.9, inplace=False)
+        (2): ReLU()
+        (3): Linear(in_features=100, out_features=50, bias=True)
+      )
+    )
+    (localAttentionLayer_item): LocalAttention(
+      (attention_layer): Sequential(
+        (0): Conv2d(1, 1, kernel_size=(3, 1), stride=(1, 1))
+        (1): Softmax(dim=2)
+      )
+      (fcLayer): Sequential(
+        (0): Linear(in_features=500, out_features=100, bias=True)
+        (1): Dropout(p=0.9, inplace=False)
+        (2): ReLU()
+        (3): Linear(in_features=100, out_features=50, bias=True)
+      )
+    )
+  ), weights = ((1, 1, 3, 1), (1,), (100, 500), (100,), (50, 100), (50,), (1, 1, 3, 1), (1,), (100, 500), (100,), (50, 100), (50,)), parameters = 110,308 (Trainable)
+  (VANRA_RatingPred): VANRA_RatingPred(
+    (userAspRepDropout): Dropout(p=0.9, inplace=False)
+    (itemAspRepDropout): Dropout(p=0.9, inplace=False)
+    (uid_userOffset): Embedding(397514, 1)
+    (iid_itemOffset): Embedding(223577, 1)
+    (globalOffset): Parameter(1,)
+  ), weights = ((1,), (397514, 1), (223577, 1)), parameters = 621,092 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/15] Training Loss: 1.11281	Elapsed Time: 138.08s (0:02:18)
+[Epoch 1] [Dev]  MSE: 0.76634, MAE: 0.56103
+[Epoch 1] [Test] MSE: 0.77222, MAE: 0.55959
+
+*** MODEL has obtained the best DEV MSE of 0.76634 so far!
+*** The Best MODEL saved to "./__saved_models__/Digital_Music - VANRA/Digital_Music_VANRA_1234.pth"
+
+[Epoch 2/15] Training Loss: 0.73243	Elapsed Time: 281.22s (0:04:41)
+[Epoch 2] [Dev]  MSE: 0.72115, MAE: 0.54131
+[Epoch 2] [Test] MSE: 0.72310, MAE: 0.53899
+
+*** MODEL has obtained the best DEV MSE of 0.72115 so far!
+*** The Best MODEL saved to "./__saved_models__/Digital_Music - VANRA/Digital_Music_VANRA_1234.pth"
+
+[Epoch 3/15] Training Loss: 0.65878	Elapsed Time: 424.47s (0:07:04)
+[Epoch 3] [Dev]  MSE: 0.70220, MAE: 0.55424
+[Epoch 3] [Test] MSE: 0.70197, MAE: 0.55161
+
+*** MODEL has obtained the best DEV MSE of 0.70220 so far!
+*** The Best MODEL saved to "./__saved_models__/Digital_Music - VANRA/Digital_Music_VANRA_1234.pth"
+
+[Epoch 4/15] Training Loss: 0.63988	Elapsed Time: 567.69s (0:09:27)
+[Epoch 4] [Dev]  MSE: 0.70108, MAE: 0.54593
+[Epoch 4] [Test] MSE: 0.70036, MAE: 0.54331
+
+*** MODEL has obtained the best DEV MSE of 0.70108 so far!
+*** The Best MODEL saved to "./__saved_models__/Digital_Music - VANRA/Digital_Music_VANRA_1234.pth"
+
+[Epoch 5/15] Training Loss: 0.58361	Elapsed Time: 710.81s (0:11:50)
+[Epoch 5] [Dev]  MSE: 0.69908, MAE: 0.54630
+[Epoch 5] [Test] MSE: 0.69692, MAE: 0.54316
+
+*** MODEL has obtained the best DEV MSE of 0.69908 so far!
+*** The Best MODEL saved to "./__saved_models__/Digital_Music - VANRA/Digital_Music_VANRA_1234.pth"
+
+[Epoch 6/15] Training Loss: 0.57410	Elapsed Time: 854.02s (0:14:14)
+[Epoch 6] [Dev]  MSE: 0.69771, MAE: 0.54880
+[Epoch 6] [Test] MSE: 0.69531, MAE: 0.54596
+
+*** MODEL has obtained the best DEV MSE of 0.69771 so far!
+*** The Best MODEL saved to "./__saved_models__/Digital_Music - VANRA/Digital_Music_VANRA_1234.pth"
+
+[Epoch 7/15] Training Loss: 0.56829	Elapsed Time: 997.23s (0:16:37)
+[Epoch 7] [Dev]  MSE: 0.70917, MAE: 0.54092
+[Epoch 7] [Test] MSE: 0.70661, MAE: 0.53825
+
+[Epoch 8/15] Training Loss: 0.51827	Elapsed Time: 1,140.30s (0:19:00)
+[Epoch 8] [Dev]  MSE: 0.70553, MAE: 0.54313
+[Epoch 8] [Test] MSE: 0.70243, MAE: 0.54010
+
+[Epoch 9/15] Training Loss: 0.50501	Elapsed Time: 1,283.49s (0:21:23)
+[Epoch 9] [Dev]  MSE: 0.70768, MAE: 0.54315
+[Epoch 9] [Test] MSE: 0.70484, MAE: 0.53940
+
+[Epoch 10/15] Training Loss: 0.49498	Elapsed Time: 1,426.58s (0:23:46)
+[Epoch 10] [Dev]  MSE: 0.70410, MAE: 0.54486
+[Epoch 10] [Test] MSE: 0.70097, MAE: 0.54190
+
+[Epoch 11/15] Training Loss: 0.48762	Elapsed Time: 1,569.78s (0:26:09)
+[Epoch 11] [Dev]  MSE: 0.69943, MAE: 0.55208
+[Epoch 11] [Test] MSE: 0.69527, MAE: 0.54941
+
+[Epoch 12/15] Training Loss: 0.52584	Elapsed Time: 1,712.83s (0:28:32)
+[Epoch 12] [Dev]  MSE: 0.70789, MAE: 0.54257
+[Epoch 12] [Test] MSE: 0.70402, MAE: 0.53979
+
+[Epoch 13/15] Training Loss: 0.46902	Elapsed Time: 1,855.96s (0:30:55)
+[Epoch 13] [Dev]  MSE: 0.70375, MAE: 0.54528
+[Epoch 13] [Test] MSE: 0.69977, MAE: 0.54224
+
+[Epoch 14/15] Training Loss: 0.46316	Elapsed Time: 1,999.08s (0:33:19)
+[Epoch 14] [Dev]  MSE: 0.70786, MAE: 0.54234
+[Epoch 14] [Test] MSE: 0.70314, MAE: 0.53872
+
+[Epoch 15/15] Training Loss: 0.52905	Elapsed Time: 2,142.21s (0:35:42)
+[Epoch 15] [Dev]  MSE: 0.71246, MAE: 0.54086
+[Epoch 15] [Test] MSE: 0.70752, MAE: 0.53699
+*** The Last MODEL saved to "./__saved_models__/Digital_Music - VANRA/Digital_Music_VANRA_1234_15.pth"
+
+[Training Loss]
+[1.11281, 0.73243, 0.65878, 0.63988, 0.58361, 0.5741, 0.56829, 0.51827, 0.50501, 0.49498, 0.48762, 0.52584, 0.46902, 0.46316, 0.52905]
+
+[Dev MSE]
+[0.76634, 0.72115, 0.7022, 0.70108, 0.69908, 0.69771, 0.70917, 0.70553, 0.70768, 0.7041, 0.69943, 0.70789, 0.70375, 0.70786, 0.71246]
+[Test MSE]
+[0.77222, 0.7231, 0.70197, 0.70036, 0.69692, 0.69531, 0.70661, 0.70243, 0.70484, 0.70097, 0.69527, 0.70402, 0.69977, 0.70314, 0.70752]
+[Test MAE]
+[0.55959, 0.53899, 0.55161, 0.54331, 0.54316, 0.54596, 0.53825, 0.5401, 0.5394, 0.5419, 0.54941, 0.53979, 0.54224, 0.53872, 0.53699]
+
+
+Best Dev MSE: 0.69771 (Obtained during Evaluation #6)
+Test MSE: 0.69531, Test MAE: 0.54596
+
+End of Program! Elapsed Time: 2,194.66s (0:36:34)

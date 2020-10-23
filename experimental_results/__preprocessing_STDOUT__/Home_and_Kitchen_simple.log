@@ -1,0 +1,207 @@
+╭─xulabzz ~/Dev/NLP/ANR/preprocessing ‹master*›
+╰─➤  $ python preprocessing_simple.py -d Home_and_Kitchen -dev_test_in_train 1
+
+Dataset: Home_and_Kitchen
+[args from argparse.ArgumentParser().parse_args()]
+command: preprocessing_simple.py -d Home_and_Kitchen -dev_test_in_train 1
+dataset: Home_and_Kitchen
+dataset_maximum_size: 1000000
+dev_test_in_train: True
+maxDL: 500
+maxVL: 500
+minImages: 1
+minReviews: 1
+minRL: 10
+random_seed: 1337
+train_ratio: 0.8
+vocab: 50000
+
+[INPUT] Source Folder:       ../datasets/
+[INPUT] Reviews/Ratings:     ../datasets/reviews_Home_and_Kitchen.json
+
+[OUTPUT] Category Folder:    ../datasets/Home_and_Kitchen/
+[OUTPUT] env:                ../datasets/Home_and_Kitchen/Home_and_Kitchen_env.pkl
+[OUTPUT] info:               ../datasets/Home_and_Kitchen/Home_and_Kitchen_info.pkl
+[OUTPUT] split_train:        ../datasets/Home_and_Kitchen/Home_and_Kitchen_train_interactions.pkl
+[OUTPUT] split_dev:          ../datasets/Home_and_Kitchen/Home_and_Kitchen_dev_interactions.pkl
+[OUTPUT] split_test:         ../datasets/Home_and_Kitchen/Home_and_Kitchen_test_interactions.pkl
+[OUTPUT] split_train:        ../datasets/Home_and_Kitchen/Home_and_Kitchen_split_train.pkl
+[OUTPUT] split_dev:          ../datasets/Home_and_Kitchen/Home_and_Kitchen_split_dev.pkl
+[OUTPUT] split_test:         ../datasets/Home_and_Kitchen/Home_and_Kitchen_split_test.pkl
+[OUTPUT] uid_userDoc:        ../datasets/Home_and_Kitchen/Home_and_Kitchen_uid_userDoc.npy
+[OUTPUT] iid_itemDoc:        ../datasets/Home_and_Kitchen/Home_and_Kitchen_iid_itemDoc.npy
+[OUTPUT] uid_userDoc:        ../datasets/Home_and_Kitchen/Home_and_Kitchen_uid_userVis.npy
+[OUTPUT] iid_itemDoc:        ../datasets/Home_and_Kitchen/Home_and_Kitchen_iid_itemVis.npy
+
+Preprocessing data for "Home_and_Kitchen"
+
+[Settings]
+Min reviews for user/item: 1
+Min review length to qualify as an user-item interaction: 10
+Max words for user/item document: 500 (For truncating/padding to get a fixed-size representation)
+Top-50000 words in vocabulary being utilized!
+
+
+Initial pass of reviews to get the user-item interactions!
+Initial pass of reviews for "Home_and_Kitchen": 4253926it [02:03, 34414.11it/s]
+[Initial stats] Users: 2,511,610, Items: 410,243, Ratings: 4,253,926, Density: 0.0000041
+
+
+Second pass of visual features to get the item-feature interactions!
+Initial pass of reviews for "Home_and_Kitchen": 100%|██████████████████████████████████████████████████████████████| 433607/433607 [00:06<00:00, 65927.92it/s]
+[Second stats] Items with image: 433,607, Images: 433,607, Density: 1.0000000
+
+
+Starting to filter away users & items based on thresold of 1 images!
+Updating interactions based on the num of images...
+Filtering interactions: 100%|██████████████████████████████████████████████████████████████████████████████████| 4253926/4253926 [00:00<00:00, 4655012.74it/s]
+
+Filtered users & items based on thresold of 1 images!
+Users: 2511610 -> 2493530, Items: 410243 -> 407052
+[Current stats] Users: 2493530, Items: 407052, Ratings: 4212436, Density: 0.0000042
+Updating interactions based on the num of images...
+Filtering interactions: 100%|██████████████████████████████████████████████████████████████████████████████████| 4212436/4212436 [00:00<00:00, 4653269.73it/s]
+
+Filtered users & items based on thresold of 1 images!
+Users: 2493530 -> 2493530, Items: 407052 -> 407052
+[Current stats] Users: 2493530, Items: 407052, Ratings: 4212436, Density: 0.0000042
+
+No change in # of users or # of items!
+
+[Final stats] Users: 2,493,530, Items: 407,052, Ratings: 4,212,436, Density: 0.0000042
+
+Elapsed time for "Home_and_Kitchen": 144.06 seconds (2.40 mintes)
+
+Starting to filter away users & items based on thresold of 1 reviews!
+
+Filtered users & items based on thresold of 1 reviews!
+Users: 2493530 -> 2493530, Items: 407052 -> 407052
+
+No change in # of users or # of items!
+
+[Final stats] Users: 2,493,530, Items: 407,052, Ratings: 4,212,436, Density: 0.0000042
+
+Elapsed time for "Home_and_Kitchen": 144.69 seconds (2.41 minutes)
+
+
+Third pass of reviews to get the rating, date, the num of tokenized review and index!
+Third pass of len of reviews for "Home_and_Kitchen": 4253926it [03:23, 20905.04it/s]
+[Current stats] Users: 2,493,530, Items: 407,052, Ratings: 4,212,436, Density: 0.0000042
+
+Filtering user-item interactions based on minimum review length of 10 tokens..
+Filtering interactions: 100%|██████████████████████████████████████████████████████████████████████████████████| 4212436/4212436 [00:00<00:00, 5196803.24it/s]
+
+Filtered users & items based on minimum review length of 10 tokens!
+Users: 2,493,530 -> 2,474,132, Items: 407,052 -> 404,672
+[Current stats] Users: 2,474,132, Items: 404,672, Ratings: 4,176,186, Density: 0.0000042
+
+
+Starting to filter away users & items based on thresold of 1 reviews (after removing reviews with <= 10 tokens)!
+
+Filtered users & items based on thresold of 1 reviews!
+Users: 2,474,132 -> 2,474,132, Items: 404,672 -> 404,672
+
+No change in # of users or # of items!
+
+[Final stats] Users: 2,474,132, Items: 404,672, Ratings: 4,176,186, Density: 0.0000042
+
+*****************************************************************************************************************************
+*** Original Dataset Size (i.e. num_ratings): 4,176,186!
+*** Selecting a random subsample of 1,000,000 user-item interactions!
+*** Current Dataset Size (i.e. num_ratings):  1,000,000!
+*****************************************************************************************************************************
+Fourth pass of reviews for "Home_and_Kitchen": 4253925it [02:29, 28451.73it/s]
+
+
+80.0% of ALL reviews are RANDOMLY selected for TRAIN, another 10.0% RANDOMLY selected for DEV, and remaining 10.0% used for TEST.
+
+[Initial Stats] Total Interactions: 1,000,000, TRAIN: 800,000 (80.00%), DEV: 100,000 (10.00%), TEST: 100,000 (10.00%)
+
+
+Removing users & items who do not appear in the training set, from the dev and test sets..
+Updating DEV interactions: 100%|█████████████████████████████████████████████████████████████████████████████████| 100000/100000 [00:00<00:00, 1027582.49it/s]
+Updating TEST interactions: 100%|█████████████████████████████████████████████████████████████████████████████████| 100000/100000 [00:00<00:00, 909505.75it/s]
+
+Removed 75,296 interactions from DEV and 75,515 interactions from TEST! (i.e. Those belonging to Users/Items which do not appear in TRAIN)
+
+[Current Stats] Total Interactions: 849,189, TRAIN: 800,000 (94.21%), DEV: 24,704 (2.91%), TEST: 24,485 (2.88%)
+
+
+[FINAL Stats] Users: 662,395, Items: 177,303, Ratings: 849,189, Density: 0.0000072
+
+[FINAL Stats] Total Interactions: 849,189, TRAIN: 800,000 (94.21%), DEV: 24,704 (2.91%), TEST: 24,485 (2.88%)
+
+[FINAL Stats][TRAIN] Users: 662,395, Items: 177,303, Ratings: 800,000
+[FINAL Stats][DEV]   Users: 22,562, Items: 15,722, Ratings: 24,704
+[FINAL Stats][TEST]  Users: 22,375, Items: 15,594, Ratings: 24,485
+
+
+train_interactions:   ../datasets/Home_and_Kitchen/Home_and_Kitchen_train_interactions.pkl
+dev_interactions:     ../datasets/Home_and_Kitchen/Home_and_Kitchen_dev_interactions.pkl
+test_interactions:    ../datasets/Home_and_Kitchen/Home_and_Kitchen_test_interactions.pkl
+
+Consolidating user/item reviews from TRAINING set
+Consolidating user/item reviews from TRAINING set: 100%|██████████████████████████████████████████████████████████| 800000/800000 [00:05<00:00, 155759.50it/s]
+
+Creating user docs from TRAINING set
+Creating item docs from TRAINING set
+
+Minimum User Doc Len: 10, Minimum Item Doc Len: 10
+
+Original number of words (based on USER & ITEM documents constructed from TRAINING set): 174,622
+For the vocabulary, we are only using the 50,000 most frequent words
+Current number of words: 50,000
+
+For each user doc, converting words to wids using word_wid...: 100%|███████████████████████████████████████████████| 662395/662395 [00:07<00:00, 87228.09it/s]
+For each item doc, converting words to wids using word_wid...: 100%|███████████████████████████████████████████████| 177303/177303 [00:03<00:00, 50109.12it/s]
+Store the actual length of each user document (before padding): 100%|████████████████████████████████████████████| 662395/662395 [00:00<00:00, 3418431.79it/s]
+Store the actual length of each item document (before padding): 100%|████████████████████████████████████████████| 177303/177303 [00:00<00:00, 3220727.17it/s]
+Pad the user documents to MAX_DOC_LEN: 100%|██████████████████████████████████████████████████████████████████████| 662395/662395 [00:04<00:00, 135547.07it/s]
+Pad the item documents to MAX_DOC_LEN: 100%|██████████████████████████████████████████████████████████████████████| 177303/177303 [00:01<00:00, 142745.89it/s]
+Preparing the TRAINING set: 100%|█████████████████████████████████████████████████████████████████████████████████| 800000/800000 [00:00<00:00, 848219.42it/s]
+Preparing the DEV set: 100%|████████████████████████████████████████████████████████████████████████████████████████| 24704/24704 [00:00<00:00, 699560.39it/s]
+Preparing the TESTING set: 100%|████████████████████████████████████████████████████████████████████████████████████| 24485/24485 [00:00<00:00, 677536.09it/s]
+Info:                 ../datasets/Home_and_Kitchen/Home_and_Kitchen_info.pkl
+Training Set:         ../datasets/Home_and_Kitchen/Home_and_Kitchen_split_train.pkl
+Validation Set:       ../datasets/Home_and_Kitchen/Home_and_Kitchen_split_dev.pkl
+Test Set:             ../datasets/Home_and_Kitchen/Home_and_Kitchen_split_test.pkl
+
+Creating numpy matrix for uid_userDoc..
+User Document Matrix: (662395, 500)
+User Document Matrix: ../datasets/Home_and_Kitchen/Home_and_Kitchen_uid_userDoc.npy
+
+Creating numpy matrix for iid_itemDoc..
+Item Document Matrix: (177303, 500)
+Item Document Matrix: ../datasets/Home_and_Kitchen/Home_and_Kitchen_iid_itemDoc.npy
+
+Consolidating user/item visual features from TRAINING set
+Consolidating user/item visual features from TRAINING set: 100%|██████████████████████████████████████████████████| 800000/800000 [00:04<00:00, 167479.18it/s]
+
+Creating user visuals from TRAINING set
+Creating item visuals from TRAINING set
+
+Minimum User Vis Len: 50, Minimum Item Vis Len: 50
+Convert user to uid...: 100%|████████████████████████████████████████████████████████████████████████████████████| 662395/662395 [00:00<00:00, 1761667.95it/s]
+Convert item to iid...: 100%|████████████████████████████████████████████████████████████████████████████████████| 177303/177303 [00:00<00:00, 1649318.09it/s]
+Store the actual length of each user visual feature (before padding): 100%|██████████████████████████████████████| 662395/662395 [00:00<00:00, 3737465.37it/s]
+Store the actual length of each item visual feature (before padding): 100%|██████████████████████████████████████| 177303/177303 [00:00<00:00, 3535913.32it/s]
+Pad the user visual feature to MAX_VIS_LEN: 100%|██████████████████████████████████████████████████████████████████| 662395/662395 [00:06<00:00, 95283.11it/s]
+Pad the item visual feature to MAX_VIS_LEN: 100%|█████████████████████████████████████████████████████████████████| 177303/177303 [00:01<00:00, 154098.68it/s]
+
+Creating numpy matrix for uid_userVis..
+User Visual Feature Matrix: (662395, 500)
+User Visual Feature Matrix: ../datasets/Home_and_Kitchen/Home_and_Kitchen_uid_userDoc.npy
+
+Creating numpy matrix for iid_itemVis..
+Item Visual Feature Matrix: (177303, 500)
+Item Visual Feature Matrix: ../datasets/Home_and_Kitchen/Home_and_Kitchen_iid_itemDoc.npy
+
+Saving all required files for "Home_and_Kitchen"..
+Environment:          ../datasets/Home_and_Kitchen/Home_and_Kitchen_env.pkl
+
+All required files for "Home_and_Kitchen" successfully saved to '../datasets/Home_and_Kitchen/'
+
+Preprocessing for "Home_and_Kitchen" done after 1612.25 seconds (26.87 minutes)
+
+
+Done!!

@@ -1,0 +1,149 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  channels_global: 100
+  channels_local: 200
+  command: -d Automotive -m DAttn -e 25 -p 1 -v 50000 -K 5 -h1 10 -h2 50 -c_local 200 -c_global 100 -hiden_size 200 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm Automotive_DAttn
+  ctx_win_size: 3
+  dataset: Automotive
+  disable_initial_eval: 0
+  dropout_rate: 0.5
+  epochs: 25
+  gpu: 0
+  h1: 10
+  h2: 50
+  hidden_size: 200
+  input_dir: ./datasets/Automotive/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: DAttn
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Automotive - DAttn/
+  output_size: 50
+  pretrained_src: 1
+  random_seed: 1234
+  save_model: Automotive_DAttn
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 561,942, # of Items: 233,577
+
+Creating model (Selected Model: DAttn)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 4.44s (0.07 minute)
+
+Loading uid_userDoc from "./datasets/Automotive/Automotive_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (561942, 500)]
+
+Loading iid_itemDoc from "./datasets/Automotive/Automotive_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (233577, 500)]
+
+Loading pretrained word embeddings from "./datasets/Automotive/Automotive_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (50002, 300)]
+
+Initialization Complete.. Elapsed Time: 32.00s (0.53 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 800,000, |DEV|: 35,546, |TEST|: 35,690
+Train/Dev/Test splits loaded! Elapsed Time: 32.26s (0.54 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 19.11927, MAE: 4.22323
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 19.09516, MAE: 4.21817
+
+Initial Evaluation Complete.. Elapsed Time: 72.48s (1.21 minutes)
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 414,628,674
+# of Trainable Parameters: 1,868,574
+DAttn (
+  (uid_userDoc): Embedding(561942, 500), weights = ((561942, 500),), parameters = 280,971,000
+  (iid_itemDoc): Embedding(233577, 500), weights = ((233577, 500),), parameters = 116,788,500
+  (wid_wEmbed): Embedding(50002, 300), weights = ((50002, 300),), parameters = 15,000,600
+  (DAttn_RatingPred): DAttn_RatingPred(
+    (uid_userOffset): Embedding(561942, 1)
+    (iid_itemOffset): Embedding(233577, 1)
+    (globalOffset): Parameter(1,)
+  ), weights = ((1,), (561942, 1), (233577, 1)), parameters = 795,520 (Trainable)
+  (localAttentionLayer_user): LocalAttention(
+    (attention_layer): Sequential(
+      (0): Conv2d(1, 1, kernel_size=(3, 300), stride=(1, 1))
+      (1): Sigmoid()
+    )
+    (cnn): Sequential(
+      (0): Conv2d(1, 200, kernel_size=(1, 300), stride=(1, 1))
+      (1): Tanh()
+      (2): MaxPool2d(kernel_size=(500, 1), stride=(500, 1), padding=0, dilation=1, ceil_mode=False)
+    )
+  ), weights = ((1, 1, 3, 300), (1,), (200, 1, 1, 300), (200,)), parameters = 61,101 (Trainable)
+  (globalAttentionLayer_user): GlobalAttention(
+    (attention_layer): Sequential(
+      (0): Conv2d(1, 1, kernel_size=(500, 300), stride=(1, 1))
+      (1): Sigmoid()
+    )
+    (cnn_1): Sequential(
+      (0): Conv2d(1, 100, kernel_size=(2, 300), stride=(1, 1))
+      (1): Tanh()
+      (2): MaxPool2d(kernel_size=(499, 1), stride=(499, 1), padding=0, dilation=1, ceil_mode=False)
+    )
+    (cnn_2): Sequential(
+      (0): Conv2d(1, 100, kernel_size=(3, 300), stride=(1, 1))
+      (1): Tanh()
+      (2): MaxPool2d(kernel_size=(498, 1), stride=(498, 1), padding=0, dilation=1, ceil_mode=False)
+    )
+    (cnn_3): Sequential(
+      (0): Conv2d(1, 100, kernel_size=(4, 300), stride=(1, 1))
+      (1): Tanh()
+      (2): MaxPool2d(kernel_size=(497, 1), stride=(497, 1), padding=0, dilation=1, ceil_mode=False)
+    )
+  ), weights = ((1, 1, 500, 300), (1,), (100, 1, 2, 300), (100,), (100, 1, 3, 300), (100,), (100, 1, 4, 300), (100,)), parameters = 420,301 (Trainable)
+  (localAttentionLayer_item): LocalAttention(
+    (attention_layer): Sequential(
+      (0): Conv2d(1, 1, kernel_size=(3, 300), stride=(1, 1))
+      (1): Sigmoid()
+    )
+    (cnn): Sequential(
+      (0): Conv2d(1, 200, kernel_size=(1, 300), stride=(1, 1))
+      (1): Tanh()
+      (2): MaxPool2d(kernel_size=(500, 1), stride=(500, 1), padding=0, dilation=1, ceil_mode=False)
+    )
+  ), weights = ((1, 1, 3, 300), (1,), (200, 1, 1, 300), (200,)), parameters = 61,101 (Trainable)
+  (globalAttentionLayer_item): GlobalAttention(
+    (attention_layer): Sequential(
+      (0): Conv2d(1, 1, kernel_size=(500, 300), stride=(1, 1))
+      (1): Sigmoid()
+    )
+    (cnn_1): Sequential(
+      (0): Conv2d(1, 100, kernel_size=(2, 300), stride=(1, 1))
+      (1): Tanh()
+      (2): MaxPool2d(kernel_size=(499, 1), stride=(499, 1), padding=0, dilation=1, ceil_mode=False)
+    )
+    (cnn_2): Sequential(
+      (0): Conv2d(1, 100, kernel_size=(3, 300), stride=(1, 1))
+      (1): Tanh()
+      (2): MaxPool2d(kernel_size=(498, 1), stride=(498, 1), padding=0, dilation=1, ceil_mode=False)
+    )
+    (cnn_3): Sequential(
+      (0): Conv2d(1, 100, kernel_size=(4, 300), stride=(1, 1))
+      (1): Tanh()
+      (2): MaxPool2d(kernel_size=(497, 1), stride=(497, 1), padding=0, dilation=1, ceil_mode=False)
+    )
+  ), weights = ((1, 1, 500, 300), (1,), (100, 1, 2, 300), (100,), (100, 1, 3, 300), (100,), (100, 1, 4, 300), (100,)), parameters = 420,301 (Trainable)
+  (fcLayer): Sequential (
+    (0): Linear(in_features=500, out_features=200, bias=True), weights = ((200, 500), (200,)), parameters = 100,200 (Trainable)
+    (1): Dropout(p=0.5, inplace=False), weights = (), parameters = 0
+    (2): ReLU(), weights = (), parameters = 0
+    (3): Linear(in_features=200, out_features=50, bias=True), weights = ((50, 200), (50,)), parameters = 10,050 (Trainable)
+  ), weights = ((200, 500), (200,), (50, 200), (50,)), parameters = 110,250 (Trainable)
+)
+========================================================================================================================

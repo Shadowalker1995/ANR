@@ -1,0 +1,152 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  channels_global: 100
+  channels_local: 200
+  command: -d Cell_Phones_and_Accessories -m DeepCoNN -e 10 -dr 0.5 -p 1 -v 50000 -K 5 -h1 10 -h2 50 -filters_num 100 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm Cell_Phones_and_Accessories_DeepCoNN
+  ctx_win_size: 3
+  dataset: Cell_Phones_and_Accessories
+  disable_initial_eval: 0
+  dropout_rate: 0.5
+  epochs: 10
+  filters_num: 100
+  gpu: 0
+  h1: 10
+  h2: 50
+  hidden_size: 500
+  input_dir: ./datasets/Cell_Phones_and_Accessories/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: DeepCoNN
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Cell_Phones_and_Accessories - DeepCoNN/
+  output_size: 50
+  pretrained_src: 1
+  random_seed: 1234
+  save_model: Cell_Phones_and_Accessories_DeepCoNN
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 687,583, # of Items: 148,399
+
+Creating model (Selected Model: DeepCoNN)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 4.61s (0.08 minute)
+
+Loading uid_userDoc from "./datasets/Cell_Phones_and_Accessories/Cell_Phones_and_Accessories_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (687583, 500)]
+
+Loading iid_itemDoc from "./datasets/Cell_Phones_and_Accessories/Cell_Phones_and_Accessories_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (148399, 500)]
+
+Loading pretrained word embeddings from "./datasets/Cell_Phones_and_Accessories/Cell_Phones_and_Accessories_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (50002, 300)]
+
+Initialization Complete.. Elapsed Time: 27.46s (0.46 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 800,000, |DEV|: 21,045, |TEST|: 21,154
+Train/Dev/Test splits loaded! Elapsed Time: 27.69s (0.46 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 14.69155, MAE: 3.59515
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 14.71292, MAE: 3.60014
+
+Initial Evaluation Complete.. Elapsed Time: 31.26s (0.52 minute)
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 434,017,883
+# of Trainable Parameters: 1,026,283
+DeepCoNN (
+  (uid_userDoc): Embedding(687583, 500), weights = ((687583, 500),), parameters = 343,791,500
+  (iid_itemDoc): Embedding(148399, 500), weights = ((148399, 500),), parameters = 74,199,500
+  (wid_wEmbed): Embedding(50002, 300), weights = ((50002, 300),), parameters = 15,000,600
+  (user_CNN): Conv2d(1, 100, kernel_size=(3, 300), stride=(1, 1)), weights = ((100, 1, 3, 300), (100,)), parameters = 90,100 (Trainable)
+  (item_CNN): Conv2d(1, 100, kernel_size=(3, 300), stride=(1, 1)), weights = ((100, 1, 3, 300), (100,)), parameters = 90,100 (Trainable)
+  (user_fcLayer): Linear(in_features=100, out_features=50, bias=True), weights = ((50, 100), (50,)), parameters = 5,050 (Trainable)
+  (item_fcLayer): Linear(in_features=100, out_features=50, bias=True), weights = ((50, 100), (50,)), parameters = 5,050 (Trainable)
+  (userDropout): Dropout(p=0.5, inplace=False), weights = (), parameters = 0
+  (itemDropout): Dropout(p=0.5, inplace=False), weights = (), parameters = 0
+  (DeepCoNN_RatingPred): DeepCoNN_RatingPred(
+    (uid_userOffset): Embedding(687583, 1)
+    (iid_itemOffset): Embedding(148399, 1)
+    (globalOffset): Parameter(1,)
+  ), weights = ((1,), (687583, 1), (148399, 1)), parameters = 835,983 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/10] Training Loss: 1.21289	Elapsed Time: 124.40s (0:02:04)
+[Epoch 1] [Dev]  MSE: 2.15944, MAE: 1.13309
+[Epoch 1] [Test] MSE: 2.13445, MAE: 1.12853
+
+*** MODEL has obtained the best DEV MSE of 2.15944 so far!
+*** The Best MODEL saved to "./__saved_models__/Cell_Phones_and_Accessories - DeepCoNN/Cell_Phones_and_Accessories_DeepCoNN_1234.pth"
+
+[Epoch 2/10] Training Loss: 0.83074	Elapsed Time: 252.31s (0:04:12)
+[Epoch 2] [Dev]  MSE: 2.15763, MAE: 1.12779
+[Epoch 2] [Test] MSE: 2.13614, MAE: 1.12433
+
+*** MODEL has obtained the best DEV MSE of 2.15763 so far!
+*** The Best MODEL saved to "./__saved_models__/Cell_Phones_and_Accessories - DeepCoNN/Cell_Phones_and_Accessories_DeepCoNN_1234.pth"
+
+[Epoch 3/10] Training Loss: 0.73234	Elapsed Time: 380.25s (0:06:20)
+[Epoch 3] [Dev]  MSE: 2.18316, MAE: 1.11648
+[Epoch 3] [Test] MSE: 2.15949, MAE: 1.11097
+
+[Epoch 4/10] Training Loss: 0.65802	Elapsed Time: 508.18s (0:08:28)
+[Epoch 4] [Dev]  MSE: 2.11313, MAE: 1.09923
+[Epoch 4] [Test] MSE: 2.08550, MAE: 1.09242
+
+*** MODEL has obtained the best DEV MSE of 2.11313 so far!
+*** The Best MODEL saved to "./__saved_models__/Cell_Phones_and_Accessories - DeepCoNN/Cell_Phones_and_Accessories_DeepCoNN_1234.pth"
+
+[Epoch 5/10] Training Loss: 0.59777	Elapsed Time: 636.13s (0:10:36)
+[Epoch 5] [Dev]  MSE: 2.12110, MAE: 1.08693
+[Epoch 5] [Test] MSE: 2.09427, MAE: 1.08028
+
+[Epoch 6/10] Training Loss: 0.54764	Elapsed Time: 764.10s (0:12:44)
+[Epoch 6] [Dev]  MSE: 2.14300, MAE: 1.10290
+[Epoch 6] [Test] MSE: 2.11660, MAE: 1.09525
+
+[Epoch 7/10] Training Loss: 0.50543	Elapsed Time: 892.00s (0:14:51)
+[Epoch 7] [Dev]  MSE: 2.16715, MAE: 1.09160
+[Epoch 7] [Test] MSE: 2.13546, MAE: 1.08438
+
+[Epoch 8/10] Training Loss: 0.46856	Elapsed Time: 1,019.88s (0:16:59)
+[Epoch 8] [Dev]  MSE: 2.23083, MAE: 1.11459
+[Epoch 8] [Test] MSE: 2.20484, MAE: 1.10883
+
+[Epoch 9/10] Training Loss: 0.43639	Elapsed Time: 1,147.73s (0:19:07)
+[Epoch 9] [Dev]  MSE: 2.16381, MAE: 1.10053
+[Epoch 9] [Test] MSE: 2.14257, MAE: 1.09543
+
+[Epoch 10/10] Training Loss: 0.40736	Elapsed Time: 1,275.64s (0:21:15)
+[Epoch 10] [Dev]  MSE: 2.16952, MAE: 1.09505
+[Epoch 10] [Test] MSE: 2.13986, MAE: 1.08777
+*** The Last MODEL saved to "./__saved_models__/Cell_Phones_and_Accessories - DeepCoNN/Cell_Phones_and_Accessories_DeepCoNN_1234_10.pth"
+
+[Training Loss]
+[1.21289, 0.83074, 0.73234, 0.65802, 0.59777, 0.54764, 0.50543, 0.46856, 0.43639, 0.40736]
+
+[Dev MSE]
+[2.15944, 2.15763, 2.18316, 2.11313, 2.1211, 2.143, 2.16715, 2.23083, 2.16381, 2.16952]
+[Test MSE]
+[2.13445, 2.13614, 2.15949, 2.0855, 2.09427, 2.1166, 2.13546, 2.20484, 2.14257, 2.13986]
+[Test MAE]
+[1.12853, 1.12433, 1.11097, 1.09242, 1.08028, 1.09525, 1.08438, 1.10883, 1.09543, 1.08777]
+
+
+Best Dev MSE: 2.11313 (Obtained during Evaluation #4)
+Test MSE: 2.08550, Test MAE: 1.09242
+
+End of Program! Elapsed Time: 1,310.34s (0:21:50)

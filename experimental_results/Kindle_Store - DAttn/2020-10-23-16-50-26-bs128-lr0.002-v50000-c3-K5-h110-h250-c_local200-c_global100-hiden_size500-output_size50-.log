@@ -1,0 +1,49 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  channels_global: 100
+  channels_local: 200
+  command: -d Kindle_Store -m DAttn -e 10 -p 1 -v 50000 -K 5 -h1 10 -h2 50 -WED 100 -c_local 200 -c_global 100 -hiden_size 500 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm Kindle_Store_DAttn
+  ctx_win_size: 3
+  dataset: Kindle_Store
+  disable_initial_eval: 0
+  dropout_rate: 0.5
+  epochs: 10
+  gpu: 0
+  h1: 10
+  h2: 50
+  hidden_size: 500
+  input_dir: ./datasets/Kindle_Store/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: DAttn
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Kindle_Store - DAttn/
+  output_size: 50
+  pretrained_src: 1
+  random_seed: 1234
+  save_model: Kindle_Store_DAttn
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 100
+========================================================================================================================
+
+[INFO] # of Users: 488,920, # of Items: 232,137
+
+Creating model (Selected Model: DAttn)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 4.22s (0.07 minute)
+
+Loading uid_userDoc from "./datasets/Kindle_Store/Kindle_Store_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (488920, 500)]
+
+Loading iid_itemDoc from "./datasets/Kindle_Store/Kindle_Store_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (232137, 500)]
+
+Loading pretrained word embeddings from "./datasets/Kindle_Store/Kindle_Store_wid_wordEmbed.npy"..

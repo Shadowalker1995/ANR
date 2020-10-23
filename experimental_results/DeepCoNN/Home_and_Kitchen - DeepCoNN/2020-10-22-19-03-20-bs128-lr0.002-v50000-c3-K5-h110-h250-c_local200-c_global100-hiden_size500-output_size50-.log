@@ -1,0 +1,155 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  channels_global: 100
+  channels_local: 200
+  command: -d Home_and_Kitchen -m DeepCoNN -e 10 -dr 0.5 -p 1 -v 50000 -K 5 -h1 10 -h2 50 -filters_num 100 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm Home_and_Kitchen_DeepCoNN
+  ctx_win_size: 3
+  dataset: Home_and_Kitchen
+  disable_initial_eval: 0
+  dropout_rate: 0.5
+  epochs: 10
+  filters_num: 100
+  gpu: 0
+  h1: 10
+  h2: 50
+  hidden_size: 500
+  input_dir: ./datasets/Home_and_Kitchen/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: DeepCoNN
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Home_and_Kitchen - DeepCoNN/
+  output_size: 50
+  pretrained_src: 1
+  random_seed: 1234
+  save_model: Home_and_Kitchen_DeepCoNN
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 662,395, # of Items: 177,303
+
+Creating model (Selected Model: DeepCoNN)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 4.65s (0.08 minute)
+
+Loading uid_userDoc from "./datasets/Home_and_Kitchen/Home_and_Kitchen_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (662395, 500)]
+
+Loading iid_itemDoc from "./datasets/Home_and_Kitchen/Home_and_Kitchen_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (177303, 500)]
+
+Loading pretrained word embeddings from "./datasets/Home_and_Kitchen/Home_and_Kitchen_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (50002, 300)]
+
+Initialization Complete.. Elapsed Time: 27.56s (0.46 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 800,000, |DEV|: 24,704, |TEST|: 24,485
+Train/Dev/Test splits loaded! Elapsed Time: 27.82s (0.46 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 16.84749, MAE: 3.93289
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 16.80105, MAE: 3.92350
+
+Initial Evaluation Complete.. Elapsed Time: 31.98s (0.53 minute)
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 435,879,599
+# of Trainable Parameters: 1,029,999
+DeepCoNN (
+  (uid_userDoc): Embedding(662395, 500), weights = ((662395, 500),), parameters = 331,197,500
+  (iid_itemDoc): Embedding(177303, 500), weights = ((177303, 500),), parameters = 88,651,500
+  (wid_wEmbed): Embedding(50002, 300), weights = ((50002, 300),), parameters = 15,000,600
+  (user_CNN): Conv2d(1, 100, kernel_size=(3, 300), stride=(1, 1)), weights = ((100, 1, 3, 300), (100,)), parameters = 90,100 (Trainable)
+  (item_CNN): Conv2d(1, 100, kernel_size=(3, 300), stride=(1, 1)), weights = ((100, 1, 3, 300), (100,)), parameters = 90,100 (Trainable)
+  (user_fcLayer): Linear(in_features=100, out_features=50, bias=True), weights = ((50, 100), (50,)), parameters = 5,050 (Trainable)
+  (item_fcLayer): Linear(in_features=100, out_features=50, bias=True), weights = ((50, 100), (50,)), parameters = 5,050 (Trainable)
+  (userDropout): Dropout(p=0.5, inplace=False), weights = (), parameters = 0
+  (itemDropout): Dropout(p=0.5, inplace=False), weights = (), parameters = 0
+  (DeepCoNN_RatingPred): DeepCoNN_RatingPred(
+    (uid_userOffset): Embedding(662395, 1)
+    (iid_itemOffset): Embedding(177303, 1)
+    (globalOffset): Parameter(1,)
+  ), weights = ((1,), (662395, 1), (177303, 1)), parameters = 839,699 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/10] Training Loss: 1.14269	Elapsed Time: 124.14s (0:02:04)
+[Epoch 1] [Dev]  MSE: 1.77652, MAE: 0.95144
+[Epoch 1] [Test] MSE: 1.81755, MAE: 0.95904
+
+*** MODEL has obtained the best DEV MSE of 1.77652 so far!
+*** The Best MODEL saved to "./__saved_models__/Home_and_Kitchen - DeepCoNN/Home_and_Kitchen_DeepCoNN_1234.pth"
+
+[Epoch 2/10] Training Loss: 0.73758	Elapsed Time: 252.51s (0:04:12)
+[Epoch 2] [Dev]  MSE: 1.67309, MAE: 0.94992
+[Epoch 2] [Test] MSE: 1.70958, MAE: 0.95449
+
+*** MODEL has obtained the best DEV MSE of 1.67309 so far!
+*** The Best MODEL saved to "./__saved_models__/Home_and_Kitchen - DeepCoNN/Home_and_Kitchen_DeepCoNN_1234.pth"
+
+[Epoch 3/10] Training Loss: 0.64754	Elapsed Time: 380.83s (0:06:20)
+[Epoch 3] [Dev]  MSE: 1.66461, MAE: 0.92335
+[Epoch 3] [Test] MSE: 1.70751, MAE: 0.93008
+
+*** MODEL has obtained the best DEV MSE of 1.66461 so far!
+*** The Best MODEL saved to "./__saved_models__/Home_and_Kitchen - DeepCoNN/Home_and_Kitchen_DeepCoNN_1234.pth"
+
+[Epoch 4/10] Training Loss: 0.57975	Elapsed Time: 509.15s (0:08:29)
+[Epoch 4] [Dev]  MSE: 1.72232, MAE: 0.93316
+[Epoch 4] [Test] MSE: 1.76063, MAE: 0.93756
+
+[Epoch 5/10] Training Loss: 0.52463	Elapsed Time: 637.43s (0:10:37)
+[Epoch 5] [Dev]  MSE: 1.56899, MAE: 0.90434
+[Epoch 5] [Test] MSE: 1.60933, MAE: 0.91066
+
+*** MODEL has obtained the best DEV MSE of 1.56899 so far!
+*** The Best MODEL saved to "./__saved_models__/Home_and_Kitchen - DeepCoNN/Home_and_Kitchen_DeepCoNN_1234.pth"
+
+[Epoch 6/10] Training Loss: 0.48023	Elapsed Time: 765.71s (0:12:45)
+[Epoch 6] [Dev]  MSE: 1.65161, MAE: 0.93120
+[Epoch 6] [Test] MSE: 1.68914, MAE: 0.93481
+
+[Epoch 7/10] Training Loss: 0.44107	Elapsed Time: 893.97s (0:14:53)
+[Epoch 7] [Dev]  MSE: 1.73146, MAE: 0.92586
+[Epoch 7] [Test] MSE: 1.77625, MAE: 0.93114
+
+[Epoch 8/10] Training Loss: 0.40962	Elapsed Time: 1,022.29s (0:17:02)
+[Epoch 8] [Dev]  MSE: 1.65656, MAE: 0.91354
+[Epoch 8] [Test] MSE: 1.70205, MAE: 0.91873
+
+[Epoch 9/10] Training Loss: 0.38123	Elapsed Time: 1,150.59s (0:19:10)
+[Epoch 9] [Dev]  MSE: 1.71375, MAE: 0.92691
+[Epoch 9] [Test] MSE: 1.75558, MAE: 0.93119
+
+[Epoch 10/10] Training Loss: 0.35608	Elapsed Time: 1,278.85s (0:21:18)
+[Epoch 10] [Dev]  MSE: 1.66074, MAE: 0.92315
+[Epoch 10] [Test] MSE: 1.70410, MAE: 0.92710
+*** The Last MODEL saved to "./__saved_models__/Home_and_Kitchen - DeepCoNN/Home_and_Kitchen_DeepCoNN_1234_10.pth"
+
+[Training Loss]
+[1.14269, 0.73758, 0.64754, 0.57975, 0.52463, 0.48023, 0.44107, 0.40962, 0.38123, 0.35608]
+
+[Dev MSE]
+[1.77652, 1.67309, 1.66461, 1.72232, 1.56899, 1.65161, 1.73146, 1.65656, 1.71375, 1.66074]
+[Test MSE]
+[1.81755, 1.70958, 1.70751, 1.76063, 1.60933, 1.68914, 1.77625, 1.70205, 1.75558, 1.7041]
+[Test MAE]
+[0.95904, 0.95449, 0.93008, 0.93756, 0.91066, 0.93481, 0.93114, 0.91873, 0.93119, 0.9271]
+
+
+Best Dev MSE: 1.56899 (Obtained during Evaluation #5)
+Test MSE: 1.60933, Test MAE: 0.91066
+
+End of Program! Elapsed Time: 1,314.84s (0:21:54)

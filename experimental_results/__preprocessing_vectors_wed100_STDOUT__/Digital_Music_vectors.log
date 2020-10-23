@@ -1,0 +1,32 @@
+
+Dataset: Digital_Music
+
+[args from argparse.ArgumentParser().parse_args()]
+command: pretrained_vectors_simple.py -emb_dim 100 -d Digital_Music
+dataset: Digital_Music
+emb_dim: 100
+emb_rand_init: 0.01
+random_seed: 1337
+
+[INPUT] Source Folder:                 ../datasets/
+[INPUT] Category Folder:               ../datasets/Digital_Music/
+[INPUT] env:                           ../datasets/Digital_Music/Digital_Music_env.pkl
+[INPUT] Pretrained Word Embeddings:    ../datasets/glove.twitter.word2vec.27B.100d.txt
+
+[OUTPUT] wid_wordEmbed:                ../datasets/Digital_Music/Digital_Music_wed100_wid_wordEmbed.npy
+
+Loading word-to-wid mappings (i.e. word_wid) from "../datasets/Digital_Music/Digital_Music_env.pkl"
+
+|V|: 50002
+
+Finished processing pretrained embeddings..
+# of words with pretrained embeddings: 43534
+
+Embedding Matrix=(50002, 100), |V|=50002
+# of Words w/ No Pretrained Embeddings=6468 (12.935%)
+
+Embeddings successfully saved to '../datasets/Digital_Music/Digital_Music_wed100_wid_wordEmbed.npy'
+
+
+Pretrained word embeddings for "Digital_Music" obtained after 73.82 seconds (1.23 minutes)
+

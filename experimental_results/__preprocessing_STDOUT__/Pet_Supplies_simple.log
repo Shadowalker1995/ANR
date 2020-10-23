@@ -1,0 +1,207 @@
+╭─xulabzz ~/Dev/NLP/ANR/preprocessing ‹master*›
+╰─➤  $ python preprocessing_simple.py -d Pet_Supplies -dev_test_in_train 1                                                                              130 ↵
+
+Dataset: Pet_Supplies
+[args from argparse.ArgumentParser().parse_args()]
+command: preprocessing_simple.py -d Pet_Supplies -dev_test_in_train 1
+dataset: Pet_Supplies
+dataset_maximum_size: 1000000
+dev_test_in_train: True
+maxDL: 500
+maxVL: 500
+minImages: 1
+minReviews: 1
+minRL: 10
+random_seed: 1337
+train_ratio: 0.8
+vocab: 50000
+
+[INPUT] Source Folder:       ../datasets/
+[INPUT] Reviews/Ratings:     ../datasets/reviews_Pet_Supplies.json
+
+[OUTPUT] Category Folder:    ../datasets/Pet_Supplies/
+[OUTPUT] env:                ../datasets/Pet_Supplies/Pet_Supplies_env.pkl
+[OUTPUT] info:               ../datasets/Pet_Supplies/Pet_Supplies_info.pkl
+[OUTPUT] split_train:        ../datasets/Pet_Supplies/Pet_Supplies_train_interactions.pkl
+[OUTPUT] split_dev:          ../datasets/Pet_Supplies/Pet_Supplies_dev_interactions.pkl
+[OUTPUT] split_test:         ../datasets/Pet_Supplies/Pet_Supplies_test_interactions.pkl
+[OUTPUT] split_train:        ../datasets/Pet_Supplies/Pet_Supplies_split_train.pkl
+[OUTPUT] split_dev:          ../datasets/Pet_Supplies/Pet_Supplies_split_dev.pkl
+[OUTPUT] split_test:         ../datasets/Pet_Supplies/Pet_Supplies_split_test.pkl
+[OUTPUT] uid_userDoc:        ../datasets/Pet_Supplies/Pet_Supplies_uid_userDoc.npy
+[OUTPUT] iid_itemDoc:        ../datasets/Pet_Supplies/Pet_Supplies_iid_itemDoc.npy
+[OUTPUT] uid_userDoc:        ../datasets/Pet_Supplies/Pet_Supplies_uid_userVis.npy
+[OUTPUT] iid_itemDoc:        ../datasets/Pet_Supplies/Pet_Supplies_iid_itemVis.npy
+
+Preprocessing data for "Pet_Supplies"
+
+[Settings]
+Min reviews for user/item: 1
+Min review length to qualify as an user-item interaction: 10
+Max words for user/item document: 500 (For truncating/padding to get a fixed-size representation)
+Top-50000 words in vocabulary being utilized!
+
+
+Initial pass of reviews to get the user-item interactions!
+Initial pass of reviews for "Pet_Supplies": 1235316it [00:35, 34343.88it/s]
+[Initial stats] Users: 740,985, Items: 103,288, Ratings: 1,235,316, Density: 0.0000161
+
+
+Second pass of visual features to get the item-feature interactions!
+Initial pass of reviews for "Pet_Supplies": 100%|██████████████████████████████████████████████████████████████████| 109844/109844 [00:01<00:00, 58170.77it/s]
+[Second stats] Items with image: 109,844, Images: 109,844, Density: 1.0000000
+
+
+Starting to filter away users & items based on thresold of 1 images!
+Updating interactions based on the num of images...
+Filtering interactions: 100%|██████████████████████████████████████████████████████████████████████████████████| 1235316/1235316 [00:00<00:00, 4093823.85it/s]
+
+Filtered users & items based on thresold of 1 images!
+Users: 740985 -> 737576, Items: 103288 -> 102486
+[Current stats] Users: 737576, Items: 102486, Ratings: 1226918, Density: 0.0000162
+Updating interactions based on the num of images...
+Filtering interactions: 100%|██████████████████████████████████████████████████████████████████████████████████| 1226918/1226918 [00:00<00:00, 4021813.38it/s]
+
+Filtered users & items based on thresold of 1 images!
+Users: 737576 -> 737576, Items: 102486 -> 102486
+[Current stats] Users: 737576, Items: 102486, Ratings: 1226918, Density: 0.0000162
+
+No change in # of users or # of items!
+
+[Final stats] Users: 737,576, Items: 102,486, Ratings: 1,226,918, Density: 0.0000162
+
+Elapsed time for "Pet_Supplies": 41.65 seconds (0.69 minutes)
+
+Starting to filter away users & items basedon thresold of 1 reviews!
+
+Filtered users & items based on thresold of 1 reviews!
+Users: 737576 -> 737576, Items: 102486 -> 102486
+
+No change in # of users or # of items!
+
+[Final stats] Users: 737,576, Items: 102,486, Ratings: 1,226,918, Density: 0.0000162
+
+Elapsed time for "Pet_Supplies": 41.81 seconds (0.70 minutes)
+
+
+Third pass of reviews to get the rating, date, the num of tokenized review and index!
+Third pass of len of reviews for "Pet_Supplies": 1235316it [01:00, 20565.54it/s]
+[Current stats] Users: 737,576, Items: 102,486, Ratings: 1,226,918, Density: 0.0000162
+
+Filtering user-item interactions based on minimum review length of 10 tokens..
+Filtering interactions: 100%|██████████████████████████████████████████████████████████████████████████████████| 1226918/1226918 [00:00<00:00, 4645919.86it/s]
+
+Filtered users & items based on minimum review length of 10 tokens!
+Users: 737,576 -> 732,362, Items: 102,486 -> 101,972
+[Current stats] Users: 732,362, Items: 101,972, Ratings: 1,217,007, Density: 0.0000163
+
+
+Starting to filter away users & items based on thresold of 1 reviews (after removing reviews with <= 10 tokens)!
+
+Filtered users & items based on thresold of 1 reviews!
+Users: 732,362 -> 732,362, Items: 101,972 -> 101,972
+
+No change in # of users or # of items!
+
+[Final stats] Users: 732,362, Items: 101,972, Ratings: 1,217,007, Density: 0.0000163
+
+*****************************************************************************************************************************
+*** Original Dataset Size (i.e. num_ratings): 1,217,007!
+*** Selecting a random subsample of 1,000,000 user-item interactions!
+*** Current Dataset Size (i.e. num_ratings):  1,000,000!
+*****************************************************************************************************************************
+Fourth pass of reviews for "Pet_Supplies": 1235315it [01:03, 19374.72it/s]
+
+
+80.0% of ALL reviews are RANDOMLY selected for TRAIN, another 10.0% RANDOMLY selected for DEV, and remaining 10.0% used for TEST.
+
+[Initial Stats] Total Interactions: 1,000,000, TRAIN: 800,000 (80.00%), DEV: 100,000 (10.00%), TEST: 100,000 (10.00%)
+
+
+Removing users & items who do not appear in the training set, from the dev and test sets..
+Updating DEV interactions: 100%|█████████████████████████████████████████████████████████████████████████████████| 100000/100000 [00:00<00:00, 1068245.06it/s]
+Updating TEST interactions: 100%|████████████████████████████████████████████████████████████████████████████████| 100000/100000 [00:00<00:00, 1049103.17it/s]
+
+Removed 53,963 interactions from DEV and 53,777 interactions from TEST! (i.e. Those belonging to Users/Items which do not appear in TRAIN)
+
+[Current Stats] Total Interactions: 892,260, TRAIN: 800,000 (89.66%), DEV: 46,037 (5.16%), TEST: 46,223 (5.18%)
+
+
+[FINAL Stats] Users: 535,028, Items: 85,685, Ratings: 892,260, Density: 0.0000195
+
+[FINAL Stats] Total Interactions: 892,260, TRAIN: 800,000 (89.66%), DEV: 46,037 (5.16%), TEST: 46,223 (5.18%)
+
+[FINAL Stats][TRAIN] Users: 535,028, Items: 85,685, Ratings: 800,000
+[FINAL Stats][DEV]   Users: 38,701, Items: 17,309, Ratings: 46,037
+[FINAL Stats][TEST]  Users: 38,821, Items: 17,376, Ratings: 46,223
+
+
+train_interactions:   ../datasets/Pet_Supplies/Pet_Supplies_train_interactions.pkl
+dev_interactions:     ../datasets/Pet_Supplies/Pet_Supplies_dev_interactions.pkl
+test_interactions:    ../datasets/Pet_Supplies/Pet_Supplies_test_interactions.pkl
+
+Consolidating user/item reviews from TRAINING set
+Consolidating user/item reviews from TRAINING set: 100%|██████████████████████████████████████████████████████████| 800000/800000 [00:04<00:00, 171132.84it/s]
+
+Creating user docs from TRAINING set
+Creating item docs from TRAINING set
+
+Minimum User Doc Len: 10, Minimum Item Doc Len: 10
+
+Original number of words (based on USER & ITEM documents constructed from TRAINING set): 156,371
+For the vocabulary, we are only using the 50,000 most frequent words
+Current number of words: 50,000
+
+For each user doc, converting words to wids using word_wid...: 100%|███████████████████████████████████████████████| 535028/535028 [00:07<00:00, 74700.94it/s]
+For each item doc, converting words to wids using word_wid...: 100%|█████████████████████████████████████████████████| 85685/85685 [00:02<00:00, 39577.49it/s]
+Store the actual length of each user document (before padding): 100%|████████████████████████████████████████████| 535028/535028 [00:00<00:00, 3118097.85it/s]
+Store the actual length of each item document (before padding): 100%|██████████████████████████████████████████████| 85685/85685 [00:00<00:00, 2113692.01it/s]
+Pad the user documents to MAX_DOC_LEN: 100%|██████████████████████████████████████████████████████████████████████| 535028/535028 [00:03<00:00, 137607.49it/s]
+Pad the item documents to MAX_DOC_LEN: 100%|████████████████████████████████████████████████████████████████████████| 85685/85685 [00:00<00:00, 147053.52it/s]
+Preparing the TRAINING set: 100%|█████████████████████████████████████████████████████████████████████████████████| 800000/800000 [00:00<00:00, 947321.80it/s]
+Preparing the DEV set: 100%|████████████████████████████████████████████████████████████████████████████████████████| 46037/46037 [00:00<00:00, 790940.82it/s]
+Preparing the TESTING set: 100%|████████████████████████████████████████████████████████████████████████████████████| 46223/46223 [00:00<00:00, 717419.58it/s]
+Info:                 ../datasets/Pet_Supplies/Pet_Supplies_info.pkl
+Training Set:         ../datasets/Pet_Supplies/Pet_Supplies_split_train.pkl
+Validation Set:       ../datasets/Pet_Supplies/Pet_Supplies_split_dev.pkl
+Test Set:             ../datasets/Pet_Supplies/Pet_Supplies_split_test.pkl
+
+Creating numpy matrix for uid_userDoc..
+User Document Matrix: (535028, 500)
+User Document Matrix: ../datasets/Pet_Supplies/Pet_Supplies_uid_userDoc.npy
+
+Creating numpy matrix for iid_itemDoc..
+Item Document Matrix: (85685, 500)
+Item Document Matrix: ../datasets/Pet_Supplies/Pet_Supplies_iid_itemDoc.npy
+
+Consolidating user/item visual features from TRAINING set
+Consolidating user/item visual features from TRAINING set: 100%|██████████████████████████████████████████████████| 800000/800000 [00:02<00:00, 334564.28it/s]
+
+Creating user visuals from TRAINING set
+Creating item visuals from TRAINING set
+
+Minimum User Vis Len: 50, Minimum Item Vis Len: 50
+Convert user to uid...: 100%|████████████████████████████████████████████████████████████████████████████████████| 535028/535028 [00:00<00:00, 1847135.45it/s]
+Convert item to iid...: 100%|██████████████████████████████████████████████████████████████████████████████████████| 85685/85685 [00:00<00:00, 1911287.46it/s]
+Store the actual length of each user visual feature (before padding): 100%|██████████████████████████████████████| 535028/535028 [00:00<00:00, 3850999.93it/s]
+Store the actual length of each item visual feature (before padding): 100%|████████████████████████████████████████| 85685/85685 [00:00<00:00, 3391837.62it/s]
+Pad the user visual feature to MAX_VIS_LEN: 100%|██████████████████████████████████████████████████████████████████| 535028/535028 [00:07<00:00, 73018.43it/s]
+Pad the item visual feature to MAX_VIS_LEN: 100%|███████████████████████████████████████████████████████████████████| 85685/85685 [00:00<00:00, 156252.53it/s]
+
+Creating numpy matrix for uid_userVis..
+User Visual Feature Matrix: (535028, 500)
+User Visual Feature Matrix: ../datasets/Pet_Supplies/Pet_Supplies_uid_userDoc.npy
+
+Creating numpy matrix for iid_itemVis..
+Item Visual Feature Matrix: (85685, 500)
+Item Visual Feature Matrix: ../datasets/Pet_Supplies/Pet_Supplies_iid_itemDoc.npy
+
+Saving all required files for "Pet_Supplies"..
+Environment:          ../datasets/Pet_Supplies/Pet_Supplies_env.pkl
+
+All required files for "Pet_Supplies" successfully saved to '../datasets/Pet_Supplies/'
+
+Preprocessing for "Pet_Supplies" done after 352.91 seconds (5.88 minutes)
+
+
+Done!!

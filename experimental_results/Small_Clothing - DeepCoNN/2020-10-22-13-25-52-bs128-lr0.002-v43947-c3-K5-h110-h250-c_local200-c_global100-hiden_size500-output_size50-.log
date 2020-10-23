@@ -1,0 +1,186 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  channels_global: 100
+  channels_local: 200
+  command: -d Small_Clothing -m DeepCoNN -e 20 -dr 0.5 -lr 2E-3 -p 1 -v 43947 -filters_num 100 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm Small_Clothing_DeepCoNN
+  ctx_win_size: 3
+  dataset: Small_Clothing
+  disable_initial_eval: 0
+  dropout_rate: 0.5
+  epochs: 20
+  filters_num: 100
+  gpu: 0
+  h1: 10
+  h2: 50
+  hidden_size: 500
+  input_dir: ./datasets/Small_Clothing/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: DeepCoNN
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Small_Clothing - DeepCoNN/
+  output_size: 50
+  pretrained_src: 1
+  random_seed: 1234
+  save_model: Small_Clothing_DeepCoNN
+  use_cuda: True
+  verbose: 1
+  vocab_size: 43947
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 77,930, # of Items: 59,172
+
+Creating model (Selected Model: DeepCoNN)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 1.88s (0.03 minute)
+
+Loading uid_userDoc from "./datasets/Small_Clothing/Small_Clothing_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (77930, 500)]
+
+Loading iid_itemDoc from "./datasets/Small_Clothing/Small_Clothing_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (59172, 500)]
+
+Loading pretrained word embeddings from "./datasets/Small_Clothing/Small_Clothing_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (43949, 300)]
+
+Initialization Complete.. Elapsed Time: 2.13s (0.04 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 80,000, |DEV|: 150, |TEST|: 166
+Train/Dev/Test splits loaded! Elapsed Time: 2.15s (0.04 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 15.05111, MAE: 3.73662
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 15.69779, MAE: 3.83303
+
+Initial Evaluation Complete.. Elapsed Time: 2.30s (0.04 minute)
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 82,063,103
+# of Trainable Parameters: 327,403
+DeepCoNN (
+  (uid_userDoc): Embedding(77930, 500), weights = ((77930, 500),), parameters = 38,965,000
+  (iid_itemDoc): Embedding(59172, 500), weights = ((59172, 500),), parameters = 29,586,000
+  (wid_wEmbed): Embedding(43949, 300), weights = ((43949, 300),), parameters = 13,184,700
+  (user_CNN): Conv2d(1, 100, kernel_size=(3, 300), stride=(1, 1)), weights = ((100, 1, 3, 300), (100,)), parameters = 90,100 (Trainable)
+  (item_CNN): Conv2d(1, 100, kernel_size=(3, 300), stride=(1, 1)), weights = ((100, 1, 3, 300), (100,)), parameters = 90,100 (Trainable)
+  (user_fcLayer): Linear(in_features=100, out_features=50, bias=True), weights = ((50, 100), (50,)), parameters = 5,050 (Trainable)
+  (item_fcLayer): Linear(in_features=100, out_features=50, bias=True), weights = ((50, 100), (50,)), parameters = 5,050 (Trainable)
+  (userDropout): Dropout(p=0.5, inplace=False), weights = (), parameters = 0
+  (itemDropout): Dropout(p=0.5, inplace=False), weights = (), parameters = 0
+  (DeepCoNN_RatingPred): DeepCoNN_RatingPred(
+    (uid_userOffset): Embedding(77930, 1)
+    (iid_itemOffset): Embedding(59172, 1)
+    (globalOffset): Parameter(1,)
+  ), weights = ((1,), (77930, 1), (59172, 1)), parameters = 137,103 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/20] Training Loss: 1.98016	Elapsed Time: 12.64s (0:00:12)
+[Epoch 1] [Dev]  MSE: 1.50482, MAE: 1.01890
+[Epoch 1] [Test] MSE: 1.68012, MAE: 0.99569
+
+*** MODEL has obtained the best DEV MSE of 1.50482 so far!
+*** The Best MODEL saved to "./__saved_models__/Small_Clothing - DeepCoNN/Small_Clothing_DeepCoNN_1234.pth"
+
+[Epoch 2/20] Training Loss: 1.31173	Elapsed Time: 25.17s (0:00:25)
+[Epoch 2] [Dev]  MSE: 1.59396, MAE: 1.02128
+[Epoch 2] [Test] MSE: 1.69380, MAE: 0.98908
+
+[Epoch 3/20] Training Loss: 0.96206	Elapsed Time: 37.66s (0:00:37)
+[Epoch 3] [Dev]  MSE: 1.57894, MAE: 0.92249
+[Epoch 3] [Test] MSE: 1.61333, MAE: 0.88800
+
+[Epoch 4/20] Training Loss: 0.71750	Elapsed Time: 50.15s (0:00:50)
+[Epoch 4] [Dev]  MSE: 1.60367, MAE: 0.98694
+[Epoch 4] [Test] MSE: 1.73588, MAE: 0.96191
+
+[Epoch 5/20] Training Loss: 0.55102	Elapsed Time: 62.76s (0:01:02)
+[Epoch 5] [Dev]  MSE: 1.50536, MAE: 0.91772
+[Epoch 5] [Test] MSE: 1.61570, MAE: 0.90716
+
+[Epoch 6/20] Training Loss: 0.43841	Elapsed Time: 75.24s (0:01:15)
+[Epoch 6] [Dev]  MSE: 1.51529, MAE: 0.90085
+[Epoch 6] [Test] MSE: 1.67027, MAE: 0.90303
+
+[Epoch 7/20] Training Loss: 0.35660	Elapsed Time: 87.77s (0:01:27)
+[Epoch 7] [Dev]  MSE: 1.55463, MAE: 0.96221
+[Epoch 7] [Test] MSE: 1.73382, MAE: 0.94120
+
+[Epoch 8/20] Training Loss: 0.30064	Elapsed Time: 100.32s (0:01:40)
+[Epoch 8] [Dev]  MSE: 1.54364, MAE: 0.93072
+[Epoch 8] [Test] MSE: 1.73044, MAE: 0.92097
+
+[Epoch 9/20] Training Loss: 0.25997	Elapsed Time: 113.03s (0:01:53)
+[Epoch 9] [Dev]  MSE: 1.57744, MAE: 0.93178
+[Epoch 9] [Test] MSE: 1.80713, MAE: 0.93323
+
+[Epoch 10/20] Training Loss: 0.22430	Elapsed Time: 125.60s (0:02:05)
+[Epoch 10] [Dev]  MSE: 1.54677, MAE: 0.90606
+[Epoch 10] [Test] MSE: 1.66985, MAE: 0.89490
+
+[Epoch 11/20] Training Loss: 0.19582	Elapsed Time: 138.26s (0:02:18)
+[Epoch 11] [Dev]  MSE: 1.59285, MAE: 0.90325
+[Epoch 11] [Test] MSE: 1.71980, MAE: 0.91688
+
+[Epoch 12/20] Training Loss: 0.17344	Elapsed Time: 151.05s (0:02:31)
+[Epoch 12] [Dev]  MSE: 1.54406, MAE: 0.90036
+[Epoch 12] [Test] MSE: 1.65952, MAE: 0.90485
+
+[Epoch 13/20] Training Loss: 0.15441	Elapsed Time: 163.85s (0:02:43)
+[Epoch 13] [Dev]  MSE: 1.59409, MAE: 0.90910
+[Epoch 13] [Test] MSE: 1.76789, MAE: 0.92338
+
+[Epoch 14/20] Training Loss: 0.13960	Elapsed Time: 176.81s (0:02:56)
+[Epoch 14] [Dev]  MSE: 1.60044, MAE: 0.90891
+[Epoch 14] [Test] MSE: 1.79652, MAE: 0.92979
+
+[Epoch 15/20] Training Loss: 0.12571	Elapsed Time: 189.26s (0:03:09)
+[Epoch 15] [Dev]  MSE: 1.60387, MAE: 0.91759
+[Epoch 15] [Test] MSE: 1.78518, MAE: 0.94569
+
+[Epoch 16/20] Training Loss: 0.11534	Elapsed Time: 201.72s (0:03:21)
+[Epoch 16] [Dev]  MSE: 1.58838, MAE: 0.90705
+[Epoch 16] [Test] MSE: 1.68629, MAE: 0.91778
+
+[Epoch 17/20] Training Loss: 0.10741	Elapsed Time: 214.16s (0:03:34)
+[Epoch 17] [Dev]  MSE: 1.51913, MAE: 0.88706
+[Epoch 17] [Test] MSE: 1.69116, MAE: 0.91513
+
+[Epoch 18/20] Training Loss: 0.09759	Elapsed Time: 226.60s (0:03:46)
+[Epoch 18] [Dev]  MSE: 1.53221, MAE: 0.89043
+[Epoch 18] [Test] MSE: 1.65717, MAE: 0.90982
+
+[Epoch 19/20] Training Loss: 0.09274	Elapsed Time: 239.04s (0:03:59)
+[Epoch 19] [Dev]  MSE: 1.56103, MAE: 0.89520
+[Epoch 19] [Test] MSE: 1.74635, MAE: 0.92761
+
+[Epoch 20/20] Training Loss: 0.08766	Elapsed Time: 251.48s (0:04:11)
+[Epoch 20] [Dev]  MSE: 1.55927, MAE: 0.89246
+[Epoch 20] [Test] MSE: 1.72801, MAE: 0.92894
+*** The Last MODEL saved to "./__saved_models__/Small_Clothing - DeepCoNN/Small_Clothing_DeepCoNN_1234_20.pth"
+
+[Training Loss]
+[1.98016, 1.31173, 0.96206, 0.7175, 0.55102, 0.43841, 0.3566, 0.30064, 0.25997, 0.2243, 0.19582, 0.17344, 0.15441, 0.1396, 0.12571, 0.11534, 0.10741, 0.09759, 0.09274, 0.08766]
+
+[Dev MSE]
+[1.50482, 1.59396, 1.57894, 1.60367, 1.50536, 1.51529, 1.55463, 1.54364, 1.57744, 1.54677, 1.59285, 1.54406, 1.59409, 1.60044, 1.60387, 1.58838, 1.51913, 1.53221, 1.56103, 1.55927]
+[Test MSE]
+[1.68012, 1.6938, 1.61333, 1.73588, 1.6157, 1.67027, 1.73382, 1.73044, 1.80713, 1.66985, 1.7198, 1.65952, 1.76789, 1.79652, 1.78518, 1.68629, 1.69116, 1.65717, 1.74635, 1.72801]
+[Test MAE]
+[0.99569, 0.98908, 0.888, 0.96191, 0.90716, 0.90303, 0.9412, 0.92097, 0.93323, 0.8949, 0.91688, 0.90485, 0.92338, 0.92979, 0.94569, 0.91778, 0.91513, 0.90982, 0.92761, 0.92894]
+
+
+Best Dev MSE: 1.50482 (Obtained during Evaluation #1)
+Test MSE: 1.68012, Test MAE: 0.99569
+
+End of Program! Elapsed Time: 253.82s (0:04:13)

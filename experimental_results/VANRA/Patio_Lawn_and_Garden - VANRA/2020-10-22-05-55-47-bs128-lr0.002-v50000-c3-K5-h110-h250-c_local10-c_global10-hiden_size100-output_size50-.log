@@ -1,0 +1,217 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  channels_global: 10
+  channels_local: 10
+  command: -d Patio_Lawn_and_Garden -m VANRA -e 15 -dr 0.9 -p 1 -v 50000 -K 5 -h1 10 -h2 50 -c_local 10 -c_global 10 -hiden_size 100 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm Patio_Lawn_and_Garden_VANRA
+  ctx_win_size: 3
+  dataset: Patio_Lawn_and_Garden
+  disable_initial_eval: 0
+  dropout_rate: 0.9
+  epochs: 15
+  gpu: 0
+  h1: 10
+  h2: 50
+  hidden_size: 100
+  input_dir: ./datasets/Patio_Lawn_and_Garden/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: VANRA
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Patio_Lawn_and_Garden - VANRA/
+  output_size: 50
+  pretrained_src: 1
+  random_seed: 1234
+  save_model: Patio_Lawn_and_Garden_VANRA
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 584,107, # of Items: 95,030
+
+Creating model (Selected Model: VANRA)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 6.78s (0.11 minute)
+
+Loading uid_userDoc from "./datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (584107, 500)]
+
+Loading iid_itemDoc from "./datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (95030, 500)]
+
+Loading pretrained word embeddings from "./datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (50002, 300)]
+
+Loading uid_userVis from "./datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_uid_userVis.npy"..
+uid_userVis loaded! [uid_userVis: (584107, 500)]
+
+Loading iid_itemVis from "./datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_iid_itemVis.npy"..
+iid_itemVis loaded! [iid_itemVis: (95030, 500)]
+
+Initialization Complete.. Elapsed Time: 51.04s (0.85 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 775,805, |DEV|: 34,584, |TEST|: 34,718
+Train/Dev/Test splits loaded! Elapsed Time: 51.31s (0.86 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 18.81169, MAE: 4.14243
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 18.67486, MAE: 4.12371
+
+Initial Evaluation Complete.. Elapsed Time: 57.06s (0.95 minute)
+
+Parameters with L2 Regularization (Regularization Strength: 1e-06):
+VANRA_RatingPred.uid_userOffset.weight, VANRA_RatingPred.iid_itemOffset.weight
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 694,943,396
+# of Trainable Parameters: 805,796
+VANRA (
+  (uid_userDoc): Embedding(584107, 500), weights = ((584107, 500),), parameters = 292,053,500
+  (iid_itemDoc): Embedding(95030, 500), weights = ((95030, 500),), parameters = 47,515,000
+  (wid_wEmbed): Embedding(50002, 300), weights = ((50002, 300),), parameters = 15,000,600
+  (uid_userVis): Embedding(584107, 500), weights = ((584107, 500),), parameters = 292,053,500
+  (iid_itemVis): Embedding(95030, 500), weights = ((95030, 500),), parameters = 47,515,000
+  (shared_ANR_ARL): ANR_ARL(
+    (aspEmbed): Embedding(5, 30)
+    (aspProj): Parameter(5, 300, 10)
+  ), weights = ((5, 300, 10), (5, 30)), parameters = 15,150 (Trainable)
+  (ANR_AIE): ANR_AIE(  (W_a): Parameter(10, 10)
+    (W_u): Parameter(50, 10)
+    (w_hu): Parameter(50, 1)
+    (W_i): Parameter(50, 10)
+    (w_hi): Parameter(50, 1)
+  ), weights = ((10, 10), (50, 10), (50, 1), (50, 10), (50, 1)), parameters = 1,200 (Trainable)
+  (VANRA_VRL): VANRA_VRL(
+    (localAttentionLayer_user): LocalAttention(
+      (attention_layer): Sequential(
+        (0): Conv2d(1, 1, kernel_size=(3, 1), stride=(1, 1))
+        (1): Softmax(dim=2)
+      )
+      (fcLayer): Sequential(
+        (0): Linear(in_features=500, out_features=100, bias=True)
+        (1): Dropout(p=0.9, inplace=False)
+        (2): ReLU()
+        (3): Linear(in_features=100, out_features=50, bias=True)
+      )
+    )
+    (localAttentionLayer_item): LocalAttention(
+      (attention_layer): Sequential(
+        (0): Conv2d(1, 1, kernel_size=(3, 1), stride=(1, 1))
+        (1): Softmax(dim=2)
+      )
+      (fcLayer): Sequential(
+        (0): Linear(in_features=500, out_features=100, bias=True)
+        (1): Dropout(p=0.9, inplace=False)
+        (2): ReLU()
+        (3): Linear(in_features=100, out_features=50, bias=True)
+      )
+    )
+  ), weights = ((1, 1, 3, 1), (1,), (100, 500), (100,), (50, 100), (50,), (1, 1, 3, 1), (1,), (100, 500), (100,), (50, 100), (50,)), parameters = 110,308 (Trainable)
+  (VANRA_RatingPred): VANRA_RatingPred(
+    (userAspRepDropout): Dropout(p=0.9, inplace=False)
+    (itemAspRepDropout): Dropout(p=0.9, inplace=False)
+    (uid_userOffset): Embedding(584107, 1)
+    (iid_itemOffset): Embedding(95030, 1)
+    (globalOffset): Parameter(1,)
+  ), weights = ((1,), (584107, 1), (95030, 1)), parameters = 679,138 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/15] Training Loss: 2.02437	Elapsed Time: 163.01s (0:02:43)
+[Epoch 1] [Dev]  MSE: 1.46373, MAE: 0.98167
+[Epoch 1] [Test] MSE: 1.47681, MAE: 0.98201
+
+*** MODEL has obtained the best DEV MSE of 1.46373 so far!
+*** The Best MODEL saved to "./__saved_models__/Patio_Lawn_and_Garden - VANRA/Patio_Lawn_and_Garden_VANRA_1234.pth"
+
+[Epoch 2/15] Training Loss: 1.57822	Elapsed Time: 331.70s (0:05:31)
+[Epoch 2] [Dev]  MSE: 1.39760, MAE: 0.91961
+[Epoch 2] [Test] MSE: 1.41190, MAE: 0.92201
+
+*** MODEL has obtained the best DEV MSE of 1.39760 so far!
+*** The Best MODEL saved to "./__saved_models__/Patio_Lawn_and_Garden - VANRA/Patio_Lawn_and_Garden_VANRA_1234.pth"
+
+[Epoch 3/15] Training Loss: 1.43456	Elapsed Time: 500.30s (0:08:20)
+[Epoch 3] [Dev]  MSE: 1.38405, MAE: 0.92332
+[Epoch 3] [Test] MSE: 1.39432, MAE: 0.92506
+
+*** MODEL has obtained the best DEV MSE of 1.38405 so far!
+*** The Best MODEL saved to "./__saved_models__/Patio_Lawn_and_Garden - VANRA/Patio_Lawn_and_Garden_VANRA_1234.pth"
+
+[Epoch 4/15] Training Loss: 1.34526	Elapsed Time: 669.10s (0:11:09)
+[Epoch 4] [Dev]  MSE: 1.37241, MAE: 0.89958
+[Epoch 4] [Test] MSE: 1.38316, MAE: 0.90212
+
+*** MODEL has obtained the best DEV MSE of 1.37241 so far!
+*** The Best MODEL saved to "./__saved_models__/Patio_Lawn_and_Garden - VANRA/Patio_Lawn_and_Garden_VANRA_1234.pth"
+
+[Epoch 5/15] Training Loss: 1.27894	Elapsed Time: 837.61s (0:13:57)
+[Epoch 5] [Dev]  MSE: 1.37364, MAE: 0.88550
+[Epoch 5] [Test] MSE: 1.38434, MAE: 0.88905
+
+[Epoch 6/15] Training Loss: 1.23342	Elapsed Time: 1,006.31s (0:16:46)
+[Epoch 6] [Dev]  MSE: 1.37745, MAE: 0.88458
+[Epoch 6] [Test] MSE: 1.38825, MAE: 0.88864
+
+[Epoch 7/15] Training Loss: 1.20054	Elapsed Time: 1,174.92s (0:19:34)
+[Epoch 7] [Dev]  MSE: 1.38013, MAE: 0.88516
+[Epoch 7] [Test] MSE: 1.39035, MAE: 0.88893
+
+[Epoch 8/15] Training Loss: 1.17414	Elapsed Time: 1,343.41s (0:22:23)
+[Epoch 8] [Dev]  MSE: 1.38138, MAE: 0.89790
+[Epoch 8] [Test] MSE: 1.39098, MAE: 0.90152
+
+[Epoch 9/15] Training Loss: 1.15376	Elapsed Time: 1,512.04s (0:25:12)
+[Epoch 9] [Dev]  MSE: 1.38753, MAE: 0.90259
+[Epoch 9] [Test] MSE: 1.39588, MAE: 0.90571
+
+[Epoch 10/15] Training Loss: 1.13979	Elapsed Time: 1,680.61s (0:28:00)
+[Epoch 10] [Dev]  MSE: 1.38879, MAE: 0.89478
+[Epoch 10] [Test] MSE: 1.39591, MAE: 0.89808
+
+[Epoch 11/15] Training Loss: 1.12454	Elapsed Time: 1,849.18s (0:30:49)
+[Epoch 11] [Dev]  MSE: 1.40197, MAE: 0.91610
+[Epoch 11] [Test] MSE: 1.40673, MAE: 0.91764
+
+[Epoch 12/15] Training Loss: 1.11475	Elapsed Time: 2,017.79s (0:33:37)
+[Epoch 12] [Dev]  MSE: 1.40421, MAE: 0.91667
+[Epoch 12] [Test] MSE: 1.40867, MAE: 0.91808
+
+[Epoch 13/15] Training Loss: 1.10798	Elapsed Time: 2,186.39s (0:36:26)
+[Epoch 13] [Dev]  MSE: 1.39531, MAE: 0.88610
+[Epoch 13] [Test] MSE: 1.40582, MAE: 0.88985
+
+[Epoch 14/15] Training Loss: 1.09938	Elapsed Time: 2,354.88s (0:39:14)
+[Epoch 14] [Dev]  MSE: 1.39846, MAE: 0.89207
+[Epoch 14] [Test] MSE: 1.40503, MAE: 0.89490
+
+[Epoch 15/15] Training Loss: 1.09417	Elapsed Time: 2,523.41s (0:42:03)
+[Epoch 15] [Dev]  MSE: 1.39947, MAE: 0.88805
+[Epoch 15] [Test] MSE: 1.40830, MAE: 0.89198
+*** The Last MODEL saved to "./__saved_models__/Patio_Lawn_and_Garden - VANRA/Patio_Lawn_and_Garden_VANRA_1234_15.pth"
+
+[Training Loss]
+[2.02437, 1.57822, 1.43456, 1.34526, 1.27894, 1.23342, 1.20054, 1.17414, 1.15376, 1.13979, 1.12454, 1.11475, 1.10798, 1.09938, 1.09417]
+
+[Dev MSE]
+[1.46373, 1.3976, 1.38405, 1.37241, 1.37364, 1.37745, 1.38013, 1.38138, 1.38753, 1.38879, 1.40197, 1.40421, 1.39531, 1.39846, 1.39947]
+[Test MSE]
+[1.47681, 1.4119, 1.39432, 1.38316, 1.38434, 1.38825, 1.39035, 1.39098, 1.39588, 1.39591, 1.40673, 1.40867, 1.40582, 1.40503, 1.4083]
+[Test MAE]
+[0.98201, 0.92201, 0.92506, 0.90212, 0.88905, 0.88864, 0.88893, 0.90152, 0.90571, 0.89808, 0.91764, 0.91808, 0.88985, 0.8949, 0.89198]
+
+
+Best Dev MSE: 1.37241 (Obtained during Evaluation #4)
+Test MSE: 1.38316, Test MAE: 0.90212
+
+End of Program! Elapsed Time: 2,586.01s (0:43:06)

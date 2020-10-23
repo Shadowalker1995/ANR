@@ -1,0 +1,32 @@
+
+Dataset: Clothing_Shoes_and_Jewelry
+
+[args from argparse.ArgumentParser().parse_args()]
+command: pretrained_vectors_simple.py -emb_dim 100 -d Clothing_Shoes_and_Jewelry
+dataset: Clothing_Shoes_and_Jewelry
+emb_dim: 100
+emb_rand_init: 0.01
+random_seed: 1337
+
+[INPUT] Source Folder:                 ../datasets/
+[INPUT] Category Folder:               ../datasets/Clothing_Shoes_and_Jewelry/
+[INPUT] env:                           ../datasets/Clothing_Shoes_and_Jewelry/Clothing_Shoes_and_Jewelry_env.pkl
+[INPUT] Pretrained Word Embeddings:    ../datasets/glove.twitter.word2vec.27B.100d.txt
+
+[OUTPUT] wid_wordEmbed:                ../datasets/Clothing_Shoes_and_Jewelry/Clothing_Shoes_and_Jewelry_wed100_wid_wordEmbed.npy
+
+Loading word-to-wid mappings (i.e. word_wid) from "../datasets/Clothing_Shoes_and_Jewelry/Clothing_Shoes_and_Jewelry_env.pkl"
+
+|V|: 50002
+
+Finished processing pretrained embeddings..
+# of words with pretrained embeddings: 38665
+
+Embedding Matrix=(50002, 100), |V|=50002
+# of Words w/ No Pretrained Embeddings=11337 (22.673%)
+
+Embeddings successfully saved to '../datasets/Clothing_Shoes_and_Jewelry/Clothing_Shoes_and_Jewelry_wed100_wid_wordEmbed.npy'
+
+
+Pretrained word embeddings for "Clothing_Shoes_and_Jewelry" obtained after 74.30 seconds (1.24 minutes)
+

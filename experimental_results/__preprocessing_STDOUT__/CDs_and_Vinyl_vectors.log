@@ -1,0 +1,32 @@
+
+Dataset: CDs_and_Vinyl
+
+[args from argparse.ArgumentParser().parse_args()]
+command: pretrained_vectors_simple.py -d CDs_and_Vinyl
+dataset: CDs_and_Vinyl
+emb_dim: 300
+emb_rand_init: 0.01
+random_seed: 1337
+
+[INPUT] Source Folder:                 ../datasets/
+[INPUT] Category Folder:               ../datasets/CDs_and_Vinyl/
+[INPUT] env:                           ../datasets/CDs_and_Vinyl/CDs_and_Vinyl_env.pkl
+[INPUT] Pretrained Word Embeddings:    ../datasets/GoogleNews-vectors-negative300.bin
+
+[OUTPUT] wid_wordEmbed:                ../datasets/CDs_and_Vinyl/CDs_and_Vinyl_wid_wordEmbed.npy
+
+Loading word-to-wid mappings (i.e. word_wid) from "../datasets/CDs_and_Vinyl/CDs_and_Vinyl_env.pkl"
+
+|V|: 50002
+
+Finished processing pretrained embeddings..
+# of words with pretrained embeddings: 36722
+
+Embedding Matrix=(50002, 300), |V|=50002
+# of Words w/ No Pretrained Embeddings=13280 (26.559%)
+
+Embeddings successfully saved to '../datasets/CDs_and_Vinyl/CDs_and_Vinyl_wid_wordEmbed.npy'
+
+
+Pretrained word embeddings for "CDs_and_Vinyl" obtained after 17.23 seconds (0.29 minutes)
+

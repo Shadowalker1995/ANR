@@ -1,0 +1,207 @@
+╭─xulabzz ~/Dev/NLP/ANR/preprocessing ‹master*›
+╰─➤  $ python preprocessing_simple.py -d Sports_and_Outdoors -dev_test_in_train 1
+
+Dataset: Sports_and_Outdoors
+[args from argparse.ArgumentParser().parse_args()]
+command: preprocessing_simple.py -d Sports_and_Outdoors -dev_test_in_train 1
+dataset: Sports_and_Outdoors
+dataset_maximum_size: 1000000
+dev_test_in_train: True
+maxDL: 500
+maxVL: 500
+minImages: 1
+minReviews: 1
+minRL: 10
+random_seed: 1337
+train_ratio: 0.8
+vocab: 50000
+
+[INPUT] Source Folder:       ../datasets/
+[INPUT] Reviews/Ratings:     ../datasets/reviews_Sports_and_Outdoors.json
+
+[OUTPUT] Category Folder:    ../datasets/Sports_and_Outdoors/
+[OUTPUT] env:                ../datasets/Sports_and_Outdoors/Sports_and_Outdoors_env.pkl
+[OUTPUT] info:               ../datasets/Sports_and_Outdoors/Sports_and_Outdoors_info.pkl
+[OUTPUT] split_train:        ../datasets/Sports_and_Outdoors/Sports_and_Outdoors_train_interactions.pkl
+[OUTPUT] split_dev:          ../datasets/Sports_and_Outdoors/Sports_and_Outdoors_dev_interactions.pkl
+[OUTPUT] split_test:         ../datasets/Sports_and_Outdoors/Sports_and_Outdoors_test_interactions.pkl
+[OUTPUT] split_train:        ../datasets/Sports_and_Outdoors/Sports_and_Outdoors_split_train.pkl
+[OUTPUT] split_dev:          ../datasets/Sports_and_Outdoors/Sports_and_Outdoors_split_dev.pkl
+[OUTPUT] split_test:         ../datasets/Sports_and_Outdoors/Sports_and_Outdoors_split_test.pkl
+[OUTPUT] uid_userDoc:        ../datasets/Sports_and_Outdoors/Sports_and_Outdoors_uid_userDoc.npy
+[OUTPUT] iid_itemDoc:        ../datasets/Sports_and_Outdoors/Sports_and_Outdoors_iid_itemDoc.npy
+[OUTPUT] uid_userDoc:        ../datasets/Sports_and_Outdoors/Sports_and_Outdoors_uid_userVis.npy
+[OUTPUT] iid_itemDoc:        ../datasets/Sports_and_Outdoors/Sports_and_Outdoors_iid_itemVis.npy
+
+Preprocessing data for "Sports_and_Outdoors"
+
+[Settings]
+Min reviews for user/item: 1
+Min review length to qualify as an user-item interaction: 10
+Max words for user/item document: 500 (For truncating/padding to get a fixed-size representation)
+Top-50000 words in vocabulary being utilized!
+
+
+Initial pass of reviews to get the user-item interactions!
+Initial pass of reviews for "Sports_and_Outdoors": 3268695it [01:35, 34368.56it/s]
+[Initial stats] Users: 1,990,521, Items: 478,898, Ratings: 3,268,695, Density: 0.0000034
+
+
+Second pass of visual features to get the item-feature interactions!
+Initial pass of reviews for "Sports_and_Outdoors": 100%|███████████████████████████████████████████████████████████| 527981/527981 [00:09<00:00, 55907.25it/s]
+[Second stats] Items with image: 527,981, Images: 527,981, Density: 1.0000000
+
+
+Starting to filter away users & items based on thresold of 1 images!
+Updating interactions based on the num of images...
+Filtering interactions: 100%|██████████████████████████████████████████████████████████████████████████████████| 3268695/3268695 [00:00<00:00, 4078868.37it/s]
+
+Filtered users & items based on thresold of 1 images!
+Users: 1990521 -> 1974839, Items: 478898 -> 475011
+[Current stats] Users: 1974839, Items: 475011, Ratings: 3235148, Density: 0.0000034
+Updating interactions based on the num of images...
+Filtering interactions: 100%|██████████████████████████████████████████████████████████████████████████████████| 3235148/3235148 [00:00<00:00, 4141986.76it/s]
+
+Filtered users & items based on thresold of 1 images!
+Users: 1974839 -> 1974839, Items: 475011 -> 475011
+[Current stats] Users: 1974839, Items: 475011, Ratings: 3235148, Density: 0.0000034
+
+No change in # of users or # of items!
+
+[Final stats] Users: 1,974,839, Items: 475,011, Ratings: 3,35,148, Density: 0.0000034
+
+Elapsed time for "Sports_and_Outdoors": 117.61 seconds (1.96 minutes)
+
+Starting to filter away users & items based on thresold of 1 reviews!
+
+Filtered users & items based on thresold of 1 reviews!
+Users: 1974839 -> 1974839, Items: 475011 -> 475011
+
+No change in # of users or # of items!
+
+[Final stats] Users: 1,974,839, Items: 475,011, Ratings: 3,235,148, Density: 0.0000034
+
+Elapsed time for "Sports_and_Outdoors": 118.10 seconds (1.97 minutes)
+
+
+Third pass of reviews to get the rating, date, the num of tokenized review and index!
+Third pass of len of reviews for "Sports_and_Outdoors": 3268695it [02:35, 21084.58it/s]
+[Current stats] Users: 1,974,839, Items: 475,011, Ratings: 3,235,148, Density: 0.0000034
+
+Filtering user-item interactions based on minimum review length of 10 tokens..
+Filtering interactions: 100%|██████████████████████████████████████████████████████████████████████████████████| 3235148/3235148 [00:00<00:00, 4957536.63it/s]
+
+Filtered users & items based on minimum review length of 10 tokens!
+Users: 1,974,839 -> 1,954,447, Items: 475,011 -> 471,279
+[Current stats] Users: 1,954,447, Items: 471,279, Ratings: 3,199,071, Density: 0.0000035
+
+
+Starting to filter away users & items based on thresold of 1 reviews (after removing reviews with <= 10 tokens)!
+
+Filtered users & items based on thresold of 1 reviews!
+Users: 1,954,447 -> 1,954,447, Items: 471,279 -> 471,279
+
+No change in # of users or # of items!
+
+[Final stats] Users: 1,954,447, Items: 471,279, Ratings: 3,199,071, Density: 0.0000035
+
+*****************************************************************************************************************************
+*** Original Dataset Size (i.e. num_ratings): 3,199,071!
+*** Selecting a random subsample of 1,000,000 user-item interactions!
+*** Current Dataset Size (i.e. num_ratings):  1,000,000!
+*****************************************************************************************************************************
+Fourth pass of reviews for "Sports_and_Outdoors": 3268693it [01:58, 27520.32it/s]
+
+
+80.0% of ALL reviews are RANDOMLY selected for TRAIN, another 10.0% RANDOMLY selected for DEV, and remaining 10.0% used for TEST.
+
+[Initial Stats] Total Interactions: 1,000,000, TRAIN: 800,000 (80.00%), DEV: 100,000 (10.00%), TEST: 100,000 (10.00%)
+
+
+Removing users & items who do not appear in the training set, from the dev and test sets..
+Updating DEV interactions: 100%|█████████████████████████████████████████████████████████████████████████████████| 100000/100000 [00:00<00:00, 1026754.89it/s]
+Updating TEST interactions: 100%|█████████████████████████████████████████████████████████████████████████████████| 100000/100000 [00:00<00:00, 966055.54it/s]
+
+Removed 74,335 interactions from DEV and 74,262 interactions from TEST! (i.e. Those belonging to Users/Items which do not appear in TRAIN)
+
+[Current Stats] Total Interactions: 851,403, TRAIN: 800,000 (93.96%), DEV: 25,665 (3.01%), TEST: 25,738 (3.02%)
+
+
+[FINAL Stats] Users: 645,026, Items: 221,569, Ratings: 851,403, Density: 0.0000060
+
+[FINAL Stats] Total Interactions: 851,403, TRAIN: 800,000 (93.96%), DEV: 25,665 (3.01%), TEST: 25,738 (3.02%)
+
+[FINAL Stats][TRAIN] Users: 645,026, Items: 221,569, Ratings: 800,000
+[FINAL Stats][DEV]   Users: 23,275, Items: 17,235, Ratings: 25,665
+[FINAL Stats][TEST]  Users: 23,281, Items: 17,342, Ratings: 25,738
+
+
+train_interactions:   ../datasets/Sports_and_Outdoors/Sports_and_Outdoors_train_interactions.pkl
+dev_interactions:     ../datasets/Sports_and_Outdoors/Sports_and_Outdoors_dev_interactions.pkl
+test_interactions:    ../datasets/Sports_and_Outdoors/Sports_and_Outdoors_test_interactions.pkl
+
+Consolidating user/item reviews from TRAINING set
+Consolidating user/item reviews from TRAINING set: 100%|██████████████████████████████████████████████████████████| 800000/800000 [00:05<00:00, 154388.36it/s]
+
+Creating user docs from TRAINING set
+Creating item docs from TRAINING set
+
+Minimum User Doc Len: 10, Minimum Item Doc Len: 10
+
+Original number of words (based on USER & ITEM documents constructed from TRAINING set): 206,692
+For the vocabulary, we are only using the 50,000 most frequent words
+Current number of words: 50,000
+
+For each user doc, converting words to wids using word_wid...: 100%|███████████████████████████████████████████████| 645026/645026 [00:07<00:00, 87776.54it/s]
+For each item doc, converting words to wids using word_wid...: 100%|███████████████████████████████████████████████| 221569/221569 [00:04<00:00, 54130.19it/s]
+Store the actual length of each user document (before padding): 100%|████████████████████████████████████████████| 645026/645026 [00:00<00:00, 3383227.56it/s]
+Store the actual length of each item document (before padding): 100%|████████████████████████████████████████████| 221569/221569 [00:00<00:00, 3075584.18it/s]
+Pad the user documents to MAX_DOC_LEN: 100%|██████████████████████████████████████████████████████████████████████| 645026/645026 [00:04<00:00, 139891.31it/s]
+Pad the item documents to MAX_DOC_LEN: 100%|██████████████████████████████████████████████████████████████████████| 221569/221569 [00:01<00:00, 133211.74it/s]
+Preparing the TRAINING set: 100%|█████████████████████████████████████████████████████████████████████████████████| 800000/800000 [00:00<00:00, 853836.45it/s]
+Preparing the DEV set: 100%|████████████████████████████████████████████████████████████████████████████████████████| 25665/25665 [00:00<00:00, 683727.95it/s]
+Preparing the TESTING set: 100%|████████████████████████████████████████████████████████████████████████████████████| 25738/25738 [00:00<00:00, 552245.74it/s]
+Info:                 ../datasets/Sports_and_Outdoors/Sports_and_Outdoors_info.pkl
+Training Set:         ../datasets/Sports_and_Outdoors/Sports_and_Outdoors_split_train.pkl
+Validation Set:       ../datasets/Sports_and_Outdoors/Sports_and_Outdoors_split_dev.pkl
+Test Set:             ../datasets/Sports_and_Outdoors/Sports_and_Outdoors_split_test.pkl
+
+Creating numpy matrix for uid_userDoc..
+User Document Matrix: (645026, 500)
+User Document Matrix: ../datasets/Sports_and_Outdoors/Sports_and_Outdoors_uid_userDoc.npy
+
+Creating numpy matrix for iid_itemDoc..
+Item Document Matrix: (221569, 500)
+Item Document Matrix: ../datasets/Sports_and_Outdoors/Sports_and_Outdoors_iid_itemDoc.npy
+
+Consolidating user/item visual features from TRAINING set
+Consolidating user/item visual features from TRAINING set: 100%|██████████████████████████████████████████████████| 800000/800000 [00:03<00:00, 266614.35it/s]
+
+Creating user visuals from TRAINING set
+Creating item visuals from TRAINING set
+
+Minimum User Vis Len: 50, Minimum Item Vis Len: 50
+Convert user to uid...: 100%|████████████████████████████████████████████████████████████████████████████████████| 645026/645026 [00:00<00:00, 1746716.56it/s]
+Convert item to iid...: 100%|████████████████████████████████████████████████████████████████████████████████████| 221569/221569 [00:00<00:00, 1727802.12it/s]
+Store the actual length of each user visual feature (before padding): 100%|██████████████████████████████████████| 645026/645026 [00:00<00:00, 3699411.51it/s]
+Store the actual length of each item visual feature (before padding): 100%|██████████████████████████████████████| 221569/221569 [00:00<00:00, 3180091.72it/s]
+Pad the user visual feature to MAX_VIS_LEN: 100%|██████████████████████████████████████████████████████████████████| 645026/645026 [00:07<00:00, 91925.49it/s]
+Pad the item visual feature to MAX_VIS_LEN: 100%|█████████████████████████████████████████████████████████████████| 221569/221569 [00:01<00:00, 156612.81it/s]
+
+Creating numpy matrix for uid_userVis..
+User Visual Feature Matrix: (645026, 500)
+User Visual Feature Matrix: ../datasets/Sports_and_Outdoors/Sports_and_Outdoors_uid_userDoc.npy
+
+Creating numpy matrix for iid_itemVis..
+Item Visual Feature Matrix: (221569, 500)
+Item Visual Feature Matrix: ../datasets/Sports_and_Outdoors/Sports_and_Outdoors_iid_itemDoc.npy
+
+Saving all required files for "Sports_and_Outdoors"..
+Environment:          ../datasets/Sports_and_Outdoors/Sports_and_Outdoors_env.pkl
+
+All required files for "Sports_and_Outdoors" successfully saved to '../datasets/Sports_and_Outdoors/'
+
+Preprocessing for "Sports_and_Outdoors" done after 1241.29 seconds (20.69 minutes)
+
+
+Done!!

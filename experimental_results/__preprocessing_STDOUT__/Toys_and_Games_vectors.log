@@ -1,0 +1,32 @@
+
+Dataset: Toys_and_Games
+
+[args from argparse.ArgumentParser().parse_args()]
+command: pretrained_vectors_simple.py -d Toys_and_Games
+dataset: Toys_and_Games
+emb_dim: 300
+emb_rand_init: 0.01
+random_seed: 1337
+
+[INPUT] Source Folder:                 ../datasets/
+[INPUT] Category Folder:               ../datasets/Toys_and_Games/
+[INPUT] env:                           ../datasets/Toys_and_Games/Toys_and_Games_env.pkl
+[INPUT] Pretrained Word Embeddings:    ../datasets/GoogleNews-vectors-negative300.bin
+
+[OUTPUT] wid_wordEmbed:                ../datasets/Toys_and_Games/Toys_and_Games_wid_wordEmbed.npy
+
+Loading word-to-wid mappings (i.e. word_wid) from "../datasets/Toys_and_Games/Toys_and_Games_env.pkl"
+
+|V|: 50002
+
+Finished processing pretrained embeddings..
+# of words with pretrained embeddings: 38971
+
+Embedding Matrix=(50002, 300), |V|=50002
+# of Words w/ No Pretrained Embeddings=11031 (22.061%)
+
+Embeddings successfully saved to '../datasets/Toys_and_Games/Toys_and_Games_wid_wordEmbed.npy'
+
+
+Pretrained word embeddings for "Toys_and_Games" obtained after 16.81 seconds (0.28 minutes)
+

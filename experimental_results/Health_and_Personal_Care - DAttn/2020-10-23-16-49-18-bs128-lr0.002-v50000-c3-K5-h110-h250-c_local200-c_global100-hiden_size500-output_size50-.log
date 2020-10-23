@@ -1,0 +1,49 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  channels_global: 100
+  channels_local: 200
+  command: -d Health_and_Personal_Care -m DAttn -e 10 -p 1 -v 50000 -K 5 -h1 10 -h2 50 -WED 100 -c_local 200 -c_global 100 -hiden_size 500 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm Health_and_Personal_Care_DAttn
+  ctx_win_size: 3
+  dataset: Health_and_Personal_Care
+  disable_initial_eval: 0
+  dropout_rate: 0.5
+  epochs: 10
+  gpu: 0
+  h1: 10
+  h2: 50
+  hidden_size: 500
+  input_dir: ./datasets/Health_and_Personal_Care/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: DAttn
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Health_and_Personal_Care - DAttn/
+  output_size: 50
+  pretrained_src: 1
+  random_seed: 1234
+  save_model: Health_and_Personal_Care_DAttn
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 100
+========================================================================================================================
+
+[INFO] # of Users: 640,558, # of Items: 140,129
+
+Creating model (Selected Model: DAttn)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 4.41s (0.07 minute)
+
+Loading uid_userDoc from "./datasets/Health_and_Personal_Care/Health_and_Personal_Care_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (640558, 500)]
+
+Loading iid_itemDoc from "./datasets/Health_and_Personal_Care/Health_and_Personal_Care_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (140129, 500)]
+
+Loading pretrained word embeddings from "./datasets/Health_and_Personal_Care/Health_and_Personal_Care_wid_wordEmbed.npy"..

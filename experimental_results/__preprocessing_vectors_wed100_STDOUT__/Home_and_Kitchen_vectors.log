@@ -1,0 +1,32 @@
+
+Dataset: Home_and_Kitchen
+
+[args from argparse.ArgumentParser().parse_args()]
+command: pretrained_vectors_simple.py -emb_dim 100 -d Home_and_Kitchen
+dataset: Home_and_Kitchen
+emb_dim: 100
+emb_rand_init: 0.01
+random_seed: 1337
+
+[INPUT] Source Folder:                 ../datasets/
+[INPUT] Category Folder:               ../datasets/Home_and_Kitchen/
+[INPUT] env:                           ../datasets/Home_and_Kitchen/Home_and_Kitchen_env.pkl
+[INPUT] Pretrained Word Embeddings:    ../datasets/glove.twitter.word2vec.27B.100d.txt
+
+[OUTPUT] wid_wordEmbed:                ../datasets/Home_and_Kitchen/Home_and_Kitchen_wed100_wid_wordEmbed.npy
+
+Loading word-to-wid mappings (i.e. word_wid) from "../datasets/Home_and_Kitchen/Home_and_Kitchen_env.pkl"
+
+|V|: 50002
+
+Finished processing pretrained embeddings..
+# of words with pretrained embeddings: 37747
+
+Embedding Matrix=(50002, 100), |V|=50002
+# of Words w/ No Pretrained Embeddings=12255 (24.509%)
+
+Embeddings successfully saved to '../datasets/Home_and_Kitchen/Home_and_Kitchen_wed100_wid_wordEmbed.npy'
+
+
+Pretrained word embeddings for "Home_and_Kitchen" obtained after 74.00 seconds (1.23 minutes)
+

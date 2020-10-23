@@ -1,0 +1,220 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  channels_global: 10
+  channels_local: 10
+  command: -d Movies_and_TV -m VANRA -e 15 -dr 0.9 -p 1 -v 50000 -K 5 -h1 10 -h2 50 -c_local 10 -c_global 10 -hiden_size 100 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm Movies_and_TV_VANRA
+  ctx_win_size: 3
+  dataset: Movies_and_TV
+  disable_initial_eval: 0
+  dropout_rate: 0.9
+  epochs: 15
+  gpu: 0
+  h1: 10
+  h2: 50
+  hidden_size: 100
+  input_dir: ./datasets/Movies_and_TV/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: VANRA
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Movies_and_TV - VANRA/
+  output_size: 50
+  pretrained_src: 1
+  random_seed: 1234
+  save_model: Movies_and_TV_VANRA
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 541,405, # of Items: 106,040
+
+Creating model (Selected Model: VANRA)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 6.49s (0.11 minute)
+
+Loading uid_userDoc from "./datasets/Movies_and_TV/Movies_and_TV_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (541405, 500)]
+
+Loading iid_itemDoc from "./datasets/Movies_and_TV/Movies_and_TV_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (106040, 500)]
+
+Loading pretrained word embeddings from "./datasets/Movies_and_TV/Movies_and_TV_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (50002, 300)]
+
+Loading uid_userVis from "./datasets/Movies_and_TV/Movies_and_TV_uid_userVis.npy"..
+uid_userVis loaded! [uid_userVis: (541405, 500)]
+
+Loading iid_itemVis from "./datasets/Movies_and_TV/Movies_and_TV_iid_itemVis.npy"..
+iid_itemVis loaded! [iid_itemVis: (106040, 500)]
+
+Initialization Complete.. Elapsed Time: 48.34s (0.81 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 800,000, |DEV|: 40,918, |TEST|: 41,059
+Train/Dev/Test splits loaded! Elapsed Time: 48.64s (0.81 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 18.39543, MAE: 4.11820
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 18.39237, MAE: 4.11681
+
+Initial Evaluation Complete.. Elapsed Time: 56.00s (0.93 minute)
+
+Parameters with L2 Regularization (Regularization Strength: 1e-06):
+VANRA_RatingPred.uid_userOffset.weight, VANRA_RatingPred.iid_itemOffset.weight
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 663,219,704
+# of Trainable Parameters: 774,104
+VANRA (
+  (uid_userDoc): Embedding(541405, 500), weights = ((541405, 500),), parameters = 270,702,500
+  (iid_itemDoc): Embedding(106040, 500), weights = ((106040, 500),), parameters = 53,020,000
+  (wid_wEmbed): Embedding(50002, 300), weights = ((50002, 300),), parameters = 15,000,600
+  (uid_userVis): Embedding(541405, 500), weights = ((541405, 500),), parameters = 270,702,500
+  (iid_itemVis): Embedding(106040, 500), weights = ((106040, 500),), parameters = 53,020,000
+  (shared_ANR_ARL): ANR_ARL(
+    (aspEmbed): Embedding(5, 30)
+    (aspProj): Parameter(5, 300, 10)
+  ), weights = ((5, 300, 10), (5, 30)), parameters = 15,150 (Trainable)
+  (ANR_AIE): ANR_AIE(  (W_a): Parameter(10, 10)
+    (W_u): Parameter(50, 10)
+    (w_hu): Parameter(50, 1)
+    (W_i): Parameter(50, 10)
+    (w_hi): Parameter(50, 1)
+  ), weights = ((10, 10), (50, 10), (50, 1), (50, 10), (50, 1)), parameters = 1,200 (Trainable)
+  (VANRA_VRL): VANRA_VRL(
+    (localAttentionLayer_user): LocalAttention(
+      (attention_layer): Sequential(
+        (0): Conv2d(1, 1, kernel_size=(3, 1), stride=(1, 1))
+        (1): Softmax(dim=2)
+      )
+      (fcLayer): Sequential(
+        (0): Linear(in_features=500, out_features=100, bias=True)
+        (1): Dropout(p=0.9, inplace=False)
+        (2): ReLU()
+        (3): Linear(in_features=100, out_features=50, bias=True)
+      )
+    )
+    (localAttentionLayer_item): LocalAttention(
+      (attention_layer): Sequential(
+        (0): Conv2d(1, 1, kernel_size=(3, 1), stride=(1, 1))
+        (1): Softmax(dim=2)
+      )
+      (fcLayer): Sequential(
+        (0): Linear(in_features=500, out_features=100, bias=True)
+        (1): Dropout(p=0.9, inplace=False)
+        (2): ReLU()
+        (3): Linear(in_features=100, out_features=50, bias=True)
+      )
+    )
+  ), weights = ((1, 1, 3, 1), (1,), (100, 500), (100,), (50, 100), (50,), (1, 1, 3, 1), (1,), (100, 500), (100,), (50, 100), (50,)), parameters = 110,308 (Trainable)
+  (VANRA_RatingPred): VANRA_RatingPred(
+    (userAspRepDropout): Dropout(p=0.9, inplace=False)
+    (itemAspRepDropout): Dropout(p=0.9, inplace=False)
+    (uid_userOffset): Embedding(541405, 1)
+    (iid_itemOffset): Embedding(106040, 1)
+    (globalOffset): Parameter(1,)
+  ), weights = ((1,), (541405, 1), (106040, 1)), parameters = 647,446 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/15] Training Loss: 1.60910	Elapsed Time: 168.38s (0:02:48)
+[Epoch 1] [Dev]  MSE: 1.20206, MAE: 0.82520
+[Epoch 1] [Test] MSE: 1.21446, MAE: 0.82523
+
+*** MODEL has obtained the best DEV MSE of 1.20206 so far!
+*** The Best MODEL saved to "./__saved_models__/Movies_and_TV - VANRA/Movies_and_TV_VANRA_1234.pth"
+
+[Epoch 2/15] Training Loss: 1.20930	Elapsed Time: 343.17s (0:05:43)
+[Epoch 2] [Dev]  MSE: 1.14389, MAE: 0.80872
+[Epoch 2] [Test] MSE: 1.15526, MAE: 0.81005
+
+*** MODEL has obtained the best DEV MSE of 1.14389 so far!
+*** The Best MODEL saved to "./__saved_models__/Movies_and_TV - VANRA/Movies_and_TV_VANRA_1234.pth"
+
+[Epoch 3/15] Training Loss: 1.10835	Elapsed Time: 518.28s (0:08:38)
+[Epoch 3] [Dev]  MSE: 1.12834, MAE: 0.79762
+[Epoch 3] [Test] MSE: 1.14053, MAE: 0.80028
+
+*** MODEL has obtained the best DEV MSE of 1.12834 so far!
+*** The Best MODEL saved to "./__saved_models__/Movies_and_TV - VANRA/Movies_and_TV_VANRA_1234.pth"
+
+[Epoch 4/15] Training Loss: 1.04694	Elapsed Time: 693.19s (0:11:33)
+[Epoch 4] [Dev]  MSE: 1.12485, MAE: 0.78635
+[Epoch 4] [Test] MSE: 1.13630, MAE: 0.78912
+
+*** MODEL has obtained the best DEV MSE of 1.12485 so far!
+*** The Best MODEL saved to "./__saved_models__/Movies_and_TV - VANRA/Movies_and_TV_VANRA_1234.pth"
+
+[Epoch 5/15] Training Loss: 1.00485	Elapsed Time: 868.11s (0:14:28)
+[Epoch 5] [Dev]  MSE: 1.12231, MAE: 0.78884
+[Epoch 5] [Test] MSE: 1.13189, MAE: 0.79122
+
+*** MODEL has obtained the best DEV MSE of 1.12231 so far!
+*** The Best MODEL saved to "./__saved_models__/Movies_and_TV - VANRA/Movies_and_TV_VANRA_1234.pth"
+
+[Epoch 6/15] Training Loss: 0.97314	Elapsed Time: 1,042.93s (0:17:22)
+[Epoch 6] [Dev]  MSE: 1.12398, MAE: 0.78749
+[Epoch 6] [Test] MSE: 1.13270, MAE: 0.78953
+
+[Epoch 7/15] Training Loss: 0.95407	Elapsed Time: 1,217.71s (0:20:17)
+[Epoch 7] [Dev]  MSE: 1.12844, MAE: 0.78299
+[Epoch 7] [Test] MSE: 1.13767, MAE: 0.78526
+
+[Epoch 8/15] Training Loss: 0.93396	Elapsed Time: 1,392.47s (0:23:12)
+[Epoch 8] [Dev]  MSE: 1.12812, MAE: 0.78602
+[Epoch 8] [Test] MSE: 1.13921, MAE: 0.78898
+
+[Epoch 9/15] Training Loss: 0.92261	Elapsed Time: 1,567.23s (0:26:07)
+[Epoch 9] [Dev]  MSE: 1.13321, MAE: 0.78164
+[Epoch 9] [Test] MSE: 1.14337, MAE: 0.78442
+
+[Epoch 10/15] Training Loss: 0.91507	Elapsed Time: 1,742.21s (0:29:02)
+[Epoch 10] [Dev]  MSE: 1.13517, MAE: 0.78332
+[Epoch 10] [Test] MSE: 1.14432, MAE: 0.78568
+
+[Epoch 11/15] Training Loss: 0.97678	Elapsed Time: 1,916.99s (0:31:56)
+[Epoch 11] [Dev]  MSE: 1.14081, MAE: 0.77885
+[Epoch 11] [Test] MSE: 1.15169, MAE: 0.78182
+
+[Epoch 12/15] Training Loss: 0.90647	Elapsed Time: 2,091.78s (0:34:51)
+[Epoch 12] [Dev]  MSE: 1.13934, MAE: 0.78250
+[Epoch 12] [Test] MSE: 1.14969, MAE: 0.78564
+
+[Epoch 13/15] Training Loss: 0.89496	Elapsed Time: 2,266.49s (0:37:46)
+[Epoch 13] [Dev]  MSE: 1.13776, MAE: 0.78756
+[Epoch 13] [Test] MSE: 1.14766, MAE: 0.79023
+
+[Epoch 14/15] Training Loss: 0.89097	Elapsed Time: 2,441.20s (0:40:41)
+[Epoch 14] [Dev]  MSE: 1.14042, MAE: 0.80522
+[Epoch 14] [Test] MSE: 1.15118, MAE: 0.80848
+
+[Epoch 15/15] Training Loss: 0.88836	Elapsed Time: 2,616.14s (0:43:36)
+[Epoch 15] [Dev]  MSE: 1.14001, MAE: 0.78725
+[Epoch 15] [Test] MSE: 1.15023, MAE: 0.79015
+*** The Last MODEL saved to "./__saved_models__/Movies_and_TV - VANRA/Movies_and_TV_VANRA_1234_15.pth"
+
+[Training Loss]
+[1.6091, 1.2093, 1.10835, 1.04694, 1.00485, 0.97314, 0.95407, 0.93396, 0.92261, 0.91507, 0.97678, 0.90647, 0.89496, 0.89097, 0.88836]
+
+[Dev MSE]
+[1.20206, 1.14389, 1.12834, 1.12485, 1.12231, 1.12398, 1.12844, 1.12812, 1.13321, 1.13517, 1.14081, 1.13934, 1.13776, 1.14042, 1.14001]
+[Test MSE]
+[1.21446, 1.15526, 1.14053, 1.1363, 1.13189, 1.1327, 1.13767, 1.13921, 1.14337, 1.14432, 1.15169, 1.14969, 1.14766, 1.15118, 1.15023]
+[Test MAE]
+[0.82523, 0.81005, 0.80028, 0.78912, 0.79122, 0.78953, 0.78526, 0.78898, 0.78442, 0.78568, 0.78182, 0.78564, 0.79023, 0.80848, 0.79015]
+
+
+Best Dev MSE: 1.12231 (Obtained during Evaluation #5)
+Test MSE: 1.13189, Test MAE: 0.79122
+
+End of Program! Elapsed Time: 2,678.68s (0:44:38)

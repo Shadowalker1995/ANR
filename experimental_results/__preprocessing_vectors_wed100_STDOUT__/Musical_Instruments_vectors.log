@@ -1,0 +1,32 @@
+
+Dataset: Musical_Instruments
+
+[args from argparse.ArgumentParser().parse_args()]
+command: pretrained_vectors_simple.py -emb_dim 100 -d Musical_Instruments
+dataset: Musical_Instruments
+emb_dim: 100
+emb_rand_init: 0.01
+random_seed: 1337
+
+[INPUT] Source Folder:                 ../datasets/
+[INPUT] Category Folder:               ../datasets/Musical_Instruments/
+[INPUT] env:                           ../datasets/Musical_Instruments/Musical_Instruments_env.pkl
+[INPUT] Pretrained Word Embeddings:    ../datasets/glove.twitter.word2vec.27B.100d.txt
+
+[OUTPUT] wid_wordEmbed:                ../datasets/Musical_Instruments/Musical_Instruments_wed100_wid_wordEmbed.npy
+
+Loading word-to-wid mappings (i.e. word_wid) from "../datasets/Musical_Instruments/Musical_Instruments_env.pkl"
+
+|V|: 50002
+
+Finished processing pretrained embeddings..
+# of words with pretrained embeddings: 38177
+
+Embedding Matrix=(50002, 100), |V|=50002
+# of Words w/ No Pretrained Embeddings=11825 (23.649%)
+
+Embeddings successfully saved to '../datasets/Musical_Instruments/Musical_Instruments_wed100_wid_wordEmbed.npy'
+
+
+Pretrained word embeddings for "Musical_Instruments" obtained after 74.05 seconds (1.23 minutes)
+

@@ -1,0 +1,32 @@
+
+Dataset: Health_and_Personal_Care
+
+[args from argparse.ArgumentParser().parse_args()]
+command: pretrained_vectors_simple.py -emb_dim 100 -d Health_and_Personal_Care
+dataset: Health_and_Personal_Care
+emb_dim: 100
+emb_rand_init: 0.01
+random_seed: 1337
+
+[INPUT] Source Folder:                 ../datasets/
+[INPUT] Category Folder:               ../datasets/Health_and_Personal_Care/
+[INPUT] env:                           ../datasets/Health_and_Personal_Care/Health_and_Personal_Care_env.pkl
+[INPUT] Pretrained Word Embeddings:    ../datasets/glove.twitter.word2vec.27B.100d.txt
+
+[OUTPUT] wid_wordEmbed:                ../datasets/Health_and_Personal_Care/Health_and_Personal_Care_wed100_wid_wordEmbed.npy
+
+Loading word-to-wid mappings (i.e. word_wid) from "../datasets/Health_and_Personal_Care/Health_and_Personal_Care_env.pkl"
+
+|V|: 50002
+
+Finished processing pretrained embeddings..
+# of words with pretrained embeddings: 37089
+
+Embedding Matrix=(50002, 100), |V|=50002
+# of Words w/ No Pretrained Embeddings=12913 (25.825%)
+
+Embeddings successfully saved to '../datasets/Health_and_Personal_Care/Health_and_Personal_Care_wed100_wid_wordEmbed.npy'
+
+
+Pretrained word embeddings for "Health_and_Personal_Care" obtained after 74.42 seconds (1.24 minutes)
+

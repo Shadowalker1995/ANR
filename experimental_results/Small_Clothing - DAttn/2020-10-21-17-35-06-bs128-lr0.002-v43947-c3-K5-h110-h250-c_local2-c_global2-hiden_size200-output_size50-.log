@@ -1,0 +1,163 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  channels_global: 2
+  channels_local: 2
+  command: -d Small_Clothing -m DAttn -e 10 -dr 0.9 -lr 2E-3 -p 1 -v 43947 -K 5 -h1 10 -h2 50 -c_local 2 -c_global 2 -hiden_size 200 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm Small_Clothing_DAttn
+  ctx_win_size: 3
+  dataset: Small_Clothing
+  disable_initial_eval: 0
+  dropout_rate: 0.9
+  epochs: 10
+  gpu: 0
+  h1: 10
+  h2: 50
+  hidden_size: 200
+  input_dir: ./datasets/Small_Clothing/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: DAttn
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Small_Clothing - DAttn/
+  output_size: 50
+  pretrained_src: 1
+  random_seed: 1234
+  save_model: Small_Clothing_DAttn
+  use_cuda: True
+  verbose: 1
+  vocab_size: 43947
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 77,930, # of Items: 59,172
+
+Creating model (Selected Model: DAttn)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 1.87s (0.03 minute)
+
+Loading uid_userDoc from "./datasets/Small_Clothing/Small_Clothing_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (77930, 500)]
+
+Loading iid_itemDoc from "./datasets/Small_Clothing/Small_Clothing_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (59172, 500)]
+
+Loading pretrained word embeddings from "./datasets/Small_Clothing/Small_Clothing_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (43949, 300)]
+
+Initialization Complete.. Elapsed Time: 2.12s (0.04 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 80,000, |DEV|: 150, |TEST|: 166
+Train/Dev/Test splits loaded! Elapsed Time: 2.14s (0.04 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 19.23531, MAE: 4.25984
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 19.99179, MAE: 4.35719
+
+Initial Evaluation Complete.. Elapsed Time: 2.28s (0.04 minute)
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 82,093,611
+# of Trainable Parameters: 357,911
+DAttn (
+  (uid_userDoc): Embedding(77930, 500), weights = ((77930, 500),), parameters = 38,965,000
+  (iid_itemDoc): Embedding(59172, 500), weights = ((59172, 500),), parameters = 29,586,000
+  (wid_wEmbed): Embedding(43949, 300), weights = ((43949, 300),), parameters = 13,184,700
+  (DAttn_RatingPred): DAttn_RatingPred(
+    (uid_userOffset): Embedding(77930, 1)
+    (iid_itemOffset): Embedding(59172, 1)
+    (globalOffset): Parameter(1,)
+  ), weights = ((1,), (77930, 1), (59172, 1)), parameters = 137,103 (Trainable)
+  (localAttentionLayer_user): LocalAttention(
+    (attention_layer): Sequential(
+      (0): Conv2d(1, 1, kernel_size=(3, 1), stride=(1, 1))
+      (1): Softmax(dim=2)
+    )
+    (fcLayer): Sequential(
+      (0): Linear(in_features=500, out_features=200, bias=True)
+      (1): Dropout(p=0.9, inplace=False)
+      (2): ReLU()
+      (3): Linear(in_features=200, out_features=50, bias=True)
+    )
+  ), weights = ((1, 1, 3, 1), (1,), (200, 500), (200,), (50, 200), (50,)), parameters = 110,254 (Trainable)
+  (localAttentionLayer_item): LocalAttention(
+    (attention_layer): Sequential(
+      (0): Conv2d(1, 1, kernel_size=(3, 1), stride=(1, 1))
+      (1): Softmax(dim=2)
+    )
+    (fcLayer): Sequential(
+      (0): Linear(in_features=500, out_features=200, bias=True)
+      (1): Dropout(p=0.9, inplace=False)
+      (2): ReLU()
+      (3): Linear(in_features=200, out_features=50, bias=True)
+    )
+  ), weights = ((1, 1, 3, 1), (1,), (200, 500), (200,), (50, 200), (50,)), parameters = 110,254 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/10] Training Loss: 2.32102	Elapsed Time: 5.28s (0:00:05)
+[Epoch 1] [Dev]  MSE: 1.05236, MAE: 0.83080
+[Epoch 1] [Test] MSE: 1.01136, MAE: 0.81457
+
+*** MODEL has obtained the best DEV MSE of 1.05236 so far!
+*** The Best MODEL saved to "./__saved_models__/Small_Clothing - DAttn/Small_Clothing_DAttn_1234.pth"
+
+[Epoch 2/10] Training Loss: 1.21750	Elapsed Time: 10.53s (0:00:10)
+[Epoch 2] [Dev]  MSE: 1.21901, MAE: 0.82237
+[Epoch 2] [Test] MSE: 1.22444, MAE: 0.83404
+
+[Epoch 3/10] Training Loss: 0.95340	Elapsed Time: 15.74s (0:00:15)
+[Epoch 3] [Dev]  MSE: 1.19915, MAE: 0.83518
+[Epoch 3] [Test] MSE: 1.22476, MAE: 0.86102
+
+[Epoch 4/10] Training Loss: 0.84070	Elapsed Time: 20.97s (0:00:20)
+[Epoch 4] [Dev]  MSE: 1.21351, MAE: 0.85882
+[Epoch 4] [Test] MSE: 1.25287, MAE: 0.88517
+
+[Epoch 5/10] Training Loss: 0.75431	Elapsed Time: 26.19s (0:00:26)
+[Epoch 5] [Dev]  MSE: 1.18377, MAE: 0.82399
+[Epoch 5] [Test] MSE: 1.20377, MAE: 0.84087
+
+[Epoch 6/10] Training Loss: 0.67407	Elapsed Time: 31.41s (0:00:31)
+[Epoch 6] [Dev]  MSE: 1.23292, MAE: 0.82983
+[Epoch 6] [Test] MSE: 1.27615, MAE: 0.85853
+
+[Epoch 7/10] Training Loss: 0.60618	Elapsed Time: 36.64s (0:00:36)
+[Epoch 7] [Dev]  MSE: 1.22962, MAE: 0.82677
+[Epoch 7] [Test] MSE: 1.29363, MAE: 0.86199
+
+[Epoch 8/10] Training Loss: 0.54865	Elapsed Time: 41.89s (0:00:41)
+[Epoch 8] [Dev]  MSE: 1.23395, MAE: 0.82425
+[Epoch 8] [Test] MSE: 1.26855, MAE: 0.84947
+
+[Epoch 9/10] Training Loss: 0.49637	Elapsed Time: 47.11s (0:00:47)
+[Epoch 9] [Dev]  MSE: 1.26757, MAE: 0.80866
+[Epoch 9] [Test] MSE: 1.31130, MAE: 0.84676
+
+[Epoch 10/10] Training Loss: 0.44763	Elapsed Time: 52.35s (0:00:52)
+[Epoch 10] [Dev]  MSE: 1.24254, MAE: 0.84140
+[Epoch 10] [Test] MSE: 1.32143, MAE: 0.87832
+*** The Last MODEL saved to "./__saved_models__/Small_Clothing - DAttn/Small_Clothing_DAttn_1234_10.pth"
+
+[Training Loss]
+[2.32102, 1.2175, 0.9534, 0.8407, 0.75431, 0.67407, 0.60618, 0.54865, 0.49637, 0.44763]
+
+[Dev MSE]
+[1.05236, 1.21901, 1.19915, 1.21351, 1.18377, 1.23292, 1.22962, 1.23395, 1.26757, 1.24254]
+[Test MSE]
+[1.01136, 1.22444, 1.22476, 1.25287, 1.20377, 1.27615, 1.29363, 1.26855, 1.3113, 1.32143]
+[Test MAE]
+[0.81457, 0.83404, 0.86102, 0.88517, 0.84087, 0.85853, 0.86199, 0.84947, 0.84676, 0.87832]
+
+
+Best Dev MSE: 1.05236 (Obtained during Evaluation #1)
+Test MSE: 1.01136, Test MAE: 0.81457
+
+End of Program! Elapsed Time: 54.65s (0:00:54)

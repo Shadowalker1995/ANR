@@ -1,0 +1,32 @@
+
+Dataset: Electronics
+
+[args from argparse.ArgumentParser().parse_args()]
+command: pretrained_vectors_simple.py -emb_dim 100 -d Electronics
+dataset: Electronics
+emb_dim: 100
+emb_rand_init: 0.01
+random_seed: 1337
+
+[INPUT] Source Folder:                 ../datasets/
+[INPUT] Category Folder:               ../datasets/Electronics/
+[INPUT] env:                           ../datasets/Electronics/Electronics_env.pkl
+[INPUT] Pretrained Word Embeddings:    ../datasets/glove.twitter.word2vec.27B.100d.txt
+
+[OUTPUT] wid_wordEmbed:                ../datasets/Electronics/Electronics_wed100_wid_wordEmbed.npy
+
+Loading word-to-wid mappings (i.e. word_wid) from "../datasets/Electronics/Electronics_env.pkl"
+
+|V|: 50002
+
+Finished processing pretrained embeddings..
+# of words with pretrained embeddings: 33936
+
+Embedding Matrix=(50002, 100), |V|=50002
+# of Words w/ No Pretrained Embeddings=16066 (32.131%)
+
+Embeddings successfully saved to '../datasets/Electronics/Electronics_wed100_wid_wordEmbed.npy'
+
+
+Pretrained word embeddings for "Electronics" obtained after 75.71 seconds (1.26 minutes)
+

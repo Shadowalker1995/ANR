@@ -1,0 +1,32 @@
+
+Dataset: Office_Products
+
+[args from argparse.ArgumentParser().parse_args()]
+command: pretrained_vectors_simple.py -d Office_Products
+dataset: Office_Products
+emb_dim: 300
+emb_rand_init: 0.01
+random_seed: 1337
+
+[INPUT] Source Folder:                 ../datasets/
+[INPUT] Category Folder:               ../datasets/Office_Products/
+[INPUT] env:                           ../datasets/Office_Products/Office_Products_env.pkl
+[INPUT] Pretrained Word Embeddings:    ../datasets/GoogleNews-vectors-negative300.bin
+
+[OUTPUT] wid_wordEmbed:                ../datasets/Office_Products/Office_Products_wid_wordEmbed.npy
+
+Loading word-to-wid mappings (i.e. word_wid) from "../datasets/Office_Products/Office_Products_env.pkl"
+
+|V|: 50002
+
+Finished processing pretrained embeddings..
+# of words with pretrained embeddings: 36920
+
+Embedding Matrix=(50002, 300), |V|=50002
+# of Words w/ No Pretrained Embeddings=13082 (26.163%)
+
+Embeddings successfully saved to '../datasets/Office_Products/Office_Products_wid_wordEmbed.npy'
+
+
+Pretrained word embeddings for "Office_Products" obtained after 16.50 seconds (0.27 minutes)
+
