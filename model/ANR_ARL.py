@@ -47,7 +47,7 @@ class ANR_ARL(nn.Module):
             if verbose > 0 and a == 0:
                 tqdm.write("\nAs an example, for <Aspect {}>:\n".format(a))
 
-            # Aspect-Specific Projection of Input Word Embeddings: (bsz x max_doc_len x h1)
+            # Aspect-Specific Projection of Input Word Embeddings
             # (bsz x max_doc_len x word_embed_dim) * (word_embed_dim x h1) -> bsz x max_doc_len x h1
             batch_aspProjDoc = torch.matmul(batch_docIn, self.aspProj[a])                           # bsz x max_doc_len x h1
 
@@ -105,10 +105,11 @@ class ANR_ARL(nn.Module):
                         "\n\tbatch_aspAttn [Window Size: {}]: {}".format(self.args.ctx_win_size, batch_aspAttn.size()))
 
             # Weighted Sum: Broadcasted Element-wise Multiplication & Sum over Words
-            # (bsz x max_doc_len x h1) and (bsz x max_doc_len x h1) -> (bsz x h1)
+            # (bsz x max_doc_len x h1) * (bsz x max_doc_len x h1) -> bsz x max_doc_len x h1
             batch_aspRep = batch_aspProjDoc * batch_aspAttn.expand_as(batch_aspProjDoc)
             if verbose > 0 and a == 0:
                 tqdm.write("\n\tbatch_aspRep: {}".format(batch_aspRep.size()))          # bsz x max_doc_len x h1
+            # bsz x max_doc_len x h1 -> bsz x h1
             batch_aspRep = torch.sum(batch_aspRep, dim=1)
             if verbose > 0 and a == 0:
                 tqdm.write("\tbatch_aspRep: {}".format(batch_aspRep.size()))            # bsz x h1

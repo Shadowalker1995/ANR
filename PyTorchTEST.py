@@ -57,7 +57,7 @@ parser.add_argument("-h2", dest="h2", type=int, default=50,
 parser.add_argument("-L2_reg", dest="L2_reg", type=float, default=1E-6,
                     help="L2 Regularization for User & Item Bias (Default: 1E-6)")
 
-# VANRA Hyperparameters
+# VANRA/DAttn Hyperparameters
 parser.add_argument("-c_local", dest="channels_local", type=int, default=200,
                     help="Local attention channels (Default: 200)")
 parser.add_argument("-c_global", dest="channels_global", type=int, default=100,
@@ -66,6 +66,10 @@ parser.add_argument("-hiden_size", dest="hidden_size", type=int, default=500,
                     help="hidden_size in the fcLayer of VANRA_VRL (Default: 500)")
 parser.add_argument("-output_size", dest="output_size", type=int, default=50,
                     help="output_size in the fcLayer of VANRA_VRL (Default: 50)")
+
+# DeepCoNN Hyperparameters
+parser.add_argument("-filters_num", dest="filters_num", type=int, default=100,
+                    help="Filters Number of Conv2d (Default: 100)")
 
 # ANR Pretraining
 parser.add_argument("-ARL_path", dest="ARL_path", type=str, default="",
@@ -124,6 +128,7 @@ if args.save_model != "":
     saved_models_dir = "./__saved_models__/{} - {}/".format(args.dataset, args.model)
     mkdir_p(saved_models_dir)
     model_path = "{}{}_{}.pth".format(saved_models_dir, args.save_model.strip(), args.random_seed)
+    last_model_path = "{}{}_{}_{}.pth".format(saved_models_dir, args.save_model.strip(), args.random_seed, args.epochs)
 
 # Create model
 mdlZoo = ModelZoo(logger, args, timer)
@@ -235,7 +240,7 @@ for epoch_num in range(args.epochs):
             #     logger.log("Optimizer's stated_dict: {}, {}".format(param_name, param_tensor))
 
             # Filter away uid_userDoc, iid_itemDoc, wid_wEmbed (These are always provided as the input, i.e. no point saving them)
-            filter_list = ["uid_userDoc.weight", "iid_itemDoc.weight", "wid_wEmbed.weight"]
+            filter_list = ["uid_userDoc.weight", "iid_itemDoc.weight", "wid_wEmbed.weight", "uid_userVis.weight", "iid_itemVis.weight"]
             filtered_mdl_state_dict = mdl.state_dict()
             filtered_mdl_state_dict = {k: v for k, v in filtered_mdl_state_dict.items() if k not in filter_list}
 
@@ -249,7 +254,23 @@ for epoch_num in range(args.epochs):
                 "opt": opt.state_dict()
             }
             torch.save(model_states, model_path)
-            logger.log("*** MODEL saved to \"{}\"".format(model_path))
+            logger.log("*** The Best MODEL saved to \"{}\"".format(model_path))
+
+# Optional: Saving the Last Model
+if args.save_model != "":
+    # Filter away uid_userDoc, iid_itemDoc, wid_wEmbed, uid_userVis, iid_itemVis
+    # (These are always provided as the input, i.e. no point saving them)
+    filter_list = ["uid_userDoc.weight", "iid_itemDoc.weight", "wid_wEmbed.weight", "uid_userVis.weight", "iid_itemVis.weight"]
+    filtered_mdl_state_dict = mdl.state_dict()
+    filtered_mdl_state_dict = {k: v for k, v in filtered_mdl_state_dict.items() if k not in filter_list}
+
+    model_states = {
+        "epoch": args.epochs,
+        "mdl": filtered_mdl_state_dict,
+        "opt": opt.state_dict()
+    }
+    torch.save(model_states, last_model_path)
+    logger.log("*** The Last MODEL saved to \"{}\"".format(last_model_path))
 
 logger.log("\n[Training Loss]\n{}".format([float("{:.5f}".format(i)) for i in lstTrainingLoss]))
 logger.log("\n[Dev MSE]\n{}".format([float("{:.5f}".format(i)) for i in lstDevMSE]))

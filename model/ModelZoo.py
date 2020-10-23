@@ -2,9 +2,9 @@ import torch
 import torch.nn as nn
 
 from .utilities import *
-# from .DeepCoNN import DeepCoNN
-# from .DAttn import DAttn
+from .DeepCoNN import DeepCoNN
 from .ANR import ANR
+from .DAttn_new import DAttn
 from .VANRA import VANRA
 
 import numpy as np
@@ -58,26 +58,26 @@ class ModelZoo:
         # Additionally, all OOV words are replaced with <unk>
         self.args.vocab_size = self.args.vocab_size + 2
 
-        if self.args.model == "ANR" or self.args.model == "ANRS":
-            self.mdl = ANR(self.logger, self.args, self.num_users, self.num_items)
-        elif self.args.model == "VANRA":
+        if self.args.model == "VANRA":
             self.mdl = VANRA(self.logger, self.args, self.num_users, self.num_items)
-        # elif self.args.model == "DeepCoNN":
-        #     self.mdl = DeepCoNN(self.logger, self.args, self.num_users, self.num_items)
-        # elif self.args.model == "DAttn":
-        #     self.mdl = DAttn(self.logger, self.args, self.num_users, self.num_items)
+        elif self.args.model == "ANR" or self.args.model == "ANRS":
+            self.mdl = ANR(self.logger, self.args, self.num_users, self.num_items)
+        elif self.args.model == "DAttn":
+            self.mdl = DAttn(self.logger, self.args, self.num_users, self.num_items)
+        elif self.args.model == "DeepCoNN":
+            self.mdl = DeepCoNN(self.logger, self.args, self.num_users, self.num_items)
 
     def initModel(self):
-        if self.args.model == "ANR":
+        if self.args.model == "VANRA":
+            self.initVANRA()
+        elif self.args.model == "ANR":
             self.initANR()
         elif self.args.model == "ANRS":
             self.initANRS()
-        elif self.args.model == "VANRA":
-            self.initVANRA()
-        # elif(self.args.model == "DeepCoNN"):
-        #     self.initDeepCoNN()
-        # elif(self.args.model == "DAttn"):
-        #     self.initDAttn()
+        elif self.args.model == "DAttn":
+            self.initDAttn()
+        elif self.args.model == "DeepCoNN":
+            self.initDeepCoNN()
 
     # DeepCoNN - Initialization (User Documents, Item Documents, Word Embeddings)
     def initDeepCoNN(self):
@@ -94,6 +94,36 @@ class ModelZoo:
         self.loadDocs()
         self.loadWordEmbeddings()
         self.loadVises()
+
+        # Optionally, Load the Pretrained Weights for ARL
+        if self.args.ARL_path != "":
+            # Determine Full Path, Load Everything from the Saved Model States
+            saved_models_dir = "./__saved_models__/{} - {}/".format(self.args.dataset, "ANRS")
+            full_model_path = "{}{}.pth".format(saved_models_dir, self.args.ARL_path.strip())
+            self.logger.log("\nLoading pretrained ARL weights of \"{}\" for dataset \"{}\" from \"{}\"!".format(
+                self.args.model, self.args.dataset, full_model_path))
+            self.logger.log("Loading pretrained ARL weights on GPU \"{}\"!".format(self.args.gpu))
+            model_states = torch.load(full_model_path, map_location=lambda storage, loc: storage.cuda(self.args.gpu))
+
+            # Update Current Model, using the pretrained ARL weights
+            DESIRED_KEYS = ["shared_ANR_ARL.aspProj", "shared_ANR_ARL.aspEmbed.weight"]
+
+            pretrained_mdl_state_dict = model_states["mdl"]
+            pretrained_mdl_state_dict = {k: v for k, v in pretrained_mdl_state_dict.items() if k in DESIRED_KEYS}
+
+            self.logger.log("\nLoaded pretrained model states:\n")
+            for pretrained_key in pretrained_mdl_state_dict.keys():
+                self.logger.log("\t{}".format(pretrained_key))
+            current_mdl_dict = self.mdl.state_dict()
+            current_mdl_dict.update(pretrained_mdl_state_dict)
+            self.mdl.load_state_dict(current_mdl_dict)
+            self.logger.log("\nPretrained model states transferred to current model!")
+
+            self.mdl.shared_ANR_ARL.aspProj.requires_grad = False if self.args.ARL_lr == 0 else True
+            self.mdl.shared_ANR_ARL.aspEmbed.weight.requires_grad = False if self.args.ARL_lr == 0 else True
+
+            self.logger.log("\n*** \"{}\" are {}!! ***\n"
+                            .format(", ".join(DESIRED_KEYS), "NOT Updatable" if self.args.ARL_lr == 0 else "FINE-TUNED"))
 
     # ANR - Initialization (User Documents, Item Documents, Word Embeddings)
     # ANR - Optionally, Load the Pretrained Weights for ARL
@@ -164,9 +194,11 @@ class ModelZoo:
             # 1: w2v (Google News), 300-dimensions
             # 2: GloVe (6B, 400K, 100d), this is included as it works better for D-Attn
             if self.args.pretrained_src == 1:
-                wid_wEmbed_path = "{}{}{}".format(self.args.input_dir, self.args.dataset, fp_wid_wordEmbed)
+                wid_wEmbed_path = "{}{}_wed{}{}".format(self.args.input_dir, self.args.dataset,
+                                                        self.args.word_embed_dim, fp_wid_wordEmbed)
             elif self.args.pretrained_src == 2:
-                wid_wEmbed_path = "{}{}{}".format(self.args.input_dir, self.args.dataset, fp_wid_wordEmbed)
+                wid_wEmbed_path = "{}{}_wed{}{}".format(self.args.input_dir, self.args.dataset,
+                                                        self.args.word_embed_dim, fp_wid_wordEmbed)
 
             self.logger.log("\nLoading pretrained word embeddings from \"{}\"..".format(wid_wEmbed_path))
             np_wid_wEmbed = np.load(wid_wEmbed_path)

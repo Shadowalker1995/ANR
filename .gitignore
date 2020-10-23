@@ -1,4 +1,6 @@
-/datasets
+/datasets/
+/__saved_models__/
+/experimental_results/
 
 __pycache__
 */__pycache__/

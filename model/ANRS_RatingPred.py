@@ -11,7 +11,7 @@ class ANRS_RatingPred(nn.Module):
     The only purpose of this is to obtain the pretrained weights for ARL
     """
 
-    def __init__(self, logger, args):
+    def __init__(self, logger, args, num_users, num_items):
         super(ANRS_RatingPred, self).__init__()
 
         self.logger = logger
@@ -42,7 +42,7 @@ class ANRS_RatingPred(nn.Module):
     [Input]    itemAspRep:        bsz x num_aspects x h1
     [Output]   rating_pred: bsz x 1
     '''
-    def forward(self, userAspRep, itemAspRep, verbose=0):
+    def forward(self, userAspRep, itemAspRep, batch_uid, batch_iid, verbose=0):
         if verbose > 0:
             tqdm.write(
                 "\n\n============================== Aspect-Based BASIC Rating Predictor ==============================")

@@ -6,7 +6,7 @@ from .utilities import PAD_idx, UNK_idx
 
 from .ANR_ARL import ANR_ARL
 from .ANR_AIE import ANR_AIE
-from .VANRA_VRL import VANRA_VRL
+from .VANRA_VRL3 import VANRA_VRL
 
 from .VANRA_RatingPred import VANRA_RatingPred
 
@@ -105,13 +105,14 @@ class VANRA(nn.Module):
         # =========== Item Aspect-Based Representations ===========
 
         # Aspect-based Co-Attention --- Aspect Importance Estimation
-        userCoAttn, itemCoAttn = self.ANR_AIE(userAspDoc, itemAspDoc, verbose=verbose)
+        # userCoAttn, itemCoAttn = self.ANR_AIE(userAspDoc, itemAspDoc, verbose=verbose)
 
         userVisAttn, itemVisAttn = self.VANRA_VRL(batch_userVis, batch_itemVis, verbose=verbose)
 
         # Visual & Aspect Based Rating Predictor with attention mechanism
-        rating_pred = self.VANRA_RatingPred(userAspDoc, itemAspDoc, userCoAttn, itemCoAttn,
-                                            userVisAttn, itemVisAttn, batch_uid, batch_iid, verbose=verbose)
+        # rating_pred = self.VANRA_RatingPred(userAspDoc, itemAspDoc, userCoAttn, itemCoAttn,
+        #                                     userVisAttn, itemVisAttn, batch_uid, batch_iid, verbose=verbose)
+        rating_pred = self.VANRA_RatingPred(userAspDoc, itemAspDoc, userVisAttn, itemVisAttn, batch_uid, batch_iid, verbose=verbose)
 
         if verbose > 0:
             # bsz x 1

@@ -5,7 +5,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-d", "--dataset", type=str, default="amazon_instant_video",
                     help="Dataset (Default: amazon_instant_video)")
 parser.add_argument("-dmax", "--dataset_maximum_size", type=int, default=1000000,
-                    help="Maximum Size of Dataset, Randomly subsample if larger than this. (Default: 100,000)")
+                    help="Maximum Size of Dataset, Randomly subsample if larger than this. (Default: 1000,000)")
 parser.add_argument("-minRL", "--minRL", type=int, default=10, help="Minimum Review Length (Default: 10)")
 parser.add_argument("-minReviews", "--minReviews", type=int, default=1,
                     help="Minimum Reviews Per User/Item (Default: 1)")

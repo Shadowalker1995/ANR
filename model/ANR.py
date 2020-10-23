@@ -8,7 +8,7 @@ from .ANR_ARL import ANR_ARL
 from .ANR_AIE import ANR_AIE
 
 from .ANR_RatingPred import ANR_RatingPred
-from .ANRS_RatingPred import ANRS_RatingPred
+from .ANRS_RatingPred2 import ANRS_RatingPred
 
 from tqdm import tqdm
 
@@ -52,8 +52,8 @@ class ANR(nn.Module):
         # 'Simplified Model' - Basically, ARL + simplfied network (3x FCs) for rating prediction
         # The only purpose of this is to obtain the pretrained weights for ARL
         elif self.args.model == "ANRS":
-            # Rating Prediction using the 'Simplified Model'
-            self.ANRS_RatingPred = ANRS_RatingPred(logger, args)
+            # Rating Predictor using the 'Simplified Model'
+            self.ANRS_RatingPred = ANRS_RatingPred(logger, args, self.num_users, self.num_items)
 
     def forward(self, batch_uid, batch_iid, verbose=0):
         # Input
@@ -74,7 +74,6 @@ class ANR(nn.Module):
         # Aspect-based Representation Learning for User
         if verbose > 0:
             tqdm.write("\n[Input to ARL] batch_userDocEmbed: {}".format(batch_userDocEmbed.size()))
-
         userAspAttn, userAspDoc = self.shared_ANR_ARL(batch_userDocEmbed, verbose=verbose)
         if verbose > 0:
             tqdm.write("[Output of ARL] userAspAttn: {}".format(userAspAttn.size()))    # bsz x num_aspects x max_doc_len
@@ -84,11 +83,8 @@ class ANR(nn.Module):
         # =========== Item Aspect-Based Representations ===========
         # Aspect-based Representation Learning for Item
         if verbose > 0:
-            tqdm.write("\n[Input to ARL] batch_itemDocEmbed: {}".format( batch_itemDocEmbed.size() ))
-
-        # print("ANR forward start")
+            tqdm.write("\n[Input to ARL] batch_itemDocEmbed: {}".format(batch_itemDocEmbed.size()))
         itemAspAttn, itemAspDoc = self.shared_ANR_ARL(batch_itemDocEmbed, verbose=verbose)
-        # print("ANR forward end")
         if verbose > 0:
             tqdm.write("[Output of ARL] itemAspAttn: {}".format(itemAspAttn.size()))    # bsz x num_aspects x max_doc_len
             tqdm.write("[Output of ARL] itemAspDoc:  {}".format(itemAspDoc.size()))     # bsz x num_aspects x h1
@@ -105,7 +101,7 @@ class ANR(nn.Module):
         # The only purpose of this is to obtain the pretrained weights for ARL
         elif self.args.model == "ANRS":
             # Rating Prediction using 3x FCs
-            rating_pred = self.ANRS_RatingPred(userAspDoc, itemAspDoc, verbose=verbose)
+            rating_pred = self.ANRS_RatingPred(userAspDoc, itemAspDoc, batch_uid, batch_iid, verbose=verbose)
 
         if verbose > 0:
             # bsz x 1

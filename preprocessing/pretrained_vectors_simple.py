@@ -25,21 +25,22 @@ startTime = time.time()
 SOURCE_FOLDER = "../datasets/"
 
 # Category Folder
-CATEGORY_FOLDER = "{}{}/".format( SOURCE_FOLDER, CATEGORY )
+CATEGORY_FOLDER = "{}{}/".format(SOURCE_FOLDER, CATEGORY)
 
 # Environment (Contains word_wid, i.e. the mapping from words in the vocabulary to their wid)
-input_env = "{}{}{}".format( CATEGORY_FOLDER, CATEGORY, fp_env )
+input_env = "{}{}{}".format(CATEGORY_FOLDER, CATEGORY, fp_env)
 
 # NOTE: This is the input file for the pretrained word embeddings
 # NOTE: Specify the correct file!!
-input_embeddings = "../datasets/GoogleNews-vectors-negative300.bin"
+# input_embeddings = "../datasets/GoogleNews-vectors-negative300.bin"
+input_embeddings = "../datasets/glove.twitter.word2vec.27B.100d.txt"
 # =========== INPUT ===========
 
 
 # =========== OUTPUT ===========
 # This contains the embeddings of words (within vocabulary) that can be found in the pretrained embeddings
-output_wid_wordEmbed = "{}{}{}".format( CATEGORY_FOLDER, CATEGORY, fp_wid_wordEmbed )
-output_log = "{}{}{}".format( CATEGORY_FOLDER, CATEGORY, "___pretrained_vectors_log.txt" )
+output_wid_wordEmbed = "{}{}_wed{}{}".format(CATEGORY_FOLDER, CATEGORY, args.emb_dim, fp_wid_wordEmbed)
+output_log = "{}{}{}".format(CATEGORY_FOLDER, CATEGORY, "___pretrained_vectors_log.txt")
 # =========== OUTPUT ===========
 
 
@@ -57,18 +58,18 @@ print("{}".format(""))
 append_to_file(output_log, print_args(args))
 
 # Input Info
-append_to_file(output_log, "\n{:<38s} {}".format( "[INPUT] Source Folder:", SOURCE_FOLDER ))
-append_to_file(output_log, "{:<38s} {}".format( "[INPUT] Category Folder:", CATEGORY_FOLDER ))
-append_to_file(output_log, "{:<38s} {}".format( "[INPUT] env:", input_env ))
-append_to_file(output_log, "{:<38s} {}".format( "[INPUT] Pretrained Word Embeddings:", input_embeddings ))
+append_to_file(output_log, "\n{:<38s} {}".format("[INPUT] Source Folder:", SOURCE_FOLDER))
+append_to_file(output_log, "{:<38s} {}".format("[INPUT] Category Folder:", CATEGORY_FOLDER))
+append_to_file(output_log, "{:<38s} {}".format("[INPUT] env:", input_env))
+append_to_file(output_log, "{:<38s} {}".format("[INPUT] Pretrained Word Embeddings:", input_embeddings))
 
 # Output Info
-append_to_file(output_log, "\n{:<38s} {}".format( "[OUTPUT] wid_wordEmbed:", output_wid_wordEmbed ))
+append_to_file(output_log, "\n{:<38s} {}".format("[OUTPUT] wid_wordEmbed:", output_wid_wordEmbed))
 
 
 # Load word-to-wid mappings from the environment file
-append_to_file(output_log, "\nLoading word-to-wid mappings (i.e. word_wid) from \"{}\"".format( input_env ))
-env = load_pickle( input_env )
+append_to_file(output_log, "\nLoading word-to-wid mappings (i.e. word_wid) from \"{}\"".format(input_env))
+env = load_pickle(input_env)
 word_wid = env['word_wid']
 wid_word = {wid: word for word, wid in word_wid.items()}
 
@@ -79,12 +80,13 @@ gc.collect()
 
 # Vocab
 vocab = word_wid.keys()
-append_to_file(output_log, "\n|V|: {}".format( len(vocab) ))
+append_to_file(output_log, "\n|V|: {}".format(len(vocab)))
 
 embeddings = {}
 
 # Load word embeddings
-w2v_model = gensim.models.KeyedVectors.load_word2vec_format(input_embeddings, binary=True)
+# w2v_model = gensim.models.KeyedVectors.load_word2vec_format(input_embeddings, binary=True)
+w2v_model = gensim.models.KeyedVectors.load_word2vec_format(input_embeddings, binary=False)
 w2v_vocab = w2v_model.vocab.keys()
 w2v_vocab_dict = {word: "" for word in w2v_vocab}
 for v in tqdm(vocab, "Processing pretrained vectors"):
@@ -95,7 +97,7 @@ for v in tqdm(vocab, "Processing pretrained vectors"):
         pass
 
 append_to_file(output_log, "\nFinished processing pretrained embeddings..")
-append_to_file(output_log, "# of words with pretrained embeddings: {}".format( len(embeddings) ))
+append_to_file(output_log, "# of words with pretrained embeddings: {}".format(len(embeddings)))
 
 
 wordEmbedMatrix = []
@@ -124,12 +126,12 @@ wordEmbedMatrix = np.stack(wordEmbedMatrix)
 wordEmbedMatrix = np.reshape(wordEmbedMatrix, (len(word_wid), args.emb_dim))
 
 noPretrainedEmb_words.sort()
-append_to_file(output_log, "\nEmbedding Matrix={}, |V|={}".format( wordEmbedMatrix.shape, len(word_wid) ))
+append_to_file(output_log, "\nEmbedding Matrix={}, |V|={}".format(wordEmbedMatrix.shape, len(word_wid)))
 append_to_file(output_log, "# of Words w/ No Pretrained Embeddings={} ({:.3f}%)\n".format(
-    len(noPretrainedEmb_words), (len(noPretrainedEmb_words) / len(word_wid) * 100) ))
+    len(noPretrainedEmb_words), (len(noPretrainedEmb_words) / len(word_wid) * 100)))
 
 np.save(output_wid_wordEmbed, wordEmbedMatrix)
-append_to_file(output_log, "Embeddings successfully saved to '{}'\n".format( output_wid_wordEmbed ))
+append_to_file(output_log, "Embeddings successfully saved to '{}'\n".format(output_wid_wordEmbed))
 
 # Force garbage collection
 gc.collect()

@@ -48,28 +48,28 @@ class ANR_AIE(nn.Module):
             tqdm.write("[Input to AIE] userAspRep: {}".format(userAspRep.size()))   # bsz x num_aspects x h1, P_u
             tqdm.write("[Input to AIE] itemAspRep: {}".format(itemAspRep.size()))   # bsz x num_aspects x h1, Q_i
 
-        userAspRepTrans = torch.transpose(userAspRep, 1, 2)
-        itemAspRepTrans = torch.transpose(itemAspRep, 1, 2)
+        userAspRepTrans = torch.transpose(userAspRep, 1, 2)                         # bsz x h1 x num_aspects
+        itemAspRepTrans = torch.transpose(itemAspRep, 1, 2)                         # bsz x h1 x num_aspects
         if verbose > 0:
-            tqdm.write("\nuserAspRepTrans: {}".format(userAspRepTrans.size()))      # bsz x h1 x num_aspects
-            tqdm.write("itemAspRepTrans: {}".format(itemAspRepTrans.size()))        # bsz x h1 x num_aspects
+            tqdm.write("\nuserAspRepTrans: {}".format(userAspRepTrans.size()))
+            tqdm.write("itemAspRepTrans: {}".format(itemAspRepTrans.size()))
 
         '''
         Affinity Matrix (User Aspects x Item Aspects), i.e. User Aspects - Rows, Item Aspects - Columns
         S = RELU(P_u * W_s * Q_i^T)
         '''
         # (bsz x num_aspects x h1) * (h1 x h1) -> bsz x num_aspects x h1
-        affinityMatrix = torch.matmul(userAspRep, self.W_a)
+        affinityMatrix = torch.matmul(userAspRep, self.W_a)                         # bsz x num_aspects x h1
         if verbose > 0:
-            tqdm.write("\naffinityMatrix: {}".format(affinityMatrix.size()))        # bsz x num_aspects x h1
+            tqdm.write("\naffinityMatrix: {}".format(affinityMatrix.size()))
 
         # (bsz x num_aspects x h1) * (bsz x h1 x num_aspects) -> bsz x num_aspects x num_aspects
-        affinityMatrix = torch.matmul(affinityMatrix, itemAspRepTrans)
+        affinityMatrix = torch.matmul(affinityMatrix, itemAspRepTrans)              # bsz x num_aspects x num_aspects
         if verbose > 0:
-            tqdm.write("affinityMatrix: {}".format(affinityMatrix.size()))          # bsz x num_aspects x num_aspects
+            tqdm.write("affinityMatrix: {}".format(affinityMatrix.size()))
 
         # Non-Linearity: ReLU
-        affinityMatrix = F.relu(affinityMatrix)
+        affinityMatrix = F.relu(affinityMatrix)                                     # bsz x num_aspects x num_aspects
 
         '''
         H_u = RELU(P_u * W_x + S^T * (Q_i * W_y))
@@ -77,15 +77,15 @@ class ANR_AIE(nn.Module):
         '''
         # =========== User Importance (over Aspects) ===========
         # (h2 x h1) * (bsz x h1 x num_aspects) -> bsz x h2 x num_aspects
-        H_u_1 = torch.matmul(self.W_u, userAspRepTrans)
-        H_u_2 = torch.matmul(self.W_i, itemAspRepTrans)
+        H_u_1 = torch.matmul(self.W_u, userAspRepTrans)                             # bsz x h2 x num_aspects
+        H_u_2 = torch.matmul(self.W_i, itemAspRepTrans)                             # bsz x h2 x num_aspects
 
         # (bsz x h2 x num_aspects) * (bsz x num_aspects x num_aspects) -> bsz x h2 x num_aspects
-        H_u_2 = torch.matmul(H_u_2, affinityMatrix)
+        H_u_2 = torch.matmul(H_u_2, affinityMatrix)                                 # bsz x h2 x num_aspects
         H_u = H_u_1 + H_u_2                                                         # bsz x h2 x num_aspects
 
         # Non-Linearity: ReLU
-        H_u = F.relu(H_u)                                                           # bsz x h2 x num_aspects, H_u
+        H_u = F.relu(H_u)                                                           # bsz x h2 x num_aspects
 
         # User Aspect-level Importance
         # (1 x h2) * (bsz x h2 x num_aspects) -> bsz x 1 x num_aspects
@@ -93,17 +93,15 @@ class ANR_AIE(nn.Module):
         if verbose > 0:
             tqdm.write("\nuserAspImpt: {}".format(userAspImpt.size()))
 
-        # User Aspect-level Importance: (bsz x 1 x num_aspects) -> (bsz x num_aspects x 1)
-        userAspImpt = torch.transpose(userAspImpt, 1, 2)
+        userAspImpt = torch.transpose(userAspImpt, 1, 2)                            # bsz x num_aspects x 1
         if verbose > 0:
             tqdm.write("userAspImpt: {}".format(userAspImpt.size()))
 
-        userAspImpt = F.softmax(userAspImpt, dim=1)                                 # bsz x 1 x num_aspects, beta_u
+        userAspImpt = F.softmax(userAspImpt, dim=1)                                 # bsz x num_aspects x 1
         if verbose > 0:
             tqdm.write("userAspImpt: {}".format(userAspImpt.size()))
 
-        # User Aspect-level Importance: (bsz x num_aspects x 1) -> (bsz x num_aspects)
-        userAspImpt = torch.squeeze(userAspImpt, 2)
+        userAspImpt = torch.squeeze(userAspImpt, 2)                                 # bsz x num_aspects, beta_u
         if verbose > 0:
             tqdm.write("userAspImpt: {}".format(userAspImpt.size()))
         # =========== User Importance (over Aspects) ===========
@@ -114,11 +112,11 @@ class ANR_AIE(nn.Module):
         '''
         # =========== Item Importance (over Aspects) ===========
         # (h2 x h1) * (bsz x h1 x num_aspects) -> bsz x h2 x num_aspects
-        H_i_1 = torch.matmul(self.W_i, itemAspRepTrans)
-        H_i_2 = torch.matmul(self.W_u, userAspRepTrans)
+        H_i_1 = torch.matmul(self.W_i, itemAspRepTrans)                             # bsz x h2 x num_aspects
+        H_i_2 = torch.matmul(self.W_u, userAspRepTrans)                             # bsz x h2 x num_aspects
 
         # (bsz x h2 x num_aspects) * (bsz x num_aspects x num_aspects) -> bsz x h2 x num_aspects
-        H_i_2 = torch.matmul(H_i_2, torch.transpose(affinityMatrix, 1, 2))
+        H_i_2 = torch.matmul(H_i_2, torch.transpose(affinityMatrix, 1, 2))          # bsz x h2 x num_aspects
         H_i = H_i_1 + H_i_2                                                         # bsz x h2 x num_aspects
 
         # Non-Linearity: ReLU
@@ -130,17 +128,15 @@ class ANR_AIE(nn.Module):
         if verbose > 0:
             tqdm.write("\nitemAspImpt: {}".format(itemAspImpt.size()))
 
-        # Item Aspect-level Importance: (bsz x 1 x num_aspects) -> (bsz x num_aspects x 1)
-        itemAspImpt = torch.transpose(itemAspImpt, 1, 2)
+        itemAspImpt = torch.transpose(itemAspImpt, 1, 2)                            # bsz x num_aspects x 1
         if verbose > 0:
             tqdm.write("itemAspImpt: {}".format(itemAspImpt.size()))
 
-        itemAspImpt = F.softmax(itemAspImpt, dim=1)                                 # # bsz x 1 x num_aspects, beta_i
+        itemAspImpt = F.softmax(itemAspImpt, dim=1)                                 # bsz x num_aspects x 1
         if verbose > 0:
             tqdm.write("itemAspImpt: {}".format(itemAspImpt.size()))
 
-        # Item Aspect-level Importance: (bsz x num_aspects x 1) -> (bsz x num_aspects)
-        itemAspImpt = torch.squeeze(itemAspImpt, 2)
+        itemAspImpt = torch.squeeze(itemAspImpt, 2)                                 # bsz x num_aspects, beta_i
         if verbose > 0:
             tqdm.write("itemAspImpt: {}".format(itemAspImpt.size()))
         # =========== Item Importance (over Aspects) ===========
