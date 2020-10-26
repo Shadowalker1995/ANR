@@ -1,0 +1,155 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  channels_global: 100
+  channels_local: 200
+  command: -d Home_and_Kitchen -m ANRS -e 10 -dr 0.9 -WED 300 -K 5 -h1 50 -h2 50 -p 1 -v 50000 -rs 1337 -gpu 0 -vb 1 -sm Home_and_Kitchen_ANRS
+  ctx_win_size: 3
+  dataset: Home_and_Kitchen
+  disable_initial_eval: 0
+  dropout_rate: 0.9
+  epochs: 10
+  filters_num: 100
+  gpu: 0
+  h1: 50
+  h2: 50
+  hidden_size: 500
+  input_dir: ./datasets/Home_and_Kitchen/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: ANRS
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Home_and_Kitchen - ANRS/
+  output_size: 50
+  pretrained_src: 1
+  random_seed: 1337
+  save_model: Home_and_Kitchen_ANRS
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 662,395, # of Items: 177,303
+
+Creating model (Selected Model: ANRS)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 4.64s (0.08 minute)
+
+Loading uid_userDoc from "./datasets/Home_and_Kitchen/Home_and_Kitchen_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (662395, 500)]
+
+Loading iid_itemDoc from "./datasets/Home_and_Kitchen/Home_and_Kitchen_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (177303, 500)]
+
+Loading pretrained word embeddings from "./datasets/Home_and_Kitchen/Home_and_Kitchen_wed300_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (50002, 300)]
+
+Initialization Complete.. Elapsed Time: 27.59s (0.46 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 800,000, |DEV|: 24,704, |TEST|: 24,485
+Train/Dev/Test splits loaded! Elapsed Time: 27.85s (0.46 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 19.49860, MAE: 4.25664
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 19.44555, MAE: 4.24717
+
+Initial Evaluation Complete.. Elapsed Time: 33.93s (0.57 minute)
+
+Parameters with L2 Regularization (Regularization Strength: 1e-06):
+ANRS_RatingPred.uid_userOffset.weight, ANRS_RatingPred.iid_itemOffset.weight
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 435,765,049
+# of Trainable Parameters: 915,449
+ANR (
+  (uid_userDoc): Embedding(662395, 500), weights = ((662395, 500),), parameters = 331,197,500
+  (iid_itemDoc): Embedding(177303, 500), weights = ((177303, 500),), parameters = 88,651,500
+  (wid_wEmbed): Embedding(50002, 300), weights = ((50002, 300),), parameters = 15,000,600
+  (shared_ANR_ARL): ANR_ARL(
+    (aspEmbed): Embedding(5, 150)
+    (aspProj): Parameter(5, 300, 50)
+  ), weights = ((5, 300, 50), (5, 150)), parameters = 75,750 (Trainable)
+  (ANRS_RatingPred): ANRS_RatingPred(
+    (userAspRepDropout): Dropout(p=0.9, inplace=False)
+    (itemAspRepDropout): Dropout(p=0.9, inplace=False)
+    (uid_userOffset): Embedding(662395, 1)
+    (iid_itemOffset): Embedding(177303, 1)
+    (globalOffset): Parameter(1,)
+  ), weights = ((1,), (662395, 1), (177303, 1)), parameters = 839,699 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/10] Training Loss: 2.71749	Elapsed Time: 230.10s (0:03:50)
+[Epoch 1] [Dev]  MSE: 1.31228, MAE: 0.90551
+[Epoch 1] [Test] MSE: 1.33633, MAE: 0.90892
+
+*** MODEL has obtained the best DEV MSE of 1.31228 so far!
+*** The Best MODEL saved to "./__saved_models__/Home_and_Kitchen - ANRS/Home_and_Kitchen_ANRS_1337.pth"
+
+[Epoch 2/10] Training Loss: 1.52367	Elapsed Time: 466.43s (0:07:46)
+[Epoch 2] [Dev]  MSE: 1.28030, MAE: 0.89376
+[Epoch 2] [Test] MSE: 1.30935, MAE: 0.90000
+
+*** MODEL has obtained the best DEV MSE of 1.28030 so far!
+*** The Best MODEL saved to "./__saved_models__/Home_and_Kitchen - ANRS/Home_and_Kitchen_ANRS_1337.pth"
+
+[Epoch 3/10] Training Loss: 1.39765	Elapsed Time: 702.62s (0:11:42)
+[Epoch 3] [Dev]  MSE: 1.26580, MAE: 0.87159
+[Epoch 3] [Test] MSE: 1.29744, MAE: 0.87929
+
+*** MODEL has obtained the best DEV MSE of 1.26580 so far!
+*** The Best MODEL saved to "./__saved_models__/Home_and_Kitchen - ANRS/Home_and_Kitchen_ANRS_1337.pth"
+
+[Epoch 4/10] Training Loss: 1.28812	Elapsed Time: 938.90s (0:15:38)
+[Epoch 4] [Dev]  MSE: 1.26635, MAE: 0.85912
+[Epoch 4] [Test] MSE: 1.29940, MAE: 0.86808
+
+[Epoch 5/10] Training Loss: 1.22078	Elapsed Time: 1,175.24s (0:19:35)
+[Epoch 5] [Dev]  MSE: 1.27403, MAE: 0.85459
+[Epoch 5] [Test] MSE: 1.30651, MAE: 0.86282
+
+[Epoch 6/10] Training Loss: 1.17594	Elapsed Time: 1,411.53s (0:23:31)
+[Epoch 6] [Dev]  MSE: 1.28148, MAE: 0.85759
+[Epoch 6] [Test] MSE: 1.31369, MAE: 0.86572
+
+[Epoch 7/10] Training Loss: 1.14433	Elapsed Time: 1,647.84s (0:27:27)
+[Epoch 7] [Dev]  MSE: 1.33689, MAE: 0.86349
+[Epoch 7] [Test] MSE: 1.39764, MAE: 0.87228
+
+[Epoch 8/10] Training Loss: 1.12382	Elapsed Time: 1,884.16s (0:31:24)
+[Epoch 8] [Dev]  MSE: 1.29482, MAE: 0.85844
+[Epoch 8] [Test] MSE: 1.32800, MAE: 0.86672
+
+[Epoch 9/10] Training Loss: 1.10596	Elapsed Time: 2,120.49s (0:35:20)
+[Epoch 9] [Dev]  MSE: 1.30103, MAE: 0.85912
+[Epoch 9] [Test] MSE: 1.33195, MAE: 0.86645
+
+[Epoch 10/10] Training Loss: 1.09426	Elapsed Time: 2,356.76s (0:39:16)
+[Epoch 10] [Dev]  MSE: 1.30625, MAE: 0.85760
+[Epoch 10] [Test] MSE: 1.33526, MAE: 0.86495
+*** The Last MODEL saved to "./__saved_models__/Home_and_Kitchen - ANRS/Home_and_Kitchen_ANRS_1337_10.pth"
+
+[Training Loss]
+[2.71749, 1.52367, 1.39765, 1.28812, 1.22078, 1.17594, 1.14433, 1.12382, 1.10596, 1.09426]
+
+[Dev MSE]
+[1.31228, 1.2803, 1.2658, 1.26635, 1.27403, 1.28148, 1.33689, 1.29482, 1.30103, 1.30625]
+[Test MSE]
+[1.33633, 1.30935, 1.29744, 1.2994, 1.30651, 1.31369, 1.39764, 1.328, 1.33195, 1.33526]
+[Test MAE]
+[0.90892, 0.9, 0.87929, 0.86808, 0.86282, 0.86572, 0.87228, 0.86672, 0.86645, 0.86495]
+
+
+Best Dev MSE: 1.26580 (Obtained during Evaluation #3)
+Test MSE: 1.29744, Test MAE: 0.87929
+
+End of Program! Elapsed Time: 2,396.63s (0:39:56)

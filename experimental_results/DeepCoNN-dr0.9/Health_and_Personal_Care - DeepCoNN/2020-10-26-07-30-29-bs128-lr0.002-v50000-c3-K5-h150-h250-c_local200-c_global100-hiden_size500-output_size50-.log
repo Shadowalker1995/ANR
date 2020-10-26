@@ -1,0 +1,152 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  channels_global: 100
+  channels_local: 200
+  command: -d Health_and_Personal_Care -m DeepCoNN -e 10 -dr 0.9 -WED 300 -p 1 -v 50000 -K 5 -h1 50 -h2 50 -filters_num 100 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm Health_and_Personal_Care_DeepCoNN
+  ctx_win_size: 3
+  dataset: Health_and_Personal_Care
+  disable_initial_eval: 0
+  dropout_rate: 0.9
+  epochs: 10
+  filters_num: 100
+  gpu: 0
+  h1: 50
+  h2: 50
+  hidden_size: 500
+  input_dir: ./datasets/Health_and_Personal_Care/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: DeepCoNN
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Health_and_Personal_Care - DeepCoNN/
+  output_size: 50
+  pretrained_src: 1
+  random_seed: 1234
+  save_model: Health_and_Personal_Care_DeepCoNN
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 640,558, # of Items: 140,129
+
+Creating model (Selected Model: DeepCoNN)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 4.40s (0.07 minute)
+
+Loading uid_userDoc from "./datasets/Health_and_Personal_Care/Health_and_Personal_Care_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (640558, 500)]
+
+Loading iid_itemDoc from "./datasets/Health_and_Personal_Care/Health_and_Personal_Care_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (140129, 500)]
+
+Loading pretrained word embeddings from "./datasets/Health_and_Personal_Care/Health_and_Personal_Care_wed300_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (50002, 300)]
+
+Initialization Complete.. Elapsed Time: 29.59s (0.49 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 800,000, |DEV|: 28,579, |TEST|: 28,406
+Train/Dev/Test splits loaded! Elapsed Time: 29.85s (0.50 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 14.30672, MAE: 3.57820
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 14.39654, MAE: 3.59509
+
+Initial Evaluation Complete.. Elapsed Time: 34.58s (0.58 minute)
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 406,315,088
+# of Trainable Parameters: 970,988
+DeepCoNN (
+  (uid_userDoc): Embedding(640558, 500), weights = ((640558, 500),), parameters = 320,279,000
+  (iid_itemDoc): Embedding(140129, 500), weights = ((140129, 500),), parameters = 70,064,500
+  (wid_wEmbed): Embedding(50002, 300), weights = ((50002, 300),), parameters = 15,000,600
+  (user_CNN): Conv2d(1, 100, kernel_size=(3, 300), stride=(1, 1)), weights = ((100, 1, 3, 300), (100,)), parameters = 90,100 (Trainable)
+  (item_CNN): Conv2d(1, 100, kernel_size=(3, 300), stride=(1, 1)), weights = ((100, 1, 3, 300), (100,)), parameters = 90,100 (Trainable)
+  (user_fcLayer): Linear(in_features=100, out_features=50, bias=True), weights = ((50, 100), (50,)), parameters = 5,050 (Trainable)
+  (item_fcLayer): Linear(in_features=100, out_features=50, bias=True), weights = ((50, 100), (50,)), parameters = 5,050 (Trainable)
+  (userDropout): Dropout(p=0.9, inplace=False), weights = (), parameters = 0
+  (itemDropout): Dropout(p=0.9, inplace=False), weights = (), parameters = 0
+  (DeepCoNN_RatingPred): DeepCoNN_RatingPred(
+    (uid_userOffset): Embedding(640558, 1)
+    (iid_itemOffset): Embedding(140129, 1)
+    (globalOffset): Parameter(1,)
+  ), weights = ((1,), (640558, 1), (140129, 1)), parameters = 780,688 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/10] Training Loss: 3.09060	Elapsed Time: 124.46s (0:02:04)
+[Epoch 1] [Dev]  MSE: 1.39670, MAE: 0.94155
+[Epoch 1] [Test] MSE: 1.36948, MAE: 0.93406
+
+*** MODEL has obtained the best DEV MSE of 1.39670 so far!
+*** The Best MODEL saved to "./__saved_models__/Health_and_Personal_Care - DeepCoNN/Health_and_Personal_Care_DeepCoNN_1234.pth"
+
+[Epoch 2/10] Training Loss: 1.36457	Elapsed Time: 253.72s (0:04:13)
+[Epoch 2] [Dev]  MSE: 1.35184, MAE: 0.90319
+[Epoch 2] [Test] MSE: 1.32696, MAE: 0.89481
+
+*** MODEL has obtained the best DEV MSE of 1.35184 so far!
+*** The Best MODEL saved to "./__saved_models__/Health_and_Personal_Care - DeepCoNN/Health_and_Personal_Care_DeepCoNN_1234.pth"
+
+[Epoch 3/10] Training Loss: 1.21287	Elapsed Time: 382.97s (0:06:22)
+[Epoch 3] [Dev]  MSE: 1.34835, MAE: 0.89514
+[Epoch 3] [Test] MSE: 1.31992, MAE: 0.88438
+
+*** MODEL has obtained the best DEV MSE of 1.34835 so far!
+*** The Best MODEL saved to "./__saved_models__/Health_and_Personal_Care - DeepCoNN/Health_and_Personal_Care_DeepCoNN_1234.pth"
+
+[Epoch 4/10] Training Loss: 1.09595	Elapsed Time: 512.30s (0:08:32)
+[Epoch 4] [Dev]  MSE: 1.36042, MAE: 0.89732
+[Epoch 4] [Test] MSE: 1.33334, MAE: 0.88625
+
+[Epoch 5/10] Training Loss: 0.99949	Elapsed Time: 641.58s (0:10:41)
+[Epoch 5] [Dev]  MSE: 1.36594, MAE: 0.87684
+[Epoch 5] [Test] MSE: 1.34235, MAE: 0.86711
+
+[Epoch 6/10] Training Loss: 0.92134	Elapsed Time: 770.81s (0:12:50)
+[Epoch 6] [Dev]  MSE: 1.37784, MAE: 0.87366
+[Epoch 6] [Test] MSE: 1.35368, MAE: 0.86347
+
+[Epoch 7/10] Training Loss: 0.84378	Elapsed Time: 900.07s (0:15:00)
+[Epoch 7] [Dev]  MSE: 1.39712, MAE: 0.88107
+[Epoch 7] [Test] MSE: 1.37200, MAE: 0.87172
+
+[Epoch 8/10] Training Loss: 0.77793	Elapsed Time: 1,029.29s (0:17:09)
+[Epoch 8] [Dev]  MSE: 1.41682, MAE: 0.87669
+[Epoch 8] [Test] MSE: 1.39229, MAE: 0.86711
+
+[Epoch 9/10] Training Loss: 0.71950	Elapsed Time: 1,158.56s (0:19:18)
+[Epoch 9] [Dev]  MSE: 1.43270, MAE: 0.88253
+[Epoch 9] [Test] MSE: 1.41052, MAE: 0.87272
+
+[Epoch 10/10] Training Loss: 0.66642	Elapsed Time: 1,287.88s (0:21:27)
+[Epoch 10] [Dev]  MSE: 1.45836, MAE: 0.89073
+[Epoch 10] [Test] MSE: 1.43606, MAE: 0.88129
+*** The Last MODEL saved to "./__saved_models__/Health_and_Personal_Care - DeepCoNN/Health_and_Personal_Care_DeepCoNN_1234_10.pth"
+
+[Training Loss]
+[3.0906, 1.36457, 1.21287, 1.09595, 0.99949, 0.92134, 0.84378, 0.77793, 0.7195, 0.66642]
+
+[Dev MSE]
+[1.3967, 1.35184, 1.34835, 1.36042, 1.36594, 1.37784, 1.39712, 1.41682, 1.4327, 1.45836]
+[Test MSE]
+[1.36948, 1.32696, 1.31992, 1.33334, 1.34235, 1.35368, 1.372, 1.39229, 1.41052, 1.43606]
+[Test MAE]
+[0.93406, 0.89481, 0.88438, 0.88625, 0.86711, 0.86347, 0.87172, 0.86711, 0.87272, 0.88129]
+
+
+Best Dev MSE: 1.34835 (Obtained during Evaluation #3)
+Test MSE: 1.31992, Test MAE: 0.88438
+
+End of Program! Elapsed Time: 1,327.09s (0:22:07)

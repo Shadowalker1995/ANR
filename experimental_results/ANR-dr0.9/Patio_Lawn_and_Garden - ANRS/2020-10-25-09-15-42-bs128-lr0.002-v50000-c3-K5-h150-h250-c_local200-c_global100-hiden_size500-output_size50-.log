@@ -1,0 +1,161 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  channels_global: 100
+  channels_local: 200
+  command: -d Patio_Lawn_and_Garden -m ANRS -e 10 -dr 0.9 -WED 300 -K 5 -h1 50 -h2 50 -p 1 -v 50000 -rs 1337 -gpu 0 -vb 1 -sm Patio_Lawn_and_Garden_ANRS
+  ctx_win_size: 3
+  dataset: Patio_Lawn_and_Garden
+  disable_initial_eval: 0
+  dropout_rate: 0.9
+  epochs: 10
+  filters_num: 100
+  gpu: 0
+  h1: 50
+  h2: 50
+  hidden_size: 500
+  input_dir: ./datasets/Patio_Lawn_and_Garden/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: ANRS
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Patio_Lawn_and_Garden - ANRS/
+  output_size: 50
+  pretrained_src: 1
+  random_seed: 1337
+  save_model: Patio_Lawn_and_Garden_ANRS
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 584,107, # of Items: 95,030
+
+Creating model (Selected Model: ANRS)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 4.04s (0.07 minute)
+
+Loading uid_userDoc from "./datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (584107, 500)]
+
+Loading iid_itemDoc from "./datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (95030, 500)]
+
+Loading pretrained word embeddings from "./datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_wed300_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (50002, 300)]
+
+Initialization Complete.. Elapsed Time: 26.86s (0.45 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 775,805, |DEV|: 34,584, |TEST|: 34,718
+Train/Dev/Test splits loaded! Elapsed Time: 27.13s (0.45 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 18.80974, MAE: 4.14218
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 18.67169, MAE: 4.12328
+
+Initial Evaluation Complete.. Elapsed Time: 35.65s (0.59 minute)
+
+Parameters with L2 Regularization (Regularization Strength: 1e-06):
+ANRS_RatingPred.uid_userOffset.weight, ANRS_RatingPred.iid_itemOffset.weight
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 355,323,988
+# of Trainable Parameters: 754,888
+ANR (
+  (uid_userDoc): Embedding(584107, 500), weights = ((584107, 500),), parameters = 292,053,500
+  (iid_itemDoc): Embedding(95030, 500), weights = ((95030, 500),), parameters = 47,515,000
+  (wid_wEmbed): Embedding(50002, 300), weights = ((50002, 300),), parameters = 15,000,600
+  (shared_ANR_ARL): ANR_ARL(
+    (aspEmbed): Embedding(5, 150)
+    (aspProj): Parameter(5, 300, 50)
+  ), weights = ((5, 300, 50), (5, 150)), parameters = 75,750 (Trainable)
+  (ANRS_RatingPred): ANRS_RatingPred(
+    (userAspRepDropout): Dropout(p=0.9, inplace=False)
+    (itemAspRepDropout): Dropout(p=0.9, inplace=False)
+    (uid_userOffset): Embedding(584107, 1)
+    (iid_itemOffset): Embedding(95030, 1)
+    (globalOffset): Parameter(1,)
+  ), weights = ((1,), (584107, 1), (95030, 1)), parameters = 679,138 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/10] Training Loss: 2.73616	Elapsed Time: 224.66s (0:03:44)
+[Epoch 1] [Dev]  MSE: 1.47420, MAE: 0.97537
+[Epoch 1] [Test] MSE: 1.49032, MAE: 0.97704
+
+*** MODEL has obtained the best DEV MSE of 1.47420 so far!
+*** The Best MODEL saved to "./__saved_models__/Patio_Lawn_and_Garden - ANRS/Patio_Lawn_and_Garden_ANRS_1337.pth"
+
+[Epoch 2/10] Training Loss: 1.60524	Elapsed Time: 458.05s (0:07:38)
+[Epoch 2] [Dev]  MSE: 1.41559, MAE: 0.95040
+[Epoch 2] [Test] MSE: 1.42500, MAE: 0.95030
+
+*** MODEL has obtained the best DEV MSE of 1.41559 so far!
+*** The Best MODEL saved to "./__saved_models__/Patio_Lawn_and_Garden - ANRS/Patio_Lawn_and_Garden_ANRS_1337.pth"
+
+[Epoch 3/10] Training Loss: 1.44398	Elapsed Time: 691.43s (0:11:31)
+[Epoch 3] [Dev]  MSE: 1.38330, MAE: 0.91261
+[Epoch 3] [Test] MSE: 1.39505, MAE: 0.91479
+
+*** MODEL has obtained the best DEV MSE of 1.38330 so far!
+*** The Best MODEL saved to "./__saved_models__/Patio_Lawn_and_Garden - ANRS/Patio_Lawn_and_Garden_ANRS_1337.pth"
+
+[Epoch 4/10] Training Loss: 1.34147	Elapsed Time: 924.78s (0:15:24)
+[Epoch 4] [Dev]  MSE: 1.37792, MAE: 0.91402
+[Epoch 4] [Test] MSE: 1.38613, MAE: 0.91593
+
+*** MODEL has obtained the best DEV MSE of 1.37792 so far!
+*** The Best MODEL saved to "./__saved_models__/Patio_Lawn_and_Garden - ANRS/Patio_Lawn_and_Garden_ANRS_1337.pth"
+
+[Epoch 5/10] Training Loss: 1.27559	Elapsed Time: 1,158.21s (0:19:18)
+[Epoch 5] [Dev]  MSE: 1.37612, MAE: 0.90187
+[Epoch 5] [Test] MSE: 1.38394, MAE: 0.90384
+
+*** MODEL has obtained the best DEV MSE of 1.37612 so far!
+*** The Best MODEL saved to "./__saved_models__/Patio_Lawn_and_Garden - ANRS/Patio_Lawn_and_Garden_ANRS_1337.pth"
+
+[Epoch 6/10] Training Loss: 1.25601	Elapsed Time: 1,391.48s (0:23:11)
+[Epoch 6] [Dev]  MSE: 1.37836, MAE: 0.89937
+[Epoch 6] [Test] MSE: 1.38529, MAE: 0.90093
+
+[Epoch 7/10] Training Loss: 1.19333	Elapsed Time: 1,624.78s (0:27:04)
+[Epoch 7] [Dev]  MSE: 1.38380, MAE: 0.90454
+[Epoch 7] [Test] MSE: 1.39022, MAE: 0.90568
+
+[Epoch 8/10] Training Loss: 1.16529	Elapsed Time: 1,858.01s (0:30:58)
+[Epoch 8] [Dev]  MSE: 1.38667, MAE: 0.90006
+[Epoch 8] [Test] MSE: 1.39279, MAE: 0.90183
+
+[Epoch 9/10] Training Loss: 1.16016	Elapsed Time: 2,091.31s (0:34:51)
+[Epoch 9] [Dev]  MSE: 1.38899, MAE: 0.89729
+[Epoch 9] [Test] MSE: 1.39461, MAE: 0.89883
+
+[Epoch 10/10] Training Loss: 1.13175	Elapsed Time: 2,324.74s (0:38:44)
+[Epoch 10] [Dev]  MSE: 1.39418, MAE: 0.89836
+[Epoch 10] [Test] MSE: 1.39910, MAE: 0.90020
+*** The Last MODEL saved to "./__saved_models__/Patio_Lawn_and_Garden - ANRS/Patio_Lawn_and_Garden_ANRS_1337_10.pth"
+
+[Training Loss]
+[2.73616, 1.60524, 1.44398, 1.34147, 1.27559, 1.25601, 1.19333, 1.16529, 1.16016, 1.13175]
+
+[Dev MSE]
+[1.4742, 1.41559, 1.3833, 1.37792, 1.37612, 1.37836, 1.3838, 1.38667, 1.38899, 1.39418]
+[Test MSE]
+[1.49032, 1.425, 1.39505, 1.38613, 1.38394, 1.38529, 1.39022, 1.39279, 1.39461, 1.3991]
+[Test MAE]
+[0.97704, 0.9503, 0.91479, 0.91593, 0.90384, 0.90093, 0.90568, 0.90183, 0.89883, 0.9002]
+
+
+Best Dev MSE: 1.37612 (Obtained during Evaluation #5)
+Test MSE: 1.38394, Test MAE: 0.90384
+
+End of Program! Elapsed Time: 2,368.75s (0:39:28)

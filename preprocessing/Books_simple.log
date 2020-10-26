@@ -1,0 +1,106 @@
+
+Dataset: Books
+[args from argparse.ArgumentParser().parse_args()]
+command: preprocessing_simple.py -d Books -dev_test_in_train 1
+dataset: Books
+dataset_maximum_size: 1000000
+dev_test_in_train: True
+maxDL: 500
+maxVL: 500
+minImages: 1
+minReviews: 1
+minRL: 10
+random_seed: 1337
+train_ratio: 0.8
+vocab: 50000
+
+[INPUT] Source Folder:       ../datasets/
+[INPUT] Reviews/Ratings:     ../datasets/reviews_Books.json
+
+[OUTPUT] Category Folder:    ../datasets/Books/
+[OUTPUT] env:                ../datasets/Books/Books_env.pkl
+[OUTPUT] info:               ../datasets/Books/Books_info.pkl
+[OUTPUT] interactions:       ../datasets/Books/Books_interactions.pkl
+[OUTPUT] train_interactions: ../datasets/Books/Books_train_interactions.pkl
+[OUTPUT] dev_interactions:   ../datasets/Books/Books_dev_interactions.pkl
+[OUTPUT] test_interactions:  ../datasets/Books/Books_test_interactions.pkl
+[OUTPUT] split_train:        ../datasets/Books/Books_split_train.pkl
+[OUTPUT] split_dev:          ../datasets/Books/Books_split_dev.pkl
+[OUTPUT] split_test:         ../datasets/Books/Books_split_test.pkl
+[OUTPUT] uid_userDoc:        ../datasets/Books/Books_uid_userDoc.npy
+[OUTPUT] iid_itemDoc:        ../datasets/Books/Books_iid_itemDoc.npy
+[OUTPUT] uid_userDoc:        ../datasets/Books/Books_uid_userVis.npy
+[OUTPUT] iid_itemDoc:        ../datasets/Books/Books_iid_itemVis.npy
+
+Preprocessing data for "Books"
+
+[Settings]
+Min reviews for user/item: 1
+Min review length to qualify as an user-item interaction: 10
+Max words for user/item document: 500 (For truncating/padding to get a fixed-size representation)
+Top-50000 words in vocabulary being utilized!
+
+
+Initial pass of reviews to get the user-item interactions!
+[Initial stats] Users: 8,026,324, Items: 2,330,066, Ratings: 22,507,155, Density: 0.0000012
+
+
+Second pass of visual features to get the item-feature interactions!
+[Second stats] Items with image: 2,303,961, Images: 2,303,961, Density: 1.0000000
+
+
+Starting to filter away users & items based on thresold of 1 images!
+Updating interactions based on the num of images...
+
+Filtered users & items based on thresold of 1 images!
+Users: 8026324 -> 7980636, Items: 2330066 -> 2266687
+[Current stats] Users: 7980636, Items: 2266687, Ratings: 22310100, Density: 0.0000012
+Updating interactions based on the num of images...
+
+Filtered users & items based on thresold of 1 images!
+Users: 7980636 -> 7980636, Items: 2266687 -> 2266687
+[Current stats] Users: 7980636, Items: 2266687, Ratings: 22310100, Density: 0.0000012
+
+No change in # of users or # of items!
+
+[Final stats] Users: 7,980,636, Items: 2,266,687, Ratings: 22,310,100, Density: 0.0000012
+
+Elapsed time for "Books": 1041.87 seconds (17.36 minutes)
+
+Starting to filter away users & items based on thresold of 1 reviews!
+
+Filtered users & items based on thresold of 1 reviews!
+Users: 7980636 -> 7980636, Items: 2266687 -> 2266687
+
+No change in # of users or # of items!
+
+[Final stats] Users: 7,980,636, Items: 2,266,687, Ratings: 22,310,100, Density: 0.0000012
+
+Elapsed time for "Books": 1044.24 seconds (17.40 minutes)
+
+
+Third pass of reviews to get the rating, date, the num of tokenized review and index!
+[Current stats] Users: 7,980,636, Items: 2,266,687, Ratings: 22,310,100, Density: 0.0000012
+
+Filtering user-item interactions based on minimum review length of 10 tokens..
+
+Filtered users & items based on minimum review length of 10 tokens!
+Users: 7,980,636 -> 7,942,222, Items: 2,266,687 -> 2,262,144
+[Current stats] Users: 7,942,222, Items: 2,262,144, Ratings: 22,211,827, Density: 0.0000012
+
+
+Starting to filter away users & items based on thresold of 1 reviews (after removing reviews with <= 10 tokens)!
+
+Filtered users & items based on thresold of 1 reviews!
+Users: 7,942,222 -> 7,942,222, Items: 2,262,144 -> 2,262,144
+
+No change in # of users or # of items!
+
+[Final stats] Users: 7,942,222, Items: 2,262,144, Ratings: 22,211,827, Density: 0.0000012
+
+*****************************************************************************************************************************
+*** Original Dataset Size (i.e. num_ratings): 22,211,827!
+*** Selecting a random subsample of 1,000,000 user-item interactions!
+*** Current Dataset Size (i.e. num_ratings):  1,000,000!
+*****************************************************************************************************************************
+[Current stats] Users: 754,748, Items: 454,839, Ratings: 1,000,000, Density: 0.0000029

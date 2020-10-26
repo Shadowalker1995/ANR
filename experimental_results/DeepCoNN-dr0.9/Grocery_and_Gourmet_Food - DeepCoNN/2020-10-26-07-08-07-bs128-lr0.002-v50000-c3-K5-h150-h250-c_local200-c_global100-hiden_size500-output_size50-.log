@@ -1,0 +1,152 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  channels_global: 100
+  channels_local: 200
+  command: -d Grocery_and_Gourmet_Food -m DeepCoNN -e 10 -dr 0.9 -WED 300 -p 1 -v 50000 -K 5 -h1 50 -h2 50 -filters_num 100 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm Grocery_and_Gourmet_Food_DeepCoNN
+  ctx_win_size: 3
+  dataset: Grocery_and_Gourmet_Food
+  disable_initial_eval: 0
+  dropout_rate: 0.9
+  epochs: 10
+  filters_num: 100
+  gpu: 0
+  h1: 50
+  h2: 50
+  hidden_size: 500
+  input_dir: ./datasets/Grocery_and_Gourmet_Food/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: DeepCoNN
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Grocery_and_Gourmet_Food - DeepCoNN/
+  output_size: 50
+  pretrained_src: 1
+  random_seed: 1234
+  save_model: Grocery_and_Gourmet_Food_DeepCoNN
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 528,374, # of Items: 134,221
+
+Creating model (Selected Model: DeepCoNN)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 3.94s (0.07 minute)
+
+Loading uid_userDoc from "./datasets/Grocery_and_Gourmet_Food/Grocery_and_Gourmet_Food_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (528374, 500)]
+
+Loading iid_itemDoc from "./datasets/Grocery_and_Gourmet_Food/Grocery_and_Gourmet_Food_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (134221, 500)]
+
+Loading pretrained word embeddings from "./datasets/Grocery_and_Gourmet_Food/Grocery_and_Gourmet_Food_wed300_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (50002, 300)]
+
+Initialization Complete.. Elapsed Time: 21.76s (0.36 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 800,000, |DEV|: 43,464, |TEST|: 43,991
+Train/Dev/Test splits loaded! Elapsed Time: 22.01s (0.37 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 14.54777, MAE: 3.62967
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 14.61429, MAE: 3.64217
+
+Initial Evaluation Complete.. Elapsed Time: 29.24s (0.49 minute)
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 347,150,996
+# of Trainable Parameters: 852,896
+DeepCoNN (
+  (uid_userDoc): Embedding(528374, 500), weights = ((528374, 500),), parameters = 264,187,000
+  (iid_itemDoc): Embedding(134221, 500), weights = ((134221, 500),), parameters = 67,110,500
+  (wid_wEmbed): Embedding(50002, 300), weights = ((50002, 300),), parameters = 15,000,600
+  (user_CNN): Conv2d(1, 100, kernel_size=(3, 300), stride=(1, 1)), weights = ((100, 1, 3, 300), (100,)), parameters = 90,100 (Trainable)
+  (item_CNN): Conv2d(1, 100, kernel_size=(3, 300), stride=(1, 1)), weights = ((100, 1, 3, 300), (100,)), parameters = 90,100 (Trainable)
+  (user_fcLayer): Linear(in_features=100, out_features=50, bias=True), weights = ((50, 100), (50,)), parameters = 5,050 (Trainable)
+  (item_fcLayer): Linear(in_features=100, out_features=50, bias=True), weights = ((50, 100), (50,)), parameters = 5,050 (Trainable)
+  (userDropout): Dropout(p=0.9, inplace=False), weights = (), parameters = 0
+  (itemDropout): Dropout(p=0.9, inplace=False), weights = (), parameters = 0
+  (DeepCoNN_RatingPred): DeepCoNN_RatingPred(
+    (uid_userOffset): Embedding(528374, 1)
+    (iid_itemOffset): Embedding(134221, 1)
+    (globalOffset): Parameter(1,)
+  ), weights = ((1,), (528374, 1), (134221, 1)), parameters = 662,596 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/10] Training Loss: 3.08461	Elapsed Time: 123.85s (0:02:03)
+[Epoch 1] [Dev]  MSE: 1.24669, MAE: 0.84970
+[Epoch 1] [Test] MSE: 1.22234, MAE: 0.84076
+
+*** MODEL has obtained the best DEV MSE of 1.24669 so far!
+*** The Best MODEL saved to "./__saved_models__/Grocery_and_Gourmet_Food - DeepCoNN/Grocery_and_Gourmet_Food_DeepCoNN_1234.pth"
+
+[Epoch 2/10] Training Loss: 1.22869	Elapsed Time: 255.00s (0:04:14)
+[Epoch 2] [Dev]  MSE: 1.21461, MAE: 0.83210
+[Epoch 2] [Test] MSE: 1.19103, MAE: 0.82325
+
+*** MODEL has obtained the best DEV MSE of 1.21461 so far!
+*** The Best MODEL saved to "./__saved_models__/Grocery_and_Gourmet_Food - DeepCoNN/Grocery_and_Gourmet_Food_DeepCoNN_1234.pth"
+
+[Epoch 3/10] Training Loss: 1.09408	Elapsed Time: 386.19s (0:06:26)
+[Epoch 3] [Dev]  MSE: 1.21037, MAE: 0.80739
+[Epoch 3] [Test] MSE: 1.18711, MAE: 0.79770
+
+*** MODEL has obtained the best DEV MSE of 1.21037 so far!
+*** The Best MODEL saved to "./__saved_models__/Grocery_and_Gourmet_Food - DeepCoNN/Grocery_and_Gourmet_Food_DeepCoNN_1234.pth"
+
+[Epoch 4/10] Training Loss: 0.99744	Elapsed Time: 517.37s (0:08:37)
+[Epoch 4] [Dev]  MSE: 1.21813, MAE: 0.81802
+[Epoch 4] [Test] MSE: 1.19190, MAE: 0.80693
+
+[Epoch 5/10] Training Loss: 0.91688	Elapsed Time: 648.58s (0:10:48)
+[Epoch 5] [Dev]  MSE: 1.23139, MAE: 0.80528
+[Epoch 5] [Test] MSE: 1.20495, MAE: 0.79449
+
+[Epoch 6/10] Training Loss: 0.84926	Elapsed Time: 779.76s (0:12:59)
+[Epoch 6] [Dev]  MSE: 1.24596, MAE: 0.80336
+[Epoch 6] [Test] MSE: 1.21912, MAE: 0.79303
+
+[Epoch 7/10] Training Loss: 0.79196	Elapsed Time: 910.92s (0:15:10)
+[Epoch 7] [Dev]  MSE: 1.25792, MAE: 0.81015
+[Epoch 7] [Test] MSE: 1.23208, MAE: 0.80012
+
+[Epoch 8/10] Training Loss: 0.74093	Elapsed Time: 1,042.09s (0:17:22)
+[Epoch 8] [Dev]  MSE: 1.27402, MAE: 0.81454
+[Epoch 8] [Test] MSE: 1.24787, MAE: 0.80483
+
+[Epoch 9/10] Training Loss: 0.69515	Elapsed Time: 1,173.24s (0:19:33)
+[Epoch 9] [Dev]  MSE: 1.29262, MAE: 0.81367
+[Epoch 9] [Test] MSE: 1.26552, MAE: 0.80336
+
+[Epoch 10/10] Training Loss: 0.65405	Elapsed Time: 1,304.41s (0:21:44)
+[Epoch 10] [Dev]  MSE: 1.30751, MAE: 0.82418
+[Epoch 10] [Test] MSE: 1.28080, MAE: 0.81392
+*** The Last MODEL saved to "./__saved_models__/Grocery_and_Gourmet_Food - DeepCoNN/Grocery_and_Gourmet_Food_DeepCoNN_1234_10.pth"
+
+[Training Loss]
+[3.08461, 1.22869, 1.09408, 0.99744, 0.91688, 0.84926, 0.79196, 0.74093, 0.69515, 0.65405]
+
+[Dev MSE]
+[1.24669, 1.21461, 1.21037, 1.21813, 1.23139, 1.24596, 1.25792, 1.27402, 1.29262, 1.30751]
+[Test MSE]
+[1.22234, 1.19103, 1.18711, 1.1919, 1.20495, 1.21912, 1.23208, 1.24787, 1.26552, 1.2808]
+[Test MAE]
+[0.84076, 0.82325, 0.7977, 0.80693, 0.79449, 0.79303, 0.80012, 0.80483, 0.80336, 0.81392]
+
+
+Best Dev MSE: 1.21037 (Obtained during Evaluation #3)
+Test MSE: 1.18711, Test MAE: 0.79770
+
+End of Program! Elapsed Time: 1,340.80s (0:22:20)

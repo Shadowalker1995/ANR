@@ -1,0 +1,158 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  channels_global: 100
+  channels_local: 200
+  command: -d Digital_Music -m DeepCoNN -e 10 -dr 0.9 -WED 300 -p 1 -v 50000 -K 5 -h1 50 -h2 50 -filters_num 100 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm Digital_Music_DeepCoNN
+  ctx_win_size: 3
+  dataset: Digital_Music
+  disable_initial_eval: 0
+  dropout_rate: 0.9
+  epochs: 10
+  filters_num: 100
+  gpu: 0
+  h1: 50
+  h2: 50
+  hidden_size: 500
+  input_dir: ./datasets/Digital_Music/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: DeepCoNN
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Digital_Music - DeepCoNN/
+  output_size: 50
+  pretrained_src: 1
+  random_seed: 1234
+  save_model: Digital_Music_DeepCoNN
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 397,514, # of Items: 223,577
+
+Creating model (Selected Model: DeepCoNN)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 3.75s (0.06 minute)
+
+Loading uid_userDoc from "./datasets/Digital_Music/Digital_Music_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (397514, 500)]
+
+Loading iid_itemDoc from "./datasets/Digital_Music/Digital_Music_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (223577, 500)]
+
+Loading pretrained word embeddings from "./datasets/Digital_Music/Digital_Music_wed300_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (50002, 300)]
+
+Initialization Complete.. Elapsed Time: 20.40s (0.34 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 656,657, |DEV|: 31,464, |TEST|: 31,775
+Train/Dev/Test splits loaded! Elapsed Time: 20.60s (0.34 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 16.86914, MAE: 3.99472
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 16.87912, MAE: 3.99480
+
+Initial Evaluation Complete.. Elapsed Time: 25.89s (0.43 minute)
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 326,357,492
+# of Trainable Parameters: 811,392
+DeepCoNN (
+  (uid_userDoc): Embedding(397514, 500), weights = ((397514, 500),), parameters = 198,757,000
+  (iid_itemDoc): Embedding(223577, 500), weights = ((223577, 500),), parameters = 111,788,500
+  (wid_wEmbed): Embedding(50002, 300), weights = ((50002, 300),), parameters = 15,000,600
+  (user_CNN): Conv2d(1, 100, kernel_size=(3, 300), stride=(1, 1)), weights = ((100, 1, 3, 300), (100,)), parameters = 90,100 (Trainable)
+  (item_CNN): Conv2d(1, 100, kernel_size=(3, 300), stride=(1, 1)), weights = ((100, 1, 3, 300), (100,)), parameters = 90,100 (Trainable)
+  (user_fcLayer): Linear(in_features=100, out_features=50, bias=True), weights = ((50, 100), (50,)), parameters = 5,050 (Trainable)
+  (item_fcLayer): Linear(in_features=100, out_features=50, bias=True), weights = ((50, 100), (50,)), parameters = 5,050 (Trainable)
+  (userDropout): Dropout(p=0.9, inplace=False), weights = (), parameters = 0
+  (itemDropout): Dropout(p=0.9, inplace=False), weights = (), parameters = 0
+  (DeepCoNN_RatingPred): DeepCoNN_RatingPred(
+    (uid_userOffset): Embedding(397514, 1)
+    (iid_itemOffset): Embedding(223577, 1)
+    (globalOffset): Parameter(1,)
+  ), weights = ((1,), (397514, 1), (223577, 1)), parameters = 621,092 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/10] Training Loss: 3.31575	Elapsed Time: 101.35s (0:01:41)
+[Epoch 1] [Dev]  MSE: 0.78467, MAE: 0.60359
+[Epoch 1] [Test] MSE: 0.79467, MAE: 0.60332
+
+*** MODEL has obtained the best DEV MSE of 0.78467 so far!
+*** The Best MODEL saved to "./__saved_models__/Digital_Music - DeepCoNN/Digital_Music_DeepCoNN_1234.pth"
+
+[Epoch 2/10] Training Loss: 0.72911	Elapsed Time: 207.99s (0:03:27)
+[Epoch 2] [Dev]  MSE: 0.71589, MAE: 0.55631
+[Epoch 2] [Test] MSE: 0.72197, MAE: 0.55569
+
+*** MODEL has obtained the best DEV MSE of 0.71589 so far!
+*** The Best MODEL saved to "./__saved_models__/Digital_Music - DeepCoNN/Digital_Music_DeepCoNN_1234.pth"
+
+[Epoch 3/10] Training Loss: 0.62813	Elapsed Time: 314.64s (0:05:14)
+[Epoch 3] [Dev]  MSE: 0.69853, MAE: 0.55385
+[Epoch 3] [Test] MSE: 0.70083, MAE: 0.55231
+
+*** MODEL has obtained the best DEV MSE of 0.69853 so far!
+*** The Best MODEL saved to "./__saved_models__/Digital_Music - DeepCoNN/Digital_Music_DeepCoNN_1234.pth"
+
+[Epoch 4/10] Training Loss: 0.56072	Elapsed Time: 421.29s (0:07:01)
+[Epoch 4] [Dev]  MSE: 0.69633, MAE: 0.54494
+[Epoch 4] [Test] MSE: 0.69850, MAE: 0.54325
+
+*** MODEL has obtained the best DEV MSE of 0.69633 so far!
+*** The Best MODEL saved to "./__saved_models__/Digital_Music - DeepCoNN/Digital_Music_DeepCoNN_1234.pth"
+
+[Epoch 5/10] Training Loss: 0.50679	Elapsed Time: 527.93s (0:08:47)
+[Epoch 5] [Dev]  MSE: 0.69485, MAE: 0.55281
+[Epoch 5] [Test] MSE: 0.69574, MAE: 0.55149
+
+*** MODEL has obtained the best DEV MSE of 0.69485 so far!
+*** The Best MODEL saved to "./__saved_models__/Digital_Music - DeepCoNN/Digital_Music_DeepCoNN_1234.pth"
+
+[Epoch 6/10] Training Loss: 0.46250	Elapsed Time: 634.57s (0:10:34)
+[Epoch 6] [Dev]  MSE: 0.70121, MAE: 0.54856
+[Epoch 6] [Test] MSE: 0.70233, MAE: 0.54656
+
+[Epoch 7/10] Training Loss: 0.42523	Elapsed Time: 741.23s (0:12:21)
+[Epoch 7] [Dev]  MSE: 0.70556, MAE: 0.55584
+[Epoch 7] [Test] MSE: 0.70552, MAE: 0.55420
+
+[Epoch 8/10] Training Loss: 0.39316	Elapsed Time: 847.83s (0:14:07)
+[Epoch 8] [Dev]  MSE: 0.71397, MAE: 0.55837
+[Epoch 8] [Test] MSE: 0.71443, MAE: 0.55731
+
+[Epoch 9/10] Training Loss: 0.36468	Elapsed Time: 954.44s (0:15:54)
+[Epoch 9] [Dev]  MSE: 0.72052, MAE: 0.56002
+[Epoch 9] [Test] MSE: 0.72052, MAE: 0.55860
+
+[Epoch 10/10] Training Loss: 0.34019	Elapsed Time: 1,061.03s (0:17:41)
+[Epoch 10] [Dev]  MSE: 0.72945, MAE: 0.56387
+[Epoch 10] [Test] MSE: 0.72981, MAE: 0.56281
+*** The Last MODEL saved to "./__saved_models__/Digital_Music - DeepCoNN/Digital_Music_DeepCoNN_1234_10.pth"
+
+[Training Loss]
+[3.31575, 0.72911, 0.62813, 0.56072, 0.50679, 0.4625, 0.42523, 0.39316, 0.36468, 0.34019]
+
+[Dev MSE]
+[0.78467, 0.71589, 0.69853, 0.69633, 0.69485, 0.70121, 0.70556, 0.71397, 0.72052, 0.72945]
+[Test MSE]
+[0.79467, 0.72197, 0.70083, 0.6985, 0.69574, 0.70233, 0.70552, 0.71443, 0.72052, 0.72981]
+[Test MAE]
+[0.60332, 0.55569, 0.55231, 0.54325, 0.55149, 0.54656, 0.5542, 0.55731, 0.5586, 0.56281]
+
+
+Best Dev MSE: 0.69485 (Obtained during Evaluation #5)
+Test MSE: 0.69574, Test MAE: 0.55149
+
+End of Program! Elapsed Time: 1,092.10s (0:18:12)

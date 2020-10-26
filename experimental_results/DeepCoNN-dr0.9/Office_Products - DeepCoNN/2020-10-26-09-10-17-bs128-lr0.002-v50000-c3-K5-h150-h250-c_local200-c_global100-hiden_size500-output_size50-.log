@@ -1,0 +1,155 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  channels_global: 100
+  channels_local: 200
+  command: -d Office_Products -m DeepCoNN -e 10 -dr 0.9 -WED 300 -p 1 -v 50000 -K 5 -h1 50 -h2 50 -filters_num 100 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm Office_Products_DeepCoNN
+  ctx_win_size: 3
+  dataset: Office_Products
+  disable_initial_eval: 0
+  dropout_rate: 0.9
+  epochs: 10
+  filters_num: 100
+  gpu: 0
+  h1: 50
+  h2: 50
+  hidden_size: 500
+  input_dir: ./datasets/Office_Products/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: DeepCoNN
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Office_Products - DeepCoNN/
+  output_size: 50
+  pretrained_src: 1
+  random_seed: 1234
+  save_model: Office_Products_DeepCoNN
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 628,512, # of Items: 105,406
+
+Creating model (Selected Model: DeepCoNN)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 4.21s (0.07 minute)
+
+Loading uid_userDoc from "./datasets/Office_Products/Office_Products_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (628512, 500)]
+
+Loading iid_itemDoc from "./datasets/Office_Products/Office_Products_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (105406, 500)]
+
+Loading pretrained word embeddings from "./datasets/Office_Products/Office_Products_wed300_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (50002, 300)]
+
+Initialization Complete.. Elapsed Time: 29.24s (0.49 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 800,000, |DEV|: 30,765, |TEST|: 30,933
+Train/Dev/Test splits loaded! Elapsed Time: 29.50s (0.49 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 15.78036, MAE: 3.77506
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 15.65574, MAE: 3.75329
+
+Initial Evaluation Complete.. Elapsed Time: 34.64s (0.58 minute)
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 382,883,819
+# of Trainable Parameters: 924,219
+DeepCoNN (
+  (uid_userDoc): Embedding(628512, 500), weights = ((628512, 500),), parameters = 314,256,000
+  (iid_itemDoc): Embedding(105406, 500), weights = ((105406, 500),), parameters = 52,703,000
+  (wid_wEmbed): Embedding(50002, 300), weights = ((50002, 300),), parameters = 15,000,600
+  (user_CNN): Conv2d(1, 100, kernel_size=(3, 300), stride=(1, 1)), weights = ((100, 1, 3, 300), (100,)), parameters = 90,100 (Trainable)
+  (item_CNN): Conv2d(1, 100, kernel_size=(3, 300), stride=(1, 1)), weights = ((100, 1, 3, 300), (100,)), parameters = 90,100 (Trainable)
+  (user_fcLayer): Linear(in_features=100, out_features=50, bias=True), weights = ((50, 100), (50,)), parameters = 5,050 (Trainable)
+  (item_fcLayer): Linear(in_features=100, out_features=50, bias=True), weights = ((50, 100), (50,)), parameters = 5,050 (Trainable)
+  (userDropout): Dropout(p=0.9, inplace=False), weights = (), parameters = 0
+  (itemDropout): Dropout(p=0.9, inplace=False), weights = (), parameters = 0
+  (DeepCoNN_RatingPred): DeepCoNN_RatingPred(
+    (uid_userOffset): Embedding(628512, 1)
+    (iid_itemOffset): Embedding(105406, 1)
+    (globalOffset): Parameter(1,)
+  ), weights = ((1,), (628512, 1), (105406, 1)), parameters = 733,919 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/10] Training Loss: 3.04357	Elapsed Time: 123.99s (0:02:03)
+[Epoch 1] [Dev]  MSE: 1.35976, MAE: 0.93563
+[Epoch 1] [Test] MSE: 1.36105, MAE: 0.93601
+
+*** MODEL has obtained the best DEV MSE of 1.35976 so far!
+*** The Best MODEL saved to "./__saved_models__/Office_Products - DeepCoNN/Office_Products_DeepCoNN_1234.pth"
+
+[Epoch 2/10] Training Loss: 1.43727	Elapsed Time: 253.13s (0:04:13)
+[Epoch 2] [Dev]  MSE: 1.31028, MAE: 0.89518
+[Epoch 2] [Test] MSE: 1.30495, MAE: 0.89120
+
+*** MODEL has obtained the best DEV MSE of 1.31028 so far!
+*** The Best MODEL saved to "./__saved_models__/Office_Products - DeepCoNN/Office_Products_DeepCoNN_1234.pth"
+
+[Epoch 3/10] Training Loss: 1.28637	Elapsed Time: 382.28s (0:06:22)
+[Epoch 3] [Dev]  MSE: 1.30470, MAE: 0.88976
+[Epoch 3] [Test] MSE: 1.29810, MAE: 0.88638
+
+*** MODEL has obtained the best DEV MSE of 1.30470 so far!
+*** The Best MODEL saved to "./__saved_models__/Office_Products - DeepCoNN/Office_Products_DeepCoNN_1234.pth"
+
+[Epoch 4/10] Training Loss: 1.16880	Elapsed Time: 511.38s (0:08:31)
+[Epoch 4] [Dev]  MSE: 1.30306, MAE: 0.87799
+[Epoch 4] [Test] MSE: 1.29656, MAE: 0.87482
+
+*** MODEL has obtained the best DEV MSE of 1.30306 so far!
+*** The Best MODEL saved to "./__saved_models__/Office_Products - DeepCoNN/Office_Products_DeepCoNN_1234.pth"
+
+[Epoch 5/10] Training Loss: 1.07336	Elapsed Time: 640.58s (0:10:40)
+[Epoch 5] [Dev]  MSE: 1.31880, MAE: 0.88667
+[Epoch 5] [Test] MSE: 1.30911, MAE: 0.88226
+
+[Epoch 6/10] Training Loss: 0.98962	Elapsed Time: 769.71s (0:12:49)
+[Epoch 6] [Dev]  MSE: 1.31958, MAE: 0.87064
+[Epoch 6] [Test] MSE: 1.30703, MAE: 0.86602
+
+[Epoch 7/10] Training Loss: 0.91542	Elapsed Time: 898.83s (0:14:58)
+[Epoch 7] [Dev]  MSE: 1.33163, MAE: 0.86060
+[Epoch 7] [Test] MSE: 1.31820, MAE: 0.85518
+
+[Epoch 8/10] Training Loss: 0.84820	Elapsed Time: 1,028.00s (0:17:07)
+[Epoch 8] [Dev]  MSE: 1.34153, MAE: 0.86996
+[Epoch 8] [Test] MSE: 1.32620, MAE: 0.86334
+
+[Epoch 9/10] Training Loss: 0.78790	Elapsed Time: 1,157.14s (0:19:17)
+[Epoch 9] [Dev]  MSE: 1.36039, MAE: 0.87040
+[Epoch 9] [Test] MSE: 1.34238, MAE: 0.86412
+
+[Epoch 10/10] Training Loss: 0.73305	Elapsed Time: 1,286.31s (0:21:26)
+[Epoch 10] [Dev]  MSE: 1.38197, MAE: 0.87780
+[Epoch 10] [Test] MSE: 1.36014, MAE: 0.86995
+*** The Last MODEL saved to "./__saved_models__/Office_Products - DeepCoNN/Office_Products_DeepCoNN_1234_10.pth"
+
+[Training Loss]
+[3.04357, 1.43727, 1.28637, 1.1688, 1.07336, 0.98962, 0.91542, 0.8482, 0.7879, 0.73305]
+
+[Dev MSE]
+[1.35976, 1.31028, 1.3047, 1.30306, 1.3188, 1.31958, 1.33163, 1.34153, 1.36039, 1.38197]
+[Test MSE]
+[1.36105, 1.30495, 1.2981, 1.29656, 1.30911, 1.30703, 1.3182, 1.3262, 1.34238, 1.36014]
+[Test MAE]
+[0.93601, 0.8912, 0.88638, 0.87482, 0.88226, 0.86602, 0.85518, 0.86334, 0.86412, 0.86995]
+
+
+Best Dev MSE: 1.30306 (Obtained during Evaluation #4)
+Test MSE: 1.29656, Test MAE: 0.87482
+
+End of Program! Elapsed Time: 1,325.96s (0:22:05)

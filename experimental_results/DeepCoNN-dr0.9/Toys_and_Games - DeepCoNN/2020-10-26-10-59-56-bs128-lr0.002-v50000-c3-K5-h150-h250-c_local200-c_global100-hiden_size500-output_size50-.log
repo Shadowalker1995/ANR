@@ -1,0 +1,152 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  channels_global: 100
+  channels_local: 200
+  command: -d Toys_and_Games -m DeepCoNN -e 10 -dr 0.9 -WED 300 -p 1 -v 50000 -K 5 -h1 50 -h2 50 -filters_num 100 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm Toys_and_Games_DeepCoNN
+  ctx_win_size: 3
+  dataset: Toys_and_Games
+  disable_initial_eval: 0
+  dropout_rate: 0.9
+  epochs: 10
+  filters_num: 100
+  gpu: 0
+  h1: 50
+  h2: 50
+  hidden_size: 500
+  input_dir: ./datasets/Toys_and_Games/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: DeepCoNN
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Toys_and_Games - DeepCoNN/
+  output_size: 50
+  pretrained_src: 1
+  random_seed: 1234
+  save_model: Toys_and_Games_DeepCoNN
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 598,485, # of Items: 197,223
+
+Creating model (Selected Model: DeepCoNN)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 4.47s (0.07 minute)
+
+Loading uid_userDoc from "./datasets/Toys_and_Games/Toys_and_Games_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (598485, 500)]
+
+Loading iid_itemDoc from "./datasets/Toys_and_Games/Toys_and_Games_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (197223, 500)]
+
+Loading pretrained word embeddings from "./datasets/Toys_and_Games/Toys_and_Games_wed300_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (50002, 300)]
+
+Initialization Complete.. Elapsed Time: 31.55s (0.53 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 800,000, |DEV|: 32,587, |TEST|: 32,299
+Train/Dev/Test splits loaded! Elapsed Time: 31.81s (0.53 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 15.10843, MAE: 3.72796
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 15.07796, MAE: 3.72022
+
+Initial Evaluation Complete.. Elapsed Time: 37.17s (0.62 minute)
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 413,840,609
+# of Trainable Parameters: 986,009
+DeepCoNN (
+  (uid_userDoc): Embedding(598485, 500), weights = ((598485, 500),), parameters = 299,242,500
+  (iid_itemDoc): Embedding(197223, 500), weights = ((197223, 500),), parameters = 98,611,500
+  (wid_wEmbed): Embedding(50002, 300), weights = ((50002, 300),), parameters = 15,000,600
+  (user_CNN): Conv2d(1, 100, kernel_size=(3, 300), stride=(1, 1)), weights = ((100, 1, 3, 300), (100,)), parameters = 90,100 (Trainable)
+  (item_CNN): Conv2d(1, 100, kernel_size=(3, 300), stride=(1, 1)), weights = ((100, 1, 3, 300), (100,)), parameters = 90,100 (Trainable)
+  (user_fcLayer): Linear(in_features=100, out_features=50, bias=True), weights = ((50, 100), (50,)), parameters = 5,050 (Trainable)
+  (item_fcLayer): Linear(in_features=100, out_features=50, bias=True), weights = ((50, 100), (50,)), parameters = 5,050 (Trainable)
+  (userDropout): Dropout(p=0.9, inplace=False), weights = (), parameters = 0
+  (itemDropout): Dropout(p=0.9, inplace=False), weights = (), parameters = 0
+  (DeepCoNN_RatingPred): DeepCoNN_RatingPred(
+    (uid_userOffset): Embedding(598485, 1)
+    (iid_itemOffset): Embedding(197223, 1)
+    (globalOffset): Parameter(1,)
+  ), weights = ((1,), (598485, 1), (197223, 1)), parameters = 795,709 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/10] Training Loss: 2.96533	Elapsed Time: 122.20s (0:02:02)
+[Epoch 1] [Dev]  MSE: 1.08433, MAE: 0.80975
+[Epoch 1] [Test] MSE: 1.09986, MAE: 0.81237
+
+*** MODEL has obtained the best DEV MSE of 1.08433 so far!
+*** The Best MODEL saved to "./__saved_models__/Toys_and_Games - DeepCoNN/Toys_and_Games_DeepCoNN_1234.pth"
+
+[Epoch 2/10] Training Loss: 1.17908	Elapsed Time: 249.89s (0:04:09)
+[Epoch 2] [Dev]  MSE: 1.03570, MAE: 0.78637
+[Epoch 2] [Test] MSE: 1.05122, MAE: 0.78953
+
+*** MODEL has obtained the best DEV MSE of 1.03570 so far!
+*** The Best MODEL saved to "./__saved_models__/Toys_and_Games - DeepCoNN/Toys_and_Games_DeepCoNN_1234.pth"
+
+[Epoch 3/10] Training Loss: 1.02964	Elapsed Time: 377.60s (0:06:17)
+[Epoch 3] [Dev]  MSE: 1.01905, MAE: 0.76450
+[Epoch 3] [Test] MSE: 1.03375, MAE: 0.76783
+
+*** MODEL has obtained the best DEV MSE of 1.01905 so far!
+*** The Best MODEL saved to "./__saved_models__/Toys_and_Games - DeepCoNN/Toys_and_Games_DeepCoNN_1234.pth"
+
+[Epoch 4/10] Training Loss: 0.91488	Elapsed Time: 505.28s (0:08:25)
+[Epoch 4] [Dev]  MSE: 1.02211, MAE: 0.75096
+[Epoch 4] [Test] MSE: 1.03425, MAE: 0.75355
+
+[Epoch 5/10] Training Loss: 0.82284	Elapsed Time: 632.93s (0:10:32)
+[Epoch 5] [Dev]  MSE: 1.02249, MAE: 0.74971
+[Epoch 5] [Test] MSE: 1.03649, MAE: 0.75352
+
+[Epoch 6/10] Training Loss: 0.74583	Elapsed Time: 762.16s (0:12:42)
+[Epoch 6] [Dev]  MSE: 1.03270, MAE: 0.74897
+[Epoch 6] [Test] MSE: 1.04552, MAE: 0.75274
+
+[Epoch 7/10] Training Loss: 0.68100	Elapsed Time: 891.57s (0:14:51)
+[Epoch 7] [Dev]  MSE: 1.04798, MAE: 0.75398
+[Epoch 7] [Test] MSE: 1.06123, MAE: 0.75787
+
+[Epoch 8/10] Training Loss: 0.62411	Elapsed Time: 1,021.03s (0:17:01)
+[Epoch 8] [Dev]  MSE: 1.06212, MAE: 0.75395
+[Epoch 8] [Test] MSE: 1.07416, MAE: 0.75704
+
+[Epoch 9/10] Training Loss: 0.57347	Elapsed Time: 1,149.80s (0:19:09)
+[Epoch 9] [Dev]  MSE: 1.07727, MAE: 0.75655
+[Epoch 9] [Test] MSE: 1.09016, MAE: 0.76007
+
+[Epoch 10/10] Training Loss: 0.52824	Elapsed Time: 1,279.15s (0:21:19)
+[Epoch 10] [Dev]  MSE: 1.09069, MAE: 0.75851
+[Epoch 10] [Test] MSE: 1.10488, MAE: 0.76265
+*** The Last MODEL saved to "./__saved_models__/Toys_and_Games - DeepCoNN/Toys_and_Games_DeepCoNN_1234_10.pth"
+
+[Training Loss]
+[2.96533, 1.17908, 1.02964, 0.91488, 0.82284, 0.74583, 0.681, 0.62411, 0.57347, 0.52824]
+
+[Dev MSE]
+[1.08433, 1.0357, 1.01905, 1.02211, 1.02249, 1.0327, 1.04798, 1.06212, 1.07727, 1.09069]
+[Test MSE]
+[1.09986, 1.05122, 1.03375, 1.03425, 1.03649, 1.04552, 1.06123, 1.07416, 1.09016, 1.10488]
+[Test MAE]
+[0.81237, 0.78953, 0.76783, 0.75355, 0.75352, 0.75274, 0.75787, 0.75704, 0.76007, 0.76265]
+
+
+Best Dev MSE: 1.01905 (Obtained during Evaluation #3)
+Test MSE: 1.03375, Test MAE: 0.76783
+
+End of Program! Elapsed Time: 1,321.85s (0:22:01)

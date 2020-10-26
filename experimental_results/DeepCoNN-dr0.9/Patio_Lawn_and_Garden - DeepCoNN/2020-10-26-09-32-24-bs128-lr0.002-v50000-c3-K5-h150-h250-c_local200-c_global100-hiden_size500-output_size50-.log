@@ -1,0 +1,155 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  channels_global: 100
+  channels_local: 200
+  command: -d Patio_Lawn_and_Garden -m DeepCoNN -e 10 -dr 0.9 -WED 300 -p 1 -v 50000 -K 5 -h1 50 -h2 50 -filters_num 100 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm Patio_Lawn_and_Garden_DeepCoNN
+  ctx_win_size: 3
+  dataset: Patio_Lawn_and_Garden
+  disable_initial_eval: 0
+  dropout_rate: 0.9
+  epochs: 10
+  filters_num: 100
+  gpu: 0
+  h1: 50
+  h2: 50
+  hidden_size: 500
+  input_dir: ./datasets/Patio_Lawn_and_Garden/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: DeepCoNN
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Patio_Lawn_and_Garden - DeepCoNN/
+  output_size: 50
+  pretrained_src: 1
+  random_seed: 1234
+  save_model: Patio_Lawn_and_Garden_DeepCoNN
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 584,107, # of Items: 95,030
+
+Creating model (Selected Model: DeepCoNN)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 4.02s (0.07 minute)
+
+Loading uid_userDoc from "./datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (584107, 500)]
+
+Loading iid_itemDoc from "./datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (95030, 500)]
+
+Loading pretrained word embeddings from "./datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_wed300_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (50002, 300)]
+
+Initialization Complete.. Elapsed Time: 27.02s (0.45 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 775,805, |DEV|: 34,584, |TEST|: 34,718
+Train/Dev/Test splits loaded! Elapsed Time: 27.27s (0.45 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 15.47091, MAE: 3.71741
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 15.34848, MAE: 3.69843
+
+Initial Evaluation Complete.. Elapsed Time: 33.03s (0.55 minute)
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 355,438,538
+# of Trainable Parameters: 869,438
+DeepCoNN (
+  (uid_userDoc): Embedding(584107, 500), weights = ((584107, 500),), parameters = 292,053,500
+  (iid_itemDoc): Embedding(95030, 500), weights = ((95030, 500),), parameters = 47,515,000
+  (wid_wEmbed): Embedding(50002, 300), weights = ((50002, 300),), parameters = 15,000,600
+  (user_CNN): Conv2d(1, 100, kernel_size=(3, 300), stride=(1, 1)), weights = ((100, 1, 3, 300), (100,)), parameters = 90,100 (Trainable)
+  (item_CNN): Conv2d(1, 100, kernel_size=(3, 300), stride=(1, 1)), weights = ((100, 1, 3, 300), (100,)), parameters = 90,100 (Trainable)
+  (user_fcLayer): Linear(in_features=100, out_features=50, bias=True), weights = ((50, 100), (50,)), parameters = 5,050 (Trainable)
+  (item_fcLayer): Linear(in_features=100, out_features=50, bias=True), weights = ((50, 100), (50,)), parameters = 5,050 (Trainable)
+  (userDropout): Dropout(p=0.9, inplace=False), weights = (), parameters = 0
+  (itemDropout): Dropout(p=0.9, inplace=False), weights = (), parameters = 0
+  (DeepCoNN_RatingPred): DeepCoNN_RatingPred(
+    (uid_userOffset): Embedding(584107, 1)
+    (iid_itemOffset): Embedding(95030, 1)
+    (globalOffset): Parameter(1,)
+  ), weights = ((1,), (584107, 1), (95030, 1)), parameters = 679,138 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/10] Training Loss: 3.11052	Elapsed Time: 120.81s (0:02:00)
+[Epoch 1] [Dev]  MSE: 1.44407, MAE: 0.96441
+[Epoch 1] [Test] MSE: 1.45903, MAE: 0.96703
+
+*** MODEL has obtained the best DEV MSE of 1.44407 so far!
+*** The Best MODEL saved to "./__saved_models__/Patio_Lawn_and_Garden - DeepCoNN/Patio_Lawn_and_Garden_DeepCoNN_1234.pth"
+
+[Epoch 2/10] Training Loss: 1.42685	Elapsed Time: 247.55s (0:04:07)
+[Epoch 2] [Dev]  MSE: 1.39206, MAE: 0.94515
+[Epoch 2] [Test] MSE: 1.40381, MAE: 0.94724
+
+*** MODEL has obtained the best DEV MSE of 1.39206 so far!
+*** The Best MODEL saved to "./__saved_models__/Patio_Lawn_and_Garden - DeepCoNN/Patio_Lawn_and_Garden_DeepCoNN_1234.pth"
+
+[Epoch 3/10] Training Loss: 1.27258	Elapsed Time: 374.19s (0:06:14)
+[Epoch 3] [Dev]  MSE: 1.36634, MAE: 0.91531
+[Epoch 3] [Test] MSE: 1.37658, MAE: 0.91791
+
+*** MODEL has obtained the best DEV MSE of 1.36634 so far!
+*** The Best MODEL saved to "./__saved_models__/Patio_Lawn_and_Garden - DeepCoNN/Patio_Lawn_and_Garden_DeepCoNN_1234.pth"
+
+[Epoch 4/10] Training Loss: 1.15763	Elapsed Time: 500.84s (0:08:20)
+[Epoch 4] [Dev]  MSE: 1.36257, MAE: 0.89491
+[Epoch 4] [Test] MSE: 1.37534, MAE: 0.89937
+
+*** MODEL has obtained the best DEV MSE of 1.36257 so far!
+*** The Best MODEL saved to "./__saved_models__/Patio_Lawn_and_Garden - DeepCoNN/Patio_Lawn_and_Garden_DeepCoNN_1234.pth"
+
+[Epoch 5/10] Training Loss: 1.06110	Elapsed Time: 627.50s (0:10:27)
+[Epoch 5] [Dev]  MSE: 1.36629, MAE: 0.88945
+[Epoch 5] [Test] MSE: 1.38018, MAE: 0.89486
+
+[Epoch 6/10] Training Loss: 0.97971	Elapsed Time: 754.18s (0:12:34)
+[Epoch 6] [Dev]  MSE: 1.37369, MAE: 0.88909
+[Epoch 6] [Test] MSE: 1.38659, MAE: 0.89379
+
+[Epoch 7/10] Training Loss: 0.90945	Elapsed Time: 880.83s (0:14:40)
+[Epoch 7] [Dev]  MSE: 1.37957, MAE: 0.88449
+[Epoch 7] [Test] MSE: 1.39246, MAE: 0.88866
+
+[Epoch 8/10] Training Loss: 0.84395	Elapsed Time: 1,007.47s (0:16:47)
+[Epoch 8] [Dev]  MSE: 1.40080, MAE: 0.89189
+[Epoch 8] [Test] MSE: 1.41381, MAE: 0.89688
+
+[Epoch 9/10] Training Loss: 0.78770	Elapsed Time: 1,134.10s (0:18:54)
+[Epoch 9] [Dev]  MSE: 1.40917, MAE: 0.88578
+[Epoch 9] [Test] MSE: 1.42582, MAE: 0.89233
+
+[Epoch 10/10] Training Loss: 0.73536	Elapsed Time: 1,260.81s (0:21:00)
+[Epoch 10] [Dev]  MSE: 1.43164, MAE: 0.88988
+[Epoch 10] [Test] MSE: 1.44711, MAE: 0.89619
+*** The Last MODEL saved to "./__saved_models__/Patio_Lawn_and_Garden - DeepCoNN/Patio_Lawn_and_Garden_DeepCoNN_1234_10.pth"
+
+[Training Loss]
+[3.11052, 1.42685, 1.27258, 1.15763, 1.0611, 0.97971, 0.90945, 0.84395, 0.7877, 0.73536]
+
+[Dev MSE]
+[1.44407, 1.39206, 1.36634, 1.36257, 1.36629, 1.37369, 1.37957, 1.4008, 1.40917, 1.43164]
+[Test MSE]
+[1.45903, 1.40381, 1.37658, 1.37534, 1.38018, 1.38659, 1.39246, 1.41381, 1.42582, 1.44711]
+[Test MAE]
+[0.96703, 0.94724, 0.91791, 0.89937, 0.89486, 0.89379, 0.88866, 0.89688, 0.89233, 0.89619]
+
+
+Best Dev MSE: 1.36257 (Obtained during Evaluation #4)
+Test MSE: 1.37534, Test MAE: 0.89937
+
+End of Program! Elapsed Time: 1,299.46s (0:21:39)

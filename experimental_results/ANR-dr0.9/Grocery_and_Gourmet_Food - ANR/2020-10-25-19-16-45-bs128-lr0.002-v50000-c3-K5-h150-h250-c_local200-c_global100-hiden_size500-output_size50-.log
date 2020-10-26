@@ -1,0 +1,177 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: Grocery_and_Gourmet_Food_ANRS_1337
+  batch_size: 128
+  channels_global: 100
+  channels_local: 200
+  command: -d Grocery_and_Gourmet_Food -m ANR -e 10 -dr 0.9 -WED 300 -h1 50 -h2 50 -p 1 -v 50000 -rs 1234 -gpu 0 -vb 1 -sm Grocery_and_Gourmet_Food_ANR -ARL_path Grocery_and_Gourmet_Food_ANRS_1337
+  ctx_win_size: 3
+  dataset: Grocery_and_Gourmet_Food
+  disable_initial_eval: 0
+  dropout_rate: 0.9
+  epochs: 10
+  filters_num: 100
+  gpu: 0
+  h1: 50
+  h2: 50
+  hidden_size: 500
+  input_dir: ./datasets/Grocery_and_Gourmet_Food/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: ANR
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Grocery_and_Gourmet_Food - ANR/
+  output_size: 50
+  pretrained_src: 1
+  random_seed: 1234
+  save_model: Grocery_and_Gourmet_Food_ANR
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 528,374, # of Items: 134,221
+
+Creating model (Selected Model: ANR)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 3.96s (0.07 minute)
+
+Loading uid_userDoc from "./datasets/Grocery_and_Gourmet_Food/Grocery_and_Gourmet_Food_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (528374, 500)]
+
+Loading iid_itemDoc from "./datasets/Grocery_and_Gourmet_Food/Grocery_and_Gourmet_Food_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (134221, 500)]
+
+Loading pretrained word embeddings from "./datasets/Grocery_and_Gourmet_Food/Grocery_and_Gourmet_Food_wed300_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (50002, 300)]
+
+Loading pretrained ARL weights of "ANR" for dataset "Grocery_and_Gourmet_Food" from "./__saved_models__/Grocery_and_Gourmet_Food - ANRS/Grocery_and_Gourmet_Food_ANRS_1337.pth"!
+Loading pretrained ARL weights on GPU "0"!
+
+Loaded pretrained model states:
+
+	shared_ANR_ARL.aspProj
+	shared_ANR_ARL.aspEmbed.weight
+
+Pretrained model states transferred to current model!
+
+*** "shared_ANR_ARL.aspProj, shared_ANR_ARL.aspEmbed.weight" are FINE-TUNED!! ***
+
+
+Initialization Complete.. Elapsed Time: 21.90s (0.37 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 800,000, |DEV|: 43,464, |TEST|: 43,991
+Train/Dev/Test splits loaded! Elapsed Time: 22.18s (0.37 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 19.74397, MAE: 4.28622
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 19.82599, MAE: 4.29863
+
+Initial Evaluation Complete.. Elapsed Time: 33.22s (0.55 minute)
+
+Parameters that are fine-tuned using a smaller LR (LR: 2e-05):
+shared_ANR_ARL.aspProj, shared_ANR_ARL.aspEmbed.weight
+
+Parameters with L2 Regularization (Regularization Strength: 1e-06):
+ANR_RatingPred.uid_userOffset.weight, ANR_RatingPred.iid_itemOffset.weight
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 347,044,046
+# of Trainable Parameters: 745,946
+ANR (
+  (uid_userDoc): Embedding(528374, 500), weights = ((528374, 500),), parameters = 264,187,000
+  (iid_itemDoc): Embedding(134221, 500), weights = ((134221, 500),), parameters = 67,110,500
+  (wid_wEmbed): Embedding(50002, 300), weights = ((50002, 300),), parameters = 15,000,600
+  (shared_ANR_ARL): ANR_ARL(
+    (aspEmbed): Embedding(5, 150)
+    (aspProj): Parameter(5, 300, 50)
+  ), weights = ((5, 300, 50), (5, 150)), parameters = 75,750 (Trainable)
+  (ANR_AIE): ANR_AIE(  (W_a): Parameter(50, 50)
+    (W_u): Parameter(50, 50)
+    (w_hu): Parameter(50, 1)
+    (W_i): Parameter(50, 50)
+    (w_hi): Parameter(50, 1)
+  ), weights = ((50, 50), (50, 50), (50, 1), (50, 50), (50, 1)), parameters = 7,600 (Trainable)
+  (ANR_RatingPred): ANR_RatingPred(
+    (userAspRepDropout): Dropout(p=0.9, inplace=False)
+    (itemAspRepDropout): Dropout(p=0.9, inplace=False)
+    (uid_userOffset): Embedding(528374, 1)
+    (iid_itemOffset): Embedding(134221, 1)
+    (globalOffset): Parameter(1,)
+  ), weights = ((1,), (528374, 1), (134221, 1)), parameters = 662,596 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/10] Training Loss: 3.80728	Elapsed Time: 234.79s (0:03:54)
+[Epoch 1] [Dev]  MSE: 1.28215, MAE: 0.86362
+[Epoch 1] [Test] MSE: 1.25743, MAE: 0.85602
+
+*** MODEL has obtained the best DEV MSE of 1.28215 so far!
+*** The Best MODEL saved to "./__saved_models__/Grocery_and_Gourmet_Food - ANR/Grocery_and_Gourmet_Food_ANR_1234.pth"
+
+[Epoch 2/10] Training Loss: 1.34880	Elapsed Time: 480.67s (0:08:00)
+[Epoch 2] [Dev]  MSE: 1.22947, MAE: 0.82274
+[Epoch 2] [Test] MSE: 1.20596, MAE: 0.81426
+
+*** MODEL has obtained the best DEV MSE of 1.22947 so far!
+*** The Best MODEL saved to "./__saved_models__/Grocery_and_Gourmet_Food - ANR/Grocery_and_Gourmet_Food_ANR_1234.pth"
+
+[Epoch 3/10] Training Loss: 1.22159	Elapsed Time: 726.45s (0:12:06)
+[Epoch 3] [Dev]  MSE: 1.22032, MAE: 0.82264
+[Epoch 3] [Test] MSE: 1.19772, MAE: 0.81429
+
+*** MODEL has obtained the best DEV MSE of 1.22032 so far!
+*** The Best MODEL saved to "./__saved_models__/Grocery_and_Gourmet_Food - ANR/Grocery_and_Gourmet_Food_ANR_1234.pth"
+
+[Epoch 4/10] Training Loss: 1.14686	Elapsed Time: 974.10s (0:16:14)
+[Epoch 4] [Dev]  MSE: 1.22282, MAE: 0.81763
+[Epoch 4] [Test] MSE: 1.19975, MAE: 0.80905
+
+[Epoch 5/10] Training Loss: 1.09767	Elapsed Time: 1,221.80s (0:20:21)
+[Epoch 5] [Dev]  MSE: 1.23101, MAE: 0.80706
+[Epoch 5] [Test] MSE: 1.20569, MAE: 0.79764
+
+[Epoch 6/10] Training Loss: 1.06454	Elapsed Time: 1,469.47s (0:24:29)
+[Epoch 6] [Dev]  MSE: 1.23603, MAE: 0.81276
+[Epoch 6] [Test] MSE: 1.21014, MAE: 0.80359
+
+[Epoch 7/10] Training Loss: 1.03954	Elapsed Time: 1,717.49s (0:28:37)
+[Epoch 7] [Dev]  MSE: 1.24045, MAE: 0.81518
+[Epoch 7] [Test] MSE: 1.21461, MAE: 0.80623
+
+[Epoch 8/10] Training Loss: 1.02117	Elapsed Time: 1,965.18s (0:32:45)
+[Epoch 8] [Dev]  MSE: 1.24626, MAE: 0.81164
+[Epoch 8] [Test] MSE: 1.21917, MAE: 0.80205
+
+[Epoch 9/10] Training Loss: 1.00723	Elapsed Time: 2,212.88s (0:36:52)
+[Epoch 9] [Dev]  MSE: 1.25245, MAE: 0.80871
+[Epoch 9] [Test] MSE: 1.22449, MAE: 0.79831
+
+[Epoch 10/10] Training Loss: 0.99738	Elapsed Time: 2,460.67s (0:41:00)
+[Epoch 10] [Dev]  MSE: 1.25341, MAE: 0.81618
+[Epoch 10] [Test] MSE: 1.22649, MAE: 0.80609
+*** The Last MODEL saved to "./__saved_models__/Grocery_and_Gourmet_Food - ANR/Grocery_and_Gourmet_Food_ANR_1234_10.pth"
+
+[Training Loss]
+[3.80728, 1.3488, 1.22159, 1.14686, 1.09767, 1.06454, 1.03954, 1.02117, 1.00723, 0.99738]
+
+[Dev MSE]
+[1.28215, 1.22947, 1.22032, 1.22282, 1.23101, 1.23603, 1.24045, 1.24626, 1.25245, 1.25341]
+[Test MSE]
+[1.25743, 1.20596, 1.19772, 1.19975, 1.20569, 1.21014, 1.21461, 1.21917, 1.22449, 1.22649]
+[Test MAE]
+[0.85602, 0.81426, 0.81429, 0.80905, 0.79764, 0.80359, 0.80623, 0.80205, 0.79831, 0.80609]
+
+
+Best Dev MSE: 1.22032 (Obtained during Evaluation #3)
+Test MSE: 1.19772, Test MAE: 0.81429
+
+End of Program! Elapsed Time: 2,504.77s (0:41:44)

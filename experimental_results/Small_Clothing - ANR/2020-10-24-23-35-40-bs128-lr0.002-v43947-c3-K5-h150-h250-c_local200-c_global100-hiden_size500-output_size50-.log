@@ -1,0 +1,111 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: Small_Clothing_ANRS_1337
+  batch_size: 128
+  channels_global: 100
+  channels_local: 200
+  command: -d Small_Clothing -m ANR -e 10 -dr 0.9 -WED 100 -h1 50 -h2 50 -p 1 -v 43947 -rs 1234 -gpu 0 -vb 1 -sm Small_Clothing_ANR -ARL_path Small_Clothing_ANRS_1337
+  ctx_win_size: 3
+  dataset: Small_Clothing
+  disable_initial_eval: 0
+  dropout_rate: 0.9
+  epochs: 10
+  filters_num: 100
+  gpu: 0
+  h1: 50
+  h2: 50
+  hidden_size: 500
+  input_dir: ./datasets/Small_Clothing/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: ANR
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Small_Clothing - ANR/
+  output_size: 50
+  pretrained_src: 1
+  random_seed: 1234
+  save_model: Small_Clothing_ANR
+  use_cuda: True
+  verbose: 1
+  vocab_size: 43947
+  word_embed_dim: 100
+========================================================================================================================
+
+[INFO] # of Users: 77,930, # of Items: 59,172
+
+Creating model (Selected Model: ANR)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 1.83s (0.03 minute)
+
+Loading uid_userDoc from "./datasets/Small_Clothing/Small_Clothing_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (77930, 500)]
+
+Loading iid_itemDoc from "./datasets/Small_Clothing/Small_Clothing_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (59172, 500)]
+
+Loading pretrained word embeddings from "./datasets/Small_Clothing/Small_Clothing_wed100_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (43949, 100)]
+
+Loading pretrained ARL weights of "ANR" for dataset "Small_Clothing" from "./__saved_models__/Small_Clothing - ANRS/Small_Clothing_ANRS_1337.pth"!
+Loading pretrained ARL weights on GPU "0"!
+
+Loaded pretrained model states:
+
+	shared_ANR_ARL.aspProj
+	shared_ANR_ARL.aspEmbed.weight
+
+Pretrained model states transferred to current model!
+
+*** "shared_ANR_ARL.aspProj, shared_ANR_ARL.aspEmbed.weight" are FINE-TUNED!! ***
+
+
+Initialization Complete.. Elapsed Time: 2.11s (0.04 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 80,000, |DEV|: 150, |TEST|: 166
+Train/Dev/Test splits loaded! Elapsed Time: 2.15s (0.04 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 19.01440, MAE: 4.23416
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 19.77212, MAE: 4.33193
+
+Initial Evaluation Complete.. Elapsed Time: 2.34s (0.04 minute)
+
+Parameters that are fine-tuned using a smaller LR (LR: 2e-05):
+shared_ANR_ARL.aspProj, shared_ANR_ARL.aspEmbed.weight
+
+Parameters with L2 Regularization (Regularization Strength: 1e-06):
+ANR_RatingPred.uid_userOffset.weight, ANR_RatingPred.iid_itemOffset.weight
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 73,116,353
+# of Trainable Parameters: 170,453
+ANR (
+  (uid_userDoc): Embedding(77930, 500), weights = ((77930, 500),), parameters = 38,965,000
+  (iid_itemDoc): Embedding(59172, 500), weights = ((59172, 500),), parameters = 29,586,000
+  (wid_wEmbed): Embedding(43949, 100), weights = ((43949, 100),), parameters = 4,394,900
+  (shared_ANR_ARL): ANR_ARL(
+    (aspEmbed): Embedding(5, 150)
+    (aspProj): Parameter(5, 100, 50)
+  ), weights = ((5, 100, 50), (5, 150)), parameters = 25,750 (Trainable)
+  (ANR_AIE): ANR_AIE(  (W_a): Parameter(50, 50)
+    (W_u): Parameter(50, 50)
+    (w_hu): Parameter(50, 1)
+    (W_i): Parameter(50, 50)
+    (w_hi): Parameter(50, 1)
+  ), weights = ((50, 50), (50, 50), (50, 1), (50, 50), (50, 1)), parameters = 7,600 (Trainable)
+  (ANR_RatingPred): ANR_RatingPred(
+    (userAspRepDropout): Dropout(p=0.9, inplace=False)
+    (itemAspRepDropout): Dropout(p=0.9, inplace=False)
+    (uid_userOffset): Embedding(77930, 1)
+    (iid_itemOffset): Embedding(59172, 1)
+    (globalOffset): Parameter(1,)
+  ), weights = ((1,), (77930, 1), (59172, 1)), parameters = 137,103 (Trainable)
+)
+========================================================================================================================

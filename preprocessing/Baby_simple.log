@@ -1,0 +1,100 @@
+
+Dataset: Baby
+[args from argparse.ArgumentParser().parse_args()]
+command: preprocessing_simple.py -d Baby -dev_test_in_train 1
+dataset: Baby
+dataset_maximum_size: 1000000
+dev_test_in_train: True
+maxDL: 500
+maxVL: 500
+minImages: 1
+minReviews: 1
+minRL: 10
+random_seed: 1337
+train_ratio: 0.8
+vocab: 50000
+
+[INPUT] Source Folder:       ../datasets/
+[INPUT] Reviews/Ratings:     ../datasets/reviews_Baby.json
+
+[OUTPUT] Category Folder:    ../datasets/Baby/
+[OUTPUT] env:                ../datasets/Baby/Baby_env.pkl
+[OUTPUT] info:               ../datasets/Baby/Baby_info.pkl
+[OUTPUT] interactions:       ../datasets/Baby/Baby_interactions.pkl
+[OUTPUT] train_interactions: ../datasets/Baby/Baby_train_interactions.pkl
+[OUTPUT] dev_interactions:   ../datasets/Baby/Baby_dev_interactions.pkl
+[OUTPUT] test_interactions:  ../datasets/Baby/Baby_test_interactions.pkl
+[OUTPUT] split_train:        ../datasets/Baby/Baby_split_train.pkl
+[OUTPUT] split_dev:          ../datasets/Baby/Baby_split_dev.pkl
+[OUTPUT] split_test:         ../datasets/Baby/Baby_split_test.pkl
+[OUTPUT] uid_userDoc:        ../datasets/Baby/Baby_uid_userDoc.npy
+[OUTPUT] iid_itemDoc:        ../datasets/Baby/Baby_iid_itemDoc.npy
+[OUTPUT] uid_userDoc:        ../datasets/Baby/Baby_uid_userVis.npy
+[OUTPUT] iid_itemDoc:        ../datasets/Baby/Baby_iid_itemVis.npy
+
+Preprocessing data for "Baby"
+
+[Settings]
+Min reviews for user/item: 1
+Min review length to qualify as an user-item interaction: 10
+Max words for user/item document: 500 (For truncating/padding to get a fixed-size representation)
+Top-50000 words in vocabulary being utilized!
+
+
+Initial pass of reviews to get the user-item interactions!
+[Initial stats] Users: 531,890, Items: 64,426, Ratings: 915,446, Density: 0.0000267
+
+
+Second pass of visual features to get the item-feature interactions!
+[Second stats] Items with image: 70,716, Images: 70,716, Density: 1.0000000
+
+
+Starting to filter away users & items based on thresold of 1 images!
+Updating interactions based on the num of images...
+
+Filtered users & items based on thresold of 1 images!
+Users: 531890 -> 528937, Items: 64426 -> 63891
+[Current stats] Users: 528937, Items: 63891, Ratings: 908179, Density: 0.0000269
+Updating interactions based on the num of images...
+
+Filtered users & items based on thresold of 1 images!
+Users: 528937 -> 528937, Items: 63891 -> 63891
+[Current stats] Users: 528937, Items: 63891, Ratings: 908179, Density: 0.0000269
+
+No change in # of users or # of items!
+
+[Final stats] Users: 528,937, Items: 63,891, Ratings: 908,179, Density: 0.0000269
+
+Elapsed time for "Baby": 30.32 seconds (0.51 minutes)
+
+Starting to filter away users & items based on thresold of 1 reviews!
+
+Filtered users & items based on thresold of 1 reviews!
+Users: 528937 -> 528937, Items: 63891 -> 63891
+
+No change in # of users or # of items!
+
+[Final stats] Users: 528,937, Items: 63,891, Ratings: 908,179, Density: 0.0000269
+
+Elapsed time for "Baby": 30.42 seconds (0.51 minutes)
+
+
+Third pass of reviews to get the rating, date, the num of tokenized review and index!
+[Current stats] Users: 528,937, Items: 63,891, Ratings: 908,179, Density: 0.0000269
+
+Filtering user-item interactions based on minimum review length of 10 tokens..
+
+Filtered users & items based on minimum review length of 10 tokens!
+Users: 528,937 -> 525,592, Items: 63,891 -> 63,557
+[Current stats] Users: 525,592, Items: 63,557, Ratings: 902,474, Density: 0.0000270
+
+
+Starting to filter away users & items based on thresold of 1 reviews (after removing reviews with <= 10 tokens)!
+
+Filtered users & items based on thresold of 1 reviews!
+Users: 525,592 -> 525,592, Items: 63,557 -> 63,557
+
+No change in # of users or # of items!
+
+[Final stats] Users: 525,592, Items: 63,557, Ratings: 902,474, Density: 0.0000270
+[Current stats] Users: 525,592, Items: 63,557, Ratings: 902,474, Density: 0.0000270

@@ -1,0 +1,206 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  channels_global: 100
+  channels_local: 200
+  command: -d Musical_Instruments -m DAttn -e 10 -p 1 -v 50000 -K 5 -h1 10 -h2 50 -WED 100 -c_local 200 -c_global 100 -hiden_size 500 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm Musical_Instruments_DAttn
+  ctx_win_size: 3
+  dataset: Musical_Instruments
+  disable_initial_eval: 0
+  dropout_rate: 0.5
+  epochs: 10
+  filters_num: 100
+  gpu: 0
+  h1: 10
+  h2: 50
+  hidden_size: 500
+  input_dir: ./datasets/Musical_Instruments/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: DAttn
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Musical_Instruments - DAttn/
+  output_size: 50
+  pretrained_src: 1
+  random_seed: 1234
+  save_model: Musical_Instruments_DAttn
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 100
+========================================================================================================================
+
+[INFO] # of Users: 280,020, # of Items: 74,260
+
+Creating model (Selected Model: DAttn)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 2.66s (0.04 minute)
+
+Loading uid_userDoc from "./datasets/Musical_Instruments/Musical_Instruments_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (280020, 500)]
+
+Loading iid_itemDoc from "./datasets/Musical_Instruments/Musical_Instruments_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (74260, 500)]
+
+Loading pretrained word embeddings from "./datasets/Musical_Instruments/Musical_Instruments_wed100_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (50002, 100)]
+
+Initialization Complete.. Elapsed Time: 14.03s (0.23 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 394,376, |DEV|: 18,487, |TEST|: 18,692
+Train/Dev/Test splits loaded! Elapsed Time: 14.21s (0.24 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 21.09051, MAE: 4.46292
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 21.15854, MAE: 4.47169
+
+Initial Evaluation Complete.. Elapsed Time: 22.62s (0.38 minute)
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 183,367,185
+# of Trainable Parameters: 1,226,985
+DAttn (
+  (uid_userDoc): Embedding(280020, 500), weights = ((280020, 500),), parameters = 140,010,000
+  (iid_itemDoc): Embedding(74260, 500), weights = ((74260, 500),), parameters = 37,130,000
+  (wid_wEmbed): Embedding(50002, 100), weights = ((50002, 100),), parameters = 5,000,200
+  (user_net): Net(
+    (localAttentionLayer): LocalAttention(
+      (attention_layer): Sequential(
+        (0): Conv2d(1, 1, kernel_size=(3, 100), stride=(1, 1), padding=(1, 0))
+        (1): Sigmoid()
+      )
+      (cnn): Sequential(
+        (0): Conv2d(1, 200, kernel_size=(1, 100), stride=(1, 1))
+        (1): Tanh()
+      )
+    )
+    (globalAttentionLayer): GlobalAttention(
+      (attention_layer): Sequential(
+        (0): Conv2d(1, 1, kernel_size=(500, 100), stride=(1, 1))
+        (1): Sigmoid()
+      )
+      (convs): ModuleList(
+        (0): Conv2d(1, 100, kernel_size=(2, 100), stride=(1, 1))
+        (1): Conv2d(1, 100, kernel_size=(3, 100), stride=(1, 1))
+        (2): Conv2d(1, 100, kernel_size=(4, 100), stride=(1, 1))
+      )
+    )
+    (fcLayer): Sequential(
+      (0): Linear(in_features=500, out_features=500, bias=True)
+      (1): Dropout(p=0.5, inplace=False)
+      (2): ReLU()
+      (3): Linear(in_features=500, out_features=50, bias=True)
+    )
+    (dropout): Dropout(p=0.5, inplace=False)
+  ), weights = ((1, 1, 3, 100), (1,), (200, 1, 1, 100), (200,), (1, 1, 500, 100), (1,), (100, 1, 2, 100), (100,), (100, 1, 3, 100), (100,), (100, 1, 4, 100), (100,), (500, 500), (500,), (50, 500), (50,)), parameters = 436,352 (Trainable)
+  (item_net): Net(
+    (localAttentionLayer): LocalAttention(
+      (attention_layer): Sequential(
+        (0): Conv2d(1, 1, kernel_size=(3, 100), stride=(1, 1), padding=(1, 0))
+        (1): Sigmoid()
+      )
+      (cnn): Sequential(
+        (0): Conv2d(1, 200, kernel_size=(1, 100), stride=(1, 1))
+        (1): Tanh()
+      )
+    )
+    (globalAttentionLayer): GlobalAttention(
+      (attention_layer): Sequential(
+        (0): Conv2d(1, 1, kernel_size=(500, 100), stride=(1, 1))
+        (1): Sigmoid()
+      )
+      (convs): ModuleList(
+        (0): Conv2d(1, 100, kernel_size=(2, 100), stride=(1, 1))
+        (1): Conv2d(1, 100, kernel_size=(3, 100), stride=(1, 1))
+        (2): Conv2d(1, 100, kernel_size=(4, 100), stride=(1, 1))
+      )
+    )
+    (fcLayer): Sequential(
+      (0): Linear(in_features=500, out_features=500, bias=True)
+      (1): Dropout(p=0.5, inplace=False)
+      (2): ReLU()
+      (3): Linear(in_features=500, out_features=50, bias=True)
+    )
+    (dropout): Dropout(p=0.5, inplace=False)
+  ), weights = ((1, 1, 3, 100), (1,), (200, 1, 1, 100), (200,), (1, 1, 500, 100), (1,), (100, 1, 2, 100), (100,), (100, 1, 3, 100), (100,), (100, 1, 4, 100), (100,), (500, 500), (500,), (50, 500), (50,)), parameters = 436,352 (Trainable)
+  (DAttn_RatingPred): DAttn_RatingPred(
+    (uid_userOffset): Embedding(280020, 1)
+    (iid_itemOffset): Embedding(74260, 1)
+    (globalOffset): Parameter(1,)
+  ), weights = ((1,), (280020, 1), (74260, 1)), parameters = 354,281 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/10] Training Loss: 1.10495	Elapsed Time: 298.62s (0:04:58)
+[Epoch 1] [Dev]  MSE: 1.25986, MAE: 0.80186
+[Epoch 1] [Test] MSE: 1.25053, MAE: 0.79530
+
+*** MODEL has obtained the best DEV MSE of 1.25986 so far!
+*** The Best MODEL saved to "./__saved_models__/Musical_Instruments - DAttn/Musical_Instruments_DAttn_1234.pth"
+
+[Epoch 2/10] Training Loss: 0.78485	Elapsed Time: 605.42s (0:10:05)
+[Epoch 2] [Dev]  MSE: 1.18428, MAE: 0.81496
+[Epoch 2] [Test] MSE: 1.17635, MAE: 0.80790
+
+*** MODEL has obtained the best DEV MSE of 1.18428 so far!
+*** The Best MODEL saved to "./__saved_models__/Musical_Instruments - DAttn/Musical_Instruments_DAttn_1234.pth"
+
+[Epoch 3/10] Training Loss: 0.67860	Elapsed Time: 912.24s (0:15:12)
+[Epoch 3] [Dev]  MSE: 1.13531, MAE: 0.80142
+[Epoch 3] [Test] MSE: 1.12183, MAE: 0.79377
+
+*** MODEL has obtained the best DEV MSE of 1.13531 so far!
+*** The Best MODEL saved to "./__saved_models__/Musical_Instruments - DAttn/Musical_Instruments_DAttn_1234.pth"
+
+[Epoch 4/10] Training Loss: 0.60838	Elapsed Time: 1,219.04s (0:20:19)
+[Epoch 4] [Dev]  MSE: 1.16694, MAE: 0.76838
+[Epoch 4] [Test] MSE: 1.15234, MAE: 0.75942
+
+[Epoch 5/10] Training Loss: 0.55523	Elapsed Time: 1,525.83s (0:25:25)
+[Epoch 5] [Dev]  MSE: 1.20574, MAE: 0.79938
+[Epoch 5] [Test] MSE: 1.19633, MAE: 0.79292
+
+[Epoch 6/10] Training Loss: 0.51025	Elapsed Time: 1,832.61s (0:30:32)
+[Epoch 6] [Dev]  MSE: 1.18287, MAE: 0.75233
+[Epoch 6] [Test] MSE: 1.16612, MAE: 0.74355
+
+[Epoch 7/10] Training Loss: 0.46996	Elapsed Time: 2,139.36s (0:35:39)
+[Epoch 7] [Dev]  MSE: 1.18685, MAE: 0.77194
+[Epoch 7] [Test] MSE: 1.17044, MAE: 0.76425
+
+[Epoch 8/10] Training Loss: 0.43765	Elapsed Time: 2,446.12s (0:40:46)
+[Epoch 8] [Dev]  MSE: 1.20885, MAE: 0.77284
+[Epoch 8] [Test] MSE: 1.19495, MAE: 0.76558
+
+[Epoch 9/10] Training Loss: 0.40857	Elapsed Time: 2,752.87s (0:45:52)
+[Epoch 9] [Dev]  MSE: 1.27828, MAE: 0.78798
+[Epoch 9] [Test] MSE: 1.26003, MAE: 0.77972
+
+[Epoch 10/10] Training Loss: 0.38394	Elapsed Time: 3,059.65s (0:50:59)
+[Epoch 10] [Dev]  MSE: 1.24407, MAE: 0.78860
+[Epoch 10] [Test] MSE: 1.23201, MAE: 0.78197
+*** The Last MODEL saved to "./__saved_models__/Musical_Instruments - DAttn/Musical_Instruments_DAttn_1234_10.pth"
+
+[Training Loss]
+[1.10495, 0.78485, 0.6786, 0.60838, 0.55523, 0.51025, 0.46996, 0.43765, 0.40857, 0.38394]
+
+[Dev MSE]
+[1.25986, 1.18428, 1.13531, 1.16694, 1.20574, 1.18287, 1.18685, 1.20885, 1.27828, 1.24407]
+[Test MSE]
+[1.25053, 1.17635, 1.12183, 1.15234, 1.19633, 1.16612, 1.17044, 1.19495, 1.26003, 1.23201]
+[Test MAE]
+[0.7953, 0.8079, 0.79377, 0.75942, 0.79292, 0.74355, 0.76425, 0.76558, 0.77972, 0.78197]
+
+
+Best Dev MSE: 1.13531 (Obtained during Evaluation #3)
+Test MSE: 1.12183, Test MAE: 0.79377
+
+End of Program! Elapsed Time: 3,090.61s (0:51:30)

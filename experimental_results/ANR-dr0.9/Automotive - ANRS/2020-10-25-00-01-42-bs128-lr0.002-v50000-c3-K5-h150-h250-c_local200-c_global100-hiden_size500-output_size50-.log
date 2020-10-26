@@ -1,0 +1,155 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  channels_global: 100
+  channels_local: 200
+  command: -d Automotive -m ANRS -e 10 -dr 0.9 -WED 300 -K 5 -h1 50 -h2 50 -p 1 -v 50000 -rs 1337 -gpu 0 -vb 1 -sm Automotive_ANRS
+  ctx_win_size: 3
+  dataset: Automotive
+  disable_initial_eval: 0
+  dropout_rate: 0.9
+  epochs: 10
+  filters_num: 100
+  gpu: 0
+  h1: 50
+  h2: 50
+  hidden_size: 500
+  input_dir: ./datasets/Automotive/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: ANRS
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Automotive - ANRS/
+  output_size: 50
+  pretrained_src: 1
+  random_seed: 1337
+  save_model: Automotive_ANRS
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 561,942, # of Items: 233,577
+
+Creating model (Selected Model: ANRS)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 4.77s (0.08 minute)
+
+Loading uid_userDoc from "./datasets/Automotive/Automotive_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (561942, 500)]
+
+Loading iid_itemDoc from "./datasets/Automotive/Automotive_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (233577, 500)]
+
+Loading pretrained word embeddings from "./datasets/Automotive/Automotive_wed300_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (50002, 300)]
+
+Initialization Complete.. Elapsed Time: 34.79s (0.58 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 800,000, |DEV|: 35,546, |TEST|: 35,690
+Train/Dev/Test splits loaded! Elapsed Time: 35.05s (0.58 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 20.04269, MAE: 4.33113
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 20.01785, MAE: 4.32614
+
+Initial Evaluation Complete.. Elapsed Time: 44.50s (0.74 minute)
+
+Parameters with L2 Regularization (Regularization Strength: 1e-06):
+ANRS_RatingPred.uid_userOffset.weight, ANRS_RatingPred.iid_itemOffset.weight
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 413,631,370
+# of Trainable Parameters: 871,270
+ANR (
+  (uid_userDoc): Embedding(561942, 500), weights = ((561942, 500),), parameters = 280,971,000
+  (iid_itemDoc): Embedding(233577, 500), weights = ((233577, 500),), parameters = 116,788,500
+  (wid_wEmbed): Embedding(50002, 300), weights = ((50002, 300),), parameters = 15,000,600
+  (shared_ANR_ARL): ANR_ARL(
+    (aspEmbed): Embedding(5, 150)
+    (aspProj): Parameter(5, 300, 50)
+  ), weights = ((5, 300, 50), (5, 150)), parameters = 75,750 (Trainable)
+  (ANRS_RatingPred): ANRS_RatingPred(
+    (userAspRepDropout): Dropout(p=0.9, inplace=False)
+    (itemAspRepDropout): Dropout(p=0.9, inplace=False)
+    (uid_userOffset): Embedding(561942, 1)
+    (iid_itemOffset): Embedding(233577, 1)
+    (globalOffset): Parameter(1,)
+  ), weights = ((1,), (561942, 1), (233577, 1)), parameters = 795,520 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/10] Training Loss: 2.71786	Elapsed Time: 228.87s (0:03:48)
+[Epoch 1] [Dev]  MSE: 1.20921, MAE: 0.86081
+[Epoch 1] [Test] MSE: 1.22557, MAE: 0.86341
+
+*** MODEL has obtained the best DEV MSE of 1.20921 so far!
+*** The Best MODEL saved to "./__saved_models__/Automotive - ANRS/Automotive_ANRS_1337.pth"
+
+[Epoch 2/10] Training Loss: 1.41806	Elapsed Time: 466.61s (0:07:46)
+[Epoch 2] [Dev]  MSE: 1.16000, MAE: 0.82455
+[Epoch 2] [Test] MSE: 1.17351, MAE: 0.82723
+
+*** MODEL has obtained the best DEV MSE of 1.16000 so far!
+*** The Best MODEL saved to "./__saved_models__/Automotive - ANRS/Automotive_ANRS_1337.pth"
+
+[Epoch 3/10] Training Loss: 1.26737	Elapsed Time: 704.30s (0:11:44)
+[Epoch 3] [Dev]  MSE: 1.14531, MAE: 0.80039
+[Epoch 3] [Test] MSE: 1.15850, MAE: 0.80256
+
+*** MODEL has obtained the best DEV MSE of 1.14531 so far!
+*** The Best MODEL saved to "./__saved_models__/Automotive - ANRS/Automotive_ANRS_1337.pth"
+
+[Epoch 4/10] Training Loss: 1.17608	Elapsed Time: 941.99s (0:15:41)
+[Epoch 4] [Dev]  MSE: 1.14836, MAE: 0.79799
+[Epoch 4] [Test] MSE: 1.16149, MAE: 0.80008
+
+[Epoch 5/10] Training Loss: 1.11470	Elapsed Time: 1,179.64s (0:19:39)
+[Epoch 5] [Dev]  MSE: 1.15255, MAE: 0.78945
+[Epoch 5] [Test] MSE: 1.16586, MAE: 0.79115
+
+[Epoch 6/10] Training Loss: 1.23716	Elapsed Time: 1,417.37s (0:23:37)
+[Epoch 6] [Dev]  MSE: 1.15932, MAE: 0.79596
+[Epoch 6] [Test] MSE: 1.17253, MAE: 0.79731
+
+[Epoch 7/10] Training Loss: 1.07551	Elapsed Time: 1,654.99s (0:27:34)
+[Epoch 7] [Dev]  MSE: 1.16742, MAE: 0.80438
+[Epoch 7] [Test] MSE: 1.18014, MAE: 0.80539
+
+[Epoch 8/10] Training Loss: 1.02311	Elapsed Time: 1,892.70s (0:31:32)
+[Epoch 8] [Dev]  MSE: 1.17001, MAE: 0.79566
+[Epoch 8] [Test] MSE: 1.18288, MAE: 0.79684
+
+[Epoch 9/10] Training Loss: 1.00261	Elapsed Time: 2,130.42s (0:35:30)
+[Epoch 9] [Dev]  MSE: 1.17503, MAE: 0.80100
+[Epoch 9] [Test] MSE: 1.18711, MAE: 0.80182
+
+[Epoch 10/10] Training Loss: 0.98905	Elapsed Time: 2,368.08s (0:39:28)
+[Epoch 10] [Dev]  MSE: 1.17788, MAE: 0.79986
+[Epoch 10] [Test] MSE: 1.19104, MAE: 0.80060
+*** The Last MODEL saved to "./__saved_models__/Automotive - ANRS/Automotive_ANRS_1337_10.pth"
+
+[Training Loss]
+[2.71786, 1.41806, 1.26737, 1.17608, 1.1147, 1.23716, 1.07551, 1.02311, 1.00261, 0.98905]
+
+[Dev MSE]
+[1.20921, 1.16, 1.14531, 1.14836, 1.15255, 1.15932, 1.16742, 1.17001, 1.17503, 1.17788]
+[Test MSE]
+[1.22557, 1.17351, 1.1585, 1.16149, 1.16586, 1.17253, 1.18014, 1.18288, 1.18711, 1.19104]
+[Test MAE]
+[0.86341, 0.82723, 0.80256, 0.80008, 0.79115, 0.79731, 0.80539, 0.79684, 0.80182, 0.8006]
+
+
+Best Dev MSE: 1.14531 (Obtained during Evaluation #3)
+Test MSE: 1.15850, Test MAE: 0.80256
+
+End of Program! Elapsed Time: 2,421.18s (0:40:21)

@@ -1,0 +1,152 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  channels_global: 100
+  channels_local: 200
+  command: -d Books -m DeepCoNN -e 10 -dr 0.9 -WED 300 -p 1 -v 50000 -K 5 -h1 50 -h2 50 -filters_num 100 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm Books_DeepCoNN
+  ctx_win_size: 3
+  dataset: Books
+  disable_initial_eval: 0
+  dropout_rate: 0.9
+  epochs: 10
+  filters_num: 100
+  gpu: 0
+  h1: 50
+  h2: 50
+  hidden_size: 500
+  input_dir: ./datasets/Books/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: DeepCoNN
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Books - DeepCoNN/
+  output_size: 50
+  pretrained_src: 1
+  random_seed: 1234
+  save_model: Books_DeepCoNN
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 621,433, # of Items: 390,310
+
+Creating model (Selected Model: DeepCoNN)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 5.32s (0.09 minute)
+
+Loading uid_userDoc from "./datasets/Books/Books_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (621433, 500)]
+
+Loading iid_itemDoc from "./datasets/Books/Books_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (390310, 500)]
+
+Loading pretrained word embeddings from "./datasets/Books/Books_wed300_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (50002, 300)]
+
+Initialization Complete.. Elapsed Time: 42.39s (0.71 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 800,000, |DEV|: 20,828, |TEST|: 21,246
+Train/Dev/Test splits loaded! Elapsed Time: 42.66s (0.71 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 15.81737, MAE: 3.83390
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 15.95517, MAE: 3.85779
+
+Initial Evaluation Complete.. Elapsed Time: 46.16s (0.77 minute)
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 522,074,144
+# of Trainable Parameters: 1,202,044
+DeepCoNN (
+  (uid_userDoc): Embedding(621433, 500), weights = ((621433, 500),), parameters = 310,716,500
+  (iid_itemDoc): Embedding(390310, 500), weights = ((390310, 500),), parameters = 195,155,000
+  (wid_wEmbed): Embedding(50002, 300), weights = ((50002, 300),), parameters = 15,000,600
+  (user_CNN): Conv2d(1, 100, kernel_size=(3, 300), stride=(1, 1)), weights = ((100, 1, 3, 300), (100,)), parameters = 90,100 (Trainable)
+  (item_CNN): Conv2d(1, 100, kernel_size=(3, 300), stride=(1, 1)), weights = ((100, 1, 3, 300), (100,)), parameters = 90,100 (Trainable)
+  (user_fcLayer): Linear(in_features=100, out_features=50, bias=True), weights = ((50, 100), (50,)), parameters = 5,050 (Trainable)
+  (item_fcLayer): Linear(in_features=100, out_features=50, bias=True), weights = ((50, 100), (50,)), parameters = 5,050 (Trainable)
+  (userDropout): Dropout(p=0.9, inplace=False), weights = (), parameters = 0
+  (itemDropout): Dropout(p=0.9, inplace=False), weights = (), parameters = 0
+  (DeepCoNN_RatingPred): DeepCoNN_RatingPred(
+    (uid_userOffset): Embedding(621433, 1)
+    (iid_itemOffset): Embedding(390310, 1)
+    (globalOffset): Parameter(1,)
+  ), weights = ((1,), (621433, 1), (390310, 1)), parameters = 1,011,744 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/10] Training Loss: 2.89999	Elapsed Time: 123.58s (0:02:03)
+[Epoch 1] [Dev]  MSE: 1.03424, MAE: 0.76153
+[Epoch 1] [Test] MSE: 0.99012, MAE: 0.75009
+
+*** MODEL has obtained the best DEV MSE of 1.03424 so far!
+*** The Best MODEL saved to "./__saved_models__/Books - DeepCoNN/Books_DeepCoNN_1234.pth"
+
+[Epoch 2/10] Training Loss: 0.96808	Elapsed Time: 250.75s (0:04:10)
+[Epoch 2] [Dev]  MSE: 0.98201, MAE: 0.74413
+[Epoch 2] [Test] MSE: 0.94623, MAE: 0.73500
+
+*** MODEL has obtained the best DEV MSE of 0.98201 so far!
+*** The Best MODEL saved to "./__saved_models__/Books - DeepCoNN/Books_DeepCoNN_1234.pth"
+
+[Epoch 3/10] Training Loss: 0.83020	Elapsed Time: 377.95s (0:06:17)
+[Epoch 3] [Dev]  MSE: 0.98065, MAE: 0.73126
+[Epoch 3] [Test] MSE: 0.94476, MAE: 0.72120
+
+*** MODEL has obtained the best DEV MSE of 0.98065 so far!
+*** The Best MODEL saved to "./__saved_models__/Books - DeepCoNN/Books_DeepCoNN_1234.pth"
+
+[Epoch 4/10] Training Loss: 0.72307	Elapsed Time: 505.19s (0:08:25)
+[Epoch 4] [Dev]  MSE: 0.98745, MAE: 0.72693
+[Epoch 4] [Test] MSE: 0.95423, MAE: 0.71742
+
+[Epoch 5/10] Training Loss: 0.63519	Elapsed Time: 632.38s (0:10:32)
+[Epoch 5] [Dev]  MSE: 0.99362, MAE: 0.73280
+[Epoch 5] [Test] MSE: 0.96129, MAE: 0.72412
+
+[Epoch 6/10] Training Loss: 0.56105	Elapsed Time: 759.59s (0:12:39)
+[Epoch 6] [Dev]  MSE: 1.00238, MAE: 0.73690
+[Epoch 6] [Test] MSE: 0.97449, MAE: 0.72938
+
+[Epoch 7/10] Training Loss: 0.49737	Elapsed Time: 886.73s (0:14:46)
+[Epoch 7] [Dev]  MSE: 1.01996, MAE: 0.73958
+[Epoch 7] [Test] MSE: 0.99140, MAE: 0.73196
+
+[Epoch 8/10] Training Loss: 0.44303	Elapsed Time: 1,013.90s (0:16:53)
+[Epoch 8] [Dev]  MSE: 1.03874, MAE: 0.74199
+[Epoch 8] [Test] MSE: 1.01017, MAE: 0.73478
+
+[Epoch 9/10] Training Loss: 0.39583	Elapsed Time: 1,141.06s (0:19:01)
+[Epoch 9] [Dev]  MSE: 1.05805, MAE: 0.74982
+[Epoch 9] [Test] MSE: 1.02788, MAE: 0.74113
+
+[Epoch 10/10] Training Loss: 0.35475	Elapsed Time: 1,268.24s (0:21:08)
+[Epoch 10] [Dev]  MSE: 1.07019, MAE: 0.75900
+[Epoch 10] [Test] MSE: 1.04126, MAE: 0.75115
+*** The Last MODEL saved to "./__saved_models__/Books - DeepCoNN/Books_DeepCoNN_1234_10.pth"
+
+[Training Loss]
+[2.89999, 0.96808, 0.8302, 0.72307, 0.63519, 0.56105, 0.49737, 0.44303, 0.39583, 0.35475]
+
+[Dev MSE]
+[1.03424, 0.98201, 0.98065, 0.98745, 0.99362, 1.00238, 1.01996, 1.03874, 1.05805, 1.07019]
+[Test MSE]
+[0.99012, 0.94623, 0.94476, 0.95423, 0.96129, 0.97449, 0.9914, 1.01017, 1.02788, 1.04126]
+[Test MAE]
+[0.75009, 0.735, 0.7212, 0.71742, 0.72412, 0.72938, 0.73196, 0.73478, 0.74113, 0.75115]
+
+
+Best Dev MSE: 0.98065 (Obtained during Evaluation #3)
+Test MSE: 0.94476, Test MAE: 0.72120
+
+End of Program! Elapsed Time: 1,317.82s (0:21:57)

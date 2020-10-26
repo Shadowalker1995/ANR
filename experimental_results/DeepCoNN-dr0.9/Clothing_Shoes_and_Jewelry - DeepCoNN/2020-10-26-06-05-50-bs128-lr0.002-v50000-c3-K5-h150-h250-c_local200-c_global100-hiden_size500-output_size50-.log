@@ -1,0 +1,152 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  channels_global: 100
+  channels_local: 200
+  command: -d Clothing_Shoes_and_Jewelry -m DeepCoNN -e 10 -dr 0.9 -WED 300 -p 1 -v 50000 -K 5 -h1 50 -h2 50 -filters_num 100 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm Clothing_Shoes_and_Jewelry_DeepCoNN
+  ctx_win_size: 3
+  dataset: Clothing_Shoes_and_Jewelry
+  disable_initial_eval: 0
+  dropout_rate: 0.9
+  epochs: 10
+  filters_num: 100
+  gpu: 0
+  h1: 50
+  h2: 50
+  hidden_size: 500
+  input_dir: ./datasets/Clothing_Shoes_and_Jewelry/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: DeepCoNN
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Clothing_Shoes_and_Jewelry - DeepCoNN/
+  output_size: 50
+  pretrained_src: 1
+  random_seed: 1234
+  save_model: Clothing_Shoes_and_Jewelry_DeepCoNN
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 669,835, # of Items: 335,585
+
+Creating model (Selected Model: DeepCoNN)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 5.27s (0.09 minute)
+
+Loading uid_userDoc from "./datasets/Clothing_Shoes_and_Jewelry/Clothing_Shoes_and_Jewelry_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (669835, 500)]
+
+Loading iid_itemDoc from "./datasets/Clothing_Shoes_and_Jewelry/Clothing_Shoes_and_Jewelry_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (335585, 500)]
+
+Loading pretrained word embeddings from "./datasets/Clothing_Shoes_and_Jewelry/Clothing_Shoes_and_Jewelry_wed300_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (50002, 300)]
+
+Initialization Complete.. Elapsed Time: 41.52s (0.69 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 800,000, |DEV|: 17,754, |TEST|: 17,846
+Train/Dev/Test splits loaded! Elapsed Time: 41.80s (0.70 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 15.31203, MAE: 3.74304
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 15.38322, MAE: 3.75422
+
+Initial Evaluation Complete.. Elapsed Time: 44.80s (0.75 minute)
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 518,906,321
+# of Trainable Parameters: 1,195,721
+DeepCoNN (
+  (uid_userDoc): Embedding(669835, 500), weights = ((669835, 500),), parameters = 334,917,500
+  (iid_itemDoc): Embedding(335585, 500), weights = ((335585, 500),), parameters = 167,792,500
+  (wid_wEmbed): Embedding(50002, 300), weights = ((50002, 300),), parameters = 15,000,600
+  (user_CNN): Conv2d(1, 100, kernel_size=(3, 300), stride=(1, 1)), weights = ((100, 1, 3, 300), (100,)), parameters = 90,100 (Trainable)
+  (item_CNN): Conv2d(1, 100, kernel_size=(3, 300), stride=(1, 1)), weights = ((100, 1, 3, 300), (100,)), parameters = 90,100 (Trainable)
+  (user_fcLayer): Linear(in_features=100, out_features=50, bias=True), weights = ((50, 100), (50,)), parameters = 5,050 (Trainable)
+  (item_fcLayer): Linear(in_features=100, out_features=50, bias=True), weights = ((50, 100), (50,)), parameters = 5,050 (Trainable)
+  (userDropout): Dropout(p=0.9, inplace=False), weights = (), parameters = 0
+  (itemDropout): Dropout(p=0.9, inplace=False), weights = (), parameters = 0
+  (DeepCoNN_RatingPred): DeepCoNN_RatingPred(
+    (uid_userOffset): Embedding(669835, 1)
+    (iid_itemOffset): Embedding(335585, 1)
+    (globalOffset): Parameter(1,)
+  ), weights = ((1,), (669835, 1), (335585, 1)), parameters = 1,005,421 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/10] Training Loss: 2.92279	Elapsed Time: 124.61s (0:02:04)
+[Epoch 1] [Dev]  MSE: 1.24584, MAE: 0.89101
+[Epoch 1] [Test] MSE: 1.23982, MAE: 0.89013
+
+*** MODEL has obtained the best DEV MSE of 1.24584 so far!
+*** The Best MODEL saved to "./__saved_models__/Clothing_Shoes_and_Jewelry - DeepCoNN/Clothing_Shoes_and_Jewelry_DeepCoNN_1234.pth"
+
+[Epoch 2/10] Training Loss: 1.16547	Elapsed Time: 252.30s (0:04:12)
+[Epoch 2] [Dev]  MSE: 1.23226, MAE: 0.88609
+[Epoch 2] [Test] MSE: 1.23077, MAE: 0.88669
+
+*** MODEL has obtained the best DEV MSE of 1.23226 so far!
+*** The Best MODEL saved to "./__saved_models__/Clothing_Shoes_and_Jewelry - DeepCoNN/Clothing_Shoes_and_Jewelry_DeepCoNN_1234.pth"
+
+[Epoch 3/10] Training Loss: 1.01187	Elapsed Time: 380.00s (0:06:20)
+[Epoch 3] [Dev]  MSE: 1.22989, MAE: 0.85793
+[Epoch 3] [Test] MSE: 1.22346, MAE: 0.85490
+
+*** MODEL has obtained the best DEV MSE of 1.22989 so far!
+*** The Best MODEL saved to "./__saved_models__/Clothing_Shoes_and_Jewelry - DeepCoNN/Clothing_Shoes_and_Jewelry_DeepCoNN_1234.pth"
+
+[Epoch 4/10] Training Loss: 0.89111	Elapsed Time: 507.66s (0:08:27)
+[Epoch 4] [Dev]  MSE: 1.24487, MAE: 0.86119
+[Epoch 4] [Test] MSE: 1.24268, MAE: 0.86022
+
+[Epoch 5/10] Training Loss: 0.79094	Elapsed Time: 635.29s (0:10:35)
+[Epoch 5] [Dev]  MSE: 1.25640, MAE: 0.85258
+[Epoch 5] [Test] MSE: 1.25118, MAE: 0.85017
+
+[Epoch 6/10] Training Loss: 0.70520	Elapsed Time: 762.90s (0:12:42)
+[Epoch 6] [Dev]  MSE: 1.27340, MAE: 0.84696
+[Epoch 6] [Test] MSE: 1.26660, MAE: 0.84371
+
+[Epoch 7/10] Training Loss: 0.63030	Elapsed Time: 890.60s (0:14:50)
+[Epoch 7] [Dev]  MSE: 1.29338, MAE: 0.85828
+[Epoch 7] [Test] MSE: 1.28721, MAE: 0.85562
+
+[Epoch 8/10] Training Loss: 0.56590	Elapsed Time: 1,018.29s (0:16:58)
+[Epoch 8] [Dev]  MSE: 1.31445, MAE: 0.86110
+[Epoch 8] [Test] MSE: 1.30665, MAE: 0.85660
+
+[Epoch 9/10] Training Loss: 0.50800	Elapsed Time: 1,145.95s (0:19:05)
+[Epoch 9] [Dev]  MSE: 1.33988, MAE: 0.86887
+[Epoch 9] [Test] MSE: 1.33568, MAE: 0.86531
+
+[Epoch 10/10] Training Loss: 0.45705	Elapsed Time: 1,273.59s (0:21:13)
+[Epoch 10] [Dev]  MSE: 1.35996, MAE: 0.86827
+[Epoch 10] [Test] MSE: 1.35482, MAE: 0.86452
+*** The Last MODEL saved to "./__saved_models__/Clothing_Shoes_and_Jewelry - DeepCoNN/Clothing_Shoes_and_Jewelry_DeepCoNN_1234_10.pth"
+
+[Training Loss]
+[2.92279, 1.16547, 1.01187, 0.89111, 0.79094, 0.7052, 0.6303, 0.5659, 0.508, 0.45705]
+
+[Dev MSE]
+[1.24584, 1.23226, 1.22989, 1.24487, 1.2564, 1.2734, 1.29338, 1.31445, 1.33988, 1.35996]
+[Test MSE]
+[1.23982, 1.23077, 1.22346, 1.24268, 1.25118, 1.2666, 1.28721, 1.30665, 1.33568, 1.35482]
+[Test MAE]
+[0.89013, 0.88669, 0.8549, 0.86022, 0.85017, 0.84371, 0.85562, 0.8566, 0.86531, 0.86452]
+
+
+Best Dev MSE: 1.22989 (Obtained during Evaluation #3)
+Test MSE: 1.22346, Test MAE: 0.85490
+
+End of Program! Elapsed Time: 1,321.30s (0:22:01)

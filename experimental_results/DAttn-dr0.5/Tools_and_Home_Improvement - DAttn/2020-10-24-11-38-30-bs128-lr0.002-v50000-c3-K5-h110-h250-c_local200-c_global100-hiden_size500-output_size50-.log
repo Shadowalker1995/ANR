@@ -1,0 +1,203 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  channels_global: 100
+  channels_local: 200
+  command: -d Tools_and_Home_Improvement -m DAttn -e 10 -p 1 -v 50000 -K 5 -h1 10 -h2 50 -WED 100 -c_local 200 -c_global 100 -hiden_size 500 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm Tools_and_Home_Improvement_DAttn
+  ctx_win_size: 3
+  dataset: Tools_and_Home_Improvement
+  disable_initial_eval: 0
+  dropout_rate: 0.5
+  epochs: 10
+  filters_num: 100
+  gpu: 0
+  h1: 10
+  h2: 50
+  hidden_size: 500
+  input_dir: ./datasets/Tools_and_Home_Improvement/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: DAttn
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Tools_and_Home_Improvement - DAttn/
+  output_size: 50
+  pretrained_src: 1
+  random_seed: 1234
+  save_model: Tools_and_Home_Improvement_DAttn
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 100
+========================================================================================================================
+
+[INFO] # of Users: 604,303, # of Items: 167,536
+
+Creating model (Selected Model: DAttn)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 4.30s (0.07 minute)
+
+Loading uid_userDoc from "./datasets/Tools_and_Home_Improvement/Tools_and_Home_Improvement_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (604303, 500)]
+
+Loading iid_itemDoc from "./datasets/Tools_and_Home_Improvement/Tools_and_Home_Improvement_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (167536, 500)]
+
+Loading pretrained word embeddings from "./datasets/Tools_and_Home_Improvement/Tools_and_Home_Improvement_wed100_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (50002, 100)]
+
+Initialization Complete.. Elapsed Time: 30.15s (0.50 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 800,000, |DEV|: 32,887, |TEST|: 33,155
+Train/Dev/Test splits loaded! Elapsed Time: 30.42s (0.51 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 19.18274, MAE: 4.22110
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 19.21792, MAE: 4.22728
+
+Initial Evaluation Complete.. Elapsed Time: 45.39s (0.76 minute)
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 392,564,244
+# of Trainable Parameters: 1,644,544
+DAttn (
+  (uid_userDoc): Embedding(604303, 500), weights = ((604303, 500),), parameters = 302,151,500
+  (iid_itemDoc): Embedding(167536, 500), weights = ((167536, 500),), parameters = 83,768,000
+  (wid_wEmbed): Embedding(50002, 100), weights = ((50002, 100),), parameters = 5,000,200
+  (user_net): Net(
+    (localAttentionLayer): LocalAttention(
+      (attention_layer): Sequential(
+        (0): Conv2d(1, 1, kernel_size=(3, 100), stride=(1, 1), padding=(1, 0))
+        (1): Sigmoid()
+      )
+      (cnn): Sequential(
+        (0): Conv2d(1, 200, kernel_size=(1, 100), stride=(1, 1))
+        (1): Tanh()
+      )
+    )
+    (globalAttentionLayer): GlobalAttention(
+      (attention_layer): Sequential(
+        (0): Conv2d(1, 1, kernel_size=(500, 100), stride=(1, 1))
+        (1): Sigmoid()
+      )
+      (convs): ModuleList(
+        (0): Conv2d(1, 100, kernel_size=(2, 100), stride=(1, 1))
+        (1): Conv2d(1, 100, kernel_size=(3, 100), stride=(1, 1))
+        (2): Conv2d(1, 100, kernel_size=(4, 100), stride=(1, 1))
+      )
+    )
+    (fcLayer): Sequential(
+      (0): Linear(in_features=500, out_features=500, bias=True)
+      (1): Dropout(p=0.5, inplace=False)
+      (2): ReLU()
+      (3): Linear(in_features=500, out_features=50, bias=True)
+    )
+    (dropout): Dropout(p=0.5, inplace=False)
+  ), weights = ((1, 1, 3, 100), (1,), (200, 1, 1, 100), (200,), (1, 1, 500, 100), (1,), (100, 1, 2, 100), (100,), (100, 1, 3, 100), (100,), (100, 1, 4, 100), (100,), (500, 500), (500,), (50, 500), (50,)), parameters = 436,352 (Trainable)
+  (item_net): Net(
+    (localAttentionLayer): LocalAttention(
+      (attention_layer): Sequential(
+        (0): Conv2d(1, 1, kernel_size=(3, 100), stride=(1, 1), padding=(1, 0))
+        (1): Sigmoid()
+      )
+      (cnn): Sequential(
+        (0): Conv2d(1, 200, kernel_size=(1, 100), stride=(1, 1))
+        (1): Tanh()
+      )
+    )
+    (globalAttentionLayer): GlobalAttention(
+      (attention_layer): Sequential(
+        (0): Conv2d(1, 1, kernel_size=(500, 100), stride=(1, 1))
+        (1): Sigmoid()
+      )
+      (convs): ModuleList(
+        (0): Conv2d(1, 100, kernel_size=(2, 100), stride=(1, 1))
+        (1): Conv2d(1, 100, kernel_size=(3, 100), stride=(1, 1))
+        (2): Conv2d(1, 100, kernel_size=(4, 100), stride=(1, 1))
+      )
+    )
+    (fcLayer): Sequential(
+      (0): Linear(in_features=500, out_features=500, bias=True)
+      (1): Dropout(p=0.5, inplace=False)
+      (2): ReLU()
+      (3): Linear(in_features=500, out_features=50, bias=True)
+    )
+    (dropout): Dropout(p=0.5, inplace=False)
+  ), weights = ((1, 1, 3, 100), (1,), (200, 1, 1, 100), (200,), (1, 1, 500, 100), (1,), (100, 1, 2, 100), (100,), (100, 1, 3, 100), (100,), (100, 1, 4, 100), (100,), (500, 500), (500,), (50, 500), (50,)), parameters = 436,352 (Trainable)
+  (DAttn_RatingPred): DAttn_RatingPred(
+    (uid_userOffset): Embedding(604303, 1)
+    (iid_itemOffset): Embedding(167536, 1)
+    (globalOffset): Parameter(1,)
+  ), weights = ((1,), (604303, 1), (167536, 1)), parameters = 771,840 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/10] Training Loss: 1.21544	Elapsed Time: 610.04s (0:10:10)
+[Epoch 1] [Dev]  MSE: 1.46536, MAE: 0.86803
+[Epoch 1] [Test] MSE: 1.47476, MAE: 0.87526
+
+*** MODEL has obtained the best DEV MSE of 1.46536 so far!
+*** The Best MODEL saved to "./__saved_models__/Tools_and_Home_Improvement - DAttn/Tools_and_Home_Improvement_DAttn_1234.pth"
+
+[Epoch 2/10] Training Loss: 0.86712	Elapsed Time: 1,235.01s (0:20:35)
+[Epoch 2] [Dev]  MSE: 1.38790, MAE: 0.86332
+[Epoch 2] [Test] MSE: 1.39604, MAE: 0.87036
+
+*** MODEL has obtained the best DEV MSE of 1.38790 so far!
+*** The Best MODEL saved to "./__saved_models__/Tools_and_Home_Improvement - DAttn/Tools_and_Home_Improvement_DAttn_1234.pth"
+
+[Epoch 3/10] Training Loss: 0.76164	Elapsed Time: 1,860.07s (0:31:00)
+[Epoch 3] [Dev]  MSE: 1.40105, MAE: 0.83793
+[Epoch 3] [Test] MSE: 1.40707, MAE: 0.84352
+
+[Epoch 4/10] Training Loss: 0.68322	Elapsed Time: 2,485.00s (0:41:24)
+[Epoch 4] [Dev]  MSE: 1.41185, MAE: 0.84443
+[Epoch 4] [Test] MSE: 1.42548, MAE: 0.85189
+
+[Epoch 5/10] Training Loss: 0.61647	Elapsed Time: 3,109.97s (0:51:49)
+[Epoch 5] [Dev]  MSE: 1.42376, MAE: 0.85892
+[Epoch 5] [Test] MSE: 1.43456, MAE: 0.86642
+
+[Epoch 6/10] Training Loss: 0.56348	Elapsed Time: 3,735.08s (1:02:15)
+[Epoch 6] [Dev]  MSE: 1.41132, MAE: 0.83492
+[Epoch 6] [Test] MSE: 1.41791, MAE: 0.83922
+
+[Epoch 7/10] Training Loss: 0.51947	Elapsed Time: 4,360.00s (1:12:40)
+[Epoch 7] [Dev]  MSE: 1.45474, MAE: 0.84864
+[Epoch 7] [Test] MSE: 1.46437, MAE: 0.85372
+
+[Epoch 8/10] Training Loss: 0.48235	Elapsed Time: 4,985.08s (1:23:05)
+[Epoch 8] [Dev]  MSE: 1.45623, MAE: 0.84606
+[Epoch 8] [Test] MSE: 1.46081, MAE: 0.85052
+
+[Epoch 9/10] Training Loss: 0.44925	Elapsed Time: 5,610.06s (1:33:30)
+[Epoch 9] [Dev]  MSE: 1.41340, MAE: 0.83687
+[Epoch 9] [Test] MSE: 1.41446, MAE: 0.84020
+
+[Epoch 10/10] Training Loss: 0.42149	Elapsed Time: 6,234.96s (1:43:54)
+[Epoch 10] [Dev]  MSE: 1.44001, MAE: 0.84223
+[Epoch 10] [Test] MSE: 1.44498, MAE: 0.84632
+*** The Last MODEL saved to "./__saved_models__/Tools_and_Home_Improvement - DAttn/Tools_and_Home_Improvement_DAttn_1234_10.pth"
+
+[Training Loss]
+[1.21544, 0.86712, 0.76164, 0.68322, 0.61647, 0.56348, 0.51947, 0.48235, 0.44925, 0.42149]
+
+[Dev MSE]
+[1.46536, 1.3879, 1.40105, 1.41185, 1.42376, 1.41132, 1.45474, 1.45623, 1.4134, 1.44001]
+[Test MSE]
+[1.47476, 1.39604, 1.40707, 1.42548, 1.43456, 1.41791, 1.46437, 1.46081, 1.41446, 1.44498]
+[Test MAE]
+[0.87526, 0.87036, 0.84352, 0.85189, 0.86642, 0.83922, 0.85372, 0.85052, 0.8402, 0.84632]
+
+
+Best Dev MSE: 1.38790 (Obtained during Evaluation #2)
+Test MSE: 1.39604, Test MAE: 0.87036
+
+End of Program! Elapsed Time: 6,295.20s (1:44:55)

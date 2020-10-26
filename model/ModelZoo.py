@@ -4,7 +4,7 @@ import torch.nn as nn
 from .utilities import *
 from .DeepCoNN import DeepCoNN
 from .ANR import ANR
-from .DAttn_new import DAttn
+from .DAttn import DAttn
 from .VANRA import VANRA
 
 import numpy as np
