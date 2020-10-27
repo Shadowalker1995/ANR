@@ -1,0 +1,106 @@
+
+Dataset: Toys_and_Games
+[args from argparse.ArgumentParser().parse_args()]
+command: preprocessing_simple.py -d Toys_and_Games -dev_test_in_train 1
+dataset: Toys_and_Games
+dataset_maximum_size: 1000000
+dev_test_in_train: True
+maxDL: 500
+maxVL: 500
+minImages: 1
+minReviews: 1
+minRL: 10
+random_seed: 1337
+train_ratio: 0.8
+vocab: 50000
+
+[INPUT] Source Folder:       ../datasets/
+[INPUT] Reviews/Ratings:     ../datasets/reviews_Toys_and_Games.json
+
+[OUTPUT] Category Folder:    ../datasets/Toys_and_Games/
+[OUTPUT] env:                ../datasets/Toys_and_Games/Toys_and_Games_env.pkl
+[OUTPUT] info:               ../datasets/Toys_and_Games/Toys_and_Games_info.pkl
+[OUTPUT] interactions:       ../datasets/Toys_and_Games/Toys_and_Games_interactions.pkl
+[OUTPUT] train_interactions: ../datasets/Toys_and_Games/Toys_and_Games_train_interactions.pkl
+[OUTPUT] dev_interactions:   ../datasets/Toys_and_Games/Toys_and_Games_dev_interactions.pkl
+[OUTPUT] test_interactions:  ../datasets/Toys_and_Games/Toys_and_Games_test_interactions.pkl
+[OUTPUT] split_train:        ../datasets/Toys_and_Games/Toys_and_Games_split_train.pkl
+[OUTPUT] split_dev:          ../datasets/Toys_and_Games/Toys_and_Games_split_dev.pkl
+[OUTPUT] split_test:         ../datasets/Toys_and_Games/Toys_and_Games_split_test.pkl
+[OUTPUT] uid_userDoc:        ../datasets/Toys_and_Games/Toys_and_Games_uid_userDoc.npy
+[OUTPUT] iid_itemDoc:        ../datasets/Toys_and_Games/Toys_and_Games_iid_itemDoc.npy
+[OUTPUT] uid_userDoc:        ../datasets/Toys_and_Games/Toys_and_Games_uid_userVis.npy
+[OUTPUT] iid_itemDoc:        ../datasets/Toys_and_Games/Toys_and_Games_iid_itemVis.npy
+
+Preprocessing data for "Toys_and_Games"
+
+[Settings]
+Min reviews for user/item: 1
+Min review length to qualify as an user-item interaction: 10
+Max words for user/item document: 500 (For truncating/padding to get a fixed-size representation)
+Top-50000 words in vocabulary being utilized!
+
+
+Initial pass of reviews to get the user-item interactions!
+[Initial stats] Users: 1,342,911, Items: 327,698, Ratings: 2,252,771, Density: 0.0000051
+
+
+Second pass of visual features to get the item-feature interactions!
+[Second stats] Items with image: 333,329, Images: 333,329, Density: 1.0000000
+
+
+Starting to filter away users & items based on thresold of 1 images!
+Updating interactions based on the num of images...
+
+Filtered users & items based on thresold of 1 images!
+Users: 1342911 -> 1335809, Items: 327698 -> 325026
+[Current stats] Users: 1335809, Items: 325026, Ratings: 2236301, Density: 0.0000052
+Updating interactions based on the num of images...
+
+Filtered users & items based on thresold of 1 images!
+Users: 1335809 -> 1335809, Items: 325026 -> 325026
+[Current stats] Users: 1335809, Items: 325026, Ratings: 2236301, Density: 0.0000052
+
+No change in # of users or # of items!
+
+[Final stats] Users: 1,335,809, Items: 325,026, Ratings: 2,236,301, Density: 0.0000052
+
+Elapsed time for "Toys_and_Games": 78.71 seconds (1.31 minutes)
+
+Starting to filter away users & items based on thresold of 1 reviews!
+
+Filtered users & items based on thresold of 1 reviews!
+Users: 1335809 -> 1335809, Items: 325026 -> 325026
+
+No change in # of users or # of items!
+
+[Final stats] Users: 1,335,809, Items: 325,026, Ratings: 2,236,301, Density: 0.0000052
+
+Elapsed time for "Toys_and_Games": 79.04 seconds (1.32 minutes)
+
+
+Third pass of reviews to get the rating, date, the num of tokenized review and index!
+[Current stats] Users: 1,335,809, Items: 325,026, Ratings: 2,236,301, Density: 0.0000052
+
+Filtering user-item interactions based on minimum review length of 10 tokens..
+
+Filtered users & items based on minimum review length of 10 tokens!
+Users: 1,335,809 -> 1,324,641, Items: 325,026 -> 323,317
+[Current stats] Users: 1,324,641, Items: 323,317, Ratings: 2,215,761, Density: 0.0000052
+
+
+Starting to filter away users & items based on thresold of 1 reviews (after removing reviews with <= 10 tokens)!
+
+Filtered users & items based on thresold of 1 reviews!
+Users: 1,324,641 -> 1,324,641, Items: 323,317 -> 323,317
+
+No change in # of users or # of items!
+
+[Final stats] Users: 1,324,641, Items: 323,317, Ratings: 2,215,761, Density: 0.0000052
+
+*****************************************************************************************************************************
+*** Original Dataset Size (i.e. num_ratings): 2,215,761!
+*** Selecting a random subsample of 1,000,000 user-item interactions!
+*** Current Dataset Size (i.e. num_ratings):  1,000,000!
+*****************************************************************************************************************************
+[Current stats] Users: 718,115, Items: 221,737, Ratings: 1,000,000, Density: 0.0000063

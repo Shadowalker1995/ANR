@@ -1,0 +1,75 @@
+[args from argparse.ArgumentParser().parse_args()]
+command: preprocessing_simple.py -d Clothing_Shoes_and_Jewelry -dev_test_in_train 1
+dataset: Clothing_Shoes_and_Jewelry
+dataset_maximum_size: 1000000
+dev_test_in_train: True
+maxDL: 500
+maxVL: 500
+minImages: 1
+minReviews: 1
+minRL: 10
+random_seed: 1337
+train_ratio: 0.8
+vocab: 50000
+
+[INPUT] Source Folder:       ../datasets/
+[INPUT] Reviews/Ratings:     ../datasets/reviews_Clothing_Shoes_and_Jewelry.json
+
+[OUTPUT] Category Folder:    ../datasets/Clothing_Shoes_and_Jewelry/
+[OUTPUT] env:                ../datasets/Clothing_Shoes_and_Jewelry/Clothing_Shoes_and_Jewelry_env.pkl
+[OUTPUT] info:               ../datasets/Clothing_Shoes_and_Jewelry/Clothing_Shoes_and_Jewelry_info.pkl
+[OUTPUT] interactions:       ../datasets/Clothing_Shoes_and_Jewelry/Clothing_Shoes_and_Jewelry_interactions.pkl
+[OUTPUT] train_interactions: ../datasets/Clothing_Shoes_and_Jewelry/Clothing_Shoes_and_Jewelry_train_interactions.pkl
+[OUTPUT] dev_interactions:   ../datasets/Clothing_Shoes_and_Jewelry/Clothing_Shoes_and_Jewelry_dev_interactions.pkl
+[OUTPUT] test_interactions:  ../datasets/Clothing_Shoes_and_Jewelry/Clothing_Shoes_and_Jewelry_test_interactions.pkl
+[OUTPUT] split_train:        ../datasets/Clothing_Shoes_and_Jewelry/Clothing_Shoes_and_Jewelry_split_train.pkl
+[OUTPUT] split_dev:          ../datasets/Clothing_Shoes_and_Jewelry/Clothing_Shoes_and_Jewelry_split_dev.pkl
+[OUTPUT] split_test:         ../datasets/Clothing_Shoes_and_Jewelry/Clothing_Shoes_and_Jewelry_split_test.pkl
+[OUTPUT] uid_userDoc:        ../datasets/Clothing_Shoes_and_Jewelry/Clothing_Shoes_and_Jewelry_uid_userDoc.npy
+[OUTPUT] iid_itemDoc:        ../datasets/Clothing_Shoes_and_Jewelry/Clothing_Shoes_and_Jewelry_iid_itemDoc.npy
+[OUTPUT] uid_userDoc:        ../datasets/Clothing_Shoes_and_Jewelry/Clothing_Shoes_and_Jewelry_uid_userVis.npy
+[OUTPUT] iid_itemDoc:        ../datasets/Clothing_Shoes_and_Jewelry/Clothing_Shoes_and_Jewelry_iid_itemVis.npy
+
+[Settings]
+Min reviews for user/item: 1
+Min review length to qualify as an user-item interaction: 10
+Max words for user/item document: 500 (For truncating/padding to get a fixed-size representation)
+Top-50000 words in vocabulary being utilized!
+
+
+Initial pass of reviews to get the user-item interactions!
+[Initial stats] Users: 3,117,268, Items: 1,136,004, Ratings: 5,748,920, Density: 0.0000016
+
+
+Second pass of visual features to get the item-feature interactions!
+[Second stats] Items with image: 1,494,171, Images: 1,494,171, Density: 1.0000000
+
+[Current stats] Users: 3103441, Items: 1128716, Ratings: 5711764, Density: 0.0000016
+[Current stats] Users: 3103441, Items: 1128716, Ratings: 5711764, Density: 0.0000016
+
+No change in # of users or # of items!
+
+[Final stats] Users: 3,103,441, Items: 1,128,716, Ratings: 5,711,764, Density: 0.0000016
+
+No change in # of users or # of items!
+
+[Final stats] Users: 3,103,441, Items: 1,128,716, Ratings: 5,711,764, Density: 0.0000016
+
+
+Third pass of reviews to get the rating, date, the num of tokenized review and index!
+[Current stats] Users: 3,103,441, Items: 1,128,716, Ratings: 5,711,764, Density: 0.0000016
+
+Filtering user-item interactions based on minimum review length of 10 tokens..
+[Current stats] Users: 3,067,624, Items: 1,117,869, Ratings: 5,634,543, Density: 0.0000016
+
+
+No change in # of users or # of items!
+
+[Final stats] Users: 3,067,624, Items: 1,117,869, Ratings: 5,634,543, Density: 0.0000016
+
+*****************************************************************************************************************************
+*** Original Dataset Size (i.e. num_ratings): 5,634,543!
+*** Selecting a random subsample of 1,000,000 user-item interactions!
+*** Current Dataset Size (i.e. num_ratings):  1,000,000!
+*****************************************************************************************************************************
+[Current stats] Users: 812,177, Items: 390,133, Ratings: 1,000,000, Density: 0.0000032

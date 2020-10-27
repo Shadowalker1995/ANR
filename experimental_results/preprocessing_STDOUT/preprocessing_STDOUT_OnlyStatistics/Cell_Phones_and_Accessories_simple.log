@@ -1,0 +1,106 @@
+
+Dataset: Cell_Phones_and_Accessories
+[args from argparse.ArgumentParser().parse_args()]
+command: preprocessing_simple.py -d Cell_Phones_and_Accessories -dev_test_in_train 1
+dataset: Cell_Phones_and_Accessories
+dataset_maximum_size: 1000000
+dev_test_in_train: True
+maxDL: 500
+maxVL: 500
+minImages: 1
+minReviews: 1
+minRL: 10
+random_seed: 1337
+train_ratio: 0.8
+vocab: 50000
+
+[INPUT] Source Folder:       ../datasets/
+[INPUT] Reviews/Ratings:     ../datasets/reviews_Cell_Phones_and_Accessories.json
+
+[OUTPUT] Category Folder:    ../datasets/Cell_Phones_and_Accessories/
+[OUTPUT] env:                ../datasets/Cell_Phones_and_Accessories/Cell_Phones_and_Accessories_env.pkl
+[OUTPUT] info:               ../datasets/Cell_Phones_and_Accessories/Cell_Phones_and_Accessories_info.pkl
+[OUTPUT] interactions:       ../datasets/Cell_Phones_and_Accessories/Cell_Phones_and_Accessories_interactions.pkl
+[OUTPUT] train_interactions: ../datasets/Cell_Phones_and_Accessories/Cell_Phones_and_Accessories_train_interactions.pkl
+[OUTPUT] dev_interactions:   ../datasets/Cell_Phones_and_Accessories/Cell_Phones_and_Accessories_dev_interactions.pkl
+[OUTPUT] test_interactions:  ../datasets/Cell_Phones_and_Accessories/Cell_Phones_and_Accessories_test_interactions.pkl
+[OUTPUT] split_train:        ../datasets/Cell_Phones_and_Accessories/Cell_Phones_and_Accessories_split_train.pkl
+[OUTPUT] split_dev:          ../datasets/Cell_Phones_and_Accessories/Cell_Phones_and_Accessories_split_dev.pkl
+[OUTPUT] split_test:         ../datasets/Cell_Phones_and_Accessories/Cell_Phones_and_Accessories_split_test.pkl
+[OUTPUT] uid_userDoc:        ../datasets/Cell_Phones_and_Accessories/Cell_Phones_and_Accessories_uid_userDoc.npy
+[OUTPUT] iid_itemDoc:        ../datasets/Cell_Phones_and_Accessories/Cell_Phones_and_Accessories_iid_itemDoc.npy
+[OUTPUT] uid_userDoc:        ../datasets/Cell_Phones_and_Accessories/Cell_Phones_and_Accessories_uid_userVis.npy
+[OUTPUT] iid_itemDoc:        ../datasets/Cell_Phones_and_Accessories/Cell_Phones_and_Accessories_iid_itemVis.npy
+
+Preprocessing data for "Cell_Phones_and_Accessories"
+
+[Settings]
+Min reviews for user/item: 1
+Min review length to qualify as an user-item interaction: 10
+Max words for user/item document: 500 (For truncating/padding to get a fixed-size representation)
+Top-50000 words in vocabulary being utilized!
+
+
+Initial pass of reviews to get the user-item interactions!
+[Initial stats] Users: 2,261,045, Items: 319,678, Ratings: 3,447,249, Density: 0.0000048
+
+
+Second pass of visual features to get the item-feature interactions!
+[Second stats] Items with image: 343,343, Images: 343,343, Density: 1.0000000
+
+
+Starting to filter away users & items based on thresold of 1 images!
+Updating interactions based on the num of images...
+
+Filtered users & items based on thresold of 1 images!
+Users: 2261045 -> 2235942, Items: 319678 -> 316358
+[Current stats] Users: 2235942, Items: 316358, Ratings: 3397816, Density: 0.0000048
+Updating interactions based on the num of images...
+
+Filtered users & items based on thresold of 1 images!
+Users: 2235942 -> 2235942, Items: 316358 -> 316358
+[Current stats] Users: 2235942, Items: 316358, Ratings: 3397816, Density: 0.0000048
+
+No change in # of users or # of items!
+
+[Final stats] Users: 2,235,942, Items: 316,358, Ratings: 3,397,816, Density: 0.0000048
+
+Elapsed time for "Cell_Phones_and_Accessories": 112.54 seconds (1.88 minutes)
+
+Starting to filter away users & items based on thresold of 1 reviews!
+
+Filtered users & items based on thresold of 1 reviews!
+Users: 2235942 -> 2235942, Items: 316358 -> 316358
+
+No change in # of users or # of items!
+
+[Final stats] Users: 2,235,942, Items: 316,358, Ratings: 3,397,816, Density: 0.0000048
+
+Elapsed time for "Cell_Phones_and_Accessories": 113.06 seconds (1.88 minutes)
+
+
+Third pass of reviews to get the rating, date, the num of tokenized review and index!
+[Current stats] Users: 2,235,942, Items: 316,358, Ratings: 3,397,816, Density: 0.0000048
+
+Filtering user-item interactions based on minimum review length of 10 tokens..
+
+Filtered users & items based on minimum review length of 10 tokens!
+Users: 2,235,942 -> 2,204,951, Items: 316,358 -> 313,775
+[Current stats] Users: 2,204,951, Items: 313,775, Ratings: 3,345,027, Density: 0.0000048
+
+
+Starting to filter away users & items based on thresold of 1 reviews (after removing reviews with <= 10 tokens)!
+
+Filtered users & items based on thresold of 1 reviews!
+Users: 2,204,951 -> 2,204,951, Items: 313,775 -> 313,775
+
+No change in # of users or # of items!
+
+[Final stats] Users: 2,204,951, Items: 313,775, Ratings: 3,345,027, Density: 0.0000048
+
+*****************************************************************************************************************************
+*** Original Dataset Size (i.e. num_ratings): 3,345,027!
+*** Selecting a random subsample of 1,000,000 user-item interactions!
+*** Current Dataset Size (i.e. num_ratings):  1,000,000!
+*****************************************************************************************************************************
+[Current stats] Users: 835,716, Items: 168,211, Ratings: 1,000,000, Density: 0.0000071

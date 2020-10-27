@@ -1,0 +1,254 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  channels_global: 100
+  channels_local: 200
+  command: -d Small_Clothing -m DenseCNN -e 10 -dr 0.5 -p 1 -bs 128 -v 43947 -K 5 -h1 50 -h2 50 -WED 300 -filters_num 64 -hiden_size 500 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm Small_Clothing
+  ctx_win_size: 3
+  dataset: Small_Clothing
+  disable_initial_eval: 0
+  dropout_rate: 0.5
+  epochs: 10
+  filters_num: 64
+  gpu: 0
+  h1: 50
+  h2: 50
+  hidden_size: 500
+  input_dir: ./datasets/Small_Clothing/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: DenseCNN
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Small_Clothing - DenseCNN/
+  output_size: 50
+  pretrained_src: 1
+  random_seed: 1234
+  save_model: Small_Clothing
+  use_cuda: True
+  verbose: 1
+  vocab_size: 43947
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 77,930, # of Items: 59,172
+
+Creating model (Selected Model: DenseCNN)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 1.92s (0.03 minute)
+
+Loading uid_userDoc from "./datasets/Small_Clothing/Small_Clothing_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (77930, 500)]
+
+Loading iid_itemDoc from "./datasets/Small_Clothing/Small_Clothing_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (59172, 500)]
+
+Loading pretrained word embeddings from "./datasets/Small_Clothing/Small_Clothing_wed300_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (43949, 300)]
+
+Initialization Complete.. Elapsed Time: 2.40s (0.04 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 80,000, |DEV|: 150, |TEST|: 166
+Train/Dev/Test splits loaded! Elapsed Time: 2.42s (0.04 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 19.03688, MAE: 4.23649
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 19.78881, MAE: 4.33384
+
+Initial Evaluation Complete.. Elapsed Time: 2.61s (0.04 minute)
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 84,631,637
+# of Trainable Parameters: 2,895,937
+DenseCNN (
+  (uid_userDoc): Embedding(77930, 500), weights = ((77930, 500),), parameters = 38,965,000
+  (iid_itemDoc): Embedding(59172, 500), weights = ((59172, 500),), parameters = 29,586,000
+  (wid_wEmbed): Embedding(43949, 300), weights = ((43949, 300),), parameters = 13,184,700
+  (user_net): DenseNet(
+    (dense_layer_conv0): Conv2d(1, 64, kernel_size=(1, 300), stride=(1, 1))
+    (dense_layer_conv1): Sequential(
+      (0): ZeroPad2d(padding=(0, 0, 0, 1), value=0.0)
+      (1): Conv2d(64, 64, kernel_size=(2, 1), stride=(1, 1))
+    )
+    (dense_layer_conv2): Sequential(
+      (0): ZeroPad2d(padding=(0, 0, 0, 1), value=0.0)
+      (1): Conv2d(128, 64, kernel_size=(2, 1), stride=(1, 1))
+    )
+    (dense_layer_conv3): Sequential(
+      (0): ZeroPad2d(padding=(0, 0, 0, 1), value=0.0)
+      (1): Conv2d(192, 64, kernel_size=(2, 1), stride=(1, 1))
+    )
+    (dense_layer_conv4): Sequential(
+      (0): ZeroPad2d(padding=(0, 0, 0, 1), value=0.0)
+      (1): Conv2d(256, 64, kernel_size=(2, 1), stride=(1, 1))
+    )
+    (activation_layer0): Sequential(
+      (0): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (1): ReLU()
+    )
+    (activation_layer1): Sequential(
+      (0): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (1): ReLU()
+    )
+    (activation_layer2): Sequential(
+      (0): BatchNorm2d(192, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (1): ReLU()
+    )
+    (activation_layer3): Sequential(
+      (0): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (1): ReLU()
+    )
+    (activation_layer4): Sequential(
+      (0): BatchNorm2d(320, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (1): ReLU()
+    )
+    (scale_attention): Sequential(
+      (0): Conv2d(1, 1, kernel_size=(1, 500), stride=(1, 1))
+      (1): Softmax(dim=2)
+    )
+    (word_attention): Sequential(
+      (0): Conv2d(1, 1, kernel_size=(5, 1), stride=(1, 1))
+      (1): Softmax(dim=3)
+    )
+    (dropout): Dropout(p=0.5, inplace=False)
+    (fcLayer): Sequential(
+      (0): Linear(in_features=2500, out_features=500, bias=True)
+      (1): Dropout(p=0.5, inplace=False)
+      (2): ReLU()
+      (3): Linear(in_features=500, out_features=50, bias=True)
+    )
+  ), weights = ((64, 1, 1, 300), (64,), (64, 64, 2, 1), (64,), (64, 128, 2, 1), (64,), (64, 192, 2, 1), (64,), (64, 256, 2, 1), (64,), (64,), (64,), (128,), (128,), (192,), (192,), (256,), (256,), (320,), (320,), (1, 1, 1, 500), (1,), (1, 1, 5, 1), (1,), (500, 2500), (500,), (50, 500), (50,)), parameters = 1,379,417 (Trainable)
+  (item_net): DenseNet(
+    (dense_layer_conv0): Conv2d(1, 64, kernel_size=(1, 300), stride=(1, 1))
+    (dense_layer_conv1): Sequential(
+      (0): ZeroPad2d(padding=(0, 0, 0, 1), value=0.0)
+      (1): Conv2d(64, 64, kernel_size=(2, 1), stride=(1, 1))
+    )
+    (dense_layer_conv2): Sequential(
+      (0): ZeroPad2d(padding=(0, 0, 0, 1), value=0.0)
+      (1): Conv2d(128, 64, kernel_size=(2, 1), stride=(1, 1))
+    )
+    (dense_layer_conv3): Sequential(
+      (0): ZeroPad2d(padding=(0, 0, 0, 1), value=0.0)
+      (1): Conv2d(192, 64, kernel_size=(2, 1), stride=(1, 1))
+    )
+    (dense_layer_conv4): Sequential(
+      (0): ZeroPad2d(padding=(0, 0, 0, 1), value=0.0)
+      (1): Conv2d(256, 64, kernel_size=(2, 1), stride=(1, 1))
+    )
+    (activation_layer0): Sequential(
+      (0): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (1): ReLU()
+    )
+    (activation_layer1): Sequential(
+      (0): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (1): ReLU()
+    )
+    (activation_layer2): Sequential(
+      (0): BatchNorm2d(192, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (1): ReLU()
+    )
+    (activation_layer3): Sequential(
+      (0): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (1): ReLU()
+    )
+    (activation_layer4): Sequential(
+      (0): BatchNorm2d(320, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (1): ReLU()
+    )
+    (scale_attention): Sequential(
+      (0): Conv2d(1, 1, kernel_size=(1, 500), stride=(1, 1))
+      (1): Softmax(dim=2)
+    )
+    (word_attention): Sequential(
+      (0): Conv2d(1, 1, kernel_size=(5, 1), stride=(1, 1))
+      (1): Softmax(dim=3)
+    )
+    (dropout): Dropout(p=0.5, inplace=False)
+    (fcLayer): Sequential(
+      (0): Linear(in_features=2500, out_features=500, bias=True)
+      (1): Dropout(p=0.5, inplace=False)
+      (2): ReLU()
+      (3): Linear(in_features=500, out_features=50, bias=True)
+    )
+  ), weights = ((64, 1, 1, 300), (64,), (64, 64, 2, 1), (64,), (64, 128, 2, 1), (64,), (64, 192, 2, 1), (64,), (64, 256, 2, 1), (64,), (64,), (64,), (128,), (128,), (192,), (192,), (256,), (256,), (320,), (320,), (1, 1, 1, 500), (1,), (1, 1, 5, 1), (1,), (500, 2500), (500,), (50, 500), (50,)), parameters = 1,379,417 (Trainable)
+  (DenseCNN_RatingPred): DenseCNN_RatingPred(
+    (uid_userOffset): Embedding(77930, 1)
+    (iid_itemOffset): Embedding(59172, 1)
+    (globalOffset): Parameter(1,)
+  ), weights = ((1,), (77930, 1), (59172, 1)), parameters = 137,103 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/10] Training Loss: 15.69023	Elapsed Time: 66.32s (0:01:06)
+[Epoch 1] [Dev]  MSE: 35.31016, MAE: 4.46167
+[Epoch 1] [Test] MSE: 40.69359, MAE: 4.90241
+
+*** MODEL has obtained the best DEV MSE of 35.31016 so far!
+*** The Best MODEL saved to "./__saved_models__/Small_Clothing - DenseCNN/Small_Clothing_1234.pth"
+
+[Epoch 2/10] Training Loss: 61166892.78451	Elapsed Time: 132.76s (0:02:12)
+[Epoch 2] [Dev]  MSE: 8720.56755, MAE: 16.58110
+[Epoch 2] [Test] MSE: 1697.17195, MAE: 15.16830
+
+[Epoch 3/10] Training Loss: 28279.59506	Elapsed Time: 199.09s (0:03:19)
+[Epoch 3] [Dev]  MSE: 9528.30652, MAE: 13.52036
+[Epoch 3] [Test] MSE: 1015.90777, MAE: 8.44349
+
+[Epoch 4/10] Training Loss: 4772.10303	Elapsed Time: 265.41s (0:04:25)
+[Epoch 4] [Dev]  MSE: 311.36512, MAE: 4.35110
+[Epoch 4] [Test] MSE: 29.90205, MAE: 2.46419
+
+[Epoch 5/10] Training Loss: 1127.06572	Elapsed Time: 331.75s (0:05:31)
+[Epoch 5] [Dev]  MSE: 303.49891, MAE: 3.17684
+[Epoch 5] [Test] MSE: 13.06127, MAE: 1.93624
+
+[Epoch 6/10] Training Loss: 511.27307	Elapsed Time: 398.11s (0:06:38)
+[Epoch 6] [Dev]  MSE: 208.57178, MAE: 3.21219
+[Epoch 6] [Test] MSE: 6.70165, MAE: 2.13286
+
+[Epoch 7/10] Training Loss: 1019.19807	Elapsed Time: 464.46s (0:07:44)
+[Epoch 7] [Dev]  MSE: 432.94925, MAE: 4.24573
+[Epoch 7] [Test] MSE: 8.98871, MAE: 2.71523
+
+[Epoch 8/10] Training Loss: 425.43960	Elapsed Time: 530.83s (0:08:50)
+[Epoch 8] [Dev]  MSE: 27.86544, MAE: 1.85186
+[Epoch 8] [Test] MSE: 3.44005, MAE: 1.36971
+
+*** MODEL has obtained the best DEV MSE of 27.86544 so far!
+*** The Best MODEL saved to "./__saved_models__/Small_Clothing - DenseCNN/Small_Clothing_1234.pth"
+
+[Epoch 9/10] Training Loss: 185.04192	Elapsed Time: 597.28s (0:09:57)
+[Epoch 9] [Dev]  MSE: 4.10120, MAE: 1.49130
+[Epoch 9] [Test] MSE: 3.52734, MAE: 1.53604
+
+*** MODEL has obtained the best DEV MSE of 4.10120 so far!
+*** The Best MODEL saved to "./__saved_models__/Small_Clothing - DenseCNN/Small_Clothing_1234.pth"
+
+[Epoch 10/10] Training Loss: 197.47736	Elapsed Time: 663.72s (0:11:03)
+[Epoch 10] [Dev]  MSE: 135.34808, MAE: 2.28626
+[Epoch 10] [Test] MSE: 3.27894, MAE: 1.31735
+*** The Last MODEL saved to "./__saved_models__/Small_Clothing - DenseCNN/Small_Clothing_1234_10.pth"
+
+[Training Loss]
+[15.69023, 61166892.78451, 28279.59506, 4772.10303, 1127.06572, 511.27307, 1019.19807, 425.4396, 185.04192, 197.47736]
+
+[Dev MSE]
+[35.31016, 8720.56755, 9528.30652, 311.36512, 303.49891, 208.57178, 432.94925, 27.86544, 4.1012, 135.34808]
+[Test MSE]
+[40.69359, 1697.17195, 1015.90777, 29.90205, 13.06127, 6.70165, 8.98871, 3.44005, 3.52734, 3.27894]
+[Test MAE]
+[4.90241, 15.1683, 8.44349, 2.46419, 1.93624, 2.13286, 2.71523, 1.36971, 1.53604, 1.31735]
+
+
+Best Dev MSE: 4.10120 (Obtained during Evaluation #9)
+Test MSE: 3.52734, Test MAE: 1.53604
+
+End of Program! Elapsed Time: 666.45s (0:11:06)

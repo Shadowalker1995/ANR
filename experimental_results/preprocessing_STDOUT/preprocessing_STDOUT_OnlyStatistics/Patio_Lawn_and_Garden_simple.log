@@ -1,0 +1,100 @@
+
+Dataset: Patio_Lawn_and_Garden
+[args from argparse.ArgumentParser().parse_args()]
+command: preprocessing_simple.py -d Patio_Lawn_and_Garden -dev_test_in_train 1
+dataset: Patio_Lawn_and_Garden
+dataset_maximum_size: 1000000
+dev_test_in_train: True
+maxDL: 500
+maxVL: 500
+minImages: 1
+minReviews: 1
+minRL: 10
+random_seed: 1337
+train_ratio: 0.8
+vocab: 50000
+
+[INPUT] Source Folder:       ../datasets/
+[INPUT] Reviews/Ratings:     ../datasets/reviews_Patio_Lawn_and_Garden.json
+
+[OUTPUT] Category Folder:    ../datasets/Patio_Lawn_and_Garden/
+[OUTPUT] env:                ../datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_env.pkl
+[OUTPUT] info:               ../datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_info.pkl
+[OUTPUT] interactions:       ../datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_interactions.pkl
+[OUTPUT] train_interactions: ../datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_train_interactions.pkl
+[OUTPUT] dev_interactions:   ../datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_dev_interactions.pkl
+[OUTPUT] test_interactions:  ../datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_test_interactions.pkl
+[OUTPUT] split_train:        ../datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_split_train.pkl
+[OUTPUT] split_dev:          ../datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_split_dev.pkl
+[OUTPUT] split_test:         ../datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_split_test.pkl
+[OUTPUT] uid_userDoc:        ../datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_uid_userDoc.npy
+[OUTPUT] iid_itemDoc:        ../datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_iid_itemDoc.npy
+[OUTPUT] uid_userDoc:        ../datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_uid_userVis.npy
+[OUTPUT] iid_itemDoc:        ../datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_iid_itemVis.npy
+
+Preprocessing data for "Patio_Lawn_and_Garden"
+
+[Settings]
+Min reviews for user/item: 1
+Min review length to qualify as an user-item interaction: 10
+Max words for user/item document: 500 (For truncating/padding to get a fixed-size representation)
+Top-50000 words in vocabulary being utilized!
+
+
+Initial pass of reviews to get the user-item interactions!
+[Initial stats] Users: 714,791, Items: 105,984, Ratings: 993,490, Density: 0.0000131
+
+
+Second pass of visual features to get the item-feature interactions!
+[Second stats] Items with image: 108,245, Images: 108,245, Density: 1.0000000
+
+
+Starting to filter away users & items based on thresold of 1 images!
+Updating interactions based on the num of images...
+
+Filtered users & items based on thresold of 1 images!
+Users: 714791 -> 709653, Items: 105984 -> 105153
+[Current stats] Users: 709653, Items: 105153, Ratings: 984699, Density: 0.0000132
+Updating interactions based on the num of images...
+
+Filtered users & items based on thresold of 1 images!
+Users: 709653 -> 709653, Items: 105153 -> 105153
+[Current stats] Users: 709653, Items: 105153, Ratings: 984699, Density: 0.0000132
+
+No change in # of users or # of items!
+
+[Final stats] Users: 709,653, Items: 105,153, Ratings: 984,699, Density: 0.0000132
+
+Elapsed time for "Patio_Lawn_and_Garden": 33.59 seconds (0.56 minutes)
+
+Starting to filter away users & items based on thresold of 1 reviews!
+
+Filtered users & items based on thresold of 1 reviews!
+Users: 709653 -> 709653, Items: 105153 -> 105153
+
+No change in # of users or # of items!
+
+[Final stats] Users: 709,653, Items: 105,153, Ratings: 984,699, Density: 0.0000132
+
+Elapsed time for "Patio_Lawn_and_Garden": 33.73 seconds (0.56 minutes)
+
+
+Third pass of reviews to get the rating, date, the num of tokenized review and index!
+[Current stats] Users: 709,653, Items: 105,153, Ratings: 984,699, Density: 0.0000132
+
+Filtering user-item interactions based on minimum review length of 10 tokens..
+
+Filtered users & items based on minimum review length of 10 tokens!
+Users: 709,653 -> 700,037, Items: 105,153 -> 104,250
+[Current stats] Users: 700,037, Items: 104,250, Ratings: 969,757, Density: 0.0000133
+
+
+Starting to filter away users & items based on thresold of 1 reviews (after removing reviews with <= 10 tokens)!
+
+Filtered users & items based on thresold of 1 reviews!
+Users: 700,037 -> 700,037, Items: 104,250 -> 104,250
+
+No change in # of users or # of items!
+
+[Final stats] Users: 700,037, Items: 104,250, Ratings: 969,757, Density: 0.0000133
+[Current stats] Users: 700,037, Items: 104,250, Ratings: 969,757, Density: 0.0000133

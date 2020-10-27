@@ -1,0 +1,75 @@
+[args from argparse.ArgumentParser().parse_args()]
+command: preprocessing_simple.py -d Tools_and_Home_Improvement -dev_test_in_train 1
+dataset: Tools_and_Home_Improvement
+dataset_maximum_size: 1000000
+dev_test_in_train: True
+maxDL: 500
+maxVL: 500
+minImages: 1
+minReviews: 1
+minRL: 10
+random_seed: 1337
+train_ratio: 0.8
+vocab: 50000
+
+[INPUT] Source Folder:       ../datasets/
+[INPUT] Reviews/Ratings:     ../datasets/reviews_Tools_and_Home_Improvement.json
+
+[OUTPUT] Category Folder:    ../datasets/Tools_and_Home_Improvement/
+[OUTPUT] env:                ../datasets/Tools_and_Home_Improvement/Tools_and_Home_Improvement_env.pkl
+[OUTPUT] info:               ../datasets/Tools_and_Home_Improvement/Tools_and_Home_Improvement_info.pkl
+[OUTPUT] interactions:       ../datasets/Tools_and_Home_Improvement/Tools_and_Home_Improvement_interactions.pkl
+[OUTPUT] train_interactions: ../datasets/Tools_and_Home_Improvement/Tools_and_Home_Improvement_train_interactions.pkl
+[OUTPUT] dev_interactions:   ../datasets/Tools_and_Home_Improvement/Tools_and_Home_Improvement_dev_interactions.pkl
+[OUTPUT] test_interactions:  ../datasets/Tools_and_Home_Improvement/Tools_and_Home_Improvement_test_interactions.pkl
+[OUTPUT] split_train:        ../datasets/Tools_and_Home_Improvement/Tools_and_Home_Improvement_split_train.pkl
+[OUTPUT] split_dev:          ../datasets/Tools_and_Home_Improvement/Tools_and_Home_Improvement_split_dev.pkl
+[OUTPUT] split_test:         ../datasets/Tools_and_Home_Improvement/Tools_and_Home_Improvement_split_test.pkl
+[OUTPUT] uid_userDoc:        ../datasets/Tools_and_Home_Improvement/Tools_and_Home_Improvement_uid_userDoc.npy
+[OUTPUT] iid_itemDoc:        ../datasets/Tools_and_Home_Improvement/Tools_and_Home_Improvement_iid_itemDoc.npy
+[OUTPUT] uid_userDoc:        ../datasets/Tools_and_Home_Improvement/Tools_and_Home_Improvement_uid_userVis.npy
+[OUTPUT] iid_itemDoc:        ../datasets/Tools_and_Home_Improvement/Tools_and_Home_Improvement_iid_itemVis.npy
+
+[Settings]
+Min reviews for user/item: 1
+Min review length to qualify as an user-item interaction: 10
+Max words for user/item document: 500 (For truncating/padding to get a fixed-size representation)
+Top-50000 words in vocabulary being utilized!
+
+
+Initial pass of reviews to get the user-item interactions!
+[Initial stats] Users: 1,212,468, Items: 260,659, Ratings: 1,926,047, Density: 0.0000061
+
+
+Second pass of visual features to get the item-feature interactions!
+[Second stats] Items with image: 267,141, Images: 267,141, Density: 1.0000000
+
+[Current stats] Users: 1206985, Items: 258737, Ratings: 1914178, Density: 0.0000061
+[Current stats] Users: 1206985, Items: 258737, Ratings: 1914178, Density: 0.0000061
+
+No change in # of users or # of items!
+
+[Final stats] Users: 1,206,985, Items: 258,737, Ratings: 1,914,178, Density: 0.0000061
+
+No change in # of users or # of items!
+
+[Final stats] Users: 1,206,985, Items: 258,737, Ratings: 1,914,178, Density: 0.0000061
+
+
+Third pass of reviews to get the rating, date, the num of tokenized review and index!
+[Current stats] Users: 1,206,985, Items: 258,737, Ratings: 1,914,178, Density: 0.0000061
+
+Filtering user-item interactions based on minimum review length of 10 tokens..
+[Current stats] Users: 1,194,374, Items: 256,895, Ratings: 1,893,225, Density: 0.0000062
+
+
+No change in # of users or # of items!
+
+[Final stats] Users: 1,194,374, Items: 256,895, Ratings: 1,893,225, Density: 0.0000062
+
+*****************************************************************************************************************************
+*** Original Dataset Size (i.e. num_ratings): 1,893,225!
+*** Selecting a random subsample of 1,000,000 user-item interactions!
+*** Current Dataset Size (i.e. num_ratings):  1,000,000!
+*****************************************************************************************************************************
+[Current stats] Users: 725,234, Items: 188,107, Ratings: 1,000,000, Density: 0.0000073

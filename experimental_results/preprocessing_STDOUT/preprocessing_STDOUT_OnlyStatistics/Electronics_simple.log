@@ -1,0 +1,106 @@
+
+Dataset: Electronics
+[args from argparse.ArgumentParser().parse_args()]
+command: preprocessing_simple.py -d Electronics -dev_test_in_train 1
+dataset: Electronics
+dataset_maximum_size: 1000000
+dev_test_in_train: True
+maxDL: 500
+maxVL: 500
+minImages: 1
+minReviews: 1
+minRL: 10
+random_seed: 1337
+train_ratio: 0.8
+vocab: 50000
+
+[INPUT] Source Folder:       ../datasets/
+[INPUT] Reviews/Ratings:     ../datasets/reviews_Electronics.json
+
+[OUTPUT] Category Folder:    ../datasets/Electronics/
+[OUTPUT] env:                ../datasets/Electronics/Electronics_env.pkl
+[OUTPUT] info:               ../datasets/Electronics/Electronics_info.pkl
+[OUTPUT] interactions:       ../datasets/Electronics/Electronics_interactions.pkl
+[OUTPUT] train_interactions: ../datasets/Electronics/Electronics_train_interactions.pkl
+[OUTPUT] dev_interactions:   ../datasets/Electronics/Electronics_dev_interactions.pkl
+[OUTPUT] test_interactions:  ../datasets/Electronics/Electronics_test_interactions.pkl
+[OUTPUT] split_train:        ../datasets/Electronics/Electronics_split_train.pkl
+[OUTPUT] split_dev:          ../datasets/Electronics/Electronics_split_dev.pkl
+[OUTPUT] split_test:         ../datasets/Electronics/Electronics_split_test.pkl
+[OUTPUT] uid_userDoc:        ../datasets/Electronics/Electronics_uid_userDoc.npy
+[OUTPUT] iid_itemDoc:        ../datasets/Electronics/Electronics_iid_itemDoc.npy
+[OUTPUT] uid_userDoc:        ../datasets/Electronics/Electronics_uid_userVis.npy
+[OUTPUT] iid_itemDoc:        ../datasets/Electronics/Electronics_iid_itemVis.npy
+
+Preprocessing data for "Electronics"
+
+[Settings]
+Min reviews for user/item: 1
+Min review length to qualify as an user-item interaction: 10
+Max words for user/item document: 500 (For truncating/padding to get a fixed-size representation)
+Top-50000 words in vocabulary being utilized!
+
+
+Initial pass of reviews to get the user-item interactions!
+[Initial stats] Users: 4,201,696, Items: 476,002, Ratings: 7,824,482, Density: 0.0000039
+
+
+Second pass of visual features to get the item-feature interactions!
+[Second stats] Items with image: 494,726, Images: 494,726, Density: 1.0000000
+
+
+Starting to filter away users & items based on thresold of 1 images!
+Updating interactions based on the num of images...
+
+Filtered users & items based on thresold of 1 images!
+Users: 4201696 -> 4180078, Items: 476002 -> 472669
+[Current stats] Users: 4180078, Items: 472669, Ratings: 7762221, Density: 0.0000039
+Updating interactions based on the num of images...
+
+Filtered users & items based on thresold of 1 images!
+Users: 4180078 -> 4180078, Items: 472669 -> 472669
+[Current stats] Users: 4180078, Items: 472669, Ratings: 7762221, Density: 0.0000039
+
+No change in # of users or # of items!
+
+[Final stats] Users: 4,180,078, Items: 472,669, Ratings: 7,762,221, Density: 0.0000039
+
+Elapsed time for "Electronics": 265.00 seconds (4.42 minutes)
+
+Starting to filter away users & items based on thresold of 1 reviews!
+
+Filtered users & items based on thresold of 1 reviews!
+Users: 4180078 -> 4180078, Items: 472669 -> 472669
+
+No change in # of users or # of items!
+
+[Final stats] Users: 4,180,078, Items: 472,669, Ratings: 7,762,221, Density: 0.0000039
+
+Elapsed time for "Electronics": 266.00 seconds (4.43 minutes)
+
+
+Third pass of reviews to get the rating, date, the num of tokenized review and index!
+[Current stats] Users: 4,180,078, Items: 472,669, Ratings: 7,762,221, Density: 0.0000039
+
+Filtering user-item interactions based on minimum review length of 10 tokens..
+
+Filtered users & items based on minimum review length of 10 tokens!
+Users: 4,180,078 -> 4,147,690, Items: 472,669 -> 470,149
+[Current stats] Users: 4,147,690, Items: 470,149, Ratings: 7,696,101, Density: 0.0000039
+
+
+Starting to filter away users & items based on thresold of 1 reviews (after removing reviews with <= 10 tokens)!
+
+Filtered users & items based on thresold of 1 reviews!
+Users: 4,147,690 -> 4,147,690, Items: 470,149 -> 470,149
+
+No change in # of users or # of items!
+
+[Final stats] Users: 4,147,690, Items: 470,149, Ratings: 7,696,101, Density: 0.0000039
+
+*****************************************************************************************************************************
+*** Original Dataset Size (i.e. num_ratings): 7,696,101!
+*** Selecting a random subsample of 1,000,000 user-item interactions!
+*** Current Dataset Size (i.e. num_ratings):  1,000,000!
+*****************************************************************************************************************************
+[Current stats] Users: 834,983, Items: 189,367, Ratings: 1,000,000, Density: 0.0000063

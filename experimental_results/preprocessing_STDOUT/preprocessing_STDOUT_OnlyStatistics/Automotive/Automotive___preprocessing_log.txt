@@ -1,0 +1,75 @@
+[args from argparse.ArgumentParser().parse_args()]
+command: preprocessing_simple.py -d Automotive -dev_test_in_train 1
+dataset: Automotive
+dataset_maximum_size: 1000000
+dev_test_in_train: True
+maxDL: 500
+maxVL: 500
+minImages: 1
+minReviews: 1
+minRL: 10
+random_seed: 1337
+train_ratio: 0.8
+vocab: 50000
+
+[INPUT] Source Folder:       ../datasets/
+[INPUT] Reviews/Ratings:     ../datasets/reviews_Automotive.json
+
+[OUTPUT] Category Folder:    ../datasets/Automotive/
+[OUTPUT] env:                ../datasets/Automotive/Automotive_env.pkl
+[OUTPUT] info:               ../datasets/Automotive/Automotive_info.pkl
+[OUTPUT] interactions:       ../datasets/Automotive/Automotive_interactions.pkl
+[OUTPUT] train_interactions: ../datasets/Automotive/Automotive_train_interactions.pkl
+[OUTPUT] dev_interactions:   ../datasets/Automotive/Automotive_dev_interactions.pkl
+[OUTPUT] test_interactions:  ../datasets/Automotive/Automotive_test_interactions.pkl
+[OUTPUT] split_train:        ../datasets/Automotive/Automotive_split_train.pkl
+[OUTPUT] split_dev:          ../datasets/Automotive/Automotive_split_dev.pkl
+[OUTPUT] split_test:         ../datasets/Automotive/Automotive_split_test.pkl
+[OUTPUT] uid_userDoc:        ../datasets/Automotive/Automotive_uid_userDoc.npy
+[OUTPUT] iid_itemDoc:        ../datasets/Automotive/Automotive_iid_itemDoc.npy
+[OUTPUT] uid_userDoc:        ../datasets/Automotive/Automotive_uid_userVis.npy
+[OUTPUT] iid_itemDoc:        ../datasets/Automotive/Automotive_iid_itemVis.npy
+
+[Settings]
+Min reviews for user/item: 1
+Min review length to qualify as an user-item interaction: 10
+Max words for user/item document: 500 (For truncating/padding to get a fixed-size representation)
+Top-50000 words in vocabulary being utilized!
+
+
+Initial pass of reviews to get the user-item interactions!
+[Initial stats] Users: 851,418, Items: 320,112, Ratings: 1,373,768, Density: 0.0000050
+
+
+Second pass of visual features to get the item-feature interactions!
+[Second stats] Items with image: 328,480, Images: 328,480, Density: 1.0000000
+
+[Current stats] Users: 846942, Items: 317586, Ratings: 1363644, Density: 0.0000051
+[Current stats] Users: 846942, Items: 317586, Ratings: 1363644, Density: 0.0000051
+
+No change in # of users or # of items!
+
+[Final stats] Users: 846,942, Items: 317,586, Ratings: 1,363,644, Density: 0.0000051
+
+No change in # of users or # of items!
+
+[Final stats] Users: 846,942, Items: 317,586, Ratings: 1,363,644, Density: 0.0000051
+
+
+Third pass of reviews to get the rating, date, the num of tokenized review and index!
+[Current stats] Users: 846,942, Items: 317,586, Ratings: 1,363,644, Density: 0.0000051
+
+Filtering user-item interactions based on minimum review length of 10 tokens..
+[Current stats] Users: 835,219, Items: 314,206, Ratings: 1,342,239, Density: 0.0000051
+
+
+No change in # of users or # of items!
+
+[Final stats] Users: 835,219, Items: 314,206, Ratings: 1,342,239, Density: 0.0000051
+
+*****************************************************************************************************************************
+*** Original Dataset Size (i.e. num_ratings): 1,342,239!
+*** Selecting a random subsample of 1,000,000 user-item interactions!
+*** Current Dataset Size (i.e. num_ratings):  1,000,000!
+*****************************************************************************************************************************
+[Current stats] Users: 668,449, Items: 265,988, Ratings: 1,000,000, Density: 0.0000056

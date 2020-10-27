@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from .DAttn_RatingPred import DAttn_RatingPred
+from .DenseCNN_RatingPred import DenseCNN_RatingPred
 
 from tqdm import tqdm
 
@@ -41,7 +41,7 @@ class DenseCNN(nn.Module):
         self.user_net = DenseNet(logger, args)
         self.item_net = DenseNet(logger, args)
 
-        self.DAttn_RatingPred = DAttn_RatingPred(logger, args, num_users, num_items)
+        self.DenseCNN_RatingPred = DenseCNN_RatingPred(logger, args, num_users, num_items)
 
     '''
     [Input]     batch_userDoc:  bsz x max_doc_len
@@ -65,17 +65,20 @@ class DenseCNN(nn.Module):
 
         # ========== new ===========
         # (bsz x max_doc_len x word_embed_dim) x (word_embed_dim x output_size) -> bsz x max_doc_len x output_size
+        print(batch_userDocEmbed.shape)
+        print(self.wedProj.shape)
         batch_userDocEmbed = torch.matmul(batch_userDocEmbed, self.wedProj)
-        batch_itemDocEmbed = torch.matmul(batch_itemDocEmbed, self.wedProj)
+        batch_userDocEmbed = torch.matmul(batch_userDocEmbed, self.wedProj)
         # ========== new ===========
 
         batch_userFea = self.user_net(batch_userDocEmbed)
         batch_itemFea = self.item_net(batch_itemDocEmbed)
 
         # bsz x 1
-        rating_pred = self.DAttn_RatingPred(batch_userFea, batch_itemFea, batch_uid, batch_iid, verbose=verbose)
+        rating_pred = self.DenseCNN_RatingPred(batch_userFea, batch_itemFea, batch_uid, batch_iid, verbose=verbose)
 
         return rating_pred
+
 
 class DenseNet(nn.Module):
     def __init__(self, logger, args, filters_size=None):
@@ -86,161 +89,197 @@ class DenseNet(nn.Module):
         if filters_size is None:
             filters_size = [2, 3, 4, 5]
 
-        self.cnn1 = nn.Sequential(
+        # # bsz x 1 x max_doc_len x word_embed_dim -> # bsz x filters_num x max_doc_len x 1
+        # self.dense_layer_conv0 = nn.Conv2d(1, args.filters_num, kernel_size=(1, args.word_embed_dim))
+        # # bsz x filters_num x max_doc_len x 1 -> bsz x filters_num x max_doc_len x 1
+        # self.dense_layer_conv1 = nn.Sequential(
+        #     nn.ZeroPad2d((0, 0, 0, 1)),
+        #     nn.Conv2d(args.filters_num, args.filters_num, kernel_size=(2, 1)))
+        # # bsz x filters_num*2 x max_doc_len x 1 -> bsz x filters_num x max_doc_len x 1
+        # # self.dense_layer_conv2 = nn.Conv2d(args.filters_num*2, args.filters_num, kernel_size=(3, 1), padding=(1, 0))
+        # self.dense_layer_conv2 = nn.Sequential(
+        #     nn.ZeroPad2d((0, 0, 0, 1)),
+        #     nn.Conv2d(args.filters_num*2, args.filters_num, kernel_size=(2, 1)))
+        # # bsz x filters_num*3 x max_doc_len x 1 -> bsz x filters_num x max_doc_len x 1
+        # self.dense_layer_conv3 = nn.Sequential(
+        #     nn.ZeroPad2d((0, 0, 0, 1)),
+        #     nn.Conv2d(args.filters_num*3, args.filters_num, kernel_size=(2, 1)))
+        # # bsz x filters_num*4 x max_doc_len x 1 -> bsz x filters_num x max_doc_len x 1
+        # self.dense_layer_conv4 = nn.Sequential(
+        #     nn.ZeroPad2d((0, 0, 0, 1)),
+        #     nn.Conv2d(args.filters_num*4, args.filters_num, kernel_size=(2, 1)))
+        #
+        # self.activation_layer0 = nn.Sequential(
+        #     nn.BatchNorm2d(args.filters_num),
+        #     nn.ReLU())
+        # self.activation_layer1 = nn.Sequential(
+        #     nn.BatchNorm2d(args.filters_num * 2),
+        #     nn.ReLU())
+        # self.activation_layer2 = nn.Sequential(
+        #     nn.BatchNorm2d(args.filters_num * 3),
+        #     nn.ReLU())
+        # self.activation_layer3 = nn.Sequential(
+        #     nn.BatchNorm2d(args.filters_num * 4),
+        #     nn.ReLU())
+
+        # bsz x 1 x max_doc_len x output_size -> # bsz x filters_num x max_doc_len x 1
+        self.dense_layer_conv0 = nn.Conv2d(1, args.filters_num, kernel_size=(1, args.output_size))
+        # bsz x filters_num x max_doc_len x 1 -> bsz x filters_num x max_doc_len x 1
+        self.dense_layer_conv1 = nn.Sequential(
             nn.ZeroPad2d((0, 0, 0, 1)),
-            # bsz x 1 x max_doc_len x output_size -> bsz x filters_num x max_doc_len x 1
-            nn.Conv2d(1, args.filters_num, kernel_size=(2, args.output_size)),
+            nn.Conv2d(args.filters_num, args.filters_num, kernel_size=(2, 1)))
+        # bsz x filters_num*2 x max_doc_len x 1 -> bsz x filters_num x max_doc_len x 1
+        self.dense_layer_conv2 = nn.Sequential(
+            nn.ZeroPad2d((0, 0, 0, 1)),
+            nn.Conv2d(args.filters_num*2, args.filters_num, kernel_size=(2, 1)))
+        # bsz x filters_num*2 x max_doc_len x 1 -> bsz x filters_num x max_doc_len x 1
+        self.dense_layer_conv3 = nn.Sequential(
+            nn.ZeroPad2d((0, 0, 0, 1)),
+            nn.Conv2d(args.filters_num*2, args.filters_num, kernel_size=(2, 1)))
+        # bsz x filters_num*2 x max_doc_len x 1 -> bsz x filters_num x max_doc_len x 1
+        self.dense_layer_conv4 = nn.Sequential(
+            nn.ZeroPad2d((0, 0, 0, 1)),
+            nn.Conv2d(args.filters_num*2, args.filters_num, kernel_size=(2, 1)))
+
+        self.activation_layer0 = nn.Sequential(
+            nn.BatchNorm2d(args.filters_num),
+            nn.ReLU())
+        self.activation_layer1 = nn.Sequential(
+            nn.BatchNorm2d(args.filters_num * 2),
+            nn.ReLU())
+        self.activation_layer2 = nn.Sequential(
+            nn.BatchNorm2d(args.filters_num * 2),
+            nn.ReLU())
+        self.activation_layer3 = nn.Sequential(
+            nn.BatchNorm2d(args.filters_num * 2),
+            nn.ReLU())
+
+        self.scale_attention = nn.Sequential(
+            # bsz x 1 x 5 x max_doc_len -> bsz x 1 x 5 x 1
+            nn.Conv2d(1, 1, kernel_size=(1, args.max_doc_len)),
+            nn.Softmax(dim=2),
+        )
+        self.word_attention = nn.Sequential(
+            # bsz x 1 x 5 x max_doc_len -> bsz x 1 x 1 x max_doc_len
+            nn.Conv2d(1, 1, kernel_size=(5, 1)),
+            nn.Softmax(dim=3),
+        )
+
+        self.dropout = nn.Dropout(args.dropout_rate)
+
+        self.fcLayer = nn.Sequential(
+            # bsz x (5 x max_doc_len) -> bsz x hidden_size
+            nn.Linear(5*args.max_doc_len, args.hidden_size),
+            nn.Dropout(args.dropout_rate),
             nn.ReLU(),
-        )
-
-        self.cnn2 = nn.Sequential(
-            nn.ZeroPad2d((0, 0, 1, 1)),
-            # bsz x 1 x max_doc_len x filters_num -> bsz x filters_num x max_doc_len x 1
-            nn.Conv2d(1, args.filters_num, kernel_size=(3, args.filters_num)),
-            nn.ReLU(),
-        )
-
-        self.cnn3 = nn.Sequential(
-            nn.ZeroPad2d((0, 0, 1, 2)),
-            # bsz x 1 x max_doc_len x filters_num -> bsz x filters_num x max_doc_len x 1
-            nn.Conv2d(1, args.filters_num, kernel_size=(4, args.filters_num)),
-            nn.ReLU(),
-        )
-
-        self.cnn4 = nn.Sequential(
-            nn.ZeroPad2d((0, 0, 2, 2)),
-            # bsz x 1 x max_doc_len x filters_num -> bsz x filters_num x max_doc_len x 1
-            nn.Conv2d(1, args.filters_num, kernel_size=(5, args.filters_num)),
-            nn.ReLU(),
-        )
-
-    '''
-    [Input]     x:      bsz x max_doc_len x output_size
-    [Output]    out:    bsz x channels_local
-    '''
-    def forward(self, batch_DocEmbed):
-        # bsz x max_doc_len x output_size -> bsz x 1 x max_doc_len x output_size
-        # bsz x 1 x max_doc_len x output_size -> bsz x filters_num x max_doc_len x 1
-        # bsz x filters_num x max_doc_len x 1 -> bsz x filters_num x max_doc_len
-        out1 = self.cnn1(batch_DocEmbed.unzqueeze(1)).squeeze(3)
-
-        # bsz x filters_num x max_doc_len -> bsz x max_doc_len x filters_num
-        out1 = torch.transpose(out1, 1, 2)
-
-
-        # bsz x max_doc_len x word_embed_dim -> bsz x 1 x max_doc_len x word_embed_dim
-        # bsz x 1 x max_doc_len x word_embed_dim -> bsz x 1 x max_doc_len x 1
-        # bsz x 1 x max_doc_len x 1 -> bsz x max_doc_len x 1
-        scores = self.attention_layer(x.unsqueeze(1)).squeeze(1)
-
-        # (bsz x max_doc_len x word_embed_dim) * (bsz x max_doc_len x 1) -> bsz x max_doc_len x word_embed_dim
-        # bsz x max_doc_len x word_embed_dim -> bsz x 1 x max_doc_len x word_embed_dim
-        out = torch.mul(x, scores).unsqueeze(1)
-
-        # bsz x 1 x max_doc_len x word_embed_dim -> bsz x channels_local x max_doc_len x 1
-        # bsz x channels_local x max_doc_len x 1 -> bsz x channels_local x max_doc_len
-        out = self.cnn(out).squeeze(3)
-
-        # bsz x channels_local x max_doc_len -> bsz x channels_local x 1
-        # bsz x channels_local x 1 -> bsz x channels_local
-        out = F.max_pool1d(out, out.size(2)).squeeze(2)
-
-        return out
-
-    def reset_para(self):
-        cnns = [self.localAttentionLayer.cnn[0], self.localAttentionLayer.attention_layer[0]]
-        for cnn in cnns:
-            nn.init.xavier_uniform_(cnn.weight, gain=1)
-            nn.init.uniform_(cnn.bias, -0.1, 0.1)
-        for cnn in self.globalAttentionLayer.convs:
-            nn.init.xavier_uniform_(cnn.weight, gain=1)
-            nn.init.uniform_(cnn.bias, -0.1, 0.1)
-        nn.init.uniform_(self.fcLayer[0].weight, -0.1, 0.1)
-        nn.init.uniform_(self.fcLayer[-1].weight, -0.1, 0.1)
-
-
-class LocalAttention(nn.Module):
-    def __init__(self, logger, args):
-        super(LocalAttention, self).__init__()
-
-        self.win_size = args.ctx_win_size
-
-        self.attention_layer = nn.Sequential(
-            # bsz x 1 x max_doc_len x word_embed_dim -> bsz x 1 x max_doc_len x 1
-            nn.Conv2d(1, 1, kernel_size=(self.win_size, args.word_embed_dim), padding=((self.win_size - 1)//2, 0)),
-            # bsz x 1 x max_doc_len x 1
-            nn.Sigmoid(),
-            # nn.Softmax(dim=2),
-        )
-
-        self.cnn = nn.Sequential(
-            # bsz x 1 x max_doc_len x word_embed_dim -> bsz x channels_local x max_doc_len x 1
-            nn.Conv2d(1, args.channels_local, kernel_size=(1, args.word_embed_dim)),
-            nn.Tanh(),
+            # bsz x hidden_size -> bsz x output_size
+            nn.Linear(args.hidden_size, args.output_size),
         )
 
     '''
     [Input]     x:      bsz x max_doc_len x word_embed_dim
-    [Output]    out:    bsz x channels_local
+    [Output]    out:    bsz x output_size
     '''
-    def forward(self, x):
-        # bsz x max_doc_len x word_embed_dim -> bsz x 1 x max_doc_len x word_embed_dim
-        # bsz x 1 x max_doc_len x word_embed_dim -> bsz x 1 x max_doc_len x 1
-        # bsz x 1 x max_doc_len x 1 -> bsz x max_doc_len x 1
-        scores = self.attention_layer(x.unsqueeze(1)).squeeze(1)
+    def forward(self, batch_DocEmbed):
+        # bsz x max_doc_len x output_size -> bsz x 1 x max_doc_len x output_size
+        batch_DocEmbed = batch_DocEmbed.unsqueeze(1)
 
-        # (bsz x max_doc_len x word_embed_dim) * (bsz x max_doc_len x 1) -> bsz x max_doc_len x word_embed_dim
-        # bsz x max_doc_len x word_embed_dim -> bsz x 1 x max_doc_len x word_embed_dim
-        out = torch.mul(x, scores).unsqueeze(1)
+        # # unigram
+        # # bsz x 1 x max_doc_len x output_size -> bsz x filters_num x max_doc_len x 1
+        # out0 = self.dense_layer_conv0(batch_DocEmbed)
+        # out0 = self.activation_layer0(out0)
+        #
+        # # bigram
+        # # bsz x filters_num x max_doc_len x 1 -> bsz x filters_num x max_doc_len x 1
+        # out1 = self.dense_layer_conv1(out0)
+        # # bsz x filters_num*2 x max_doc_len x 1
+        # out1_0 = torch.cat((out1, out0), dim=1)
+        # out1_0 = self.activation_layer1(out1_0)
+        #
+        # # trigram
+        # # bsz x filters_num*2 x max_doc_len x 1 -> bsz x filters_num x max_doc_len x 1
+        # out2 = self.dense_layer_conv2(out1_0)
+        # # bsz x filters_num*3 x max_doc_len x 1
+        # out2_1_0 = torch.cat((out2, out1_0), dim=1)
+        # out2_1_0 = self.activation_layer2(out2_1_0)
+        #
+        # # fourgram
+        # # bsz x filters_num*3 x max_doc_len x 1 -> bsz x filters_num x max_doc_len x 1
+        # out3 = self.dense_layer_conv3(out2_1_0)
+        # # bsz x filters_num*4 x max_doc_len x 1
+        # out3_2_1_0 = torch.cat((out3, out2_1_0), dim=1)
+        # out3_2_1_0 = self.activation_layer3(out3_2_1_0)
+        #
+        # # fivegram
+        # # bsz x filters_num*4 x max_doc_len x 1 -> bsz x filters_num x max_doc_len x 1
+        # out4 = self.dense_layer_conv4(out3_2_1_0)
 
-        # bsz x 1 x max_doc_len x word_embed_dim -> bsz x channels_local x max_doc_len x 1
-        # bsz x channels_local x max_doc_len x 1 -> bsz x channels_local x max_doc_len
-        out = self.cnn(out).squeeze(3)
+        # unigram
+        # bsz x 1 x max_doc_len x output_size -> bsz x filters_num x max_doc_len x 1
+        out0 = self.dense_layer_conv0(batch_DocEmbed)
+        out0 = self.activation_layer0(out0)
 
-        # bsz x channels_local x max_doc_len -> bsz x channels_local x 1
-        # bsz x channels_local x 1 -> bsz x channels_local
-        out = F.max_pool1d(out, out.size(2)).squeeze(2)
+        # bigram
+        # bsz x filters_num x max_doc_len x 1 -> bsz x filters_num x max_doc_len x 1
+        out1 = self.dense_layer_conv1(out0)
+        # bsz x filters_num*2 x max_doc_len x 1
+        out1_0 = torch.cat((out1, out0), dim=1)
+        out1_0 = self.activation_layer1(out1_0)
+
+        # trigram
+        # bsz x filters_num*2 x max_doc_len x 1 -> bsz x filters_num x max_doc_len x 1
+        out2 = self.dense_layer_conv2(out1_0)
+        # bsz x filters_num*2 x max_doc_len x 1
+        out2_1 = torch.cat((out2, out1), dim=1)
+        out2_1 = self.activation_layer2(out2_1)
+
+        # fourgram
+        # bsz x filters_num*2 x max_doc_len x 1 -> bsz x filters_num x max_doc_len x 1
+        out3 = self.dense_layer_conv3(out2_1)
+        # bsz x filters_num*2 x max_doc_len x 1
+        out3_2 = torch.cat((out3, out2), dim=1)
+        out3_2 = self.activation_layer3(out3_2)
+
+        # fivegram
+        # bsz x filters_num*2 x max_doc_len x 1 -> bsz x filters_num x max_doc_len x 1
+        out4 = self.dense_layer_conv4(out3_2)
+
+        out0 = out0.squeeze(3)
+        out1 = out1.squeeze(3)
+        out2 = out2.squeeze(3)
+        out3 = out3.squeeze(3)
+        out4 = out4.squeeze(3)
+        # bsz x 5 x filters_num x max_doc_len
+        out = torch.stack((out0, out1, out2, out3, out4), dim=1)
+        # bsz x 5 x filters_num x max_doc_len -> bsz x 5 x max_doc_len
+        out = torch.sum(out, dim=2)
+        # bsz x 5 x max_doc_len -> bsz x 1 x 5 x max_doc_len
+        # bsz x 1 x 5 x max_doc_len -> bsz x 1 x 5 x 1 -> bsz x 5 x 1
+        scale_score = self.scale_attention(out.unsqueeze(1)).squeeze(1)
+        # (bsz x 5 x 1) * (bsz x 5 x max_doc_len) -> bsz x 5 x max_doc_len
+        out = torch.mul(out, scale_score)
+
+        # bsz x 5 x max_doc_len -> bsz x 1 x 5 x max_doc_len
+        out = out.unsqueeze(1)
+        # bsz x 1 x 5 x max_doc_len -> bsz x 1 x 1 x max_doc_len
+        word_score = self.word_attention(out)
+        # bsz x 1 x 5 x max_doc_len -> bsz x 5 x max_doc_len
+        out = torch.mul(out, word_score).squeeze(1)
+
+        # bsz x 5 x max_doc_len -> bsz x (5 x max_doc_len) -> bsz x hidden_size
+        # bsz x hidden_size -> bsz x output_size
+        out = out.reshape(out.size(0), -1)
+        out = self.dropout(out)
+        out = self.fcLayer(out)
 
         return out
 
-
-class GlobalAttention(nn.Module):
-    def __init__(self, logger, args, filters_size=None):
-        super(GlobalAttention, self).__init__()
-
-        if filters_size is None:
-            filters_size = [2, 3, 4]
-
-        self.attention_layer = nn.Sequential(
-            # bsz x 1 x max_doc_len x word_embed_dim -> bsz x 1 x 1 x 1
-            nn.Conv2d(1, 1, kernel_size=(args.max_doc_len, args.word_embed_dim)),
-            # bsz x 1 x 1 x 1
-            nn.Sigmoid()
-        )
-
-        # bsz x 1 x max_doc_len x word_embed_dim -> bsz x channels_global x (max_doc_len-k+1) x 1
-        self.convs = nn.ModuleList([nn.Conv2d(1, args.channels_global, (k, args.word_embed_dim)) for k in filters_size])
-
-    '''
-    [Input]     x:          bsz x max_doc_len x word_embed_dim
-    [Output]    conv_outs:  [bsz x channels_global]
-    '''
-    def forward(self, x):
-        # bsz x max_doc_len x word_embed_dim -> bsz x 1 x max_doc_len x word_embed_dim
-        x = x.unsqueeze(1)
-
-        # bsz x 1 x max_doc_len x word_embed_dim -> bsz x 1 x 1 x 1
-        score = self.attention_layer(x)
-
-        # (bsz x 1 x max_doc_len x word_embed_dim) * (bsz x 1 x 1 x 1) -> bsz x 1 x max_doc_len x word_embed_dim
-        x = torch.mul(x, score)
-
-        # [bsz x 1 x max_doc_len x word_embed_dim] -> [bsz x channels_global x (max_doc_len-k+1) x 1]
-        # [bsz x channels_global x (max_doc_len-k+1) x 1] -> [bsz x channels_global x (max_doc_len-k+1)]
-        conv_outs = [torch.tanh(cnn(x).squeeze(3)) for cnn in self.convs]
-
-        # [bsz x channels_global x (max_doc_len-k+1)] -> [bsz x channels_global x 1]
-        # [bsz x channels_global x 1] -> [bsz x channels_global]
-        outs = [F.max_pool1d(out, out.size(2)).squeeze(2) for out in conv_outs]
-
-        return outs
+    def reset_para(self):
+        convs = [self.dense_layer_conv0, self.dense_layer_conv1[1], self.dense_layer_conv2[1],
+                 self.dense_layer_conv3[1], self.dense_layer_conv4[1], self.scale_attention[0],
+                 self.word_attention[0]]
+        for conv in convs:
+            nn.init.xavier_uniform_(conv.weight, gain=1)
+            nn.init.uniform_(conv.bias, -0.1, 0.1)
+        nn.init.uniform_(self.fcLayer[0].weight, -0.1, 0.1)
+        nn.init.uniform_(self.fcLayer[-1].weight, -0.1, 0.1)

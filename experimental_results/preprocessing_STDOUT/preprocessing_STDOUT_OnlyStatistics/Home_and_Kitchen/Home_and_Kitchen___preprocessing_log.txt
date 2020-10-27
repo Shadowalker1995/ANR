@@ -1,0 +1,75 @@
+[args from argparse.ArgumentParser().parse_args()]
+command: preprocessing_simple.py -d Home_and_Kitchen -dev_test_in_train 1
+dataset: Home_and_Kitchen
+dataset_maximum_size: 1000000
+dev_test_in_train: True
+maxDL: 500
+maxVL: 500
+minImages: 1
+minReviews: 1
+minRL: 10
+random_seed: 1337
+train_ratio: 0.8
+vocab: 50000
+
+[INPUT] Source Folder:       ../datasets/
+[INPUT] Reviews/Ratings:     ../datasets/reviews_Home_and_Kitchen.json
+
+[OUTPUT] Category Folder:    ../datasets/Home_and_Kitchen/
+[OUTPUT] env:                ../datasets/Home_and_Kitchen/Home_and_Kitchen_env.pkl
+[OUTPUT] info:               ../datasets/Home_and_Kitchen/Home_and_Kitchen_info.pkl
+[OUTPUT] interactions:       ../datasets/Home_and_Kitchen/Home_and_Kitchen_interactions.pkl
+[OUTPUT] train_interactions: ../datasets/Home_and_Kitchen/Home_and_Kitchen_train_interactions.pkl
+[OUTPUT] dev_interactions:   ../datasets/Home_and_Kitchen/Home_and_Kitchen_dev_interactions.pkl
+[OUTPUT] test_interactions:  ../datasets/Home_and_Kitchen/Home_and_Kitchen_test_interactions.pkl
+[OUTPUT] split_train:        ../datasets/Home_and_Kitchen/Home_and_Kitchen_split_train.pkl
+[OUTPUT] split_dev:          ../datasets/Home_and_Kitchen/Home_and_Kitchen_split_dev.pkl
+[OUTPUT] split_test:         ../datasets/Home_and_Kitchen/Home_and_Kitchen_split_test.pkl
+[OUTPUT] uid_userDoc:        ../datasets/Home_and_Kitchen/Home_and_Kitchen_uid_userDoc.npy
+[OUTPUT] iid_itemDoc:        ../datasets/Home_and_Kitchen/Home_and_Kitchen_iid_itemDoc.npy
+[OUTPUT] uid_userDoc:        ../datasets/Home_and_Kitchen/Home_and_Kitchen_uid_userVis.npy
+[OUTPUT] iid_itemDoc:        ../datasets/Home_and_Kitchen/Home_and_Kitchen_iid_itemVis.npy
+
+[Settings]
+Min reviews for user/item: 1
+Min review length to qualify as an user-item interaction: 10
+Max words for user/item document: 500 (For truncating/padding to get a fixed-size representation)
+Top-50000 words in vocabulary being utilized!
+
+
+Initial pass of reviews to get the user-item interactions!
+[Initial stats] Users: 2,511,610, Items: 410,243, Ratings: 4,253,926, Density: 0.0000041
+
+
+Second pass of visual features to get the item-feature interactions!
+[Second stats] Items with image: 433,607, Images: 433,607, Density: 1.0000000
+
+[Current stats] Users: 2493530, Items: 407052, Ratings: 4212436, Density: 0.0000042
+[Current stats] Users: 2493530, Items: 407052, Ratings: 4212436, Density: 0.0000042
+
+No change in # of users or # of items!
+
+[Final stats] Users: 2,493,530, Items: 407,052, Ratings: 4,212,436, Density: 0.0000042
+
+No change in # of users or # of items!
+
+[Final stats] Users: 2,493,530, Items: 407,052, Ratings: 4,212,436, Density: 0.0000042
+
+
+Third pass of reviews to get the rating, date, the num of tokenized review and index!
+[Current stats] Users: 2,493,530, Items: 407,052, Ratings: 4,212,436, Density: 0.0000042
+
+Filtering user-item interactions based on minimum review length of 10 tokens..
+[Current stats] Users: 2,474,132, Items: 404,672, Ratings: 4,176,186, Density: 0.0000042
+
+
+No change in # of users or # of items!
+
+[Final stats] Users: 2,474,132, Items: 404,672, Ratings: 4,176,186, Density: 0.0000042
+
+*****************************************************************************************************************************
+*** Original Dataset Size (i.e. num_ratings): 4,176,186!
+*** Selecting a random subsample of 1,000,000 user-item interactions!
+*** Current Dataset Size (i.e. num_ratings):  1,000,000!
+*****************************************************************************************************************************
+[Current stats] Users: 802,487, Items: 200,101, Ratings: 1,000,000, Density: 0.0000062

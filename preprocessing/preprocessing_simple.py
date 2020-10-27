@@ -1,6 +1,5 @@
 from preprocessing_simple_utilities import *
 from itertools import groupby
-import sys
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-d", "--dataset", type=str, default="amazon_instant_video",
@@ -412,7 +411,6 @@ if not (train_exist and dev_exist and test_exist):
     num_reviews = len(interactions)
     append_to_file(output_log, "[Current stats] Users: {:,}, Items: {:,}, Ratings: {:,}, Density: {:.7f}".format(
         len(user_count), len(item_count), num_reviews, float(num_reviews) / (len(user_count) * len(item_count))))
-    sys.exit(1)
 
     # Sort interactions with the user-item pair index
     interactions = sorted(interactions, key=lambda x: x[5], reverse=False)

@@ -1,0 +1,106 @@
+
+Dataset: Sports_and_Outdoors
+[args from argparse.ArgumentParser().parse_args()]
+command: preprocessing_simple.py -d Sports_and_Outdoors -dev_test_in_train 1
+dataset: Sports_and_Outdoors
+dataset_maximum_size: 1000000
+dev_test_in_train: True
+maxDL: 500
+maxVL: 500
+minImages: 1
+minReviews: 1
+minRL: 10
+random_seed: 1337
+train_ratio: 0.8
+vocab: 50000
+
+[INPUT] Source Folder:       ../datasets/
+[INPUT] Reviews/Ratings:     ../datasets/reviews_Sports_and_Outdoors.json
+
+[OUTPUT] Category Folder:    ../datasets/Sports_and_Outdoors/
+[OUTPUT] env:                ../datasets/Sports_and_Outdoors/Sports_and_Outdoors_env.pkl
+[OUTPUT] info:               ../datasets/Sports_and_Outdoors/Sports_and_Outdoors_info.pkl
+[OUTPUT] interactions:       ../datasets/Sports_and_Outdoors/Sports_and_Outdoors_interactions.pkl
+[OUTPUT] train_interactions: ../datasets/Sports_and_Outdoors/Sports_and_Outdoors_train_interactions.pkl
+[OUTPUT] dev_interactions:   ../datasets/Sports_and_Outdoors/Sports_and_Outdoors_dev_interactions.pkl
+[OUTPUT] test_interactions:  ../datasets/Sports_and_Outdoors/Sports_and_Outdoors_test_interactions.pkl
+[OUTPUT] split_train:        ../datasets/Sports_and_Outdoors/Sports_and_Outdoors_split_train.pkl
+[OUTPUT] split_dev:          ../datasets/Sports_and_Outdoors/Sports_and_Outdoors_split_dev.pkl
+[OUTPUT] split_test:         ../datasets/Sports_and_Outdoors/Sports_and_Outdoors_split_test.pkl
+[OUTPUT] uid_userDoc:        ../datasets/Sports_and_Outdoors/Sports_and_Outdoors_uid_userDoc.npy
+[OUTPUT] iid_itemDoc:        ../datasets/Sports_and_Outdoors/Sports_and_Outdoors_iid_itemDoc.npy
+[OUTPUT] uid_userDoc:        ../datasets/Sports_and_Outdoors/Sports_and_Outdoors_uid_userVis.npy
+[OUTPUT] iid_itemDoc:        ../datasets/Sports_and_Outdoors/Sports_and_Outdoors_iid_itemVis.npy
+
+Preprocessing data for "Sports_and_Outdoors"
+
+[Settings]
+Min reviews for user/item: 1
+Min review length to qualify as an user-item interaction: 10
+Max words for user/item document: 500 (For truncating/padding to get a fixed-size representation)
+Top-50000 words in vocabulary being utilized!
+
+
+Initial pass of reviews to get the user-item interactions!
+[Initial stats] Users: 1,990,521, Items: 478,898, Ratings: 3,268,695, Density: 0.0000034
+
+
+Second pass of visual features to get the item-feature interactions!
+[Second stats] Items with image: 527,981, Images: 527,981, Density: 1.0000000
+
+
+Starting to filter away users & items based on thresold of 1 images!
+Updating interactions based on the num of images...
+
+Filtered users & items based on thresold of 1 images!
+Users: 1990521 -> 1974839, Items: 478898 -> 475011
+[Current stats] Users: 1974839, Items: 475011, Ratings: 3235148, Density: 0.0000034
+Updating interactions based on the num of images...
+
+Filtered users & items based on thresold of 1 images!
+Users: 1974839 -> 1974839, Items: 475011 -> 475011
+[Current stats] Users: 1974839, Items: 475011, Ratings: 3235148, Density: 0.0000034
+
+No change in # of users or # of items!
+
+[Final stats] Users: 1,974,839, Items: 475,011, Ratings: 3,235,148, Density: 0.0000034
+
+Elapsed time for "Sports_and_Outdoors": 115.81 seconds (1.93 minutes)
+
+Starting to filter away users & items based on thresold of 1 reviews!
+
+Filtered users & items based on thresold of 1 reviews!
+Users: 1974839 -> 1974839, Items: 475011 -> 475011
+
+No change in # of users or # of items!
+
+[Final stats] Users: 1,974,839, Items: 475,011, Ratings: 3,235,148, Density: 0.0000034
+
+Elapsed time for "Sports_and_Outdoors": 116.30 seconds (1.94 minutes)
+
+
+Third pass of reviews to get the rating, date, the num of tokenized review and index!
+[Current stats] Users: 1,974,839, Items: 475,011, Ratings: 3,235,148, Density: 0.0000034
+
+Filtering user-item interactions based on minimum review length of 10 tokens..
+
+Filtered users & items based on minimum review length of 10 tokens!
+Users: 1,974,839 -> 1,954,447, Items: 475,011 -> 471,279
+[Current stats] Users: 1,954,447, Items: 471,279, Ratings: 3,199,071, Density: 0.0000035
+
+
+Starting to filter away users & items based on thresold of 1 reviews (after removing reviews with <= 10 tokens)!
+
+Filtered users & items based on thresold of 1 reviews!
+Users: 1,954,447 -> 1,954,447, Items: 471,279 -> 471,279
+
+No change in # of users or # of items!
+
+[Final stats] Users: 1,954,447, Items: 471,279, Ratings: 3,199,071, Density: 0.0000035
+
+*****************************************************************************************************************************
+*** Original Dataset Size (i.e. num_ratings): 3,199,071!
+*** Selecting a random subsample of 1,000,000 user-item interactions!
+*** Current Dataset Size (i.e. num_ratings):  1,000,000!
+*****************************************************************************************************************************
+[Current stats] Users: 779,542, Items: 252,866, Ratings: 1,000,000, Density: 0.0000051

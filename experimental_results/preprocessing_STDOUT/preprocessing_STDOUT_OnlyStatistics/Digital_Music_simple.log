@@ -1,0 +1,100 @@
+
+Dataset: Digital_Music
+[args from argparse.ArgumentParser().parse_args()]
+command: preprocessing_simple.py -d Digital_Music -dev_test_in_train 1
+dataset: Digital_Music
+dataset_maximum_size: 1000000
+dev_test_in_train: True
+maxDL: 500
+maxVL: 500
+minImages: 1
+minReviews: 1
+minRL: 10
+random_seed: 1337
+train_ratio: 0.8
+vocab: 50000
+
+[INPUT] Source Folder:       ../datasets/
+[INPUT] Reviews/Ratings:     ../datasets/reviews_Digital_Music.json
+
+[OUTPUT] Category Folder:    ../datasets/Digital_Music/
+[OUTPUT] env:                ../datasets/Digital_Music/Digital_Music_env.pkl
+[OUTPUT] info:               ../datasets/Digital_Music/Digital_Music_info.pkl
+[OUTPUT] interactions:       ../datasets/Digital_Music/Digital_Music_interactions.pkl
+[OUTPUT] train_interactions: ../datasets/Digital_Music/Digital_Music_train_interactions.pkl
+[OUTPUT] dev_interactions:   ../datasets/Digital_Music/Digital_Music_dev_interactions.pkl
+[OUTPUT] test_interactions:  ../datasets/Digital_Music/Digital_Music_test_interactions.pkl
+[OUTPUT] split_train:        ../datasets/Digital_Music/Digital_Music_split_train.pkl
+[OUTPUT] split_dev:          ../datasets/Digital_Music/Digital_Music_split_dev.pkl
+[OUTPUT] split_test:         ../datasets/Digital_Music/Digital_Music_split_test.pkl
+[OUTPUT] uid_userDoc:        ../datasets/Digital_Music/Digital_Music_uid_userDoc.npy
+[OUTPUT] iid_itemDoc:        ../datasets/Digital_Music/Digital_Music_iid_itemDoc.npy
+[OUTPUT] uid_userDoc:        ../datasets/Digital_Music/Digital_Music_uid_userVis.npy
+[OUTPUT] iid_itemDoc:        ../datasets/Digital_Music/Digital_Music_iid_itemVis.npy
+
+Preprocessing data for "Digital_Music"
+
+[Settings]
+Min reviews for user/item: 1
+Min review length to qualify as an user-item interaction: 10
+Max words for user/item document: 500 (For truncating/padding to get a fixed-size representation)
+Top-50000 words in vocabulary being utilized!
+
+
+Initial pass of reviews to get the user-item interactions!
+[Initial stats] Users: 478,235, Items: 266,414, Ratings: 836,006, Density: 0.0000066
+
+
+Second pass of visual features to get the item-feature interactions!
+[Second stats] Items with image: 277,324, Images: 277,324, Density: 1.0000000
+
+
+Starting to filter away users & items based on thresold of 1 images!
+Updating interactions based on the num of images...
+
+Filtered users & items based on thresold of 1 images!
+Users: 478235 -> 475866, Items: 266414 -> 263969
+[Current stats] Users: 475866, Items: 263969, Ratings: 830189, Density: 0.0000066
+Updating interactions based on the num of images...
+
+Filtered users & items based on thresold of 1 images!
+Users: 475866 -> 475866, Items: 263969 -> 263969
+[Current stats] Users: 475866, Items: 263969, Ratings: 830189, Density: 0.0000066
+
+No change in # of users or # of items!
+
+[Final stats] Users: 475,866, Items: 263,969, Ratings: 830,189, Density: 0.0000066
+
+Elapsed time for "Digital_Music": 34.03 seconds (0.57 minutes)
+
+Starting to filter away users & items based on thresold of 1 reviews!
+
+Filtered users & items based on thresold of 1 reviews!
+Users: 475866 -> 475866, Items: 263969 -> 263969
+
+No change in # of users or # of items!
+
+[Final stats] Users: 475,866, Items: 263,969, Ratings: 830,189, Density: 0.0000066
+
+Elapsed time for "Digital_Music": 34.15 seconds (0.57 minutes)
+
+
+Third pass of reviews to get the rating, date, the num of tokenized review and index!
+[Current stats] Users: 475,866, Items: 263,969, Ratings: 830,189, Density: 0.0000066
+
+Filtering user-item interactions based on minimum review length of 10 tokens..
+
+Filtered users & items based on minimum review length of 10 tokens!
+Users: 475,866 -> 470,808, Items: 263,969 -> 261,826
+[Current stats] Users: 470,808, Items: 261,826, Ratings: 820,822, Density: 0.0000067
+
+
+Starting to filter away users & items based on thresold of 1 reviews (after removing reviews with <= 10 tokens)!
+
+Filtered users & items based on thresold of 1 reviews!
+Users: 470,808 -> 470,808, Items: 261,826 -> 261,826
+
+No change in # of users or # of items!
+
+[Final stats] Users: 470,808, Items: 261,826, Ratings: 820,822, Density: 0.0000067
+[Current stats] Users: 470,808, Items: 261,826, Ratings: 820,822, Density: 0.0000067

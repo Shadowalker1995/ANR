@@ -1,0 +1,75 @@
+[args from argparse.ArgumentParser().parse_args()]
+command: preprocessing_simple.py -d Office_Products -dev_test_in_train 1
+dataset: Office_Products
+dataset_maximum_size: 1000000
+dev_test_in_train: True
+maxDL: 500
+maxVL: 500
+minImages: 1
+minReviews: 1
+minRL: 10
+random_seed: 1337
+train_ratio: 0.8
+vocab: 50000
+
+[INPUT] Source Folder:       ../datasets/
+[INPUT] Reviews/Ratings:     ../datasets/reviews_Office_Products.json
+
+[OUTPUT] Category Folder:    ../datasets/Office_Products/
+[OUTPUT] env:                ../datasets/Office_Products/Office_Products_env.pkl
+[OUTPUT] info:               ../datasets/Office_Products/Office_Products_info.pkl
+[OUTPUT] interactions:       ../datasets/Office_Products/Office_Products_interactions.pkl
+[OUTPUT] train_interactions: ../datasets/Office_Products/Office_Products_train_interactions.pkl
+[OUTPUT] dev_interactions:   ../datasets/Office_Products/Office_Products_dev_interactions.pkl
+[OUTPUT] test_interactions:  ../datasets/Office_Products/Office_Products_test_interactions.pkl
+[OUTPUT] split_train:        ../datasets/Office_Products/Office_Products_split_train.pkl
+[OUTPUT] split_dev:          ../datasets/Office_Products/Office_Products_split_dev.pkl
+[OUTPUT] split_test:         ../datasets/Office_Products/Office_Products_split_test.pkl
+[OUTPUT] uid_userDoc:        ../datasets/Office_Products/Office_Products_uid_userDoc.npy
+[OUTPUT] iid_itemDoc:        ../datasets/Office_Products/Office_Products_iid_itemDoc.npy
+[OUTPUT] uid_userDoc:        ../datasets/Office_Products/Office_Products_uid_userVis.npy
+[OUTPUT] iid_itemDoc:        ../datasets/Office_Products/Office_Products_iid_itemVis.npy
+
+[Settings]
+Min reviews for user/item: 1
+Min review length to qualify as an user-item interaction: 10
+Max words for user/item document: 500 (For truncating/padding to get a fixed-size representation)
+Top-50000 words in vocabulary being utilized!
+
+
+Initial pass of reviews to get the user-item interactions!
+[Initial stats] Users: 909,314, Items: 130,006, Ratings: 1,243,186, Density: 0.0000105
+
+
+Second pass of visual features to get the item-feature interactions!
+[Second stats] Items with image: 133,871, Images: 133,871, Density: 1.0000000
+
+[Current stats] Users: 904387, Items: 129067, Ratings: 1235333, Density: 0.0000106
+[Current stats] Users: 904387, Items: 129067, Ratings: 1235333, Density: 0.0000106
+
+No change in # of users or # of items!
+
+[Final stats] Users: 904,387, Items: 129,067, Ratings: 1,235,333, Density: 0.0000106
+
+No change in # of users or # of items!
+
+[Final stats] Users: 904,387, Items: 129,067, Ratings: 1,235,333, Density: 0.0000106
+
+
+Third pass of reviews to get the rating, date, the num of tokenized review and index!
+[Current stats] Users: 904,387, Items: 129,067, Ratings: 1,235,333, Density: 0.0000106
+
+Filtering user-item interactions based on minimum review length of 10 tokens..
+[Current stats] Users: 896,120, Items: 128,202, Ratings: 1,223,339, Density: 0.0000106
+
+
+No change in # of users or # of items!
+
+[Final stats] Users: 896,120, Items: 128,202, Ratings: 1,223,339, Density: 0.0000106
+
+*****************************************************************************************************************************
+*** Original Dataset Size (i.e. num_ratings): 1,223,339!
+*** Selecting a random subsample of 1,000,000 user-item interactions!
+*** Current Dataset Size (i.e. num_ratings):  1,000,000!
+*****************************************************************************************************************************
+[Current stats] Users: 758,539, Items: 117,002, Ratings: 1,000,000, Density: 0.0000113
