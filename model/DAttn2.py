@@ -12,7 +12,8 @@ class DAttn(nn.Module):
     2017. Interpretable Convolutional Neural Networks with Dual Local and Global Attention for Review Rating Prediction
     Rescys
     This implementation is base on https://github.com/ShomyLiu/Neu-Review-Rec
-    remove Maxpool layer and add fcLayer in both LocalAttention module and GlobalAttention module
+    remove Maxpool layer in both LocalAttention module and GlobalAttention module
+    1 local + 1 global
     """
     def __init__(self, logger, args, num_users, num_items):
         super(DAttn, self).__init__()
@@ -88,41 +89,34 @@ class Net(nn.Module):
         self.localAttentionLayer = LocalAttention(logger, args)
         self.globalAttentionLayer = GlobalAttention(logger, args)
 
-        self.fc_input_size = args.output_size + 3 * args.output_size
+        self.fc_input_size = args.word_embed_dim + args.word_embed_dim
 
         self.fcLayer = nn.Sequential(
-            # bsz x (output_size + 3 * output_size) -> bsz x (output_size + 3 * output_size)
-            nn.Linear(self.fc_input_size, self.fc_input_size),
             nn.Dropout(args.dropout_rate),
-            nn.ReLU(),
-            # bsz x (output_size + 3 * output_size) -> bsz x output_size
+            # bsz x (word_embed_dim + word_embed_dim) -> bsz x output_size
             nn.Linear(self.fc_input_size, args.output_size),
         )
         self.dropout = nn.Dropout(args.dropout_rate)
         self.reset_para()
 
     def forward(self, batch_DocEmbed):
-        # bsz x max_doc_len x word_embed_dim -> bsz x output_size
+        # bsz x max_doc_len x word_embed_dim -> bsz x word_embed_dim
         local_fea = self.localAttentionLayer(batch_DocEmbed)
-        # bsz x max_doc_len x word_embed_dim -> [bsz x output_size]
+        # bsz x max_doc_len x word_embed_dim -> bsz x word_embed_dim
         global_fea = self.globalAttentionLayer(batch_DocEmbed)
-        # bsz x (output_size + 3 * output_size)
-        cat_fea = torch.cat([local_fea]+global_fea, 1)
+        # bsz x (word_embed_dim + word_embed_dim)
+        cat_fea = torch.cat((local_fea, global_fea), 1)
         # Dropout before fcLayer
         cat_fea = self.dropout(cat_fea)
-        # bsz x (output_size + 3 * output_size) -> bsz x output_size
+        # bsz x (word_embed_dim + word_embed_dim) -> bsz x output_size
         cat_fea = self.fcLayer(cat_fea)
         return cat_fea
 
     def reset_para(self):
-        cnns = [self.localAttentionLayer.cnn[0], self.localAttentionLayer.attention_layer[0]]
+        cnns = [self.localAttentionLayer.attention_layer[0], self.globalAttentionLayer.attention_layer[0]]
         for cnn in cnns:
             nn.init.xavier_uniform_(cnn.weight, gain=1)
             nn.init.uniform_(cnn.bias, -0.1, 0.1)
-        for cnn in self.globalAttentionLayer.convs:
-            nn.init.xavier_uniform_(cnn.weight, gain=1)
-            nn.init.uniform_(cnn.bias, -0.1, 0.1)
-        nn.init.uniform_(self.fcLayer[0].weight, -0.1, 0.1)
         nn.init.uniform_(self.fcLayer[-1].weight, -0.1, 0.1)
 
 
@@ -136,28 +130,12 @@ class LocalAttention(nn.Module):
             # bsz x 1 x max_doc_len x word_embed_dim -> bsz x 1 x max_doc_len x 1
             nn.Conv2d(1, 1, kernel_size=(self.win_size, args.word_embed_dim), padding=((self.win_size - 1)//2, 0)),
             # bsz x 1 x max_doc_len x 1
-            nn.Sigmoid(),
-            # nn.Softmax(dim=2),
-        )
-
-        self.cnn = nn.Sequential(
-            # bsz x 1 x max_doc_len x word_embed_dim -> bsz x channels_local x max_doc_len x 1
-            nn.Conv2d(1, args.channels_local, kernel_size=(1, args.word_embed_dim)),
-            nn.Tanh(),
-        )
-
-        self.fcLayer = nn.Sequential(
-            # bsz x (channels_local x max_doc_len) -> bsz x hidden_size
-            nn.Linear(args.channels_local * args.max_doc_len, args.hidden_size),
-            nn.Dropout(args.dropout_rate),
-            nn.ReLU(),
-            # bsz x hidden_size -> bsz x output_size
-            nn.Linear(args.hidden_size, args.output_size)
+            nn.Softmax(dim=2),
         )
 
     '''
     [Input]     x:      bsz x max_doc_len x word_embed_dim
-    [Output]    out:    bsz x output_size
+    [Output]    out:    bsz x word_embed_dim
     '''
     def forward(self, x):
         # bsz x max_doc_len x word_embed_dim -> bsz x 1 x max_doc_len x word_embed_dim
@@ -166,76 +144,29 @@ class LocalAttention(nn.Module):
         scores = self.attention_layer(x.unsqueeze(1)).squeeze(1)
 
         # (bsz x max_doc_len x word_embed_dim) * (bsz x max_doc_len x 1) -> bsz x max_doc_len x word_embed_dim
-        # bsz x max_doc_len x word_embed_dim -> bsz x 1 x max_doc_len x word_embed_dim
-        out = torch.mul(x, scores).unsqueeze(1)
-
-        # bsz x 1 x max_doc_len x word_embed_dim -> bsz x channels_local x max_doc_len x 1
-        # bsz x channels_local x max_doc_len x 1 -> bsz x channels_local x max_doc_len
-        out = self.cnn(out).squeeze(3)
-
-        # # bsz x channels_local x max_doc_len -> bsz x channels_local x 1
-        # # bsz x channels_local x 1 -> bsz x channels_local
-        # out = F.max_pool1d(out, out.size(2)).squeeze(2)
-
-        # bsz x channels_local x max_doc_len -> bsz x (channels_local x max_doc_len)
-        # bsz x (channels_local x max_doc_len) -> bsz x output_size
-        out = self.fcLayer(out.contiguous().view(out.size(0), -1))
+        out = torch.mul(x, scores)
+        # bsz x max_doc_len x word_embed_dim -> bsz x word_embed_dim
+        out = torch.sum(out, dim=1)
 
         return out
 
 
 class GlobalAttention(nn.Module):
-    def __init__(self, logger, args, filters_size=None):
+    def __init__(self, logger, args):
         super(GlobalAttention, self).__init__()
 
-        if filters_size is None:
-            filters_size = [2, 3, 4]
-
         self.attention_layer = nn.Sequential(
-            # bsz x 1 x max_doc_len x word_embed_dim -> bsz x 1 x 1 x 1
-            nn.Conv2d(1, 1, kernel_size=(args.max_doc_len, args.word_embed_dim)),
-            # bsz x 1 x 1 x 1
-            nn.Sigmoid()
-        )
-
-        # bsz x 1 x max_doc_len x word_embed_dim -> bsz x channels_global x (max_doc_len-k+1) x 1
-        self.convs = nn.ModuleList([nn.Conv2d(1, args.channels_global, (k, args.word_embed_dim)) for k in filters_size])
-
-        self.fcLayers = nn.ModuleList([nn.Sequential(
-            # bsz x (out_channels x (max_vis_len - k + 1)) -> bsz x hidden_size
-            nn.Linear(args.channels_global * (args.max_doc_len - k + 1), args.hidden_size),
-            nn.Dropout(args.dropout_rate),
-            nn.ReLU(),
-            # bsz x hidden_size -> bsz x output_size
-            nn.Linear(args.hidden_size, args.output_size)
-        ) for k in filters_size])
+            # bsz x 1 x max_doc_len x word_embed_dim -> bsz x 1 x 1 x word_embed_dim
+            nn.Conv2d(1, 1, kernel_size=(args.max_doc_len, 1)),)
 
     '''
     [Input]     x:          bsz x max_doc_len x word_embed_dim
-    [Output]    conv_outs:  [bsz x output_size]
+    [Output]    out:        bsz x word_embed_dim
     '''
     def forward(self, x):
         # bsz x max_doc_len x word_embed_dim -> bsz x 1 x max_doc_len x word_embed_dim
-        x = x.unsqueeze(1)
+        # bsz x 1 x max_doc_len x word_embed_dim -> bsz x 1 x 1 x word_embed_dim
+        # bsz x 1 x 1 x word_embed_dim -> bsz x word_embed_dim
+        out = self.attention_layer(x.unsqueeze(1)).squeeze()
 
-        # bsz x 1 x max_doc_len x word_embed_dim -> bsz x 1 x 1 x 1
-        score = self.attention_layer(x)
-
-        # (bsz x 1 x max_doc_len x word_embed_dim) * (bsz x 1 x 1 x 1) -> bsz x 1 x max_doc_len x word_embed_dim
-        x = torch.mul(x, score)
-
-        # [bsz x 1 x max_doc_len x word_embed_dim] -> [bsz x channels_global x (max_doc_len-k+1) x 1]
-        # [bsz x channels_global x (max_doc_len-k+1) x 1] -> [bsz x channels_global x (max_doc_len-k+1)]
-        conv_outs = [torch.tanh(cnn(x).squeeze(3)) for cnn in self.convs]
-
-        # # [bsz x channels_global x (max_doc_len-k+1) -> bsz x channels_global x 1]
-        # # [bsz x channels_global x 1 -> bsz x channels_global]
-        # outs = [F.max_pool1d(out, out.size(2)).squeeze(2) for out in conv_outs]
-
-        # [bsz x channels_global x (max_doc_len-k+1)] -> [bsz x (channels_global x (max_doc_len-k+1))]
-        conv_outs = [out.contiguous().view(out.size(0), -1) for out in conv_outs]
-
-        # [bsz x (channels_global x (max_doc_len-k+1))] -> [bsz x output_size]
-        outs = [fcLayer(conv_out) for conv_out, fcLayer in zip(conv_outs, self.fcLayers)]
-
-        return outs
+        return out

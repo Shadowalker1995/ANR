@@ -441,61 +441,6 @@ Test MSE: 1.04730, Test MAE: 0.82815
 
 
 
-# DAttn Sigmoid() -> Softmax()
-# -d "Small_Clothing" -m "DAttn" -e 10 -dr 0.9 -p 1 -v 43947 -K 5 -h1 10 -h2 50 -c_local 20 -c_global 20 -hiden_size 200 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm "Small_Clothing_DAttn"
-[Training Loss]
-[2.46577, 1.40978, 1.2815, 1.15837, 1.04169, 0.93388, 0.83459, 0.74275, 0.66037, 0.58478]
-[Dev MSE]
-[1.07284, 1.05106, 1.05674, 1.03732, 1.02887, 1.04084, 1.03942, 1.07018, 1.06575, 1.08958]
-[Test MSE]
-[1.02903, 1.0246, 1.06764, 1.04235, 1.02632, 1.07134, 1.07211, 1.14272, 1.11729, 1.16676]
-[Test MAE]
-[0.82544, 0.81943, 0.85506, 0.83401, 0.80129, 0.84736, 0.82766, 0.88491, 0.83398, 0.86805]
-Best Dev MSE: 1.02887 (Obtained during Evaluation #5)
-Test MSE: 1.02632, Test MAE: 0.80129
-
-# -d "Small_Clothing" -m "DAttn" -e 10 -dr 0.5 -p 1 -v 43947 -K 5 -h1 10 -h2 50 -c_local 20 -c_global 20 -hiden_size 200 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm "Small_Clothing_DAttn"
-[Training Loss]
-[1.84034, 1.43655, 1.27876, 1.15375, 1.03664, 0.92893, 0.82989, 0.73847, 0.6565, 0.58128]
-[Dev MSE]
-[1.12995, 1.05213, 1.05899, 1.04027, 1.03507, 1.04709, 1.04858, 1.07831, 1.07511, 1.09745]
-[Test MSE]
-[1.12133, 1.01406, 1.06023, 1.03657, 1.02153, 1.06552, 1.06647, 1.13852, 1.11449, 1.16279]
-[Test MAE]
-[0.88056, 0.81555, 0.8524, 0.83235, 0.79893, 0.84382, 0.82382, 0.88142, 0.83071, 0.86438]
-Best Dev MSE: 1.03507 (Obtained during Evaluation #5)
-Test MSE: 1.02153, Test MAE: 0.79893
-
-
-
-# DAttn3 1 local only
-# -d "Small_Clothing" -m "DAttn" -e 10 -dr 0.9 -lr 2E-3 -p 1 -v 43947 -K 5 -h1 10 -h2 50 -c_local 2 -c_global 2 -hiden_size 200 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm "Small_Clothing_DAttn"
-[Training Loss]
-[1.78588, 1.09352, 0.89417, 1.16312, 0.81729, 0.70529, 0.62174, 0.55252, 0.4938, 0.44496]
-[Dev MSE]
-[3.81364, 2.36054, 1.86326, 1.24288, 1.24807, 1.2519, 1.26487, 1.26215, 1.21454, 1.28197]
-[Test MSE]
-[4.0664, 2.52005, 2.01647, 1.22913, 1.32992, 1.34442, 1.39402, 1.38147, 1.3587, 1.43306]
-[Test MAE]
-[1.88511, 1.45535, 1.28645, 0.84171, 0.90987, 0.87141, 0.90984, 0.88735, 0.88411, 0.89159]
-Best Dev MSE: 1.21454 (Obtained during Evaluation #9)
-Test MSE: 1.35870, Test MAE: 0.88411
-
-# DAttn3 3 local + 1 global
-# -d "Small_Clothing" -m "DAttn" -e 10 -dr 0.9 -lr 2E-3 -p 1 -v 43947 -K 5 -h1 10 -h2 50 -c_local 2 -c_global 2 -hiden_size 200 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm "Small_Clothing_DAttn"
-[Training Loss]
-[1.35818, 0.8408, 0.70674, 0.61215, 0.53475, 0.65039, 0.50796, 0.36369, 0.33848, 0.27444]
-[Dev MSE]
-[1.24064, 1.21157, 1.27595, 1.35592, 1.34943, 1.15826, 1.29684, 1.35834, 1.33545, 1.10123]
-[Test MSE]
-[1.49511, 1.48452, 1.53159, 1.73254, 1.61665, 1.32894, 1.61063, 1.72125, 1.62126, 1.15482]
-[Test MAE]
-[0.98218, 0.90775, 0.87858, 0.97299, 0.9484, 0.93544, 0.9328, 0.96136, 0.96149, 0.82074]
-Best Dev MSE: 1.10123 (Obtained during Evaluation #10)
-Test MSE: 1.15482, Test MAE: 0.82074
-
-
-
 # DeepCoNN
 -d "Small_Clothing" -m "DeepCoNN" -e 20 -dr 0.9 -lr 2E-3 -p 1 -v 43947 -filters_num 100 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm "Small_Clothing_DeepCoNN"
 [Training Loss]
@@ -641,7 +586,7 @@ Test MSE: 1.03770, Test MAE: 0.82327
 
 
 DAttn
--d "Small_Clothing" -m "DAttn" -e 10 -dr 0.9 -p 1 -v 43947 -K 5 -h1 50 -h2 50 -WED 100 -c_local 200 -c_global 100 -hiden_size 500 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm "Small_Clothing"
+-d "Small_Clothing" -m "DAttn" -e 10 -dr 0.9 -p 1 -v 43947 -K 5 -h1 50 -h2 50 -WED 100 -c_local 200 -c_global 100 -hiden_size 500 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm "Small_Clothing_DAttn"
 [Training Loss]
 [3.19611, 1.36356, 1.05917, 0.87594, 0.77342, 0.69548, 0.62025, 0.54558, 0.49254, 0.44619]
 [Dev MSE]
@@ -654,35 +599,26 @@ Best Dev MSE: 1.10878 (Obtained during Evaluation #2)
 Test MSE: 1.14333, Test MAE: 0.89623
 
 DAttn2
--d "Small_Clothing" -m "DAttn" -e 10 -dr 0.9 -p 1 -v 43947 -K 5 -h1 50 -h2 50 -WED 100 -c_local 1 -c_global 1 -hiden_size 500 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm "Small_Clothing"
+-d "Small_Clothing" -m "DAttn" -e 10 -dr 0.9 -p 1 -v 43947 -K 5 -h1 50 -h2 50 -WED 300 -c_local 1 -c_global 1 -hiden_size 500 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm "Small_Clothing_DAttn"
 [Training Loss]
-[2.84385, 1.43574, 1.29632, 1.33889, 1.52737, 0.94958, 0.88727, 0.75931, 1.80162, 0.79465]
+[4.94405, 1.50922, 1.36962, 1.21644, 1.09798, 0.9856, 0.88631, 0.80265, 0.74786, 113.93682]
 [Dev MSE]
-[1.12253, 1.06476, 1.05186, 1.03572, 1.03214, 1.03214, 1.04148, 1.05059, 1.06685, 1.08184]
+[1.0739, 1.05131, 1.04735, 1.0373, 1.02657, 1.0225, 1.03817, 1.04047, 1.08688, 1.13608]
 [Test MSE]
-[1.09779, 1.03833, 1.04802, 1.03545, 1.04163, 1.03335, 1.05695, 1.07537, 1.08957, 1.1242]
+[1.04471, 1.02086, 1.00497, 1.02407, 1.03066, 1.02048, 1.0883, 1.09612, 1.10243, 1.21735]
 [Test MAE]
-[0.86492, 0.8325, 0.84349, 0.83362, 0.83507, 0.81749, 0.82989, 0.83302, 0.81802, 0.83873]
-Best Dev MSE: 1.03214 (Obtained during Evaluation #6)
-Test MSE: 1.03335, Test MAE: 0.81749
+[0.83603, 0.82023, 0.80715, 0.82093, 0.82507, 0.80284, 0.83708, 0.84463, 0.81247, 0.92382]
+Best Dev MSE: 1.02250 (Obtained during Evaluation #6)
+Test MSE: 1.02048, Test MAE: 0.80284
 
 DAttn3
--d "Small_Clothing" -m "DAttn" -e 10 -dr 0.9 -p 1 -v 43947 -K 5 -h1 50 -h2 50 -WED 100 -c_local 1 -c_global 1 -hiden_size 500 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm "Small_Clothing"
-[Training Loss]
-[27.65523, 2.53589, 1.69167, 1.34902, 1.17851, 1.0551, 0.94792, 0.84935, 0.75848, 0.67412]
-[Dev MSE]
-[5.31064, 2.32503, 1.49872, 1.14276, 1.0652, 1.04407, 1.03818, 1.04508, 1.04471, 1.0555]
-[Test MSE]
-[5.70463, 2.53995, 1.61818, 1.19747, 1.09728, 1.07273, 1.07614, 1.10001, 1.10778, 1.13829]
-[Test MAE]
-[2.24655, 1.46311, 1.16141, 0.93476, 0.87306, 0.85221, 0.84365, 0.85405, 0.84435, 0.85509]
-Best Dev MSE: 1.03818 (Obtained during Evaluation #7)
-Test MSE: 1.07614, Test MAE: 0.84365
+-d "Small_Clothing" -m "DAttn" -e 10 -dr 0.9 -p 1 -v 43947 -K 5 -h1 50 -h2 50 -WED 300 -c_local 1 -c_global 1 -hiden_size 500 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm "Small_Clothing_DAttn"
+to be update
 
 
 
 DenseCNN
--d "Small_Clothing" -m "DenseCNN" -e 15 -dr 0.9 -p 1 -bs 128 -v 43947 -K 5 -h1 50 -h2 50 -WED 300 -filters_num 10 -hiden_size 500 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm "Small_Clothing"
+-d "Small_Clothing" -m "DenseCNN" -e 15 -dr 0.9 -p 1 -bs 128 -v 43947 -K 5 -h1 50 -h2 50 -WED 300 -filters_num 10 -hiden_size 500 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm "Small_Clothing_DenseCNN"
 [Training Loss]
 [2.78319, 1.68702, 1.18704, 0.79084, 6.07872, 1.14358, 0.95514, 0.84063, 0.74631, 0.65997, 0.58437, 0.51521, 0.45352, 0.39878, 0.34889]
 [Dev MSE]
@@ -694,7 +630,7 @@ DenseCNN
 Best Dev MSE: 1.02291 (Obtained during Evaluation #7)
 Test MSE: 1.05996, Test MAE: 0.83099
 
--d "Small_Clothing" -m "DenseCNN" -e 15 -dr 0.5 -p 1 -bs 128 -v 43947 -K 5 -h1 50 -h2 50 -WED 300 -filters_num 10 -hiden_size 500 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm "Small_Clothing"
+-d "Small_Clothing" -m "DenseCNN" -e 15 -dr 0.5 -p 1 -bs 128 -v 43947 -K 5 -h1 50 -h2 50 -WED 300 -filters_num 10 -hiden_size 500 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm "Small_Clothing_DenseCNN"
 [Training Loss]
 [1.95301, 0.99337, 0.84069, 0.73234, 0.64243, 0.56427, 0.49796, 0.44121, 0.39179, 0.3485, 0.32727, 0.2906, 0.25828, 0.23356, 0.21162]
 [Dev MSE]
@@ -706,7 +642,7 @@ Test MSE: 1.05996, Test MAE: 0.83099
 Best Dev MSE: 1.11376 (Obtained during Evaluation #2)
 Test MSE: 1.25602, Test MAE: 0.87578
 
--d "Small_Clothing" -m "DenseCNN" -e 10 -dr 0.9 -p 1 -bs 128 -v 43947 -K 5 -h1 50 -h2 50 -WED 300 -filters_num 64 -hiden_size 500 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm "Small_Clothing"
+-d "Small_Clothing" -m "DenseCNN" -e 10 -dr 0.9 -p 1 -bs 128 -v 43947 -K 5 -h1 50 -h2 50 -WED 300 -filters_num 64 -hiden_size 500 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm "Small_Clothing_DenseCNN"
 [Training Loss]
 [2.30739, 1.60577, 1.33164, 1.17595, 1.05619, 0.94724, 0.84772, 0.75597, 0.67152, 0.59537]
 [Dev MSE]
@@ -718,7 +654,7 @@ Test MSE: 1.25602, Test MAE: 0.87578
 Best Dev MSE: 1.02754 (Obtained during Evaluation #5)
 Test MSE: 1.03209, Test MAE: 0.82268
 
--d "Small_Clothing" -m "DenseCNN" -e 10 -dr 0.9 -p 1 -bs 128 -v 43947 -K 5 -h1 50 -h2 50 -WED 300 -filters_num 1 -hiden_size 500 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm "Small_Clothing"
+-d "Small_Clothing" -m "DenseCNN" -e 10 -dr 0.9 -p 1 -bs 128 -v 43947 -K 5 -h1 50 -h2 50 -WED 300 -filters_num 1 -hiden_size 500 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm "Small_Clothing_DenseCNN"
 [Training Loss]
 [1.97881, 0.97317, 0.85839, 0.76783, 0.69647, 0.62791, 0.56536, 0.50694, 0.45848, 0.41251]
 [Dev MSE]

@@ -8,6 +8,7 @@ from tqdm import tqdm
 class ANR_AIE(nn.Module):
     """
     Aspect Importance Estimation (AIE)
+    More similar to the paper
     """
 
     def __init__(self, logger, args):

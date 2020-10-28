@@ -90,10 +90,10 @@ class Net(nn.Module):
         self.localAttentionLayer = LocalAttention(logger, args)
         self.globalAttentionLayer = GlobalAttention(logger, args)
 
-        self.fc_input_size = args.max_doc_len + 3 * args.max_doc_len
+        self.fc_input_size = 3 * args.word_embed_dim + args.word_embed_dim
 
         self.fcLayer = nn.Sequential(
-            # bsz x (max_doc_len + 3 * max_doc_len) -> bsz x hiden_size
+            # bsz x (word_embed_dim + 3 * word_embed_dim) -> bsz x hiden_size
             nn.Linear(self.fc_input_size, args.hidden_size),
             nn.Dropout(args.dropout_rate),
             nn.ReLU(),
@@ -108,22 +108,20 @@ class Net(nn.Module):
         local_fea = self.localAttentionLayer(batch_DocEmbed)
         # bsz x max_doc_len x word_embed_dim -> [bsz x output_size]
         global_fea = self.globalAttentionLayer(batch_DocEmbed)
-        # bsz x (max_doc_len + 3 * max_doc_len)
+        # bsz x (word_embed_dim + 3 * word_embed_dim)
         cat_fea = torch.cat(local_fea+[global_fea], 1)
         # Dropout before fcLayer
         cat_fea = self.dropout(cat_fea)
-        # bsz x (max_doc_len + 3 * max_doc_len) -> bsz x output_size
+        # bsz x (word_embed_dim + 3 * word_embed_dim) -> bsz x output_size
         cat_fea = self.fcLayer(cat_fea)
         return cat_fea
 
     def reset_para(self):
-        for cnn in self.localAttentionLayer.convs:
+        for cnn in self.localAttentionLayer.attention_layers:
             nn.init.xavier_uniform_(cnn[0].weight, gain=1)
             nn.init.uniform_(cnn[0].bias, -0.1, 0.1)
-        cnns = [self.globalAttentionLayer.cnn[0], self.globalAttentionLayer.attention_layer[0]]
-        for cnn in cnns:
-            nn.init.xavier_uniform_(cnn.weight, gain=1)
-            nn.init.uniform_(cnn.bias, -0.1, 0.1)
+        nn.init.xavier_uniform_(self.globalAttentionLayer.attention_layer[0].weight, gain=1)
+        nn.init.uniform_(self.globalAttentionLayer.attention_layer[0].bias, -0.1, 0.1)
         nn.init.uniform_(self.fcLayer[0].weight, -0.1, 0.1)
         nn.init.uniform_(self.fcLayer[-1].weight, -0.1, 0.1)
 
@@ -139,19 +137,12 @@ class LocalAttention(nn.Module):
             # bsz x 1 x max_doc_len x word_embed_dim -> bsz x 1 x max_doc_len x 1
             nn.Conv2d(1, 1, kernel_size=(k, args.word_embed_dim), padding=((k - 1)//2, 0)),
             # bsz x 1 x max_doc_len x 1
-            nn.Sigmoid(),
-            # nn.Softmax(dim=2),
+            nn.Softmax(dim=2),
         ) for k in filters_size])
-
-        self.convs = nn.ModuleList([nn.Sequential(
-            # bsz x 1 x max_doc_len x word_embed_dim -> bsz x 1 x max_doc_len x 1
-            nn.Conv2d(1, 1, kernel_size=(1, args.word_embed_dim)),
-            nn.Tanh(),
-        ) for _ in filters_size])
 
     '''
     [Input]     x:      bsz x max_doc_len x word_embed_dim
-    [Output]    out:    [bsz x max_doc_len]
+    [Output]    outs:   [bsz x word_embed_dim]
     '''
     def forward(self, x):
         # [bsz x max_doc_len x word_embed_dim] -> [bsz x 1 x max_doc_len x word_embed_dim]
@@ -160,12 +151,8 @@ class LocalAttention(nn.Module):
         scores = [attention_layer(x.unsqueeze(1)).squeeze(1) for attention_layer in self.attention_layers]
 
         # [(bsz x max_doc_len x word_embed_dim) * (bsz x max_doc_len x 1)] -> [bsz x max_doc_len x word_embed_dim]
-        # [bsz x max_doc_len x word_embed_dim] -> [bsz x 1 x max_doc_len x word_embed_dim]
-        outs = [torch.mul(x, score).unsqueeze(1) for score in scores]
-
-        # [bsz x 1 x max_doc_len x word_embed_dim] -> [bsz x 1 x max_doc_len x 1]
-        # [bsz x 1 x max_doc_len x 1] -> [bsz x max_doc_len]
-        outs = [cnn(out).squeeze(3).squeeze(1) for cnn, out in zip(self.convs, outs)]
+        # [bsz x max_doc_len x word_embed_dim] -> [bsz x word_embed_dim]
+        outs = [torch.sum(torch.mul(x, score), dim=1) for score in scores]
 
         return outs
 
@@ -175,34 +162,17 @@ class GlobalAttention(nn.Module):
         super(GlobalAttention, self).__init__()
 
         self.attention_layer = nn.Sequential(
-            # bsz x 1 x max_doc_len x word_embed_dim -> bsz x 1 x 1 x 1
-            nn.Conv2d(1, 1, kernel_size=(args.max_doc_len, args.word_embed_dim)),
-            # bsz x 1 x 1 x 1
-            nn.Sigmoid()
-        )
-
-        self.cnn = nn.Sequential(
-            # bsz x 1 x max_doc_len x word_embed_dim -> bsz x 1 x max_doc_len x 1
-            nn.Conv2d(1, 1, kernel_size=(1, args.word_embed_dim)),
-            nn.Tanh(),
-        )
+            # bsz x 1 x max_doc_len x word_embed_dim -> bsz x 1 x 1 x word_embed_dim
+            nn.Conv2d(1, 1, kernel_size=(args.max_doc_len, 1)),)
 
     '''
     [Input]     x:          bsz x max_doc_len x word_embed_dim
-    [Output]    conv_outs:  bsz x max_doc_len
+    [Output]    out:        bsz x word_embed_dim
     '''
     def forward(self, x):
         # bsz x max_doc_len x word_embed_dim -> bsz x 1 x max_doc_len x word_embed_dim
-        x = x.unsqueeze(1)
-
-        # bsz x 1 x max_doc_len x word_embed_dim -> bsz x 1 x 1 x 1
-        score = self.attention_layer(x)
-
-        # (bsz x 1 x max_doc_len x word_embed_dim) * (bsz x 1 x 1 x 1) -> bsz x 1 x max_doc_len x word_embed_dim
-        out = torch.mul(x, score)
-
-        # bsz x 1 x max_doc_len x word_embed_dim -> bsz x 1 x max_doc_len x 1
-        # bsz x 1 x max_doc_len x 1 -> bsz x max_doc_len
-        out = self.cnn(out).squeeze(3).squeeze(1)
+        # bsz x 1 x max_doc_len x word_embed_dim -> bsz x 1 x 1 x word_embed_dim
+        # bsz x 1 x 1 x word_embed_dim -> bsz x word_embed_dim
+        out = self.attention_layer(x.unsqueeze(1)).squeeze()
 
         return out
