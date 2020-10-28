@@ -6,7 +6,8 @@ from .DeepCoNN import DeepCoNN
 from .ANR import ANR
 from .DAttn3 import DAttn
 from .VANRA import VANRA
-from .DenseCNN import DenseCNN
+from .DenseCNN2 import DenseCNN
+from .MSANR import MSANR
 
 import numpy as np
 
@@ -69,6 +70,8 @@ class ModelZoo:
             self.mdl = DeepCoNN(self.logger, self.args, self.num_users, self.num_items)
         elif self.args.model == "DenseCNN":
             self.mdl = DenseCNN(self.logger, self.args, self.num_users, self.num_items)
+        elif self.args.model == "MSANR":
+            self.mdl = MSANR(self.logger, self.args, self.num_users, self.num_items)
 
     def initModel(self):
         if self.args.model == "VANRA":
@@ -83,6 +86,13 @@ class ModelZoo:
             self.initDeepCoNN()
         elif self.args.model == "DenseCNN":
             self.initDenseCNN()
+        elif self.args.model == "MSANR":
+            self.initMSANR()
+
+    # MSANR - Initialization (User Documents, Item Documents, Word Embeddings)
+    def initMSANR(self):
+        self.loadDocs()
+        self.loadWordEmbeddings()
 
     # DenseCNN - Initialization (User Documents, Item Documents, Word Embeddings)
     def initDenseCNN(self):

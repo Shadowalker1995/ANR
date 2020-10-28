@@ -7,7 +7,7 @@ from tqdm import tqdm
 
 class ANRS_RatingPred(nn.Module):
     """
-    Rating Prediction using the 'Simplified Model', i.e. 3x FCs
+    Rating Prediction using Aspect-based Representations
     The only purpose of this is to obtain the pretrained weights for ARL
     """
 

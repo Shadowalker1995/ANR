@@ -106,8 +106,8 @@ class Net(nn.Module):
         global_fea = self.globalAttentionLayer(batch_DocEmbed)
         # bsz x (word_embed_dim + word_embed_dim)
         cat_fea = torch.cat((local_fea, global_fea), 1)
-        # Dropout before fcLayer
-        cat_fea = self.dropout(cat_fea)
+        # # Dropout before fcLayer
+        # cat_fea = self.dropout(cat_fea)
         # bsz x (word_embed_dim + word_embed_dim) -> bsz x output_size
         cat_fea = self.fcLayer(cat_fea)
         return cat_fea

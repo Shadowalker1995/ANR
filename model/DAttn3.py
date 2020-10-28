@@ -35,11 +35,11 @@ class DAttn(nn.Module):
         self.wid_wEmbed = nn.Embedding(self.args.vocab_size, self.args.word_embed_dim)  # vocab_size x word_embed_dim
         self.wid_wEmbed.weight.requires_grad = False
 
-        # # ========== new ==========
-        # # Word Embedding Projection Matrices
-        # self.wedProj = nn.Parameter(torch.Tensor(self.args.word_embed_dim, 1), requires_grad=True)
-        # self.wedProj.data.uniform_(-0.01, 0.01)
-        # # ========== new ==========
+        # ========== new ==========
+        # Word Embedding Projection Matrices
+        self.wedProj = nn.Parameter(torch.Tensor(self.args.word_embed_dim, self.args.output_size), requires_grad=True)
+        self.wedProj.data.uniform_(-0.01, 0.01)
+        # ========== new ==========
 
         self.user_net = Net(logger, args)
         self.item_net = Net(logger, args)
@@ -66,11 +66,11 @@ class DAttn(nn.Module):
             tqdm.write("batch_userDocEmbed: {}".format(batch_userDocEmbed.size()))      # bsz x max_doc_len x word_embed_dim
             tqdm.write("batch_itemDocEmbed: {}".format(batch_itemDocEmbed.size()))      # bsz x max_doc_len x word_embed_dim
 
-        # # ========== new ===========
-        # # (bsz x max_doc_len x word_embed_dim) x (word_embed_dim x 1) -> bsz x max_doc_len x 1
-        # batch_userDocEmbed = torch.matmul(batch_userDocEmbed, self.wedProj)
-        # batch_itemDocEmbed = torch.matmul(batch_itemDocEmbed, self.wedProj)
-        # # ========== new ===========
+        # ========== new ===========
+        # (bsz x max_doc_len x word_embed_dim) x (word_embed_dim x output_size) -> bsz x max_doc_len x output_size
+        batch_userDocEmbed = torch.matmul(batch_userDocEmbed, self.wedProj)
+        batch_itemDocEmbed = torch.matmul(batch_itemDocEmbed, self.wedProj)
+        # ========== new ===========
 
         batch_userFea = self.user_net(batch_userDocEmbed)
         batch_itemFea = self.item_net(batch_itemDocEmbed)
@@ -90,29 +90,26 @@ class Net(nn.Module):
         self.localAttentionLayer = LocalAttention(logger, args)
         self.globalAttentionLayer = GlobalAttention(logger, args)
 
-        self.fc_input_size = 3 * args.word_embed_dim + args.word_embed_dim
+        self.fc_input_size = 3 * args.output_size + args.output_size
 
         self.fcLayer = nn.Sequential(
-            # bsz x (word_embed_dim + 3 * word_embed_dim) -> bsz x hiden_size
-            nn.Linear(self.fc_input_size, args.hidden_size),
             nn.Dropout(args.dropout_rate),
-            nn.ReLU(),
-            # bsz x hiden_size -> bsz x output_size
-            nn.Linear(args.hidden_size, args.output_size),
+            # bsz x (output_size + 3 * output_size) -> bsz x output_size
+            nn.Linear(self.fc_input_size, args.output_size),
         )
         self.dropout = nn.Dropout(args.dropout_rate)
         self.reset_para()
 
     def forward(self, batch_DocEmbed):
-        # bsz x max_doc_len x word_embed_dim -> bsz x output_size
+        # bsz x max_doc_len x output_size -> bsz x output_size
         local_fea = self.localAttentionLayer(batch_DocEmbed)
-        # bsz x max_doc_len x word_embed_dim -> [bsz x output_size]
+        # bsz x max_doc_len x output_size -> [bsz x output_size]
         global_fea = self.globalAttentionLayer(batch_DocEmbed)
         # bsz x (word_embed_dim + 3 * word_embed_dim)
         cat_fea = torch.cat(local_fea+[global_fea], 1)
-        # Dropout before fcLayer
-        cat_fea = self.dropout(cat_fea)
-        # bsz x (word_embed_dim + 3 * word_embed_dim) -> bsz x output_size
+        # # Dropout before fcLayer
+        # cat_fea = self.dropout(cat_fea)
+        # bsz x (output_size + 3 * output_size) -> bsz x output_size
         cat_fea = self.fcLayer(cat_fea)
         return cat_fea
 
@@ -122,7 +119,6 @@ class Net(nn.Module):
             nn.init.uniform_(cnn[0].bias, -0.1, 0.1)
         nn.init.xavier_uniform_(self.globalAttentionLayer.attention_layer[0].weight, gain=1)
         nn.init.uniform_(self.globalAttentionLayer.attention_layer[0].bias, -0.1, 0.1)
-        nn.init.uniform_(self.fcLayer[0].weight, -0.1, 0.1)
         nn.init.uniform_(self.fcLayer[-1].weight, -0.1, 0.1)
 
 
@@ -134,24 +130,24 @@ class LocalAttention(nn.Module):
             filters_size = [3, 5, 7]
 
         self.attention_layers = nn.ModuleList([nn.Sequential(
-            # bsz x 1 x max_doc_len x word_embed_dim -> bsz x 1 x max_doc_len x 1
-            nn.Conv2d(1, 1, kernel_size=(k, args.word_embed_dim), padding=((k - 1)//2, 0)),
+            # bsz x 1 x max_doc_len x output_size -> bsz x 1 x max_doc_len x 1
+            nn.Conv2d(1, 1, kernel_size=(k, args.output_size), padding=((k - 1)//2, 0)),
             # bsz x 1 x max_doc_len x 1
             nn.Softmax(dim=2),
         ) for k in filters_size])
 
     '''
-    [Input]     x:      bsz x max_doc_len x word_embed_dim
-    [Output]    outs:   [bsz x word_embed_dim]
+    [Input]     x:      bsz x max_doc_len x output_size
+    [Output]    outs:   [bsz x output_size]
     '''
     def forward(self, x):
-        # [bsz x max_doc_len x word_embed_dim] -> [bsz x 1 x max_doc_len x word_embed_dim]
-        # [bsz x 1 x max_doc_len x word_embed_dim] -> [bsz x 1 x max_doc_len x 1]
+        # [bsz x max_doc_len x output_size] -> [bsz x 1 x max_doc_len x output_size]
+        # [bsz x 1 x max_doc_len x output_size] -> [bsz x 1 x max_doc_len x 1]
         # [bsz x 1 x max_doc_len x 1] -> [bsz x max_doc_len x 1]
         scores = [attention_layer(x.unsqueeze(1)).squeeze(1) for attention_layer in self.attention_layers]
 
-        # [(bsz x max_doc_len x word_embed_dim) * (bsz x max_doc_len x 1)] -> [bsz x max_doc_len x word_embed_dim]
-        # [bsz x max_doc_len x word_embed_dim] -> [bsz x word_embed_dim]
+        # [(bsz x max_doc_len x output_size) * (bsz x max_doc_len x 1)] -> [bsz x max_doc_len x output_size]
+        # [bsz x max_doc_len x output_size] -> [bsz x output_size]
         outs = [torch.sum(torch.mul(x, score), dim=1) for score in scores]
 
         return outs
@@ -162,17 +158,17 @@ class GlobalAttention(nn.Module):
         super(GlobalAttention, self).__init__()
 
         self.attention_layer = nn.Sequential(
-            # bsz x 1 x max_doc_len x word_embed_dim -> bsz x 1 x 1 x word_embed_dim
-            nn.Conv2d(1, 1, kernel_size=(args.max_doc_len, 1)),)
+            # bsz x 1 x max_doc_len x output_size -> bsz x 1 x 1 x output_size
+            nn.Conv2d(1, 1, kernel_size=(args.output_size, 1)),)
 
     '''
-    [Input]     x:          bsz x max_doc_len x word_embed_dim
-    [Output]    out:        bsz x word_embed_dim
+    [Input]     x:          bsz x max_doc_len x output_size
+    [Output]    out:        bsz x output_size
     '''
     def forward(self, x):
-        # bsz x max_doc_len x word_embed_dim -> bsz x 1 x max_doc_len x word_embed_dim
-        # bsz x 1 x max_doc_len x word_embed_dim -> bsz x 1 x 1 x word_embed_dim
-        # bsz x 1 x 1 x word_embed_dim -> bsz x word_embed_dim
+        # bsz x max_doc_len x output_size -> bsz x 1 x max_doc_len x output_size
+        # bsz x 1 x max_doc_len x output_size -> bsz x 1 x 1 x output_size
+        # bsz x 1 x 1 x output_size -> bsz x output_size
         out = self.attention_layer(x.unsqueeze(1)).squeeze()
 
         return out

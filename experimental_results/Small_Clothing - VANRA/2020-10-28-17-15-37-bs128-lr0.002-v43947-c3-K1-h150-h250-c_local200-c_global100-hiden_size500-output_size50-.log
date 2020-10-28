@@ -1,0 +1,40 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  channels_global: 100
+  channels_local: 200
+  command: -d Small_Clothing -m VANRA -e 10 -dr 0.9 -WED 300 -K 1 -h1 50 -h2 50 -output_size 50 -p 1 -v 43947 -rs 1337 -gpu 0 -vb 1 -sm Small_Clothing_VANRA
+  ctx_win_size: 3
+  dataset: Small_Clothing
+  disable_initial_eval: 0
+  dropout_rate: 0.9
+  epochs: 10
+  filters_num: 100
+  gpu: 0
+  h1: 50
+  h2: 50
+  hidden_size: 500
+  input_dir: ./datasets/Small_Clothing/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: VANRA
+  num_aspects: 1
+  optimizer: Adam
+  out_dir: ./experimental_results/Small_Clothing - VANRA/
+  output_size: 50
+  pretrained_src: 1
+  random_seed: 1337
+  save_model: Small_Clothing_VANRA
+  use_cuda: True
+  verbose: 1
+  vocab_size: 43947
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 77,930, # of Items: 59,172
+
+Creating model (Selected Model: VANRA)..

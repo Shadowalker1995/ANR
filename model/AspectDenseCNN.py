@@ -9,8 +9,10 @@ from tqdm import tqdm
 
 class AspectDenseCNN(nn.Module):
     """
-    2018. Densely Connected CNN with Multi-scale Feature Attention for Text Classification
-    This implementation is base on https://github.com/wangshy31/Densely-Connected-CNN-with-Multiscale-Feature-Attention.git
+    Aspect-based Densely CNN
+    with aspect attention mechanism and
+    token attention mechanism in each densely convolution layer and
+    scale attention mechanism in the end.
     """
     def __init__(self, logger, args, num_users, num_items):
         super(AspectDenseCNN, self).__init__()
