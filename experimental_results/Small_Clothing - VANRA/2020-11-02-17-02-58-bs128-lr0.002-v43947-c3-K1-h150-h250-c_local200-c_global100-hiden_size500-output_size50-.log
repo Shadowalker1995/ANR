@@ -1,0 +1,115 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  channels_global: 100
+  channels_local: 200
+  command: -d Small_Clothing -m VANRA -e 10 -dr 0.9 -WED 300 -K 1 -h1 50 -h2 50 -output_size 50 -p 1 -v 43947 -rs 1337 -gpu 0 -vb 1 -sm Small_Clothing_VANRA
+  ctx_win_size: 3
+  dataset: Small_Clothing
+  disable_initial_eval: 0
+  dropout_rate: 0.9
+  epochs: 10
+  filters_num: 100
+  gpu: 0
+  h1: 50
+  h2: 50
+  hidden_size: 500
+  input_dir: ./datasets/Small_Clothing/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: VANRA
+  num_aspects: 1
+  optimizer: Adam
+  out_dir: ./experimental_results/Small_Clothing - VANRA/
+  output_size: 50
+  pretrained_src: 1
+  random_seed: 1337
+  save_model: Small_Clothing_VANRA
+  use_cuda: True
+  verbose: 1
+  vocab_size: 43947
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 77,930, # of Items: 59,172
+
+Creating model (Selected Model: VANRA)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 2.46s (0.04 minute)
+
+Loading uid_userDoc from "./datasets/Small_Clothing/Small_Clothing_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (77930, 500)]
+
+Loading iid_itemDoc from "./datasets/Small_Clothing/Small_Clothing_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (59172, 500)]
+
+Loading pretrained word embeddings from "./datasets/Small_Clothing/Small_Clothing_wed300_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (43949, 300)]
+
+Loading uid_userVis from "./datasets/Small_Clothing/Small_Clothing_uid_userVis.npy"..
+uid_userVis loaded! [uid_userVis: (77930, 500)]
+
+Loading iid_itemVis from "./datasets/Small_Clothing/Small_Clothing_iid_itemVis.npy"..
+iid_itemVis loaded! [iid_itemVis: (59172, 500)]
+
+Initialization Complete.. Elapsed Time: 3.65s (0.06 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 80,000, |DEV|: 150, |TEST|: 166
+Train/Dev/Test splits loaded! Elapsed Time: 3.67s (0.06 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 16.09973, MAE: 3.86296
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 17.10596, MAE: 3.99358
+
+Initial Evaluation Complete.. Elapsed Time: 3.86s (0.06 minute)
+
+Parameters with L2 Regularization (Regularization Strength: 1e-06):
+VANRA_RatingPred.uid_userOffset.weight, VANRA_RatingPred.iid_itemOffset.weight
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 150,514,703
+# of Trainable Parameters: 228,003
+VANRA (
+  (uid_userDoc): Embedding(77930, 500), weights = ((77930, 500),), parameters = 38,965,000
+  (iid_itemDoc): Embedding(59172, 500), weights = ((59172, 500),), parameters = 29,586,000
+  (wid_wEmbed): Embedding(43949, 300), weights = ((43949, 300),), parameters = 13,184,700
+  (uid_userVis): Embedding(77930, 500), weights = ((77930, 500),), parameters = 38,965,000
+  (iid_itemVis): Embedding(59172, 500), weights = ((59172, 500),), parameters = 29,586,000
+  (MSANR_ARL): MSANR_ARL(
+    (aspEmbed): ModuleList(
+      (0): Embedding(1, 150)
+      (1): Embedding(1, 250)
+      (2): Embedding(1, 350)
+    )
+    (filterEmbed): Embedding(1, 50)
+    (aspProj): Parameter(1, 300, 50)
+  ), weights = ((1, 300, 50), (1, 150), (1, 250), (1, 350), (1, 50)), parameters = 15,800 (Trainable)
+  (VANRA_VRL): VANRA_VRL(
+    (fcLayer_user): Sequential(
+      (0): Dropout(p=0.9, inplace=False)
+      (1): Linear(in_features=500, out_features=50, bias=True)
+    )
+    (fcLayer_item): Sequential(
+      (0): Dropout(p=0.9, inplace=False)
+      (1): Linear(in_features=500, out_features=50, bias=True)
+    )
+    (visProj): Parameter(500, 50)
+  ), weights = ((500, 50), (50, 500), (50,), (50, 500), (50,)), parameters = 75,100 (Trainable)
+  (VANRA_RatingPred): VANRA_RatingPred(
+    (userAspRepDropout): Dropout(p=0.9, inplace=False)
+    (itemAspRepDropout): Dropout(p=0.9, inplace=False)
+    (userVisRepDropout): Dropout(p=0.9, inplace=False)
+    (itemVisRepDropout): Dropout(p=0.9, inplace=False)
+    (uid_userOffset): Embedding(77930, 1)
+    (iid_itemOffset): Embedding(59172, 1)
+    (globalOffset): Parameter(1,)
+  ), weights = ((1,), (77930, 1), (59172, 1)), parameters = 137,103 (Trainable)
+)
+========================================================================================================================

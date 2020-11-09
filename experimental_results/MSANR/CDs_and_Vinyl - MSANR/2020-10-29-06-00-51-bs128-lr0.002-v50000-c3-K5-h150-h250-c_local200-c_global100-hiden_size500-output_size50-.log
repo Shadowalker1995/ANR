@@ -1,0 +1,164 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  channels_global: 100
+  channels_local: 200
+  command: -d CDs_and_Vinyl -m MSANR -e 10 -dr 0.9 -WED 300 -p 1 -v 50000 -K 5 -h1 50 -h2 50 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm CDs_and_Vinyl_MSANR
+  ctx_win_size: 3
+  dataset: CDs_and_Vinyl
+  disable_initial_eval: 0
+  dropout_rate: 0.9
+  epochs: 10
+  filters_num: 100
+  gpu: 0
+  h1: 50
+  h2: 50
+  hidden_size: 500
+  input_dir: ./datasets/CDs_and_Vinyl/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: MSANR
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/CDs_and_Vinyl - MSANR/
+  output_size: 50
+  pretrained_src: 1
+  random_seed: 1234
+  save_model: CDs_and_Vinyl_MSANR
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 488,046, # of Items: 237,480
+
+Creating model (Selected Model: MSANR)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 4.33s (0.07 minute)
+
+Loading uid_userDoc from "./datasets/CDs_and_Vinyl/CDs_and_Vinyl_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (488046, 500)]
+
+Loading iid_itemDoc from "./datasets/CDs_and_Vinyl/CDs_and_Vinyl_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (237480, 500)]
+
+Loading pretrained word embeddings from "./datasets/CDs_and_Vinyl/CDs_and_Vinyl_wed300_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (50002, 300)]
+
+Initialization Complete.. Elapsed Time: 29.00s (0.48 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 800,000, |DEV|: 41,001, |TEST|: 41,018
+Train/Dev/Test splits loaded! Elapsed Time: 29.26s (0.49 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 19.84649, MAE: 4.32507
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 19.87484, MAE: 4.32981
+
+Initial Evaluation Complete.. Elapsed Time: 72.33s (1.21 minutes)
+
+Parameters with L2 Regularization (Regularization Strength: 1e-06):
+MSANR_RatingPred.uid_userOffset.weight, MSANR_RatingPred.iid_itemOffset.weight
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 378,570,377
+# of Trainable Parameters: 806,777
+MSANR (
+  (uid_userDoc): Embedding(488046, 500), weights = ((488046, 500),), parameters = 244,023,000
+  (iid_itemDoc): Embedding(237480, 500), weights = ((237480, 500),), parameters = 118,740,000
+  (wid_wEmbed): Embedding(50002, 300), weights = ((50002, 300),), parameters = 15,000,600
+  (MSANR_ARL): MSANR_ARL(
+    (aspEmbed): ModuleList(
+      (0): Embedding(5, 150)
+      (1): Embedding(5, 250)
+      (2): Embedding(5, 350)
+      (3): Embedding(5, 450)
+    )
+    (filterEmbed): Embedding(5, 50)
+    (aspProj): Parameter(5, 300, 50)
+  ), weights = ((5, 300, 50), (5, 150), (5, 250), (5, 350), (5, 450), (5, 50)), parameters = 81,250 (Trainable)
+  (MSANR_RatingPred): MSANR_RatingPred(
+    (userAspRepDropout): Dropout(p=0.9, inplace=False)
+    (itemAspRepDropout): Dropout(p=0.9, inplace=False)
+    (uid_userOffset): Embedding(488046, 1)
+    (iid_itemOffset): Embedding(237480, 1)
+    (globalOffset): Parameter(1,)
+  ), weights = ((1,), (488046, 1), (237480, 1)), parameters = 725,527 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/10] Training Loss: 2.11957	Elapsed Time: 1,070.08s (0:17:50)
+[Epoch 1] [Dev]  MSE: 1.03212, MAE: 0.72627
+[Epoch 1] [Test] MSE: 1.01793, MAE: 0.72330
+
+*** MODEL has obtained the best DEV MSE of 1.03212 so far!
+*** The Best MODEL saved to "./__saved_models__/CDs_and_Vinyl - MSANR/CDs_and_Vinyl_MSANR_1234.pth"
+
+[Epoch 2/10] Training Loss: 0.93755	Elapsed Time: 2,182.22s (0:36:22)
+[Epoch 2] [Dev]  MSE: 0.98698, MAE: 0.70539
+[Epoch 2] [Test] MSE: 0.97188, MAE: 0.70154
+
+*** MODEL has obtained the best DEV MSE of 0.98698 so far!
+*** The Best MODEL saved to "./__saved_models__/CDs_and_Vinyl - MSANR/CDs_and_Vinyl_MSANR_1234.pth"
+
+[Epoch 3/10] Training Loss: 0.84462	Elapsed Time: 3,294.32s (0:54:54)
+[Epoch 3] [Dev]  MSE: 0.97305, MAE: 0.69664
+[Epoch 3] [Test] MSE: 0.95899, MAE: 0.69322
+
+*** MODEL has obtained the best DEV MSE of 0.97305 so far!
+*** The Best MODEL saved to "./__saved_models__/CDs_and_Vinyl - MSANR/CDs_and_Vinyl_MSANR_1234.pth"
+
+[Epoch 4/10] Training Loss: 0.79420	Elapsed Time: 4,406.45s (1:13:26)
+[Epoch 4] [Dev]  MSE: 0.97621, MAE: 0.68966
+[Epoch 4] [Test] MSE: 0.96239, MAE: 0.68662
+
+[Epoch 5/10] Training Loss: 0.76339	Elapsed Time: 5,518.54s (1:31:58)
+[Epoch 5] [Dev]  MSE: 0.97168, MAE: 0.69422
+[Epoch 5] [Test] MSE: 0.95935, MAE: 0.69153
+
+*** MODEL has obtained the best DEV MSE of 0.97168 so far!
+*** The Best MODEL saved to "./__saved_models__/CDs_and_Vinyl - MSANR/CDs_and_Vinyl_MSANR_1234.pth"
+
+[Epoch 6/10] Training Loss: 0.74078	Elapsed Time: 6,630.82s (1:50:30)
+[Epoch 6] [Dev]  MSE: 0.97277, MAE: 0.69631
+[Epoch 6] [Test] MSE: 0.96098, MAE: 0.69369
+
+[Epoch 7/10] Training Loss: 0.72751	Elapsed Time: 7,743.15s (2:09:03)
+[Epoch 7] [Dev]  MSE: 0.97921, MAE: 0.69263
+[Epoch 7] [Test] MSE: 0.96746, MAE: 0.68998
+
+[Epoch 8/10] Training Loss: 0.71149	Elapsed Time: 8,855.52s (2:27:35)
+[Epoch 8] [Dev]  MSE: 0.97582, MAE: 0.69942
+[Epoch 8] [Test] MSE: 0.96464, MAE: 0.69632
+
+[Epoch 9/10] Training Loss: 0.74300	Elapsed Time: 9,967.84s (2:46:07)
+[Epoch 9] [Dev]  MSE: 0.98322, MAE: 0.69452
+[Epoch 9] [Test] MSE: 0.97145, MAE: 0.69175
+
+[Epoch 10/10] Training Loss: 0.74797	Elapsed Time: 11,080.23s (3:04:40)
+[Epoch 10] [Dev]  MSE: 0.98251, MAE: 0.69658
+[Epoch 10] [Test] MSE: 0.97159, MAE: 0.69386
+*** The Last MODEL saved to "./__saved_models__/CDs_and_Vinyl - MSANR/CDs_and_Vinyl_MSANR_1234_10.pth"
+
+[Training Loss]
+[2.11957, 0.93755, 0.84462, 0.7942, 0.76339, 0.74078, 0.72751, 0.71149, 0.743, 0.74797]
+
+[Dev MSE]
+[1.03212, 0.98698, 0.97305, 0.97621, 0.97168, 0.97277, 0.97921, 0.97582, 0.98322, 0.98251]
+[Test MSE]
+[1.01793, 0.97188, 0.95899, 0.96239, 0.95935, 0.96098, 0.96746, 0.96464, 0.97145, 0.97159]
+[Test MAE]
+[0.7233, 0.70154, 0.69322, 0.68662, 0.69153, 0.69369, 0.68998, 0.69632, 0.69175, 0.69386]
+
+
+Best Dev MSE: 0.97168 (Obtained during Evaluation #5)
+Test MSE: 0.95935, Test MAE: 0.69153
+
+End of Program! Elapsed Time: 11,195.07s (3:06:35)

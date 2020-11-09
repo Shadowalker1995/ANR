@@ -1,0 +1,143 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  channels_global: 100
+  channels_local: 200
+  command: -d Toys_and_Games -m MSANR -e 5 -dr 0.9 -WED 300 -p 1 -v 50000 -K 5 -h1 50 -h2 50 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm Toys_and_Games_MSANR
+  ctx_win_size: 3
+  dataset: Toys_and_Games
+  disable_initial_eval: 0
+  dropout_rate: 0.9
+  epochs: 5
+  filters_num: 100
+  gpu: 0
+  h1: 50
+  h2: 50
+  hidden_size: 500
+  input_dir: ./datasets/Toys_and_Games/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: MSANR
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Toys_and_Games - MSANR/
+  output_size: 50
+  pretrained_src: 1
+  random_seed: 1234
+  save_model: Toys_and_Games_MSANR
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 598,485, # of Items: 197,223
+
+Creating model (Selected Model: MSANR)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 4.66s (0.08 minute)
+
+Loading uid_userDoc from "./datasets/Toys_and_Games/Toys_and_Games_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (598485, 500)]
+
+Loading iid_itemDoc from "./datasets/Toys_and_Games/Toys_and_Games_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (197223, 500)]
+
+Loading pretrained word embeddings from "./datasets/Toys_and_Games/Toys_and_Games_wed300_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (50002, 300)]
+
+Initialization Complete.. Elapsed Time: 32.86s (0.55 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 800,000, |DEV|: 32,587, |TEST|: 32,299
+Train/Dev/Test splits loaded! Elapsed Time: 33.13s (0.55 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 19.82478, MAE: 4.31442
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 19.78538, MAE: 4.30670
+
+Initial Evaluation Complete.. Elapsed Time: 58.04s (0.97 minute)
+
+Parameters with L2 Regularization (Regularization Strength: 1e-06):
+MSANR_RatingPred.uid_userOffset.weight, MSANR_RatingPred.iid_itemOffset.weight
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 413,729,309
+# of Trainable Parameters: 874,709
+MSANR (
+  (uid_userDoc): Embedding(598485, 500), weights = ((598485, 500),), parameters = 299,242,500
+  (iid_itemDoc): Embedding(197223, 500), weights = ((197223, 500),), parameters = 98,611,500
+  (wid_wEmbed): Embedding(50002, 300), weights = ((50002, 300),), parameters = 15,000,600
+  (MSANR_ARL): MSANR_ARL(
+    (aspEmbed): ModuleList(
+      (0): Embedding(5, 150)
+      (1): Embedding(5, 250)
+      (2): Embedding(5, 350)
+    )
+    (filterEmbed): Embedding(5, 50)
+    (aspProj): Parameter(5, 300, 50)
+  ), weights = ((5, 300, 50), (5, 150), (5, 250), (5, 350), (5, 50)), parameters = 79,000 (Trainable)
+  (MSANR_RatingPred): MSANR_RatingPred(
+    (userAspRepDropout): Dropout(p=0.9, inplace=False)
+    (itemAspRepDropout): Dropout(p=0.9, inplace=False)
+    (uid_userOffset): Embedding(598485, 1)
+    (iid_itemOffset): Embedding(197223, 1)
+    (globalOffset): Parameter(1,)
+  ), weights = ((1,), (598485, 1), (197223, 1)), parameters = 795,709 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/5] Training Loss: 2.37577	Elapsed Time: 763.58s (0:12:43)
+[Epoch 1] [Dev]  MSE: 1.08445, MAE: 0.83219
+[Epoch 1] [Test] MSE: 1.10551, MAE: 0.83706
+
+*** MODEL has obtained the best DEV MSE of 1.08445 so far!
+*** The Best MODEL saved to "./__saved_models__/Toys_and_Games - MSANR/Toys_and_Games_MSANR_1234.pth"
+
+[Epoch 2/5] Training Loss: 1.33000	Elapsed Time: 1,554.61s (0:25:54)
+[Epoch 2] [Dev]  MSE: 1.05724, MAE: 0.81132
+[Epoch 2] [Test] MSE: 1.08011, MAE: 0.81739
+
+*** MODEL has obtained the best DEV MSE of 1.05724 so far!
+*** The Best MODEL saved to "./__saved_models__/Toys_and_Games - MSANR/Toys_and_Games_MSANR_1234.pth"
+
+[Epoch 3/5] Training Loss: 1.17496	Elapsed Time: 2,345.77s (0:39:05)
+[Epoch 3] [Dev]  MSE: 1.02737, MAE: 0.78277
+[Epoch 3] [Test] MSE: 1.05037, MAE: 0.78884
+
+*** MODEL has obtained the best DEV MSE of 1.02737 so far!
+*** The Best MODEL saved to "./__saved_models__/Toys_and_Games - MSANR/Toys_and_Games_MSANR_1234.pth"
+
+[Epoch 4/5] Training Loss: 1.08318	Elapsed Time: 3,137.01s (0:52:17)
+[Epoch 4] [Dev]  MSE: 1.01635, MAE: 0.76368
+[Epoch 4] [Test] MSE: 1.03775, MAE: 0.76954
+
+*** MODEL has obtained the best DEV MSE of 1.01635 so far!
+*** The Best MODEL saved to "./__saved_models__/Toys_and_Games - MSANR/Toys_and_Games_MSANR_1234.pth"
+
+[Epoch 5/5] Training Loss: 1.03871	Elapsed Time: 3,928.55s (1:05:28)
+[Epoch 5] [Dev]  MSE: 1.02289, MAE: 0.77745
+[Epoch 5] [Test] MSE: 1.04553, MAE: 0.78419
+*** The Last MODEL saved to "./__saved_models__/Toys_and_Games - MSANR/Toys_and_Games_MSANR_1234_5.pth"
+
+[Training Loss]
+[2.37577, 1.33, 1.17496, 1.08318, 1.03871]
+
+[Dev MSE]
+[1.08445, 1.05724, 1.02737, 1.01635, 1.02289]
+[Test MSE]
+[1.10551, 1.08011, 1.05037, 1.03775, 1.04553]
+[Test MAE]
+[0.83706, 0.81739, 0.78884, 0.76954, 0.78419]
+
+
+Best Dev MSE: 1.01635 (Obtained during Evaluation #4)
+Test MSE: 1.03775, Test MAE: 0.76954
+
+End of Program! Elapsed Time: 4,010.72s (1:06:50)

@@ -23,6 +23,8 @@ class VANRA_RatingPred(nn.Module):
         if self.args.dropout_rate > 0.0:
             self.userAspRepDropout = nn.Dropout(p=self.args.dropout_rate)
             self.itemAspRepDropout = nn.Dropout(p=self.args.dropout_rate)
+            self.userVisRepDropout = nn.Dropout(p=self.args.dropout_rate)
+            self.itemVisRepDropout = nn.Dropout(p=self.args.dropout_rate)
 
         # Global Offset/Bias (Trainable)
         self.globalOffset = nn.Parameter(torch.Tensor(1), requires_grad=True)   # 1 x 1
@@ -73,21 +75,22 @@ class VANRA_RatingPred(nn.Module):
             tqdm.write("\nbatch_userDocOffset: {}".format(batch_userOffset.size()))  # bsz x 1
             tqdm.write("batch_itemDocOffset: {}".format(batch_itemOffset.size()))    # bsz x 1
 
-        # =========== Dropout for the User & Item Aspect-Based Representations ===========
+        # Dropout for the User & Item Aspect-Based Representations
         if self.args.dropout_rate > 0.0:
             userAspRep = self.userAspRepDropout(userAspRep)
             itemAspRep = self.itemAspRepDropout(itemAspRep)
-
-            if verbose > 0:
-                tqdm.write("\n[After Dropout (Dropout Rate of {:.1f})] userAspRep: {}".format(self.args.dropout_rate, userAspRep.size()))
-                tqdm.write("[After Dropout (Dropout Rate of {:.1f})] itemAspRep: {}".format(self.args.dropout_rate, itemAspRep.size()))
-        # =========== Dropout for the User & Item Aspect-Based Representations ===========
+            userVisAttn = self.userVisRepDropout(userVisAttn)
+            itemVisAttn = self.itemVisRepDropout(itemVisAttn)
 
         lstAspRating = []
 
         # (bsz x num_aspects x h1) -> (num_aspects x bsz x h1)
         userAspRep = torch.transpose(userAspRep, 0, 1)                              # num_aspects x bsz x h1
         itemAspRep = torch.transpose(itemAspRep, 0, 1)                              # num_aspects x bsz x h1
+
+        # normalize
+        userAspRep = F.normalize(userAspRep, p=2, dim=2)
+        itemAspRep = F.normalize(itemAspRep, p=2, dim=2)
 
         for k in range(self.args.num_aspects):
             aspRating = torch.sum(torch.mul(userAspRep[k], itemAspRep[k]), 1, keepdim=True)
@@ -97,9 +100,9 @@ class VANRA_RatingPred(nn.Module):
             lstAspRating.append(aspRating)
 
         # List of (bsz x 1) -> (bsz x num_aspects)
-        rating_pred = torch.cat(lstAspRating, dim=1)
+        DocRating = torch.cat(lstAspRating, dim=1)
         if verbose > 0:
-            tqdm.write("\nrating_pred: {} ('Raw' Aspect-Level Ratings)".format(rating_pred.size()))     # bsz x num_aspects
+            tqdm.write("\nrating_pred: {} ('Raw' Aspect-Level Ratings)".format(DocRating.size()))     # bsz x num_aspects
 
         # # Multiply Each Aspect-Level (Predicted) Rating with the Corresponding User-Aspect Importance & Item-Aspect Importance
         # # (bsz x num_aspects) * (bsz x num_aspects) * (bsz x num_aspects) -> bsz x num_aspects
@@ -108,16 +111,22 @@ class VANRA_RatingPred(nn.Module):
         #     tqdm.write("rating_pred: {} (Multiplied with User-Aspect Importance & Item-Aspect Importance)".format(rating_pred.size()))
 
         # Sum over all Aspects
-        rating_pred = torch.sum(rating_pred, dim=1, keepdim=True)                   # bsz x 1
+        DocRating = torch.sum(DocRating, dim=1, keepdim=True)                   # bsz x 1
         if verbose > 0:
-            tqdm.write("rating_pred: {} (Summed over All {} Aspects)".format(rating_pred.size(), self.args.num_aspects))
+            tqdm.write("rating_pred: {} (Summed over All {} Aspects)".format(DocRating.size(), self.args.num_aspects))
+
+        # normalize
+        userVisAttn = F.normalize(userVisAttn, p=2, dim=1)
+        itemVisAttn = F.normalize(itemVisAttn, p=2, dim=1)
 
         # userVisAttn: bsz x output_size
         VisRating = torch.sum(torch.mul(userVisAttn, itemVisAttn), 1, keepdim=True)
         if verbose > 0:
             tqdm.write("\n\tVisRating: {}".format(VisRating.size()))                # bsz x 1
-        # rating_pred = (rating_pred + 0.001 * VisRating) / 2
-        rating_pred = VisRating
+
+        rating_pred = (DocRating + VisRating)/2
+        # rating_pred = DocRating
+        # rating_pred = VisRating
         if verbose > 0:
             tqdm.write("rating_pred: {} (Include Visual Rating Predict)".format(rating_pred.size()))    # bsz x 1
 

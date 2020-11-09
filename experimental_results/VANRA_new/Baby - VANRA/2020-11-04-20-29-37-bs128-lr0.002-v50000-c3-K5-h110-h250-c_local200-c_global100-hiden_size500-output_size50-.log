@@ -1,0 +1,181 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  channels_global: 100
+  channels_local: 200
+  command: -d Baby -m VANRA -e 10 -dr 0.9 -WED 300 -p 1 -v 50000 -K 5 -h1 10 -h2 50 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm Baby_VANRA
+  ctx_win_size: 3
+  dataset: Baby
+  disable_initial_eval: 0
+  dropout_rate: 0.9
+  epochs: 10
+  filters_num: 100
+  gpu: 0
+  h1: 10
+  h2: 50
+  hidden_size: 500
+  input_dir: ./datasets/Baby/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: VANRA
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Baby - VANRA/
+  output_size: 50
+  pretrained_src: 1
+  random_seed: 1234
+  save_model: Baby_VANRA
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 446,248, # of Items: 58,586
+
+Creating model (Selected Model: VANRA)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 5.39s (0.09 minute)
+
+Loading uid_userDoc from "./datasets/Baby/Baby_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (446248, 500)]
+
+Loading iid_itemDoc from "./datasets/Baby/Baby_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (58586, 500)]
+
+Loading pretrained word embeddings from "./datasets/Baby/Baby_wed300_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (50002, 300)]
+
+Loading uid_userVis from "./datasets/Baby/Baby_uid_userVis.npy"..
+uid_userVis loaded! [uid_userVis: (446248, 500)]
+
+Loading iid_itemVis from "./datasets/Baby/Baby_iid_itemVis.npy"..
+iid_itemVis loaded! [iid_itemVis: (58586, 500)]
+
+Initialization Complete.. Elapsed Time: 41.77s (0.70 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 721,979, |DEV|: 47,357, |TEST|: 47,373
+Train/Dev/Test splits loaded! Elapsed Time: 42.02s (0.70 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 11.41156, MAE: 2.96194
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 11.48899, MAE: 2.96738
+
+Initial Evaluation Complete.. Elapsed Time: 59.81s (1.00 minute)
+
+Parameters with L2 Regularization (Regularization Strength: 1e-06):
+VANRA_RatingPred.uid_userOffset.weight, VANRA_RatingPred.iid_itemOffset.weight
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 520,386,295
+# of Trainable Parameters: 551,695
+VANRA (
+  (uid_userDoc): Embedding(446248, 500), weights = ((446248, 500),), parameters = 223,124,000
+  (iid_itemDoc): Embedding(58586, 500), weights = ((58586, 500),), parameters = 29,293,000
+  (wid_wEmbed): Embedding(50002, 300), weights = ((50002, 300),), parameters = 15,000,600
+  (uid_userVis): Embedding(446248, 500), weights = ((446248, 500),), parameters = 223,124,000
+  (iid_itemVis): Embedding(58586, 500), weights = ((58586, 500),), parameters = 29,293,000
+  (MSANR_ARL): MSANR_ARL(
+    (aspEmbed): ModuleList(
+      (0): Embedding(5, 30)
+      (1): Embedding(5, 50)
+      (2): Embedding(5, 70)
+    )
+    (filterEmbed): Embedding(5, 10)
+    (aspProj): Parameter(5, 300, 10)
+  ), weights = ((5, 300, 10), (5, 30), (5, 50), (5, 70), (5, 10)), parameters = 15,800 (Trainable)
+  (VANRA_VRL): VANRA_VRL(
+    (fcLayer): Sequential(
+      (0): Dropout(p=0.9, inplace=False)
+      (1): Linear(in_features=500, out_features=50, bias=True)
+    )
+    (visProj): Parameter(500, 10)
+  ), weights = ((500, 10), (50, 500), (50,)), parameters = 30,050 (Trainable)
+  (VANRA_RatingPred): VANRA_RatingPred(
+    (uid_userOffset): Embedding(446248, 1)
+    (iid_itemOffset): Embedding(58586, 1)
+    (fcLayer1): Sequential(
+      (0): Linear(in_features=100, out_features=10, bias=True)
+      (1): ReLU()
+      (2): Dropout(p=0.9, inplace=False)
+    )
+    (globalOffset): Parameter(1,)
+  ), weights = ((1,), (446248, 1), (58586, 1), (10, 100), (10,)), parameters = 505,845 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/10] Training Loss: 1014.18002	Elapsed Time: 380.21s (0:06:20)
+[Epoch 1] [Dev]  MSE: 1.40698, MAE: 0.93291
+[Epoch 1] [Test] MSE: 1.39547, MAE: 0.93075
+
+*** MODEL has obtained the best DEV MSE of 1.40698 so far!
+*** The Best MODEL saved to "./__saved_models__/Baby - VANRA/Baby_VANRA_1234.pth"
+
+[Epoch 2/10] Training Loss: 1.43768	Elapsed Time: 778.66s (0:12:58)
+[Epoch 2] [Dev]  MSE: 1.28626, MAE: 0.88233
+[Epoch 2] [Test] MSE: 1.27538, MAE: 0.88022
+
+*** MODEL has obtained the best DEV MSE of 1.28626 so far!
+*** The Best MODEL saved to "./__saved_models__/Baby - VANRA/Baby_VANRA_1234.pth"
+
+[Epoch 3/10] Training Loss: 1.27833	Elapsed Time: 1,177.04s (0:19:37)
+[Epoch 3] [Dev]  MSE: 1.26340, MAE: 0.87114
+[Epoch 3] [Test] MSE: 1.25121, MAE: 0.86886
+
+*** MODEL has obtained the best DEV MSE of 1.26340 so far!
+*** The Best MODEL saved to "./__saved_models__/Baby - VANRA/Baby_VANRA_1234.pth"
+
+[Epoch 4/10] Training Loss: 1.18932	Elapsed Time: 1,575.49s (0:26:15)
+[Epoch 4] [Dev]  MSE: 1.26195, MAE: 0.85833
+[Epoch 4] [Test] MSE: 1.24770, MAE: 0.85531
+
+*** MODEL has obtained the best DEV MSE of 1.26195 so far!
+*** The Best MODEL saved to "./__saved_models__/Baby - VANRA/Baby_VANRA_1234.pth"
+
+[Epoch 5/10] Training Loss: 1.12995	Elapsed Time: 1,973.87s (0:32:53)
+[Epoch 5] [Dev]  MSE: 1.26695, MAE: 0.85064
+[Epoch 5] [Test] MSE: 1.25186, MAE: 0.84745
+
+[Epoch 6/10] Training Loss: 1.08763	Elapsed Time: 2,372.41s (0:39:32)
+[Epoch 6] [Dev]  MSE: 1.27218, MAE: 0.85736
+[Epoch 6] [Test] MSE: 1.25621, MAE: 0.85389
+
+[Epoch 7/10] Training Loss: 1.05621	Elapsed Time: 2,770.80s (0:46:10)
+[Epoch 7] [Dev]  MSE: 1.27715, MAE: 0.85356
+[Epoch 7] [Test] MSE: 1.26134, MAE: 0.85019
+
+[Epoch 8/10] Training Loss: 1.03218	Elapsed Time: 3,169.21s (0:52:49)
+[Epoch 8] [Dev]  MSE: 1.28227, MAE: 0.85650
+[Epoch 8] [Test] MSE: 1.26621, MAE: 0.85311
+
+[Epoch 9/10] Training Loss: 1.01346	Elapsed Time: 3,567.61s (0:59:27)
+[Epoch 9] [Dev]  MSE: 1.28579, MAE: 0.85513
+[Epoch 9] [Test] MSE: 1.27045, MAE: 0.85182
+
+[Epoch 10/10] Training Loss: 0.99825	Elapsed Time: 3,965.86s (1:06:05)
+[Epoch 10] [Dev]  MSE: 1.29077, MAE: 0.85707
+[Epoch 10] [Test] MSE: 1.27589, MAE: 0.85419
+*** The Last MODEL saved to "./__saved_models__/Baby - VANRA/Baby_VANRA_1234_10.pth"
+
+[Training Loss]
+[1014.18002, 1.43768, 1.27833, 1.18932, 1.12995, 1.08763, 1.05621, 1.03218, 1.01346, 0.99825]
+
+[Dev MSE]
+[1.40698, 1.28626, 1.2634, 1.26195, 1.26695, 1.27218, 1.27715, 1.28227, 1.28579, 1.29077]
+[Test MSE]
+[1.39547, 1.27538, 1.25121, 1.2477, 1.25186, 1.25621, 1.26134, 1.26621, 1.27045, 1.27589]
+[Test MAE]
+[0.93075, 0.88022, 0.86886, 0.85531, 0.84745, 0.85389, 0.85019, 0.85311, 0.85182, 0.85419]
+
+
+Best Dev MSE: 1.26195 (Obtained during Evaluation #4)
+Test MSE: 1.24770, Test MAE: 0.85531
+
+End of Program! Elapsed Time: 4,043.28s (1:07:23)

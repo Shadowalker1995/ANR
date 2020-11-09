@@ -1,0 +1,178 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  channels_global: 100
+  channels_local: 200
+  command: -d Grocery_and_Gourmet_Food -m VANRA -e 10 -dr 0.9 -WED 300 -p 1 -v 50000 -K 5 -h1 10 -h2 50 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm Grocery_and_Gourmet_Food_VANRA
+  ctx_win_size: 3
+  dataset: Grocery_and_Gourmet_Food
+  disable_initial_eval: 0
+  dropout_rate: 0.9
+  epochs: 10
+  filters_num: 100
+  gpu: 0
+  h1: 10
+  h2: 50
+  hidden_size: 500
+  input_dir: ./datasets/Grocery_and_Gourmet_Food/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: VANRA
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Grocery_and_Gourmet_Food - VANRA/
+  output_size: 50
+  pretrained_src: 1
+  random_seed: 1234
+  save_model: Grocery_and_Gourmet_Food_VANRA
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 528,374, # of Items: 134,221
+
+Creating model (Selected Model: VANRA)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 6.76s (0.11 minute)
+
+Loading uid_userDoc from "./datasets/Grocery_and_Gourmet_Food/Grocery_and_Gourmet_Food_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (528374, 500)]
+
+Loading iid_itemDoc from "./datasets/Grocery_and_Gourmet_Food/Grocery_and_Gourmet_Food_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (134221, 500)]
+
+Loading pretrained word embeddings from "./datasets/Grocery_and_Gourmet_Food/Grocery_and_Gourmet_Food_wed300_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (50002, 300)]
+
+Loading uid_userVis from "./datasets/Grocery_and_Gourmet_Food/Grocery_and_Gourmet_Food_uid_userVis.npy"..
+uid_userVis loaded! [uid_userVis: (528374, 500)]
+
+Loading iid_itemVis from "./datasets/Grocery_and_Gourmet_Food/Grocery_and_Gourmet_Food_iid_itemVis.npy"..
+iid_itemVis loaded! [iid_itemVis: (134221, 500)]
+
+Initialization Complete.. Elapsed Time: 42.43s (0.71 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 800,000, |DEV|: 43,464, |TEST|: 43,991
+Train/Dev/Test splits loaded! Elapsed Time: 42.67s (0.71 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 12.70298, MAE: 3.18705
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 12.66753, MAE: 3.18148
+
+Initial Evaluation Complete.. Elapsed Time: 59.44s (0.99 minute)
+
+Parameters with L2 Regularization (Regularization Strength: 1e-06):
+VANRA_RatingPred.uid_userOffset.weight, VANRA_RatingPred.iid_itemOffset.weight
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 678,305,056
+# of Trainable Parameters: 709,456
+VANRA (
+  (uid_userDoc): Embedding(528374, 500), weights = ((528374, 500),), parameters = 264,187,000
+  (iid_itemDoc): Embedding(134221, 500), weights = ((134221, 500),), parameters = 67,110,500
+  (wid_wEmbed): Embedding(50002, 300), weights = ((50002, 300),), parameters = 15,000,600
+  (uid_userVis): Embedding(528374, 500), weights = ((528374, 500),), parameters = 264,187,000
+  (iid_itemVis): Embedding(134221, 500), weights = ((134221, 500),), parameters = 67,110,500
+  (MSANR_ARL): MSANR_ARL(
+    (aspEmbed): ModuleList(
+      (0): Embedding(5, 30)
+      (1): Embedding(5, 50)
+      (2): Embedding(5, 70)
+    )
+    (filterEmbed): Embedding(5, 10)
+    (aspProj): Parameter(5, 300, 10)
+  ), weights = ((5, 300, 10), (5, 30), (5, 50), (5, 70), (5, 10)), parameters = 15,800 (Trainable)
+  (VANRA_VRL): VANRA_VRL(
+    (fcLayer): Sequential(
+      (0): Dropout(p=0.9, inplace=False)
+      (1): Linear(in_features=500, out_features=50, bias=True)
+    )
+    (visProj): Parameter(500, 10)
+  ), weights = ((500, 10), (50, 500), (50,)), parameters = 30,050 (Trainable)
+  (VANRA_RatingPred): VANRA_RatingPred(
+    (uid_userOffset): Embedding(528374, 1)
+    (iid_itemOffset): Embedding(134221, 1)
+    (fcLayer1): Sequential(
+      (0): Linear(in_features=100, out_features=10, bias=True)
+      (1): ReLU()
+      (2): Dropout(p=0.9, inplace=False)
+    )
+    (globalOffset): Parameter(1,)
+  ), weights = ((1,), (528374, 1), (134221, 1), (10, 100), (10,)), parameters = 663,606 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/10] Training Loss: 269.59921	Elapsed Time: 413.50s (0:06:53)
+[Epoch 1] [Dev]  MSE: 1.30770, MAE: 0.86855
+[Epoch 1] [Test] MSE: 1.28447, MAE: 0.86200
+
+*** MODEL has obtained the best DEV MSE of 1.30770 so far!
+*** The Best MODEL saved to "./__saved_models__/Grocery_and_Gourmet_Food - VANRA/Grocery_and_Gourmet_Food_VANRA_1234.pth"
+
+[Epoch 2/10] Training Loss: 1.36707	Elapsed Time: 842.32s (0:14:02)
+[Epoch 2] [Dev]  MSE: 1.23316, MAE: 0.83112
+[Epoch 2] [Test] MSE: 1.21031, MAE: 0.82318
+
+*** MODEL has obtained the best DEV MSE of 1.23316 so far!
+*** The Best MODEL saved to "./__saved_models__/Grocery_and_Gourmet_Food - VANRA/Grocery_and_Gourmet_Food_VANRA_1234.pth"
+
+[Epoch 3/10] Training Loss: 1.23262	Elapsed Time: 1,270.45s (0:21:10)
+[Epoch 3] [Dev]  MSE: 1.22292, MAE: 0.81328
+[Epoch 3] [Test] MSE: 1.20013, MAE: 0.80486
+
+*** MODEL has obtained the best DEV MSE of 1.22292 so far!
+*** The Best MODEL saved to "./__saved_models__/Grocery_and_Gourmet_Food - VANRA/Grocery_and_Gourmet_Food_VANRA_1234.pth"
+
+[Epoch 4/10] Training Loss: 1.15470	Elapsed Time: 1,698.42s (0:28:18)
+[Epoch 4] [Dev]  MSE: 1.22471, MAE: 0.81916
+[Epoch 4] [Test] MSE: 1.20067, MAE: 0.81054
+
+[Epoch 5/10] Training Loss: 1.10412	Elapsed Time: 2,126.76s (0:35:26)
+[Epoch 5] [Dev]  MSE: 1.23066, MAE: 0.81113
+[Epoch 5] [Test] MSE: 1.20554, MAE: 0.80153
+
+[Epoch 6/10] Training Loss: 1.06930	Elapsed Time: 2,555.06s (0:42:35)
+[Epoch 6] [Dev]  MSE: 1.23775, MAE: 0.81280
+[Epoch 6] [Test] MSE: 1.21182, MAE: 0.80332
+
+[Epoch 7/10] Training Loss: 1.04404	Elapsed Time: 2,983.29s (0:49:43)
+[Epoch 7] [Dev]  MSE: 1.24430, MAE: 0.81193
+[Epoch 7] [Test] MSE: 1.21760, MAE: 0.80199
+
+[Epoch 8/10] Training Loss: 1.02545	Elapsed Time: 3,411.37s (0:56:51)
+[Epoch 8] [Dev]  MSE: 1.24744, MAE: 0.81936
+[Epoch 8] [Test] MSE: 1.22109, MAE: 0.80960
+
+[Epoch 9/10] Training Loss: 1.01119	Elapsed Time: 3,839.44s (1:03:59)
+[Epoch 9] [Dev]  MSE: 1.25309, MAE: 0.81137
+[Epoch 9] [Test] MSE: 1.22483, MAE: 0.80089
+
+[Epoch 10/10] Training Loss: 1.00048	Elapsed Time: 4,267.36s (1:11:07)
+[Epoch 10] [Dev]  MSE: 1.25511, MAE: 0.81575
+[Epoch 10] [Test] MSE: 1.22700, MAE: 0.80534
+*** The Last MODEL saved to "./__saved_models__/Grocery_and_Gourmet_Food - VANRA/Grocery_and_Gourmet_Food_VANRA_1234_10.pth"
+
+[Training Loss]
+[269.59921, 1.36707, 1.23262, 1.1547, 1.10412, 1.0693, 1.04404, 1.02545, 1.01119, 1.00048]
+
+[Dev MSE]
+[1.3077, 1.23316, 1.22292, 1.22471, 1.23066, 1.23775, 1.2443, 1.24744, 1.25309, 1.25511]
+[Test MSE]
+[1.28447, 1.21031, 1.20013, 1.20067, 1.20554, 1.21182, 1.2176, 1.22109, 1.22483, 1.227]
+[Test MAE]
+[0.862, 0.82318, 0.80486, 0.81054, 0.80153, 0.80332, 0.80199, 0.8096, 0.80089, 0.80534]
+
+
+Best Dev MSE: 1.22292 (Obtained during Evaluation #3)
+Test MSE: 1.20013, Test MAE: 0.80486
+
+End of Program! Elapsed Time: 4,342.76s (1:12:22)

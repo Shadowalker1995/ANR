@@ -5,9 +5,10 @@ import torch.nn.functional as F
 from .utilities import PAD_idx, UNK_idx
 
 from .MSANR_ARL import MSANR_ARL
-from .VANRA_VRL3 import VANRA_VRL
+from .VANRA_VRL4 import VANRA_VRL
 
-from .VANRA_RatingPred import VANRA_RatingPred
+# from .VANRA_RatingPred import VANRA_RatingPred
+from .VANRA_RatingPred_fc import VANRA_RatingPred
 
 from tqdm import tqdm
 

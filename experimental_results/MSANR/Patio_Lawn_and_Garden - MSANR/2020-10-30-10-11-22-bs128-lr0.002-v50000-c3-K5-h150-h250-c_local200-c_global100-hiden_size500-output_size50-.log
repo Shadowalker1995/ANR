@@ -1,0 +1,119 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  channels_global: 100
+  channels_local: 200
+  command: -d Patio_Lawn_and_Garden -m MSANR -e 10 -dr 0.9 -WED 300 -p 1 -v 50000 -K 5 -h1 50 -h2 50 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm Patio_Lawn_and_Garden_MSANR
+  ctx_win_size: 3
+  dataset: Patio_Lawn_and_Garden
+  disable_initial_eval: 0
+  dropout_rate: 0.9
+  epochs: 10
+  filters_num: 100
+  gpu: 0
+  h1: 50
+  h2: 50
+  hidden_size: 500
+  input_dir: ./datasets/Patio_Lawn_and_Garden/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: MSANR
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Patio_Lawn_and_Garden - MSANR/
+  output_size: 50
+  pretrained_src: 1
+  random_seed: 1234
+  save_model: Patio_Lawn_and_Garden_MSANR
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 584,107, # of Items: 95,030
+
+Creating model (Selected Model: MSANR)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 4.10s (0.07 minute)
+
+Loading uid_userDoc from "./datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (584107, 500)]
+
+Loading iid_itemDoc from "./datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (95030, 500)]
+
+Loading pretrained word embeddings from "./datasets/Patio_Lawn_and_Garden/Patio_Lawn_and_Garden_wed300_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (50002, 300)]
+
+Initialization Complete.. Elapsed Time: 27.37s (0.46 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 775,805, |DEV|: 34,584, |TEST|: 34,718
+Train/Dev/Test splits loaded! Elapsed Time: 27.71s (0.46 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 18.82070, MAE: 4.14351
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 18.68259, MAE: 4.12460
+
+Initial Evaluation Complete.. Elapsed Time: 53.65s (0.89 minute)
+
+Parameters with L2 Regularization (Regularization Strength: 1e-06):
+MSANR_RatingPred.uid_userOffset.weight, MSANR_RatingPred.iid_itemOffset.weight
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 355,327,238
+# of Trainable Parameters: 758,138
+MSANR (
+  (uid_userDoc): Embedding(584107, 500), weights = ((584107, 500),), parameters = 292,053,500
+  (iid_itemDoc): Embedding(95030, 500), weights = ((95030, 500),), parameters = 47,515,000
+  (wid_wEmbed): Embedding(50002, 300), weights = ((50002, 300),), parameters = 15,000,600
+  (MSANR_ARL): MSANR_ARL(
+    (aspEmbed): ModuleList(
+      (0): Embedding(5, 150)
+      (1): Embedding(5, 250)
+      (2): Embedding(5, 350)
+    )
+    (filterEmbed): Embedding(5, 50)
+    (aspProj): Parameter(5, 300, 50)
+  ), weights = ((5, 300, 50), (5, 150), (5, 250), (5, 350), (5, 50)), parameters = 79,000 (Trainable)
+  (MSANR_RatingPred): MSANR_RatingPred(
+    (userAspRepDropout): Dropout(p=0.9, inplace=False)
+    (itemAspRepDropout): Dropout(p=0.9, inplace=False)
+    (uid_userOffset): Embedding(584107, 1)
+    (iid_itemOffset): Embedding(95030, 1)
+    (globalOffset): Parameter(1,)
+  ), weights = ((1,), (584107, 1), (95030, 1)), parameters = 679,138 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/10] Training Loss: 2.52379	Elapsed Time: 752.21s (0:12:32)
+[Epoch 1] [Dev]  MSE: 1.46095, MAE: 0.99109
+[Epoch 1] [Test] MSE: 1.47254, MAE: 0.99099
+
+*** MODEL has obtained the best DEV MSE of 1.46095 so far!
+*** The Best MODEL saved to "./__saved_models__/Patio_Lawn_and_Garden - MSANR/Patio_Lawn_and_Garden_MSANR_1234.pth"
+
+[Epoch 2/10] Training Loss: 1.50511	Elapsed Time: 1,530.19s (0:25:30)
+[Epoch 2] [Dev]  MSE: 1.41188, MAE: 0.95937
+[Epoch 2] [Test] MSE: 1.42140, MAE: 0.96010
+
+*** MODEL has obtained the best DEV MSE of 1.41188 so far!
+*** The Best MODEL saved to "./__saved_models__/Patio_Lawn_and_Garden - MSANR/Patio_Lawn_and_Garden_MSANR_1234.pth"
+
+[Epoch 3/10] Training Loss: 1.42862	Elapsed Time: 2,308.48s (0:38:28)
+[Epoch 3] [Dev]  MSE: 1.38327, MAE: 0.92084
+[Epoch 3] [Test] MSE: 1.39490, MAE: 0.92336
+
+*** MODEL has obtained the best DEV MSE of 1.38327 so far!
+*** The Best MODEL saved to "./__saved_models__/Patio_Lawn_and_Garden - MSANR/Patio_Lawn_and_Garden_MSANR_1234.pth"
+
+[Epoch 4/10] Training Loss: 1.31363	Elapsed Time: 3,086.00s (0:51:26)
+[Epoch 4] [Dev]  MSE: 1.38606, MAE: 0.92986
+[Epoch 4] [Test] MSE: 1.39501, MAE: 0.93193

@@ -1,0 +1,164 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  channels_global: 100
+  channels_local: 200
+  command: -d Beauty -m MSANR -e 10 -dr 0.9 -WED 300 -p 1 -v 50000 -K 5 -h1 50 -h2 50 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm Beauty_MSANR
+  ctx_win_size: 3
+  dataset: Beauty
+  disable_initial_eval: 0
+  dropout_rate: 0.9
+  epochs: 10
+  filters_num: 100
+  gpu: 0
+  h1: 50
+  h2: 50
+  hidden_size: 500
+  input_dir: ./datasets/Beauty/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: MSANR
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Beauty - MSANR/
+  output_size: 50
+  pretrained_src: 1
+  random_seed: 1234
+  save_model: Beauty_MSANR
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 588,069, # of Items: 161,739
+
+Creating model (Selected Model: MSANR)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 4.34s (0.07 minute)
+
+Loading uid_userDoc from "./datasets/Beauty/Beauty_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (588069, 500)]
+
+Loading iid_itemDoc from "./datasets/Beauty/Beauty_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (161739, 500)]
+
+Loading pretrained word embeddings from "./datasets/Beauty/Beauty_wed300_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (50002, 300)]
+
+Initialization Complete.. Elapsed Time: 34.87s (0.58 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 800,000, |DEV|: 35,826, |TEST|: 35,569
+Train/Dev/Test splits loaded! Elapsed Time: 35.50s (0.59 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 19.07656, MAE: 4.19140
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 19.13332, MAE: 4.20099
+
+Initial Evaluation Complete.. Elapsed Time: 73.51s (1.23 minutes)
+
+Parameters with L2 Regularization (Regularization Strength: 1e-06):
+MSANR_RatingPred.uid_userOffset.weight, MSANR_RatingPred.iid_itemOffset.weight
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 390,735,659
+# of Trainable Parameters: 831,059
+MSANR (
+  (uid_userDoc): Embedding(588069, 500), weights = ((588069, 500),), parameters = 294,034,500
+  (iid_itemDoc): Embedding(161739, 500), weights = ((161739, 500),), parameters = 80,869,500
+  (wid_wEmbed): Embedding(50002, 300), weights = ((50002, 300),), parameters = 15,000,600
+  (MSANR_ARL): MSANR_ARL(
+    (aspEmbed): ModuleList(
+      (0): Embedding(5, 150)
+      (1): Embedding(5, 250)
+      (2): Embedding(5, 350)
+      (3): Embedding(5, 450)
+    )
+    (filterEmbed): Embedding(5, 50)
+    (aspProj): Parameter(5, 300, 50)
+  ), weights = ((5, 300, 50), (5, 150), (5, 250), (5, 350), (5, 450), (5, 50)), parameters = 81,250 (Trainable)
+  (MSANR_RatingPred): MSANR_RatingPred(
+    (userAspRepDropout): Dropout(p=0.9, inplace=False)
+    (itemAspRepDropout): Dropout(p=0.9, inplace=False)
+    (uid_userOffset): Embedding(588069, 1)
+    (iid_itemOffset): Embedding(161739, 1)
+    (globalOffset): Parameter(1,)
+  ), weights = ((1,), (588069, 1), (161739, 1)), parameters = 749,809 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/10] Training Loss: 2.49663	Elapsed Time: 1,061.53s (0:17:41)
+[Epoch 1] [Dev]  MSE: 1.40199, MAE: 0.92811
+[Epoch 1] [Test] MSE: 1.37958, MAE: 0.92170
+
+*** MODEL has obtained the best DEV MSE of 1.40199 so far!
+*** The Best MODEL saved to "./__saved_models__/Beauty - MSANR/Beauty_MSANR_1234.pth"
+
+[Epoch 2/10] Training Loss: 1.43581	Elapsed Time: 2,160.24s (0:36:00)
+[Epoch 2] [Dev]  MSE: 1.38198, MAE: 0.91513
+[Epoch 2] [Test] MSE: 1.36129, MAE: 0.90955
+
+*** MODEL has obtained the best DEV MSE of 1.38198 so far!
+*** The Best MODEL saved to "./__saved_models__/Beauty - MSANR/Beauty_MSANR_1234.pth"
+
+[Epoch 3/10] Training Loss: 1.32850	Elapsed Time: 3,258.62s (0:54:18)
+[Epoch 3] [Dev]  MSE: 1.38099, MAE: 0.88924
+[Epoch 3] [Test] MSE: 1.35846, MAE: 0.88363
+
+*** MODEL has obtained the best DEV MSE of 1.38099 so far!
+*** The Best MODEL saved to "./__saved_models__/Beauty - MSANR/Beauty_MSANR_1234.pth"
+
+[Epoch 4/10] Training Loss: 1.25371	Elapsed Time: 4,356.91s (1:12:36)
+[Epoch 4] [Dev]  MSE: 1.37818, MAE: 0.90643
+[Epoch 4] [Test] MSE: 1.35781, MAE: 0.90072
+
+*** MODEL has obtained the best DEV MSE of 1.37818 so far!
+*** The Best MODEL saved to "./__saved_models__/Beauty - MSANR/Beauty_MSANR_1234.pth"
+
+[Epoch 5/10] Training Loss: 1.21376	Elapsed Time: 5,454.94s (1:30:54)
+[Epoch 5] [Dev]  MSE: 1.38487, MAE: 0.90600
+[Epoch 5] [Test] MSE: 1.36602, MAE: 0.90126
+
+[Epoch 6/10] Training Loss: 1.17846	Elapsed Time: 6,552.89s (1:49:12)
+[Epoch 6] [Dev]  MSE: 1.39108, MAE: 0.90411
+[Epoch 6] [Test] MSE: 1.37123, MAE: 0.89927
+
+[Epoch 7/10] Training Loss: 1.18918	Elapsed Time: 7,651.12s (2:07:31)
+[Epoch 7] [Dev]  MSE: 1.40226, MAE: 0.89028
+[Epoch 7] [Test] MSE: 1.38249, MAE: 0.88624
+
+[Epoch 8/10] Training Loss: 1.11515	Elapsed Time: 8,749.36s (2:25:49)
+[Epoch 8] [Dev]  MSE: 1.41416, MAE: 0.89230
+[Epoch 8] [Test] MSE: 1.39545, MAE: 0.88814
+
+[Epoch 9/10] Training Loss: 1.10849	Elapsed Time: 9,847.57s (2:44:07)
+[Epoch 9] [Dev]  MSE: 1.41078, MAE: 0.89552
+[Epoch 9] [Test] MSE: 1.39164, MAE: 0.89081
+
+[Epoch 10/10] Training Loss: 1.08595	Elapsed Time: 10,945.63s (3:02:25)
+[Epoch 10] [Dev]  MSE: 1.41176, MAE: 0.89651
+[Epoch 10] [Test] MSE: 1.39539, MAE: 0.89277
+*** The Last MODEL saved to "./__saved_models__/Beauty - MSANR/Beauty_MSANR_1234_10.pth"
+
+[Training Loss]
+[2.49663, 1.43581, 1.3285, 1.25371, 1.21376, 1.17846, 1.18918, 1.11515, 1.10849, 1.08595]
+
+[Dev MSE]
+[1.40199, 1.38198, 1.38099, 1.37818, 1.38487, 1.39108, 1.40226, 1.41416, 1.41078, 1.41176]
+[Test MSE]
+[1.37958, 1.36129, 1.35846, 1.35781, 1.36602, 1.37123, 1.38249, 1.39545, 1.39164, 1.39539]
+[Test MAE]
+[0.9217, 0.90955, 0.88363, 0.90072, 0.90126, 0.89927, 0.88624, 0.88814, 0.89081, 0.89277]
+
+
+Best Dev MSE: 1.37818 (Obtained during Evaluation #4)
+Test MSE: 1.35781, Test MAE: 0.90072
+
+End of Program! Elapsed Time: 11,055.89s (3:04:15)

@@ -6,7 +6,7 @@ from .DeepCoNN import DeepCoNN
 from .ANR import ANR
 from .DAttn3 import DAttn
 from .VANRA import VANRA
-from .DenseCNN2 import DenseCNN
+from .DenseCNN import DenseCNN
 from .MSANR import MSANR
 
 import numpy as np

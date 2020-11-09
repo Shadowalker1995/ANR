@@ -43,26 +43,24 @@ class VANRA_RatingPred(nn.Module):
 
         self.fcLayer1 = nn.Sequential(
             # bsz x (num_aspects x h1) -> bsz x h1
-            nn.Linear(self.args.num_aspects * self.args.h1, self.user_item_rep_dim),
+            nn.Linear(self.args.num_aspects * self.args.h1 + self.args.output_size, self.user_item_rep_dim),
             nn.ReLU(),
             nn.Dropout(self.args.dropout_rate),
         )
 
-        self.fcLayer2 = nn.Sequential(
-            # bsz x output_size -> bsz x h1
-            nn.Linear(self.args.output_size, self.user_item_rep_dim),
-            nn.ReLU(),
-            nn.Dropout(self.args.dropout_rate),
-        )
-
-        # bsz x (4 x h1) -> bsz x 1
-        self.prediction = nn.Linear(4 * self.user_item_rep_dim, 1)
+        # self.fcLayer2 = nn.Sequential(
+        #     # bsz x output_size -> bsz x h1
+        #     nn.Linear(self.args.output_size, self.user_item_rep_dim),
+        #     nn.ReLU(),
+        #     nn.Dropout(self.args.dropout_rate),
+        # )
+        #
+        # # bsz x (4 x h1) -> bsz x 1
+        # self.prediction = nn.Linear(4 * self.user_item_rep_dim, 1)
 
     '''
     [Input]    userAspRep:  bsz x num_aspects x h1
     [Input]    itemAspRep:  bsz x num_aspects x h1
-    [Input]    userAspImpt: bsz x num_aspects
-    [Input]    itemAspImpt: bsz x num_aspects
     [Input]    userVisAttn: bsz x output_size
     [Input]    itemVisAttn: bsz x output_size
     [Input]    batch_uid:   bsz
@@ -70,52 +68,54 @@ class VANRA_RatingPred(nn.Module):
     [Output]   rating_pred: bsz x 1
     '''
 
-    def forward(self, userAspRep, itemAspRep, userAspImpt, itemAspImpt,
+    def forward(self, userAspRep, itemAspRep,
                 userVisAttn, itemVisAttn, batch_uid, batch_iid, verbose=0):
         if verbose > 0:
             tqdm.write(
                 "\n\n**************************************** Aspect-Based Rating Predictor ****************************************")
             tqdm.write("[Input] userAspRep: {}".format(userAspRep.size()))  # bsz x num_aspects x h1
             tqdm.write("[Input] itemAspRep: {}".format(itemAspRep.size()))  # bsz x num_aspects x h1
-            tqdm.write("[Input] userAspImpt: {}".format(userAspImpt.size()))  # bsz x num_aspects
-            tqdm.write("[Input] itemAspImpt: {}".format(itemAspImpt.size()))  # bsz x num_aspects
             tqdm.write("[Input] userVisAttn: {}".format(userVisAttn.size()))  # bsz x output_size
             tqdm.write("[Input] itemVisAttn: {}".format(itemVisAttn.size()))  # bsz x output_size
             tqdm.write("[Input] batch_uid:  {}".format(batch_uid.size()))  # bsz
             tqdm.write("[Input] batch_iid:  {}".format(batch_iid.size()))  # bsz
 
-        userAspImpt = userAspImpt.unsqueeze(2)  # bsz x num_aspects x 1
-        itemAspImpt = itemAspImpt.unsqueeze(2)  # bsz x num_aspects x 1
-
-        userAspRep = torch.mul(userAspRep, userAspImpt)  # bsz x num_aspects x h1
-        itemAspRep = torch.mul(itemAspRep, itemAspImpt)  # bsz x num_aspects x h1
-
         # Concatenate all aspect-level representations into a single vector
         userAspRep = userAspRep.view(-1, self.args.num_aspects * self.args.h1)  # bsz x (num_aspects x h1)
         itemAspRep = itemAspRep.view(-1, self.args.num_aspects * self.args.h1)  # bsz x (num_aspects x h1)
+
+        # bsz x (num_aspects x h1 + output_size)
+        user_out = torch.cat((userAspRep, userVisAttn), 1)
+        item_out = torch.cat((itemAspRep, itemVisAttn), 1)
+
+        # userAspRep = self.fcLayer1(userAspRep)  # bsz x h1
+        # itemAspRep = self.fcLayer1(itemAspRep)  # bsz x h1
+        #
+        # userVisAttn = self.fcLayer2(userVisAttn)  # bsz x h1
+        # itemVisAttn = self.fcLayer2(itemVisAttn)  # bsz x h1
+        #
+        # # Concatenate the user & item representations for prediction
+        # userItemRep = torch.cat((userAspRep, itemAspRep, userVisAttn, itemVisAttn), 1)  # bsz x (h1 x 4)
         # if verbose > 0:
-        #     tqdm.write("\n[Concatenated] concatUserRep: {}".format(concatUserRep.size()))
-        #     tqdm.write("[Concatenated] concatItemRep: {}".format(concatItemRep.size()))
+        #     tqdm.write("\n[Input to Final Prediction Layer] userItemRep: {}".format(userItemRep.size()))
 
-        userAspRep = self.fcLayer1(userAspRep)  # bsz x h1
-        itemAspRep = self.fcLayer1(itemAspRep)  # bsz x h1
+        user_out = self.fcLayer1(user_out)  # bsz x h1
+        item_out = self.fcLayer1(item_out)  # bsz x h1
 
-        userVisAttn = self.fcLayer2(userVisAttn)  # bsz x h1
-        itemVisAttn = self.fcLayer2(itemVisAttn)  # bsz x h1
-
-        # Concatenate the user & item representations for prediction
-        userItemRep = torch.cat((userAspRep, itemAspRep, userVisAttn, itemVisAttn), 1)  # bsz x (h1 x 4)
+        # userVisAttn: bsz x output_size
+        Rating = torch.sum(torch.mul(user_out, item_out), 1, keepdim=True)
         if verbose > 0:
-            tqdm.write("\n[Input to Final Prediction Layer] userItemRep: {}".format(userItemRep.size()))
-        rating_pred = self.prediction(userItemRep)  # bsz x 1
+            tqdm.write("\n\tVisRating: {}".format(Rating.size()))  # bsz x 1
+
+        rating_pred = Rating
         if verbose > 0:
-            tqdm.write("\nrating_pred: {} ('Raw' Ratings)".format(rating_pred.size()))
+            tqdm.write("rating_pred: {} (Include Visual Rating Predict)".format(rating_pred.size()))  # bsz x 1
 
         # User & Item Bias
         batch_userOffset = self.uid_userOffset(batch_uid)
         batch_itemOffset = self.iid_itemOffset(batch_iid)
 
-        # Include User Bias & Item Bias
+        # Include User & Item Doc Bias
         rating_pred = rating_pred + batch_userOffset + batch_itemOffset  # bsz x 1
         if verbose > 0:
             tqdm.write("rating_pred: {} (Include User & Item Bias)".format(rating_pred.size()))

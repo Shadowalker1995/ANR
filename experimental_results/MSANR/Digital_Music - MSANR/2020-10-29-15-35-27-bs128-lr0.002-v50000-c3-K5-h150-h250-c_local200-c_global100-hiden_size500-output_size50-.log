@@ -1,0 +1,166 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  channels_global: 100
+  channels_local: 200
+  command: -d Digital_Music -m MSANR -e 10 -dr 0.9 -WED 300 -p 1 -v 50000 -K 5 -h1 50 -h2 50 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm Digital_Music_MSANR
+  ctx_win_size: 3
+  dataset: Digital_Music
+  disable_initial_eval: 0
+  dropout_rate: 0.9
+  epochs: 10
+  filters_num: 100
+  gpu: 0
+  h1: 50
+  h2: 50
+  hidden_size: 500
+  input_dir: ./datasets/Digital_Music/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: MSANR
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Digital_Music - MSANR/
+  output_size: 50
+  pretrained_src: 1
+  random_seed: 1234
+  save_model: Digital_Music_MSANR
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 397,514, # of Items: 223,577
+
+Creating model (Selected Model: MSANR)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 3.88s (0.06 minute)
+
+Loading uid_userDoc from "./datasets/Digital_Music/Digital_Music_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (397514, 500)]
+
+Loading iid_itemDoc from "./datasets/Digital_Music/Digital_Music_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (223577, 500)]
+
+Loading pretrained word embeddings from "./datasets/Digital_Music/Digital_Music_wed300_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (50002, 300)]
+
+Initialization Complete.. Elapsed Time: 20.77s (0.35 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 656,657, |DEV|: 31,464, |TEST|: 31,775
+Train/Dev/Test splits loaded! Elapsed Time: 20.97s (0.35 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 21.05270, MAE: 4.48786
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 21.06238, MAE: 4.48790
+
+Initial Evaluation Complete.. Elapsed Time: 45.25s (0.75 minute)
+
+Parameters with L2 Regularization (Regularization Strength: 1e-06):
+MSANR_RatingPred.uid_userOffset.weight, MSANR_RatingPred.iid_itemOffset.weight
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 326,246,192
+# of Trainable Parameters: 700,092
+MSANR (
+  (uid_userDoc): Embedding(397514, 500), weights = ((397514, 500),), parameters = 198,757,000
+  (iid_itemDoc): Embedding(223577, 500), weights = ((223577, 500),), parameters = 111,788,500
+  (wid_wEmbed): Embedding(50002, 300), weights = ((50002, 300),), parameters = 15,000,600
+  (MSANR_ARL): MSANR_ARL(
+    (aspEmbed): ModuleList(
+      (0): Embedding(5, 150)
+      (1): Embedding(5, 250)
+      (2): Embedding(5, 350)
+    )
+    (filterEmbed): Embedding(5, 50)
+    (aspProj): Parameter(5, 300, 50)
+  ), weights = ((5, 300, 50), (5, 150), (5, 250), (5, 350), (5, 50)), parameters = 79,000 (Trainable)
+  (MSANR_RatingPred): MSANR_RatingPred(
+    (userAspRepDropout): Dropout(p=0.9, inplace=False)
+    (itemAspRepDropout): Dropout(p=0.9, inplace=False)
+    (uid_userOffset): Embedding(397514, 1)
+    (iid_itemOffset): Embedding(223577, 1)
+    (globalOffset): Parameter(1,)
+  ), weights = ((1,), (397514, 1), (223577, 1)), parameters = 621,092 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/10] Training Loss: 2.30051	Elapsed Time: 629.25s (0:10:29)
+[Epoch 1] [Dev]  MSE: 0.77269, MAE: 0.61697
+[Epoch 1] [Test] MSE: 0.77973, MAE: 0.61585
+
+*** MODEL has obtained the best DEV MSE of 0.77269 so far!
+*** The Best MODEL saved to "./__saved_models__/Digital_Music - MSANR/Digital_Music_MSANR_1234.pth"
+
+[Epoch 2/10] Training Loss: 0.74510	Elapsed Time: 1,282.41s (0:21:22)
+[Epoch 2] [Dev]  MSE: 0.72282, MAE: 0.56857
+[Epoch 2] [Test] MSE: 0.72699, MAE: 0.56711
+
+*** MODEL has obtained the best DEV MSE of 0.72282 so far!
+*** The Best MODEL saved to "./__saved_models__/Digital_Music - MSANR/Digital_Music_MSANR_1234.pth"
+
+[Epoch 3/10] Training Loss: 0.67137	Elapsed Time: 1,935.59s (0:32:15)
+[Epoch 3] [Dev]  MSE: 0.70640, MAE: 0.55399
+[Epoch 3] [Test] MSE: 0.70738, MAE: 0.55165
+
+*** MODEL has obtained the best DEV MSE of 0.70640 so far!
+*** The Best MODEL saved to "./__saved_models__/Digital_Music - MSANR/Digital_Music_MSANR_1234.pth"
+
+[Epoch 4/10] Training Loss: 3.16789	Elapsed Time: 2,588.76s (0:43:08)
+[Epoch 4] [Dev]  MSE: 0.70508, MAE: 0.54599
+[Epoch 4] [Test] MSE: 0.70388, MAE: 0.54269
+
+*** MODEL has obtained the best DEV MSE of 0.70508 so far!
+*** The Best MODEL saved to "./__saved_models__/Digital_Music - MSANR/Digital_Music_MSANR_1234.pth"
+
+[Epoch 5/10] Training Loss: 0.59013	Elapsed Time: 3,242.26s (0:54:02)
+[Epoch 5] [Dev]  MSE: 0.70042, MAE: 0.54567
+[Epoch 5] [Test] MSE: 0.69929, MAE: 0.54291
+
+*** MODEL has obtained the best DEV MSE of 0.70042 so far!
+*** The Best MODEL saved to "./__saved_models__/Digital_Music - MSANR/Digital_Music_MSANR_1234.pth"
+
+[Epoch 6/10] Training Loss: 0.55552	Elapsed Time: 3,895.36s (1:04:55)
+[Epoch 6] [Dev]  MSE: 0.70248, MAE: 0.54503
+[Epoch 6] [Test] MSE: 0.70075, MAE: 0.54222
+
+[Epoch 7/10] Training Loss: 0.62499	Elapsed Time: 4,548.45s (1:15:48)
+[Epoch 7] [Dev]  MSE: 0.70069, MAE: 0.54693
+[Epoch 7] [Test] MSE: 0.69888, MAE: 0.54492
+
+[Epoch 8/10] Training Loss: 1646.72468	Elapsed Time: 5,204.10s (1:26:44)
+[Epoch 8] [Dev]  MSE: 1.09924, MAE: 0.58682
+[Epoch 8] [Test] MSE: 1.28175, MAE: 0.58800
+
+[Epoch 9/10] Training Loss: 301.79664	Elapsed Time: 5,862.24s (1:37:42)
+[Epoch 9] [Dev]  MSE: 0.71827, MAE: 0.55252
+[Epoch 9] [Test] MSE: 0.71989, MAE: 0.55032
+
+[Epoch 10/10] Training Loss: 1119.99509	Elapsed Time: 6,520.31s (1:48:40)
+[Epoch 10] [Dev]  MSE: 0.70632, MAE: 0.55513
+[Epoch 10] [Test] MSE: 0.70324, MAE: 0.55204
+*** The Last MODEL saved to "./__saved_models__/Digital_Music - MSANR/Digital_Music_MSANR_1234_10.pth"
+
+[Training Loss]
+[2.30051, 0.7451, 0.67137, 3.16789, 0.59013, 0.55552, 0.62499, 1646.72468, 301.79664, 1119.99509]
+
+[Dev MSE]
+[0.77269, 0.72282, 0.7064, 0.70508, 0.70042, 0.70248, 0.70069, 1.09924, 0.71827, 0.70632]
+[Test MSE]
+[0.77973, 0.72699, 0.70738, 0.70388, 0.69929, 0.70075, 0.69888, 1.28175, 0.71989, 0.70324]
+[Test MAE]
+[0.61585, 0.56711, 0.55165, 0.54269, 0.54291, 0.54222, 0.54492, 0.588, 0.55032, 0.55204]
+
+
+Best Dev MSE: 0.70042 (Obtained during Evaluation #5)
+Test MSE: 0.69929, Test MAE: 0.54291
+
+End of Program! Elapsed Time: 6,589.11s (1:49:49)

@@ -34,8 +34,11 @@ class DenseCNN(nn.Module):
         self.wid_wEmbed = nn.Embedding(self.args.vocab_size, self.args.word_embed_dim)  # vocab_size x word_embed_dim
         self.wid_wEmbed.weight.requires_grad = False
 
-        self.user_net = DenseNet(logger, args)
-        self.item_net = DenseNet(logger, args)
+        # Word Embedding Projection Matrices
+        self.docProj = nn.Parameter(torch.Tensor(self.args.word_embed_dim, self.args.output_size), requires_grad=True)
+        self.docProj.data.uniform_(-0.01, 0.01)
+
+        self.doc_net = DenseNet(logger, args)
 
         self.DenseCNN_RatingPred = DenseCNN_RatingPred(logger, args, num_users, num_items)
 
@@ -59,8 +62,12 @@ class DenseCNN(nn.Module):
             tqdm.write("batch_userDocEmbed: {}".format(batch_userDocEmbed.size()))      # bsz x max_doc_len x word_embed_dim
             tqdm.write("batch_itemDocEmbed: {}".format(batch_itemDocEmbed.size()))      # bsz x max_doc_len x word_embed_dim
 
-        batch_userFea = self.user_net(batch_userDocEmbed)
-        batch_itemFea = self.item_net(batch_itemDocEmbed)
+        # (bsz x max_doc_len x word_embed_dim) x (word_embed_dim x output_size) -> bsz x max_doc_len x output_size
+        batch_userDocEmbed = torch.matmul(batch_userDocEmbed, self.docProj)
+        batch_itemDocEmbed = torch.matmul(batch_itemDocEmbed, self.docProj)
+
+        batch_userFea = self.doc_net(batch_userDocEmbed)
+        batch_itemFea = self.doc_net(batch_itemDocEmbed)
 
         # bsz x 1
         rating_pred = self.DenseCNN_RatingPred(batch_userFea, batch_itemFea, batch_uid, batch_iid, verbose=verbose)
@@ -76,12 +83,7 @@ class DenseNet(nn.Module):
 
         if filters_size is None:
             filters_size = [3, 5, 7, 9]
-
-        # ========== new ==========
-        # Word Embedding Projection Matrices
-        self.wedProj = nn.Parameter(torch.Tensor(self.args.word_embed_dim, self.args.output_size), requires_grad=True)
-        self.wedProj.data.uniform_(-0.01, 0.01)
-        # ========== new ==========
+            # filters_size = [3]
 
         self.local_attention = nn.ModuleList([nn.Sequential(
             # bsz x 1 x max_doc_len x output_size -> bsz x 1 x max_doc_len x 1
@@ -89,10 +91,6 @@ class DenseNet(nn.Module):
             # bsz x 1 x max_doc_len x 1
             nn.Softmax(dim=2),
         ) for k in filters_size])
-
-        self.global_attention = nn.Sequential(
-            # bsz x 1 x max_doc_len x output_size -> bsz x 1 x 1 x output_size
-            nn.Conv2d(1, 1, kernel_size=(args.max_doc_len, 1)))
 
         # bsz x 1 x filters_num x output_size -> bsz x 1 x filters_num x 1
         self.scale_attention = nn.Sequential(
@@ -111,15 +109,10 @@ class DenseNet(nn.Module):
         nn.init.uniform_(self.scale_attention[0].bias, -0.1, 0.1)
 
     '''
-    [Input]     x:      bsz x max_doc_len x word_embed_dim
+    [Input]     x:      bsz x max_doc_len x output_size
     [Output]    out:    bsz x output_size
     '''
     def forward(self, batch_DocEmbed):
-        # ========== new ===========
-        # (bsz x max_doc_len x word_embed_dim) x (word_embed_dim x output_size) -> bsz x max_doc_len x output_size
-        batch_DocEmbed = torch.matmul(batch_DocEmbed, self.wedProj)
-        # ========== new ===========
-
         # [bsz x max_doc_len x output_size] -> [bsz x 1 x max_doc_len x output_size]
         # [bsz x 1 x max_doc_len x output_size] -> [bsz x 1 x max_doc_len x 1]
         # [bsz x 1 x max_doc_len x 1] -> [bsz x max_doc_len x 1]
@@ -131,19 +124,15 @@ class DenseNet(nn.Module):
 
         local_feas = [self.dropout(local_fea) for local_fea in local_feas]
 
-        # bsz x max_doc_len x output_size -> bsz x 1 x max_doc_len x output_size
-        # bsz x 1 x max_doc_len x output_size -> bsz x 1 x 1 x output_size
-        # bsz x 1 x 1 x output_size -> bsz x output_size
-        global_fea = self.global_attention(batch_DocEmbed.unsqueeze(1)).squeeze()
-        global_fea = self.dropout(global_fea)
-
         # bsz x filters_num x output_size
-        feas = torch.stack(local_feas+[global_fea], dim=1)
+        # feas = torch.stack(local_feas+[global_fea], dim=1)
+        feas = torch.stack(local_feas, dim=1)
 
         # bsz x filters_num x output_size -> bsz x 1 x filters_num x output_size
         # bsz x 1 x filters_num x output_size -> bsz x 1 x filters_num x 1
         # bsz x 1 x filters_num x 1 -> bsz x filters_num x 1
         scale_score = self.scale_attention(feas.unsqueeze(1)).squeeze(1)
+        print(scale_score[0])
         # bsz x filters_num x output_size * bsz x filters_num x 1 -> bsz x filters_num x output_size
         # bsz x filters_num x output_size -> bsz x output_size
         fea = torch.sum(torch.mul(feas, scale_score), dim=1)

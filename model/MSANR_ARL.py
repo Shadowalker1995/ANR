@@ -18,7 +18,7 @@ class MSANR_ARL(nn.Module):
         self.logger = logger
         self.args = args
 
-        self.ctx_win_size = [3, 5, 7, 9]
+        self.ctx_win_size = [3, 5, 7]
         # self.ctx_win_size = [3]
 
         # num_aspects x (ctx_win_size x h1)

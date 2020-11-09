@@ -58,21 +58,23 @@ class MSANR_RatingPred(nn.Module):
             tqdm.write("\nbatch_userOffset: {}".format(batch_userOffset.size()))    # bsz x 1
             tqdm.write("batch_itemOffset: {}".format(batch_itemOffset.size()))      # bsz x 1
 
-        # =========== Dropout for the User & Item Aspect-Based Representations ===========
+        # Dropout for the User & Item Aspect-Based Representations
         if self.args.dropout_rate > 0.0:
             userAspRep = self.userAspRepDropout(userAspRep)
             itemAspRep = self.itemAspRepDropout(itemAspRep)
-
             if verbose > 0:
                 tqdm.write("\n[After Dropout (Dropout Rate of {:.1f})] userAspRep: {}".format(self.args.dropout_rate, userAspRep.size()))
                 tqdm.write("[After Dropout (Dropout Rate of {:.1f})] itemAspRep: {}".format(self.args.dropout_rate, itemAspRep.size()))
-        # =========== Dropout for the User & Item Aspect-Based Representations ===========
 
         lstAspRating = []
 
         # (bsz x num_aspects x h1) -> (num_aspects x bsz x h1)
         userAspRep = torch.transpose(userAspRep, 0, 1)                              # num_aspects x bsz x h1
         itemAspRep = torch.transpose(itemAspRep, 0, 1)                              # num_aspects x bsz x h1
+
+        # # normalize
+        # userAspRep = F.normalize(userAspRep, p=2, dim=2)
+        # itemAspRep = F.normalize(itemAspRep, p=2, dim=2)
 
         for k in range(self.args.num_aspects):
             aspRating = torch.sum(torch.mul(userAspRep[k], itemAspRep[k]), 1, keepdim=True)
@@ -103,7 +105,7 @@ class MSANR_RatingPred(nn.Module):
 
         if verbose > 0:
             # bsz x 1
-            tqdm.write("\n[ANRS_RatingPred Output] rating_pred: {}".format(rating_pred.size()))
+            tqdm.write("\n[MSANR_RatingPred Output] rating_pred: {}".format(rating_pred.size()))
             tqdm.write(
                 "============================== =================================== ==============================\n")
 

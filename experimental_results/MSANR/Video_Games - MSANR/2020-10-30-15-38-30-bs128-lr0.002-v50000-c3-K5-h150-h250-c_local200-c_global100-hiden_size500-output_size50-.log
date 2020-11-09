@@ -1,0 +1,143 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  channels_global: 100
+  channels_local: 200
+  command: -d Video_Games -m MSANR -e 5 -dr 0.9 -WED 300 -p 1 -v 50000 -K 5 -h1 50 -h2 50 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm Video_Games_MSANR
+  ctx_win_size: 3
+  dataset: Video_Games
+  disable_initial_eval: 0
+  dropout_rate: 0.9
+  epochs: 5
+  filters_num: 100
+  gpu: 0
+  h1: 50
+  h2: 50
+  hidden_size: 500
+  input_dir: ./datasets/Video_Games/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: MSANR
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Video_Games - MSANR/
+  output_size: 50
+  pretrained_src: 1
+  random_seed: 1234
+  save_model: Video_Games_MSANR
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 540,331, # of Items: 44,636
+
+Creating model (Selected Model: MSANR)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 3.85s (0.06 minute)
+
+Loading uid_userDoc from "./datasets/Video_Games/Video_Games_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (540331, 500)]
+
+Loading iid_itemDoc from "./datasets/Video_Games/Video_Games_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (44636, 500)]
+
+Loading pretrained word embeddings from "./datasets/Video_Games/Video_Games_wed300_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (50002, 300)]
+
+Initialization Complete.. Elapsed Time: 25.07s (0.42 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 800,000, |DEV|: 45,587, |TEST|: 45,469
+Train/Dev/Test splits loaded! Elapsed Time: 25.36s (0.42 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 17.98021, MAE: 4.04321
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 18.05245, MAE: 4.05553
+
+Initial Evaluation Complete.. Elapsed Time: 59.93s (1.00 minute)
+
+Parameters with L2 Regularization (Regularization Strength: 1e-06):
+MSANR_RatingPred.uid_userOffset.weight, MSANR_RatingPred.iid_itemOffset.weight
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 308,148,068
+# of Trainable Parameters: 663,968
+MSANR (
+  (uid_userDoc): Embedding(540331, 500), weights = ((540331, 500),), parameters = 270,165,500
+  (iid_itemDoc): Embedding(44636, 500), weights = ((44636, 500),), parameters = 22,318,000
+  (wid_wEmbed): Embedding(50002, 300), weights = ((50002, 300),), parameters = 15,000,600
+  (MSANR_ARL): MSANR_ARL(
+    (aspEmbed): ModuleList(
+      (0): Embedding(5, 150)
+      (1): Embedding(5, 250)
+      (2): Embedding(5, 350)
+    )
+    (filterEmbed): Embedding(5, 50)
+    (aspProj): Parameter(5, 300, 50)
+  ), weights = ((5, 300, 50), (5, 150), (5, 250), (5, 350), (5, 50)), parameters = 79,000 (Trainable)
+  (MSANR_RatingPred): MSANR_RatingPred(
+    (userAspRepDropout): Dropout(p=0.9, inplace=False)
+    (itemAspRepDropout): Dropout(p=0.9, inplace=False)
+    (uid_userOffset): Embedding(540331, 1)
+    (iid_itemOffset): Embedding(44636, 1)
+    (globalOffset): Parameter(1,)
+  ), weights = ((1,), (540331, 1), (44636, 1)), parameters = 584,968 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/5] Training Loss: 2.41639	Elapsed Time: 767.25s (0:12:47)
+[Epoch 1] [Dev]  MSE: 1.36972, MAE: 0.89998
+[Epoch 1] [Test] MSE: 1.32984, MAE: 0.88753
+
+*** MODEL has obtained the best DEV MSE of 1.36972 so far!
+*** The Best MODEL saved to "./__saved_models__/Video_Games - MSANR/Video_Games_MSANR_1234.pth"
+
+[Epoch 2/5] Training Loss: 1.48098	Elapsed Time: 1,576.68s (0:26:16)
+[Epoch 2] [Dev]  MSE: 1.32509, MAE: 0.89984
+[Epoch 2] [Test] MSE: 1.28397, MAE: 0.88618
+
+*** MODEL has obtained the best DEV MSE of 1.32509 so far!
+*** The Best MODEL saved to "./__saved_models__/Video_Games - MSANR/Video_Games_MSANR_1234.pth"
+
+[Epoch 3/5] Training Loss: 1.36875	Elapsed Time: 2,386.14s (0:39:46)
+[Epoch 3] [Dev]  MSE: 1.31232, MAE: 0.89320
+[Epoch 3] [Test] MSE: 1.26794, MAE: 0.87805
+
+*** MODEL has obtained the best DEV MSE of 1.31232 so far!
+*** The Best MODEL saved to "./__saved_models__/Video_Games - MSANR/Video_Games_MSANR_1234.pth"
+
+[Epoch 4/5] Training Loss: 1.31225	Elapsed Time: 3,194.35s (0:53:14)
+[Epoch 4] [Dev]  MSE: 1.30980, MAE: 0.88289
+[Epoch 4] [Test] MSE: 1.26441, MAE: 0.86799
+
+*** MODEL has obtained the best DEV MSE of 1.30980 so far!
+*** The Best MODEL saved to "./__saved_models__/Video_Games - MSANR/Video_Games_MSANR_1234.pth"
+
+[Epoch 5/5] Training Loss: 1.25675	Elapsed Time: 4,002.65s (1:06:42)
+[Epoch 5] [Dev]  MSE: 1.31120, MAE: 0.89083
+[Epoch 5] [Test] MSE: 1.26643, MAE: 0.87636
+*** The Last MODEL saved to "./__saved_models__/Video_Games - MSANR/Video_Games_MSANR_1234_5.pth"
+
+[Training Loss]
+[2.41639, 1.48098, 1.36875, 1.31225, 1.25675]
+
+[Dev MSE]
+[1.36972, 1.32509, 1.31232, 1.3098, 1.3112]
+[Test MSE]
+[1.32984, 1.28397, 1.26794, 1.26441, 1.26643]
+[Test MAE]
+[0.88753, 0.88618, 0.87805, 0.86799, 0.87636]
+
+
+Best Dev MSE: 1.30980 (Obtained during Evaluation #4)
+Test MSE: 1.26441, Test MAE: 0.86799
+
+End of Program! Elapsed Time: 4,096.71s (1:08:16)

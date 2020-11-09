@@ -1,0 +1,181 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  channels_global: 100
+  channels_local: 200
+  command: -d Toys_and_Games -m VANRA -e 10 -dr 0.9 -WED 300 -p 1 -v 50000 -K 5 -h1 10 -h2 50 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm Toys_and_Games_VANRA
+  ctx_win_size: 3
+  dataset: Toys_and_Games
+  disable_initial_eval: 0
+  dropout_rate: 0.9
+  epochs: 10
+  filters_num: 100
+  gpu: 0
+  h1: 10
+  h2: 50
+  hidden_size: 500
+  input_dir: ./datasets/Toys_and_Games/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: VANRA
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Toys_and_Games - VANRA/
+  output_size: 50
+  pretrained_src: 1
+  random_seed: 1234
+  save_model: Toys_and_Games_VANRA
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 598,485, # of Items: 197,223
+
+Creating model (Selected Model: VANRA)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 7.63s (0.13 minute)
+
+Loading uid_userDoc from "./datasets/Toys_and_Games/Toys_and_Games_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (598485, 500)]
+
+Loading iid_itemDoc from "./datasets/Toys_and_Games/Toys_and_Games_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (197223, 500)]
+
+Loading pretrained word embeddings from "./datasets/Toys_and_Games/Toys_and_Games_wed300_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (50002, 300)]
+
+Loading uid_userVis from "./datasets/Toys_and_Games/Toys_and_Games_uid_userVis.npy"..
+uid_userVis loaded! [uid_userVis: (598485, 500)]
+
+Loading iid_itemVis from "./datasets/Toys_and_Games/Toys_and_Games_iid_itemVis.npy"..
+iid_itemVis loaded! [iid_itemVis: (197223, 500)]
+
+Initialization Complete.. Elapsed Time: 61.66s (1.03 minutes)
+
+Train/Dev/Test splits loaded! |TRAIN|: 800,000, |DEV|: 32,587, |TEST|: 32,299
+Train/Dev/Test splits loaded! Elapsed Time: 61.95s (1.03 minutes)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 14.18023, MAE: 3.31393
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 14.05317, MAE: 3.31235
+
+Initial Evaluation Complete.. Elapsed Time: 74.05s (1.23 minutes)
+
+Parameters with L2 Regularization (Regularization Strength: 1e-06):
+VANRA_RatingPred.uid_userOffset.weight, VANRA_RatingPred.iid_itemOffset.weight
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 811,551,169
+# of Trainable Parameters: 842,569
+VANRA (
+  (uid_userDoc): Embedding(598485, 500), weights = ((598485, 500),), parameters = 299,242,500
+  (iid_itemDoc): Embedding(197223, 500), weights = ((197223, 500),), parameters = 98,611,500
+  (wid_wEmbed): Embedding(50002, 300), weights = ((50002, 300),), parameters = 15,000,600
+  (uid_userVis): Embedding(598485, 500), weights = ((598485, 500),), parameters = 299,242,500
+  (iid_itemVis): Embedding(197223, 500), weights = ((197223, 500),), parameters = 98,611,500
+  (MSANR_ARL): MSANR_ARL(
+    (aspEmbed): ModuleList(
+      (0): Embedding(5, 30)
+      (1): Embedding(5, 50)
+      (2): Embedding(5, 70)
+    )
+    (filterEmbed): Embedding(5, 10)
+    (aspProj): Parameter(5, 300, 10)
+  ), weights = ((5, 300, 10), (5, 30), (5, 50), (5, 70), (5, 10)), parameters = 15,800 (Trainable)
+  (VANRA_VRL): VANRA_VRL(
+    (fcLayer): Sequential(
+      (0): Dropout(p=0.9, inplace=False)
+      (1): Linear(in_features=500, out_features=50, bias=True)
+    )
+    (visProj): Parameter(500, 10)
+  ), weights = ((500, 10), (50, 500), (50,)), parameters = 30,050 (Trainable)
+  (VANRA_RatingPred): VANRA_RatingPred(
+    (uid_userOffset): Embedding(598485, 1)
+    (iid_itemOffset): Embedding(197223, 1)
+    (fcLayer1): Sequential(
+      (0): Linear(in_features=100, out_features=10, bias=True)
+      (1): ReLU()
+      (2): Dropout(p=0.9, inplace=False)
+    )
+    (globalOffset): Parameter(1,)
+  ), weights = ((1,), (598485, 1), (197223, 1), (10, 100), (10,)), parameters = 796,719 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/10] Training Loss: 334.08674	Elapsed Time: 414.10s (0:06:54)
+[Epoch 1] [Dev]  MSE: 1.13007, MAE: 0.83655
+[Epoch 1] [Test] MSE: 1.15661, MAE: 0.84233
+
+*** MODEL has obtained the best DEV MSE of 1.13007 so far!
+*** The Best MODEL saved to "./__saved_models__/Toys_and_Games - VANRA/Toys_and_Games_VANRA_1234.pth"
+
+[Epoch 2/10] Training Loss: 1.37443	Elapsed Time: 840.52s (0:14:00)
+[Epoch 2] [Dev]  MSE: 1.05118, MAE: 0.80098
+[Epoch 2] [Test] MSE: 1.07587, MAE: 0.80694
+
+*** MODEL has obtained the best DEV MSE of 1.05118 so far!
+*** The Best MODEL saved to "./__saved_models__/Toys_and_Games - VANRA/Toys_and_Games_VANRA_1234.pth"
+
+[Epoch 3/10] Training Loss: 1.21076	Elapsed Time: 1,267.10s (0:21:07)
+[Epoch 3] [Dev]  MSE: 1.02459, MAE: 0.77352
+[Epoch 3] [Test] MSE: 1.04762, MAE: 0.77924
+
+*** MODEL has obtained the best DEV MSE of 1.02459 so far!
+*** The Best MODEL saved to "./__saved_models__/Toys_and_Games - VANRA/Toys_and_Games_VANRA_1234.pth"
+
+[Epoch 4/10] Training Loss: 1.11298	Elapsed Time: 1,693.61s (0:28:13)
+[Epoch 4] [Dev]  MSE: 1.01989, MAE: 0.76510
+[Epoch 4] [Test] MSE: 1.04116, MAE: 0.77060
+
+*** MODEL has obtained the best DEV MSE of 1.01989 so far!
+*** The Best MODEL saved to "./__saved_models__/Toys_and_Games - VANRA/Toys_and_Games_VANRA_1234.pth"
+
+[Epoch 5/10] Training Loss: 1.05010	Elapsed Time: 2,119.77s (0:35:19)
+[Epoch 5] [Dev]  MSE: 1.02011, MAE: 0.75866
+[Epoch 5] [Test] MSE: 1.04223, MAE: 0.76490
+
+[Epoch 6/10] Training Loss: 1.00724	Elapsed Time: 2,546.07s (0:42:26)
+[Epoch 6] [Dev]  MSE: 1.02460, MAE: 0.75650
+[Epoch 6] [Test] MSE: 1.04618, MAE: 0.76268
+
+[Epoch 7/10] Training Loss: 0.97751	Elapsed Time: 2,972.44s (0:49:32)
+[Epoch 7] [Dev]  MSE: 1.02756, MAE: 0.75854
+[Epoch 7] [Test] MSE: 1.05049, MAE: 0.76497
+
+[Epoch 8/10] Training Loss: 0.96369	Elapsed Time: 3,398.58s (0:56:38)
+[Epoch 8] [Dev]  MSE: 1.03117, MAE: 0.76131
+[Epoch 8] [Test] MSE: 1.05370, MAE: 0.76690
+
+[Epoch 9/10] Training Loss: 0.93996	Elapsed Time: 3,824.91s (1:03:44)
+[Epoch 9] [Dev]  MSE: 1.03365, MAE: 0.75838
+[Epoch 9] [Test] MSE: 1.05563, MAE: 0.76409
+
+[Epoch 10/10] Training Loss: 0.92780	Elapsed Time: 4,251.16s (1:10:51)
+[Epoch 10] [Dev]  MSE: 1.03548, MAE: 0.75854
+[Epoch 10] [Test] MSE: 1.05849, MAE: 0.76451
+*** The Last MODEL saved to "./__saved_models__/Toys_and_Games - VANRA/Toys_and_Games_VANRA_1234_10.pth"
+
+[Training Loss]
+[334.08674, 1.37443, 1.21076, 1.11298, 1.0501, 1.00724, 0.97751, 0.96369, 0.93996, 0.9278]
+
+[Dev MSE]
+[1.13007, 1.05118, 1.02459, 1.01989, 1.02011, 1.0246, 1.02756, 1.03117, 1.03365, 1.03548]
+[Test MSE]
+[1.15661, 1.07587, 1.04762, 1.04116, 1.04223, 1.04618, 1.05049, 1.0537, 1.05563, 1.05849]
+[Test MAE]
+[0.84233, 0.80694, 0.77924, 0.7706, 0.7649, 0.76268, 0.76497, 0.7669, 0.76409, 0.76451]
+
+
+Best Dev MSE: 1.01989 (Obtained during Evaluation #4)
+Test MSE: 1.04116, Test MAE: 0.77060
+
+End of Program! Elapsed Time: 4,337.12s (1:12:17)

@@ -1,0 +1,184 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  channels_global: 100
+  channels_local: 200
+  command: -d Kindle_Store -m VANRA -e 10 -dr 0.9 -WED 300 -p 1 -v 50000 -K 5 -h1 10 -h2 50 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm Kindle_Store_VANRA
+  ctx_win_size: 3
+  dataset: Kindle_Store
+  disable_initial_eval: 0
+  dropout_rate: 0.9
+  epochs: 10
+  filters_num: 100
+  gpu: 0
+  h1: 10
+  h2: 50
+  hidden_size: 500
+  input_dir: ./datasets/Kindle_Store/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: VANRA
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Kindle_Store - VANRA/
+  output_size: 50
+  pretrained_src: 1
+  random_seed: 1234
+  save_model: Kindle_Store_VANRA
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 488,920, # of Items: 232,137
+
+Creating model (Selected Model: VANRA)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 7.17s (0.12 minute)
+
+Loading uid_userDoc from "./datasets/Kindle_Store/Kindle_Store_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (488920, 500)]
+
+Loading iid_itemDoc from "./datasets/Kindle_Store/Kindle_Store_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (232137, 500)]
+
+Loading pretrained word embeddings from "./datasets/Kindle_Store/Kindle_Store_wed300_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (50002, 300)]
+
+Loading uid_userVis from "./datasets/Kindle_Store/Kindle_Store_uid_userVis.npy"..
+uid_userVis loaded! [uid_userVis: (488920, 500)]
+
+Loading iid_itemVis from "./datasets/Kindle_Store/Kindle_Store_iid_itemVis.npy"..
+iid_itemVis loaded! [iid_itemVis: (232137, 500)]
+
+Initialization Complete.. Elapsed Time: 46.13s (0.77 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 800,000, |DEV|: 43,894, |TEST|: 43,882
+Train/Dev/Test splits loaded! Elapsed Time: 46.39s (0.77 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 12.20988, MAE: 3.16224
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 12.31037, MAE: 3.17251
+
+Initial Evaluation Complete.. Elapsed Time: 63.33s (1.06 minutes)
+
+Parameters with L2 Regularization (Regularization Strength: 1e-06):
+VANRA_RatingPred.uid_userOffset.weight, VANRA_RatingPred.iid_itemOffset.weight
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 736,825,518
+# of Trainable Parameters: 767,918
+VANRA (
+  (uid_userDoc): Embedding(488920, 500), weights = ((488920, 500),), parameters = 244,460,000
+  (iid_itemDoc): Embedding(232137, 500), weights = ((232137, 500),), parameters = 116,068,500
+  (wid_wEmbed): Embedding(50002, 300), weights = ((50002, 300),), parameters = 15,000,600
+  (uid_userVis): Embedding(488920, 500), weights = ((488920, 500),), parameters = 244,460,000
+  (iid_itemVis): Embedding(232137, 500), weights = ((232137, 500),), parameters = 116,068,500
+  (MSANR_ARL): MSANR_ARL(
+    (aspEmbed): ModuleList(
+      (0): Embedding(5, 30)
+      (1): Embedding(5, 50)
+      (2): Embedding(5, 70)
+    )
+    (filterEmbed): Embedding(5, 10)
+    (aspProj): Parameter(5, 300, 10)
+  ), weights = ((5, 300, 10), (5, 30), (5, 50), (5, 70), (5, 10)), parameters = 15,800 (Trainable)
+  (VANRA_VRL): VANRA_VRL(
+    (fcLayer): Sequential(
+      (0): Dropout(p=0.9, inplace=False)
+      (1): Linear(in_features=500, out_features=50, bias=True)
+    )
+    (visProj): Parameter(500, 10)
+  ), weights = ((500, 10), (50, 500), (50,)), parameters = 30,050 (Trainable)
+  (VANRA_RatingPred): VANRA_RatingPred(
+    (uid_userOffset): Embedding(488920, 1)
+    (iid_itemOffset): Embedding(232137, 1)
+    (fcLayer1): Sequential(
+      (0): Linear(in_features=100, out_features=10, bias=True)
+      (1): ReLU()
+      (2): Dropout(p=0.9, inplace=False)
+    )
+    (globalOffset): Parameter(1,)
+  ), weights = ((1,), (488920, 1), (232137, 1), (10, 100), (10,)), parameters = 722,068 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/10] Training Loss: 386.67655	Elapsed Time: 414.06s (0:06:54)
+[Epoch 1] [Dev]  MSE: 0.93311, MAE: 0.73778
+[Epoch 1] [Test] MSE: 0.93011, MAE: 0.73900
+
+*** MODEL has obtained the best DEV MSE of 0.93311 so far!
+*** The Best MODEL saved to "./__saved_models__/Kindle_Store - VANRA/Kindle_Store_VANRA_1234.pth"
+
+[Epoch 2/10] Training Loss: 1.06935	Elapsed Time: 844.30s (0:14:04)
+[Epoch 2] [Dev]  MSE: 0.83521, MAE: 0.67465
+[Epoch 2] [Test] MSE: 0.83184, MAE: 0.67578
+
+*** MODEL has obtained the best DEV MSE of 0.83521 so far!
+*** The Best MODEL saved to "./__saved_models__/Kindle_Store - VANRA/Kindle_Store_VANRA_1234.pth"
+
+[Epoch 3/10] Training Loss: 0.93422	Elapsed Time: 1,274.63s (0:21:14)
+[Epoch 3] [Dev]  MSE: 0.80952, MAE: 0.65747
+[Epoch 3] [Test] MSE: 0.80673, MAE: 0.65894
+
+*** MODEL has obtained the best DEV MSE of 0.80952 so far!
+*** The Best MODEL saved to "./__saved_models__/Kindle_Store - VANRA/Kindle_Store_VANRA_1234.pth"
+
+[Epoch 4/10] Training Loss: 0.85771	Elapsed Time: 1,705.02s (0:28:25)
+[Epoch 4] [Dev]  MSE: 0.80331, MAE: 0.64868
+[Epoch 4] [Test] MSE: 0.80072, MAE: 0.64953
+
+*** MODEL has obtained the best DEV MSE of 0.80331 so far!
+*** The Best MODEL saved to "./__saved_models__/Kindle_Store - VANRA/Kindle_Store_VANRA_1234.pth"
+
+[Epoch 5/10] Training Loss: 0.80935	Elapsed Time: 2,135.53s (0:35:35)
+[Epoch 5] [Dev]  MSE: 0.80110, MAE: 0.64918
+[Epoch 5] [Test] MSE: 0.79872, MAE: 0.65051
+
+*** MODEL has obtained the best DEV MSE of 0.80110 so far!
+*** The Best MODEL saved to "./__saved_models__/Kindle_Store - VANRA/Kindle_Store_VANRA_1234.pth"
+
+[Epoch 6/10] Training Loss: 0.77706	Elapsed Time: 2,565.94s (0:42:45)
+[Epoch 6] [Dev]  MSE: 0.80155, MAE: 0.64992
+[Epoch 6] [Test] MSE: 0.79924, MAE: 0.65065
+
+[Epoch 7/10] Training Loss: 0.75443	Elapsed Time: 2,996.19s (0:49:56)
+[Epoch 7] [Dev]  MSE: 0.80393, MAE: 0.64977
+[Epoch 7] [Test] MSE: 0.80106, MAE: 0.65002
+
+[Epoch 8/10] Training Loss: 0.73798	Elapsed Time: 3,426.48s (0:57:06)
+[Epoch 8] [Dev]  MSE: 0.80545, MAE: 0.65228
+[Epoch 8] [Test] MSE: 0.80197, MAE: 0.65234
+
+[Epoch 9/10] Training Loss: 0.72553	Elapsed Time: 3,856.69s (1:04:16)
+[Epoch 9] [Dev]  MSE: 0.80801, MAE: 0.64824
+[Epoch 9] [Test] MSE: 0.80512, MAE: 0.64860
+
+[Epoch 10/10] Training Loss: 0.71629	Elapsed Time: 4,286.93s (1:11:26)
+[Epoch 10] [Dev]  MSE: 0.80827, MAE: 0.64972
+[Epoch 10] [Test] MSE: 0.80544, MAE: 0.65004
+*** The Last MODEL saved to "./__saved_models__/Kindle_Store - VANRA/Kindle_Store_VANRA_1234_10.pth"
+
+[Training Loss]
+[386.67655, 1.06935, 0.93422, 0.85771, 0.80935, 0.77706, 0.75443, 0.73798, 0.72553, 0.71629]
+
+[Dev MSE]
+[0.93311, 0.83521, 0.80952, 0.80331, 0.8011, 0.80155, 0.80393, 0.80545, 0.80801, 0.80827]
+[Test MSE]
+[0.93011, 0.83184, 0.80673, 0.80072, 0.79872, 0.79924, 0.80106, 0.80197, 0.80512, 0.80544]
+[Test MAE]
+[0.739, 0.67578, 0.65894, 0.64953, 0.65051, 0.65065, 0.65002, 0.65234, 0.6486, 0.65004]
+
+
+Best Dev MSE: 0.80110 (Obtained during Evaluation #5)
+Test MSE: 0.79872, Test MAE: 0.65051
+
+End of Program! Elapsed Time: 4,366.36s (1:12:46)

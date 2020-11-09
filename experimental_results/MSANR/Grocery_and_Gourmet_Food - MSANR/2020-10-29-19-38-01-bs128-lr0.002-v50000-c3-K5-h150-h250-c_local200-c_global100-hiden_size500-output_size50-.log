@@ -1,0 +1,160 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  channels_global: 100
+  channels_local: 200
+  command: -d Grocery_and_Gourmet_Food -m MSANR -e 10 -dr 0.9 -WED 300 -p 1 -v 50000 -K 5 -h1 50 -h2 50 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm Grocery_and_Gourmet_Food_MSANR
+  ctx_win_size: 3
+  dataset: Grocery_and_Gourmet_Food
+  disable_initial_eval: 0
+  dropout_rate: 0.9
+  epochs: 10
+  filters_num: 100
+  gpu: 0
+  h1: 50
+  h2: 50
+  hidden_size: 500
+  input_dir: ./datasets/Grocery_and_Gourmet_Food/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: MSANR
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Grocery_and_Gourmet_Food - MSANR/
+  output_size: 50
+  pretrained_src: 1
+  random_seed: 1234
+  save_model: Grocery_and_Gourmet_Food_MSANR
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 528,374, # of Items: 134,221
+
+Creating model (Selected Model: MSANR)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 3.99s (0.07 minute)
+
+Loading uid_userDoc from "./datasets/Grocery_and_Gourmet_Food/Grocery_and_Gourmet_Food_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (528374, 500)]
+
+Loading iid_itemDoc from "./datasets/Grocery_and_Gourmet_Food/Grocery_and_Gourmet_Food_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (134221, 500)]
+
+Loading pretrained word embeddings from "./datasets/Grocery_and_Gourmet_Food/Grocery_and_Gourmet_Food_wed300_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (50002, 300)]
+
+Initialization Complete.. Elapsed Time: 22.17s (0.37 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 800,000, |DEV|: 43,464, |TEST|: 43,991
+Train/Dev/Test splits loaded! Elapsed Time: 22.44s (0.37 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 19.74611, MAE: 4.28647
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 19.82810, MAE: 4.29888
+
+Initial Evaluation Complete.. Elapsed Time: 55.15s (0.92 minute)
+
+Parameters with L2 Regularization (Regularization Strength: 1e-06):
+MSANR_RatingPred.uid_userOffset.weight, MSANR_RatingPred.iid_itemOffset.weight
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 347,039,696
+# of Trainable Parameters: 741,596
+MSANR (
+  (uid_userDoc): Embedding(528374, 500), weights = ((528374, 500),), parameters = 264,187,000
+  (iid_itemDoc): Embedding(134221, 500), weights = ((134221, 500),), parameters = 67,110,500
+  (wid_wEmbed): Embedding(50002, 300), weights = ((50002, 300),), parameters = 15,000,600
+  (MSANR_ARL): MSANR_ARL(
+    (aspEmbed): ModuleList(
+      (0): Embedding(5, 150)
+      (1): Embedding(5, 250)
+      (2): Embedding(5, 350)
+    )
+    (filterEmbed): Embedding(5, 50)
+    (aspProj): Parameter(5, 300, 50)
+  ), weights = ((5, 300, 50), (5, 150), (5, 250), (5, 350), (5, 50)), parameters = 79,000 (Trainable)
+  (MSANR_RatingPred): MSANR_RatingPred(
+    (userAspRepDropout): Dropout(p=0.9, inplace=False)
+    (itemAspRepDropout): Dropout(p=0.9, inplace=False)
+    (uid_userOffset): Embedding(528374, 1)
+    (iid_itemOffset): Embedding(134221, 1)
+    (globalOffset): Parameter(1,)
+  ), weights = ((1,), (528374, 1), (134221, 1)), parameters = 662,596 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/10] Training Loss: 2.40597	Elapsed Time: 772.48s (0:12:52)
+[Epoch 1] [Dev]  MSE: 1.28010, MAE: 0.83812
+[Epoch 1] [Test] MSE: 1.25578, MAE: 0.83108
+
+*** MODEL has obtained the best DEV MSE of 1.28010 so far!
+*** The Best MODEL saved to "./__saved_models__/Grocery_and_Gourmet_Food - MSANR/Grocery_and_Gourmet_Food_MSANR_1234.pth"
+
+[Epoch 2/10] Training Loss: 1.30991	Elapsed Time: 1,578.26s (0:26:18)
+[Epoch 2] [Dev]  MSE: 1.22253, MAE: 0.81508
+[Epoch 2] [Test] MSE: 1.19867, MAE: 0.80660
+
+*** MODEL has obtained the best DEV MSE of 1.22253 so far!
+*** The Best MODEL saved to "./__saved_models__/Grocery_and_Gourmet_Food - MSANR/Grocery_and_Gourmet_Food_MSANR_1234.pth"
+
+[Epoch 3/10] Training Loss: 1.21249	Elapsed Time: 2,383.98s (0:39:43)
+[Epoch 3] [Dev]  MSE: 1.21751, MAE: 0.82841
+[Epoch 3] [Test] MSE: 1.19429, MAE: 0.81983
+
+*** MODEL has obtained the best DEV MSE of 1.21751 so far!
+*** The Best MODEL saved to "./__saved_models__/Grocery_and_Gourmet_Food - MSANR/Grocery_and_Gourmet_Food_MSANR_1234.pth"
+
+[Epoch 4/10] Training Loss: 1.13430	Elapsed Time: 3,189.70s (0:53:09)
+[Epoch 4] [Dev]  MSE: 1.22058, MAE: 0.82232
+[Epoch 4] [Test] MSE: 1.19555, MAE: 0.81302
+
+[Epoch 5/10] Training Loss: 1.09152	Elapsed Time: 3,995.31s (1:06:35)
+[Epoch 5] [Dev]  MSE: 1.28636, MAE: 0.78408
+[Epoch 5] [Test] MSE: 1.25819, MAE: 0.77564
+
+[Epoch 6/10] Training Loss: 1.06427	Elapsed Time: 4,801.05s (1:20:01)
+[Epoch 6] [Dev]  MSE: 1.23303, MAE: 0.81169
+[Epoch 6] [Test] MSE: 1.20637, MAE: 0.80213
+
+[Epoch 7/10] Training Loss: 1.05654	Elapsed Time: 5,606.84s (1:33:26)
+[Epoch 7] [Dev]  MSE: 1.23764, MAE: 0.81518
+[Epoch 7] [Test] MSE: 1.21181, MAE: 0.80545
+
+[Epoch 8/10] Training Loss: 1.05906	Elapsed Time: 6,413.74s (1:46:53)
+[Epoch 8] [Dev]  MSE: 1.24277, MAE: 0.81557
+[Epoch 8] [Test] MSE: 1.21578, MAE: 0.80582
+
+[Epoch 9/10] Training Loss: 7.22835	Elapsed Time: 7,220.53s (2:00:20)
+[Epoch 9] [Dev]  MSE: 1.29280, MAE: 0.81775
+[Epoch 9] [Test] MSE: 1.22538, MAE: 0.80514
+
+[Epoch 10/10] Training Loss: 32.51495	Elapsed Time: 8,027.37s (2:13:47)
+[Epoch 10] [Dev]  MSE: 1.25632, MAE: 0.81311
+[Epoch 10] [Test] MSE: 1.22511, MAE: 0.80181
+*** The Last MODEL saved to "./__saved_models__/Grocery_and_Gourmet_Food - MSANR/Grocery_and_Gourmet_Food_MSANR_1234_10.pth"
+
+[Training Loss]
+[2.40597, 1.30991, 1.21249, 1.1343, 1.09152, 1.06427, 1.05654, 1.05906, 7.22835, 32.51495]
+
+[Dev MSE]
+[1.2801, 1.22253, 1.21751, 1.22058, 1.28636, 1.23303, 1.23764, 1.24277, 1.2928, 1.25632]
+[Test MSE]
+[1.25578, 1.19867, 1.19429, 1.19555, 1.25819, 1.20637, 1.21181, 1.21578, 1.22538, 1.22511]
+[Test MAE]
+[0.83108, 0.8066, 0.81983, 0.81302, 0.77564, 0.80213, 0.80545, 0.80582, 0.80514, 0.80181]
+
+
+Best Dev MSE: 1.21751 (Obtained during Evaluation #3)
+Test MSE: 1.19429, Test MAE: 0.81983
+
+End of Program! Elapsed Time: 8,115.22s (2:15:15)

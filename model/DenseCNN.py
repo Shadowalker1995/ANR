@@ -33,14 +33,11 @@ class DenseCNN(nn.Module):
         self.wid_wEmbed = nn.Embedding(self.args.vocab_size, self.args.word_embed_dim)  # vocab_size x word_embed_dim
         self.wid_wEmbed.weight.requires_grad = False
 
-        # ========== new ==========
         # Word Embedding Projection Matrices
         self.wedProj = nn.Parameter(torch.Tensor(self.args.word_embed_dim, self.args.output_size), requires_grad=True)
         self.wedProj.data.uniform_(-0.01, 0.01)
-        # ========== new ==========
 
-        self.user_net = DenseNet(logger, args)
-        self.item_net = DenseNet(logger, args)
+        self.doc_net = DenseNet(logger, args)
 
         self.DenseCNN_RatingPred = DenseCNN_RatingPred(logger, args, num_users, num_items)
 
@@ -64,14 +61,12 @@ class DenseCNN(nn.Module):
             tqdm.write("batch_userDocEmbed: {}".format(batch_userDocEmbed.size()))      # bsz x max_doc_len x word_embed_dim
             tqdm.write("batch_itemDocEmbed: {}".format(batch_itemDocEmbed.size()))      # bsz x max_doc_len x word_embed_dim
 
-        # ========== new ===========
         # (bsz x max_doc_len x word_embed_dim) x (word_embed_dim x output_size) -> bsz x max_doc_len x output_size
         batch_userDocEmbed = torch.matmul(batch_userDocEmbed, self.wedProj)
         batch_itemDocEmbed = torch.matmul(batch_itemDocEmbed, self.wedProj)
-        # ========== new ===========
 
-        batch_userFea = self.user_net(batch_userDocEmbed)
-        batch_itemFea = self.item_net(batch_itemDocEmbed)
+        batch_userFea = self.doc_net(batch_userDocEmbed)
+        batch_itemFea = self.doc_net(batch_itemDocEmbed)
 
         # bsz x 1
         rating_pred = self.DenseCNN_RatingPred(batch_userFea, batch_itemFea, batch_uid, batch_iid, verbose=verbose)
@@ -233,7 +228,7 @@ class DenseNet(nn.Module):
         fea = torch.stack((fea0, fea1, fea2, fea3, fea4), dim=3)
 
         # bsz x filters_num x output_size x 5 -> bsz x filters_num x 1 x 5
-        scale_score = self.scale_attention(fea).squeeze(1)
+        scale_score = self.scale_attention(fea)
 
         # bsz x filters_num x output_size x 5 * bsz x filters_num x 1 x 5 -> bsz x filters_num x output_size x 5
         fea = torch.mul(fea, scale_score)

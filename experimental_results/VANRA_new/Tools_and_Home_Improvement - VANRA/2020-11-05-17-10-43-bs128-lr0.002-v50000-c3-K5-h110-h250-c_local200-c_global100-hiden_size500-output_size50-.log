@@ -1,0 +1,181 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  channels_global: 100
+  channels_local: 200
+  command: -d Tools_and_Home_Improvement -m VANRA -e 10 -dr 0.9 -WED 300 -p 1 -v 50000 -K 5 -h1 10 -h2 50 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm Tools_and_Home_Improvement_VANRA
+  ctx_win_size: 3
+  dataset: Tools_and_Home_Improvement
+  disable_initial_eval: 0
+  dropout_rate: 0.9
+  epochs: 10
+  filters_num: 100
+  gpu: 0
+  h1: 10
+  h2: 50
+  hidden_size: 500
+  input_dir: ./datasets/Tools_and_Home_Improvement/
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: VANRA
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Tools_and_Home_Improvement - VANRA/
+  output_size: 50
+  pretrained_src: 1
+  random_seed: 1234
+  save_model: Tools_and_Home_Improvement_VANRA
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 604,303, # of Items: 167,536
+
+Creating model (Selected Model: VANRA)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 7.46s (0.12 minute)
+
+Loading uid_userDoc from "./datasets/Tools_and_Home_Improvement/Tools_and_Home_Improvement_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (604303, 500)]
+
+Loading iid_itemDoc from "./datasets/Tools_and_Home_Improvement/Tools_and_Home_Improvement_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (167536, 500)]
+
+Loading pretrained word embeddings from "./datasets/Tools_and_Home_Improvement/Tools_and_Home_Improvement_wed300_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (50002, 300)]
+
+Loading uid_userVis from "./datasets/Tools_and_Home_Improvement/Tools_and_Home_Improvement_uid_userVis.npy"..
+uid_userVis loaded! [uid_userVis: (604303, 500)]
+
+Loading iid_itemVis from "./datasets/Tools_and_Home_Improvement/Tools_and_Home_Improvement_iid_itemVis.npy"..
+iid_itemVis loaded! [iid_itemVis: (167536, 500)]
+
+Initialization Complete.. Elapsed Time: 59.87s (1.00 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 800,000, |DEV|: 32,887, |TEST|: 33,155
+Train/Dev/Test splits loaded! Elapsed Time: 60.17s (1.00 minutes)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 14.42690, MAE: 3.29576
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 14.56652, MAE: 3.32196
+
+Initial Evaluation Complete.. Elapsed Time: 72.44s (1.21 minutes)
+
+Parameters with L2 Regularization (Regularization Strength: 1e-06):
+VANRA_RatingPred.uid_userOffset.weight, VANRA_RatingPred.iid_itemOffset.weight
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 787,658,300
+# of Trainable Parameters: 818,700
+VANRA (
+  (uid_userDoc): Embedding(604303, 500), weights = ((604303, 500),), parameters = 302,151,500
+  (iid_itemDoc): Embedding(167536, 500), weights = ((167536, 500),), parameters = 83,768,000
+  (wid_wEmbed): Embedding(50002, 300), weights = ((50002, 300),), parameters = 15,000,600
+  (uid_userVis): Embedding(604303, 500), weights = ((604303, 500),), parameters = 302,151,500
+  (iid_itemVis): Embedding(167536, 500), weights = ((167536, 500),), parameters = 83,768,000
+  (MSANR_ARL): MSANR_ARL(
+    (aspEmbed): ModuleList(
+      (0): Embedding(5, 30)
+      (1): Embedding(5, 50)
+      (2): Embedding(5, 70)
+    )
+    (filterEmbed): Embedding(5, 10)
+    (aspProj): Parameter(5, 300, 10)
+  ), weights = ((5, 300, 10), (5, 30), (5, 50), (5, 70), (5, 10)), parameters = 15,800 (Trainable)
+  (VANRA_VRL): VANRA_VRL(
+    (fcLayer): Sequential(
+      (0): Dropout(p=0.9, inplace=False)
+      (1): Linear(in_features=500, out_features=50, bias=True)
+    )
+    (visProj): Parameter(500, 10)
+  ), weights = ((500, 10), (50, 500), (50,)), parameters = 30,050 (Trainable)
+  (VANRA_RatingPred): VANRA_RatingPred(
+    (uid_userOffset): Embedding(604303, 1)
+    (iid_itemOffset): Embedding(167536, 1)
+    (fcLayer1): Sequential(
+      (0): Linear(in_features=100, out_features=10, bias=True)
+      (1): ReLU()
+      (2): Dropout(p=0.9, inplace=False)
+    )
+    (globalOffset): Parameter(1,)
+  ), weights = ((1,), (604303, 1), (167536, 1), (10, 100), (10,)), parameters = 772,850 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/10] Training Loss: 600.09547	Elapsed Time: 412.34s (0:06:52)
+[Epoch 1] [Dev]  MSE: 1.30955, MAE: 0.88830
+[Epoch 1] [Test] MSE: 1.29744, MAE: 0.88806
+
+*** MODEL has obtained the best DEV MSE of 1.30955 so far!
+*** The Best MODEL saved to "./__saved_models__/Tools_and_Home_Improvement - VANRA/Tools_and_Home_Improvement_VANRA_1234.pth"
+
+[Epoch 2/10] Training Loss: 1.48241	Elapsed Time: 837.73s (0:13:57)
+[Epoch 2] [Dev]  MSE: 1.23417, MAE: 0.85090
+[Epoch 2] [Test] MSE: 1.22175, MAE: 0.85031
+
+*** MODEL has obtained the best DEV MSE of 1.23417 so far!
+*** The Best MODEL saved to "./__saved_models__/Tools_and_Home_Improvement - VANRA/Tools_and_Home_Improvement_VANRA_1234.pth"
+
+[Epoch 3/10] Training Loss: 1.32567	Elapsed Time: 1,264.17s (0:21:04)
+[Epoch 3] [Dev]  MSE: 1.21819, MAE: 0.83572
+[Epoch 3] [Test] MSE: 1.20518, MAE: 0.83544
+
+*** MODEL has obtained the best DEV MSE of 1.21819 so far!
+*** The Best MODEL saved to "./__saved_models__/Tools_and_Home_Improvement - VANRA/Tools_and_Home_Improvement_VANRA_1234.pth"
+
+[Epoch 4/10] Training Loss: 1.23214	Elapsed Time: 1,690.19s (0:28:10)
+[Epoch 4] [Dev]  MSE: 1.21701, MAE: 0.82011
+[Epoch 4] [Test] MSE: 1.20408, MAE: 0.81985
+
+*** MODEL has obtained the best DEV MSE of 1.21701 so far!
+*** The Best MODEL saved to "./__saved_models__/Tools_and_Home_Improvement - VANRA/Tools_and_Home_Improvement_VANRA_1234.pth"
+
+[Epoch 5/10] Training Loss: 1.17085	Elapsed Time: 2,116.28s (0:35:16)
+[Epoch 5] [Dev]  MSE: 1.22041, MAE: 0.82107
+[Epoch 5] [Test] MSE: 1.20867, MAE: 0.82089
+
+[Epoch 6/10] Training Loss: 1.12888	Elapsed Time: 2,542.27s (0:42:22)
+[Epoch 6] [Dev]  MSE: 1.22604, MAE: 0.82107
+[Epoch 6] [Test] MSE: 1.21471, MAE: 0.82119
+
+[Epoch 7/10] Training Loss: 1.09835	Elapsed Time: 2,968.21s (0:49:28)
+[Epoch 7] [Dev]  MSE: 1.23155, MAE: 0.82311
+[Epoch 7] [Test] MSE: 1.22053, MAE: 0.82362
+
+[Epoch 8/10] Training Loss: 1.07616	Elapsed Time: 3,394.16s (0:56:34)
+[Epoch 8] [Dev]  MSE: 1.23728, MAE: 0.82032
+[Epoch 8] [Test] MSE: 1.22597, MAE: 0.82083
+
+[Epoch 9/10] Training Loss: 1.05933	Elapsed Time: 3,820.01s (1:03:40)
+[Epoch 9] [Dev]  MSE: 1.24143, MAE: 0.82434
+[Epoch 9] [Test] MSE: 1.22983, MAE: 0.82457
+
+[Epoch 10/10] Training Loss: 1.04659	Elapsed Time: 4,246.01s (1:10:46)
+[Epoch 10] [Dev]  MSE: 1.24427, MAE: 0.82216
+[Epoch 10] [Test] MSE: 1.23292, MAE: 0.82227
+*** The Last MODEL saved to "./__saved_models__/Tools_and_Home_Improvement - VANRA/Tools_and_Home_Improvement_VANRA_1234_10.pth"
+
+[Training Loss]
+[600.09547, 1.48241, 1.32567, 1.23214, 1.17085, 1.12888, 1.09835, 1.07616, 1.05933, 1.04659]
+
+[Dev MSE]
+[1.30955, 1.23417, 1.21819, 1.21701, 1.22041, 1.22604, 1.23155, 1.23728, 1.24143, 1.24427]
+[Test MSE]
+[1.29744, 1.22175, 1.20518, 1.20408, 1.20867, 1.21471, 1.22053, 1.22597, 1.22983, 1.23292]
+[Test MAE]
+[0.88806, 0.85031, 0.83544, 0.81985, 0.82089, 0.82119, 0.82362, 0.82083, 0.82457, 0.82227]
+
+
+Best Dev MSE: 1.21701 (Obtained during Evaluation #4)
+Test MSE: 1.20408, Test MAE: 0.81985
+
+End of Program! Elapsed Time: 4,330.50s (1:12:10)
