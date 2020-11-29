@@ -18,11 +18,8 @@ class MSANR_ARL(nn.Module):
         self.logger = logger
         self.args = args
 
-        self.ctx_win_size = [3, 5, 7]
-        # self.ctx_win_size = [3]
-
         # num_aspects x (ctx_win_size x h1)
-        self.aspEmbed = nn.ModuleList([nn.Embedding(self.args.num_aspects, c * self.args.h1) for c in self.ctx_win_size])
+        self.aspEmbed = nn.ModuleList([nn.Embedding(self.args.num_aspects, c * self.args.h1) for c in self.args.kernel_list])
         for aspEmbed in self.aspEmbed:
             aspEmbed.weight.requires_grad = True
 
@@ -50,7 +47,7 @@ class MSANR_ARL(nn.Module):
         for a in range(self.args.num_aspects):
             lst_batch_ctxAttn = []
             lst_batch_ctxRep = []
-            for i, c in enumerate(self.ctx_win_size):
+            for i, c in enumerate(self.args.kernel_list):
                 # Aspect-Specific Projection of Input Word Embeddings
                 # (bsz x max_doc_len x word_embed_dim) * (word_embed_dim x h1) -> bsz x max_doc_len x h1
                 batch_aspProjDoc = torch.matmul(batch_docIn, self.aspProj[a])                           # bsz x max_doc_len x h1
@@ -74,8 +71,11 @@ class MSANR_ARL(nn.Module):
                 else:
                     # Pad the document
                     pad_size = int((c - 1) / 2)
-                    # bsz x (max_doc_len+2) x h1
-                    batch_aspProjDoc_padded = F.pad(batch_aspProjDoc, [0, 0, pad_size, pad_size], "constant", 0)
+                    if c % 2 == 0:
+                        batch_aspProjDoc_padded = F.pad(batch_aspProjDoc, [0, 0, pad_size, pad_size+1], "constant", 0)
+                    else:
+                        # bsz x (max_doc_len+2) x h1
+                        batch_aspProjDoc_padded = F.pad(batch_aspProjDoc, [0, 0, pad_size, pad_size], "constant", 0)
 
                     # Use "sliding window" using stride of 1 (word at a time) to generate word chunks of ctx_win_size
                     # bsz x (max_doc_len+2) x h1 -> bsz x max_doc_len x h1 x ctx_win_size

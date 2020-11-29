@@ -1,0 +1,156 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  channels_global: 100
+  channels_local: 200
+  command: -d Clothing_Shoes_and_Jewelry -m MSANR -e 10 -dr 0.9 -WED 300 -p 1 -v 50000 -K 5 -h1 50 -kernel_list 2 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm Clothing_Shoes_and_Jewelry_MSANR
+  ctx_win_size: 3
+  dataset: Clothing_Shoes_and_Jewelry
+  disable_initial_eval: 0
+  dropout_rate: 0.9
+  epochs: 10
+  filters_num: 100
+  gpu: 0
+  h1: 50
+  h2: 50
+  hidden_size: 500
+  input_dir: ./datasets/Clothing_Shoes_and_Jewelry/
+  kernel_list: [2]
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: MSANR
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Clothing_Shoes_and_Jewelry - MSANR/
+  output_size: 50
+  pretrained_src: 1
+  random_seed: 1234
+  save_model: Clothing_Shoes_and_Jewelry_MSANR
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 669,835, # of Items: 335,585
+
+Creating model (Selected Model: MSANR)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 5.39s (0.09 minute)
+
+Loading uid_userDoc from "./datasets/Clothing_Shoes_and_Jewelry/Clothing_Shoes_and_Jewelry_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (669835, 500)]
+
+Loading iid_itemDoc from "./datasets/Clothing_Shoes_and_Jewelry/Clothing_Shoes_and_Jewelry_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (335585, 500)]
+
+Loading pretrained word embeddings from "./datasets/Clothing_Shoes_and_Jewelry/Clothing_Shoes_and_Jewelry_wed300_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (50002, 300)]
+
+Initialization Complete.. Elapsed Time: 41.03s (0.68 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 800,000, |DEV|: 17,754, |TEST|: 17,846
+Train/Dev/Test splits loaded! Elapsed Time: 41.33s (0.69 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 19.15692, MAE: 4.22564
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 19.23966, MAE: 4.23686
+
+Initial Evaluation Complete.. Elapsed Time: 46.46s (0.77 minute)
+
+Parameters with L2 Regularization (Regularization Strength: 1e-06):
+MSANR_RatingPred.uid_userOffset.weight, MSANR_RatingPred.iid_itemOffset.weight
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 518,791,771
+# of Trainable Parameters: 1,081,171
+MSANR (
+  (uid_userDoc): Embedding(669835, 500), weights = ((669835, 500),), parameters = 334,917,500
+  (iid_itemDoc): Embedding(335585, 500), weights = ((335585, 500),), parameters = 167,792,500
+  (wid_wEmbed): Embedding(50002, 300), weights = ((50002, 300),), parameters = 15,000,600
+  (MSANR_ARL): MSANR_ARL(
+    (aspEmbed): ModuleList(
+      (0): Embedding(5, 100)
+    )
+    (filterEmbed): Embedding(5, 50)
+    (aspProj): Parameter(5, 300, 50)
+  ), weights = ((5, 300, 50), (5, 100), (5, 50)), parameters = 75,750 (Trainable)
+  (MSANR_RatingPred): MSANR_RatingPred(
+    (userAspRepDropout): Dropout(p=0.9, inplace=False)
+    (itemAspRepDropout): Dropout(p=0.9, inplace=False)
+    (uid_userOffset): Embedding(669835, 1)
+    (iid_itemOffset): Embedding(335585, 1)
+    (globalOffset): Parameter(1,)
+  ), weights = ((1,), (669835, 1), (335585, 1)), parameters = 1,005,421 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/10] Training Loss: 2.46159	Elapsed Time: 231.73s (0:03:51)
+[Epoch 1] [Dev]  MSE: 1.23234, MAE: 0.87581
+[Epoch 1] [Test] MSE: 1.22625, MAE: 0.87250
+
+*** MODEL has obtained the best DEV MSE of 1.23234 so far!
+*** The Best MODEL saved to "./__saved_models__/Clothing_Shoes_and_Jewelry - MSANR/Clothing_Shoes_and_Jewelry_MSANR_1234.pth"
+
+[Epoch 2/10] Training Loss: 1.24785	Elapsed Time: 467.93s (0:07:47)
+[Epoch 2] [Dev]  MSE: 1.21560, MAE: 0.86883
+[Epoch 2] [Test] MSE: 1.20747, MAE: 0.86541
+
+*** MODEL has obtained the best DEV MSE of 1.21560 so far!
+*** The Best MODEL saved to "./__saved_models__/Clothing_Shoes_and_Jewelry - MSANR/Clothing_Shoes_and_Jewelry_MSANR_1234.pth"
+
+[Epoch 3/10] Training Loss: 1.15413	Elapsed Time: 704.12s (0:11:44)
+[Epoch 3] [Dev]  MSE: 1.22349, MAE: 0.87955
+[Epoch 3] [Test] MSE: 1.21601, MAE: 0.87641
+
+[Epoch 4/10] Training Loss: 1.07464	Elapsed Time: 940.46s (0:15:40)
+[Epoch 4] [Dev]  MSE: 1.21916, MAE: 0.87042
+[Epoch 4] [Test] MSE: 1.20797, MAE: 0.86624
+
+[Epoch 5/10] Training Loss: 1.02989	Elapsed Time: 1,176.59s (0:19:36)
+[Epoch 5] [Dev]  MSE: 1.22883, MAE: 0.85728
+[Epoch 5] [Test] MSE: 1.21489, MAE: 0.85137
+
+[Epoch 6/10] Training Loss: 1.00051	Elapsed Time: 1,412.82s (0:23:32)
+[Epoch 6] [Dev]  MSE: 1.23622, MAE: 0.86539
+[Epoch 6] [Test] MSE: 1.22005, MAE: 0.85907
+
+[Epoch 7/10] Training Loss: 0.98678	Elapsed Time: 1,648.98s (0:27:28)
+[Epoch 7] [Dev]  MSE: 1.24371, MAE: 0.85185
+[Epoch 7] [Test] MSE: 1.22525, MAE: 0.84472
+
+[Epoch 8/10] Training Loss: 0.95404	Elapsed Time: 1,885.18s (0:31:25)
+[Epoch 8] [Dev]  MSE: 1.24550, MAE: 0.85772
+[Epoch 8] [Test] MSE: 1.22616, MAE: 0.85153
+
+[Epoch 9/10] Training Loss: 0.93900	Elapsed Time: 2,121.50s (0:35:21)
+[Epoch 9] [Dev]  MSE: 1.25438, MAE: 0.87534
+[Epoch 9] [Test] MSE: 1.23340, MAE: 0.86765
+
+[Epoch 10/10] Training Loss: 0.93138	Elapsed Time: 2,357.68s (0:39:17)
+[Epoch 10] [Dev]  MSE: 1.25992, MAE: 0.85539
+[Epoch 10] [Test] MSE: 1.24011, MAE: 0.84696
+*** The Last MODEL saved to "./__saved_models__/Clothing_Shoes_and_Jewelry - MSANR/Clothing_Shoes_and_Jewelry_MSANR_1234_10.pth"
+
+[Training Loss]
+[2.46159, 1.24785, 1.15413, 1.07464, 1.02989, 1.00051, 0.98678, 0.95404, 0.939, 0.93138]
+
+[Dev MSE]
+[1.23234, 1.2156, 1.22349, 1.21916, 1.22883, 1.23622, 1.24371, 1.2455, 1.25438, 1.25992]
+[Test MSE]
+[1.22625, 1.20747, 1.21601, 1.20797, 1.21489, 1.22005, 1.22525, 1.22616, 1.2334, 1.24011]
+[Test MAE]
+[0.8725, 0.86541, 0.87641, 0.86624, 0.85137, 0.85907, 0.84472, 0.85153, 0.86765, 0.84696]
+
+
+Best Dev MSE: 1.21560 (Obtained during Evaluation #2)
+Test MSE: 1.20747, Test MAE: 0.86541
+
+End of Program! Elapsed Time: 2,408.70s (0:40:08)

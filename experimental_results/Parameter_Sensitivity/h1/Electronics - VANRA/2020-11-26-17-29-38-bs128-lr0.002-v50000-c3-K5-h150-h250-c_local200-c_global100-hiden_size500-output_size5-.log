@@ -1,0 +1,157 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  channels_global: 100
+  channels_local: 200
+  command: -d Electronics -m VANRA -e 5 -dr 0.9 -WED 300 -p 1 -v 50000 -K 5 -h1 50 -kernel_list 3 -output_size 5 -rs 1234 -gpu 0 -vb 1 -sm Electronics_VANRA
+  ctx_win_size: 3
+  dataset: Electronics
+  disable_initial_eval: 0
+  dropout_rate: 0.9
+  epochs: 5
+  filters_num: 100
+  gpu: 0
+  h1: 50
+  h2: 50
+  hidden_size: 500
+  input_dir: ./datasets/Electronics/
+  kernel_list: [3]
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: VANRA
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Electronics - VANRA/
+  output_size: 5
+  pretrained_src: 1
+  random_seed: 1234
+  save_model: Electronics_VANRA
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 685,969, # of Items: 168,412
+
+Creating model (Selected Model: VANRA)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 8.07s (0.13 minute)
+
+Loading uid_userDoc from "./datasets/Electronics/Electronics_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (685969, 500)]
+
+Loading iid_itemDoc from "./datasets/Electronics/Electronics_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (168412, 500)]
+
+Loading pretrained word embeddings from "./datasets/Electronics/Electronics_wed300_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (50002, 300)]
+
+Loading uid_userVis from "./datasets/Electronics/Electronics_uid_userVis.npy"..
+uid_userVis loaded! [uid_userVis: (685969, 500)]
+
+Loading iid_itemVis from "./datasets/Electronics/Electronics_iid_itemVis.npy"..
+iid_itemVis loaded! [iid_itemVis: (168412, 500)]
+
+Initialization Complete.. Elapsed Time: 65.24s (1.09 minutes)
+
+Train/Dev/Test splits loaded! |TRAIN|: 800,000, |DEV|: 20,925, |TEST|: 20,954
+Train/Dev/Test splits loaded! Elapsed Time: 65.51s (1.09 minutes)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 16.71471, MAE: 3.89117
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 16.53261, MAE: 3.86278
+
+Initial Evaluation Complete.. Elapsed Time: 71.48s (1.19 minutes)
+
+Parameters with L2 Regularization (Regularization Strength: 1e-06):
+VANRA_RatingPred.uid_userOffset.weight, VANRA_RatingPred.iid_itemOffset.weight
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 870,352,287
+# of Trainable Parameters: 970,687
+VANRA (
+  (uid_userDoc): Embedding(685969, 500), weights = ((685969, 500),), parameters = 342,984,500
+  (iid_itemDoc): Embedding(168412, 500), weights = ((168412, 500),), parameters = 84,206,000
+  (wid_wEmbed): Embedding(50002, 300), weights = ((50002, 300),), parameters = 15,000,600
+  (uid_userVis): Embedding(685969, 500), weights = ((685969, 500),), parameters = 342,984,500
+  (iid_itemVis): Embedding(168412, 500), weights = ((168412, 500),), parameters = 84,206,000
+  (MSANR_ARL): MSANR_ARL(
+    (aspEmbed): ModuleList(
+      (0): Embedding(5, 150)
+    )
+    (filterEmbed): Embedding(5, 50)
+    (aspProj): Parameter(5, 300, 50)
+  ), weights = ((5, 300, 50), (5, 150), (5, 50)), parameters = 76,000 (Trainable)
+  (VANRA_VRL): VANRA_VRL(
+    (fcLayer): Sequential(
+      (0): Dropout(p=0.9, inplace=False)
+      (1): Linear(in_features=500, out_features=5, bias=True)
+    )
+    (visProj): Parameter(500, 50)
+  ), weights = ((500, 50), (5, 500), (5,)), parameters = 27,505 (Trainable)
+  (VANRA_RatingPred): VANRA_RatingPred(
+    (uid_userOffset): Embedding(685969, 1)
+    (iid_itemOffset): Embedding(168412, 1)
+    (fcLayer1): Sequential(
+      (0): Linear(in_features=255, out_features=50, bias=True)
+      (1): ReLU()
+      (2): Dropout(p=0.9, inplace=False)
+    )
+    (globalOffset): Parameter(1,)
+  ), weights = ((1,), (685969, 1), (168412, 1), (50, 255), (50,)), parameters = 867,182 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/5] Training Loss: 4.64521	Elapsed Time: 246.95s (0:04:06)
+[Epoch 1] [Dev]  MSE: 1.41801, MAE: 0.94678
+[Epoch 1] [Test] MSE: 1.45552, MAE: 0.95593
+
+*** MODEL has obtained the best DEV MSE of 1.41801 so far!
+*** The Best MODEL saved to "./__saved_models__/Electronics - VANRA/Electronics_VANRA_1234.pth"
+
+[Epoch 2/5] Training Loss: 1.64667	Elapsed Time: 500.44s (0:08:20)
+[Epoch 2] [Dev]  MSE: 1.37590, MAE: 0.92611
+[Epoch 2] [Test] MSE: 1.41164, MAE: 0.93439
+
+*** MODEL has obtained the best DEV MSE of 1.37590 so far!
+*** The Best MODEL saved to "./__saved_models__/Electronics - VANRA/Electronics_VANRA_1234.pth"
+
+[Epoch 3/5] Training Loss: 1.49849	Elapsed Time: 753.94s (0:12:33)
+[Epoch 3] [Dev]  MSE: 1.36432, MAE: 0.91220
+[Epoch 3] [Test] MSE: 1.40402, MAE: 0.92158
+
+*** MODEL has obtained the best DEV MSE of 1.36432 so far!
+*** The Best MODEL saved to "./__saved_models__/Electronics - VANRA/Electronics_VANRA_1234.pth"
+
+[Epoch 4/5] Training Loss: 1.39955	Elapsed Time: 1,007.30s (0:16:47)
+[Epoch 4] [Dev]  MSE: 1.36724, MAE: 0.90525
+[Epoch 4] [Test] MSE: 1.40644, MAE: 0.91406
+
+[Epoch 5/5] Training Loss: 1.33281	Elapsed Time: 1,260.70s (0:21:00)
+[Epoch 5] [Dev]  MSE: 1.37513, MAE: 0.90770
+[Epoch 5] [Test] MSE: 1.41454, MAE: 0.91627
+*** The Last MODEL saved to "./__saved_models__/Electronics - VANRA/Electronics_VANRA_1234_5.pth"
+
+[Training Loss]
+[4.64521, 1.64667, 1.49849, 1.39955, 1.33281]
+
+[Dev MSE]
+[1.41801, 1.3759, 1.36432, 1.36724, 1.37513]
+[Test MSE]
+[1.45552, 1.41164, 1.40402, 1.40644, 1.41454]
+[Test MAE]
+[0.95593, 0.93439, 0.92158, 0.91406, 0.91627]
+
+
+Best Dev MSE: 1.36432 (Obtained during Evaluation #3)
+Test MSE: 1.40402, Test MAE: 0.92158
+
+End of Program! Elapsed Time: 1,337.99s (0:22:17)

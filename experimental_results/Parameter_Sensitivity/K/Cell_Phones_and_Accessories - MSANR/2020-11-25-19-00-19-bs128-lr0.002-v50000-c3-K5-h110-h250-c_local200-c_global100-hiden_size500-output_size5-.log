@@ -1,0 +1,138 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  channels_global: 100
+  channels_local: 200
+  command: -d Cell_Phones_and_Accessories -m MSANR -e 5 -dr 0.9 -WED 300 -p 1 -v 50000 -K 5 -h1 10 -kernel_list 2 3 4 -output_size 5 -rs 1234 -gpu 0 -vb 1 -sm Cell_Phones_and_Accessories_MSANR
+  ctx_win_size: 3
+  dataset: Cell_Phones_and_Accessories
+  disable_initial_eval: 0
+  dropout_rate: 0.9
+  epochs: 5
+  filters_num: 100
+  gpu: 0
+  h1: 10
+  h2: 50
+  hidden_size: 500
+  input_dir: ./datasets/Cell_Phones_and_Accessories/
+  kernel_list: [2, 3, 4]
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: MSANR
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Cell_Phones_and_Accessories - MSANR/
+  output_size: 5
+  pretrained_src: 1
+  random_seed: 1234
+  save_model: Cell_Phones_and_Accessories_MSANR
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 687,583, # of Items: 148,399
+
+Creating model (Selected Model: MSANR)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 4.70s (0.08 minute)
+
+Loading uid_userDoc from "./datasets/Cell_Phones_and_Accessories/Cell_Phones_and_Accessories_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (687583, 500)]
+
+Loading iid_itemDoc from "./datasets/Cell_Phones_and_Accessories/Cell_Phones_and_Accessories_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (148399, 500)]
+
+Loading pretrained word embeddings from "./datasets/Cell_Phones_and_Accessories/Cell_Phones_and_Accessories_wed300_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (50002, 300)]
+
+Initialization Complete.. Elapsed Time: 25.36s (0.42 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 800,000, |DEV|: 21,045, |TEST|: 21,154
+Train/Dev/Test splits loaded! Elapsed Time: 25.63s (0.43 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 17.78280, MAE: 4.00214
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 17.80874, MAE: 4.00719
+
+Initial Evaluation Complete.. Elapsed Time: 33.77s (0.56 minute)
+
+Parameters with L2 Regularization (Regularization Strength: 1e-06):
+MSANR_RatingPred.uid_userOffset.weight, MSANR_RatingPred.iid_itemOffset.weight
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 433,843,083
+# of Trainable Parameters: 851,483
+MSANR (
+  (uid_userDoc): Embedding(687583, 500), weights = ((687583, 500),), parameters = 343,791,500
+  (iid_itemDoc): Embedding(148399, 500), weights = ((148399, 500),), parameters = 74,199,500
+  (wid_wEmbed): Embedding(50002, 300), weights = ((50002, 300),), parameters = 15,000,600
+  (MSANR_ARL): MSANR_ARL(
+    (aspEmbed): ModuleList(
+      (0): Embedding(5, 20)
+      (1): Embedding(5, 30)
+      (2): Embedding(5, 40)
+    )
+    (filterEmbed): Embedding(5, 10)
+    (aspProj): Parameter(5, 300, 10)
+  ), weights = ((5, 300, 10), (5, 20), (5, 30), (5, 40), (5, 10)), parameters = 15,500 (Trainable)
+  (MSANR_RatingPred): MSANR_RatingPred(
+    (userAspRepDropout): Dropout(p=0.9, inplace=False)
+    (itemAspRepDropout): Dropout(p=0.9, inplace=False)
+    (uid_userOffset): Embedding(687583, 1)
+    (iid_itemOffset): Embedding(148399, 1)
+    (globalOffset): Parameter(1,)
+  ), weights = ((1,), (687583, 1), (148399, 1)), parameters = 835,983 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/5] Training Loss: 3.38669	Elapsed Time: 400.52s (0:06:40)
+[Epoch 1] [Dev]  MSE: 1.67318, MAE: 1.09465
+[Epoch 1] [Test] MSE: 1.66544, MAE: 1.09170
+
+*** MODEL has obtained the best DEV MSE of 1.67318 so far!
+*** The Best MODEL saved to "./__saved_models__/Cell_Phones_and_Accessories - MSANR/Cell_Phones_and_Accessories_MSANR_1234.pth"
+
+[Epoch 2/5] Training Loss: 1.81755	Elapsed Time: 808.99s (0:13:28)
+[Epoch 2] [Dev]  MSE: 1.62663, MAE: 1.05807
+[Epoch 2] [Test] MSE: 1.61734, MAE: 1.05452
+
+*** MODEL has obtained the best DEV MSE of 1.62663 so far!
+*** The Best MODEL saved to "./__saved_models__/Cell_Phones_and_Accessories - MSANR/Cell_Phones_and_Accessories_MSANR_1234.pth"
+
+[Epoch 3/5] Training Loss: 2.74097	Elapsed Time: 1,217.17s (0:20:17)
+[Epoch 3] [Dev]  MSE: 1.63120, MAE: 1.05885
+[Epoch 3] [Test] MSE: 1.62589, MAE: 1.05648
+
+[Epoch 4/5] Training Loss: 1.54751	Elapsed Time: 1,625.29s (0:27:05)
+[Epoch 4] [Dev]  MSE: 1.62727, MAE: 1.04675
+[Epoch 4] [Test] MSE: 1.62408, MAE: 1.04553
+
+[Epoch 5/5] Training Loss: 1.47844	Elapsed Time: 2,033.61s (0:33:53)
+[Epoch 5] [Dev]  MSE: 1.63073, MAE: 1.03314
+[Epoch 5] [Test] MSE: 1.62439, MAE: 1.03133
+*** The Last MODEL saved to "./__saved_models__/Cell_Phones_and_Accessories - MSANR/Cell_Phones_and_Accessories_MSANR_1234_5.pth"
+
+[Training Loss]
+[3.38669, 1.81755, 2.74097, 1.54751, 1.47844]
+
+[Dev MSE]
+[1.67318, 1.62663, 1.6312, 1.62727, 1.63073]
+[Test MSE]
+[1.66544, 1.61734, 1.62589, 1.62408, 1.62439]
+[Test MAE]
+[1.0917, 1.05452, 1.05648, 1.04553, 1.03133]
+
+
+Best Dev MSE: 1.62663 (Obtained during Evaluation #2)
+Test MSE: 1.61734, Test MAE: 1.05452
+
+End of Program! Elapsed Time: 2,074.80s (0:34:34)

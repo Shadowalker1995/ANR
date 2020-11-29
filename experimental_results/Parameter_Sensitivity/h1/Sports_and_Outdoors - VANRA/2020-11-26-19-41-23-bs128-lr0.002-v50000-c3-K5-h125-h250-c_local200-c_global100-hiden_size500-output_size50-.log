@@ -1,0 +1,157 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  channels_global: 100
+  channels_local: 200
+  command: -d Sports_and_Outdoors -m VANRA -e 5 -dr 0.9 -WED 300 -p 1 -v 50000 -K 5 -h1 25 -kernel_list 3 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm Sports_and_Outdoors_VANRA
+  ctx_win_size: 3
+  dataset: Sports_and_Outdoors
+  disable_initial_eval: 0
+  dropout_rate: 0.9
+  epochs: 5
+  filters_num: 100
+  gpu: 0
+  h1: 25
+  h2: 50
+  hidden_size: 500
+  input_dir: ./datasets/Sports_and_Outdoors/
+  kernel_list: [3]
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: VANRA
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Sports_and_Outdoors - VANRA/
+  output_size: 50
+  pretrained_src: 1
+  random_seed: 1234
+  save_model: Sports_and_Outdoors_VANRA
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 645,026, # of Items: 221,569
+
+Creating model (Selected Model: VANRA)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 8.15s (0.14 minute)
+
+Loading uid_userDoc from "./datasets/Sports_and_Outdoors/Sports_and_Outdoors_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (645026, 500)]
+
+Loading iid_itemDoc from "./datasets/Sports_and_Outdoors/Sports_and_Outdoors_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (221569, 500)]
+
+Loading pretrained word embeddings from "./datasets/Sports_and_Outdoors/Sports_and_Outdoors_wed300_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (50002, 300)]
+
+Loading uid_userVis from "./datasets/Sports_and_Outdoors/Sports_and_Outdoors_uid_userVis.npy"..
+uid_userVis loaded! [uid_userVis: (645026, 500)]
+
+Loading iid_itemVis from "./datasets/Sports_and_Outdoors/Sports_and_Outdoors_iid_itemVis.npy"..
+iid_itemVis loaded! [iid_itemVis: (221569, 500)]
+
+Initialization Complete.. Elapsed Time: 66.15s (1.10 minutes)
+
+Train/Dev/Test splits loaded! |TRAIN|: 800,000, |DEV|: 25,665, |TEST|: 25,738
+Train/Dev/Test splits loaded! Elapsed Time: 66.42s (1.11 minutes)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 10.37933, MAE: 2.76945
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 10.46924, MAE: 2.77620
+
+Initial Evaluation Complete.. Elapsed Time: 71.79s (1.20 minutes)
+
+Parameters with L2 Regularization (Regularization Strength: 1e-06):
+VANRA_RatingPred.uid_userOffset.weight, VANRA_RatingPred.iid_itemOffset.weight
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 882,542,146
+# of Trainable Parameters: 946,546
+VANRA (
+  (uid_userDoc): Embedding(645026, 500), weights = ((645026, 500),), parameters = 322,513,000
+  (iid_itemDoc): Embedding(221569, 500), weights = ((221569, 500),), parameters = 110,784,500
+  (wid_wEmbed): Embedding(50002, 300), weights = ((50002, 300),), parameters = 15,000,600
+  (uid_userVis): Embedding(645026, 500), weights = ((645026, 500),), parameters = 322,513,000
+  (iid_itemVis): Embedding(221569, 500), weights = ((221569, 500),), parameters = 110,784,500
+  (MSANR_ARL): MSANR_ARL(
+    (aspEmbed): ModuleList(
+      (0): Embedding(5, 75)
+    )
+    (filterEmbed): Embedding(5, 25)
+    (aspProj): Parameter(5, 300, 25)
+  ), weights = ((5, 300, 25), (5, 75), (5, 25)), parameters = 38,000 (Trainable)
+  (VANRA_VRL): VANRA_VRL(
+    (fcLayer): Sequential(
+      (0): Dropout(p=0.9, inplace=False)
+      (1): Linear(in_features=500, out_features=50, bias=True)
+    )
+    (visProj): Parameter(500, 25)
+  ), weights = ((500, 25), (50, 500), (50,)), parameters = 37,550 (Trainable)
+  (VANRA_RatingPred): VANRA_RatingPred(
+    (uid_userOffset): Embedding(645026, 1)
+    (iid_itemOffset): Embedding(221569, 1)
+    (fcLayer1): Sequential(
+      (0): Linear(in_features=175, out_features=25, bias=True)
+      (1): ReLU()
+      (2): Dropout(p=0.9, inplace=False)
+    )
+    (globalOffset): Parameter(1,)
+  ), weights = ((1,), (645026, 1), (221569, 1), (25, 175), (25,)), parameters = 870,996 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/5] Training Loss: 164.20048	Elapsed Time: 182.12s (0:03:02)
+[Epoch 1] [Dev]  MSE: 1.13702, MAE: 0.82599
+[Epoch 1] [Test] MSE: 1.13135, MAE: 0.82513
+
+*** MODEL has obtained the best DEV MSE of 1.13702 so far!
+*** The Best MODEL saved to "./__saved_models__/Sports_and_Outdoors - VANRA/Sports_and_Outdoors_VANRA_1234.pth"
+
+[Epoch 2/5] Training Loss: 1.34602	Elapsed Time: 369.71s (0:06:09)
+[Epoch 2] [Dev]  MSE: 1.09076, MAE: 0.79669
+[Epoch 2] [Test] MSE: 1.08616, MAE: 0.79597
+
+*** MODEL has obtained the best DEV MSE of 1.09076 so far!
+*** The Best MODEL saved to "./__saved_models__/Sports_and_Outdoors - VANRA/Sports_and_Outdoors_VANRA_1234.pth"
+
+[Epoch 3/5] Training Loss: 1.20908	Elapsed Time: 557.25s (0:09:17)
+[Epoch 3] [Dev]  MSE: 1.08529, MAE: 0.78122
+[Epoch 3] [Test] MSE: 1.07964, MAE: 0.77983
+
+*** MODEL has obtained the best DEV MSE of 1.08529 so far!
+*** The Best MODEL saved to "./__saved_models__/Sports_and_Outdoors - VANRA/Sports_and_Outdoors_VANRA_1234.pth"
+
+[Epoch 4/5] Training Loss: 1.12416	Elapsed Time: 744.82s (0:12:24)
+[Epoch 4] [Dev]  MSE: 1.08745, MAE: 0.78109
+[Epoch 4] [Test] MSE: 1.08296, MAE: 0.77982
+
+[Epoch 5/5] Training Loss: 1.06805	Elapsed Time: 932.35s (0:15:32)
+[Epoch 5] [Dev]  MSE: 1.09461, MAE: 0.78052
+[Epoch 5] [Test] MSE: 1.09073, MAE: 0.77926
+*** The Last MODEL saved to "./__saved_models__/Sports_and_Outdoors - VANRA/Sports_and_Outdoors_VANRA_1234_5.pth"
+
+[Training Loss]
+[164.20048, 1.34602, 1.20908, 1.12416, 1.06805]
+
+[Dev MSE]
+[1.13702, 1.09076, 1.08529, 1.08745, 1.09461]
+[Test MSE]
+[1.13135, 1.08616, 1.07964, 1.08296, 1.09073]
+[Test MAE]
+[0.82513, 0.79597, 0.77983, 0.77982, 0.77926]
+
+
+Best Dev MSE: 1.08529 (Obtained during Evaluation #3)
+Test MSE: 1.07964, Test MAE: 0.77983
+
+End of Program! Elapsed Time: 1,009.35s (0:16:49)

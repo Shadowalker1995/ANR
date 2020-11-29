@@ -1,0 +1,161 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  channels_global: 100
+  channels_local: 200
+  command: -d Sports_and_Outdoors -m MSANR -e 10 -dr 0.9 -WED 300 -p 1 -v 50000 -K 5 -h1 50 -kernel_list 2 3 4 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm Sports_and_Outdoors_MSANR
+  ctx_win_size: 3
+  dataset: Sports_and_Outdoors
+  disable_initial_eval: 0
+  dropout_rate: 0.9
+  epochs: 10
+  filters_num: 100
+  gpu: 0
+  h1: 50
+  h2: 50
+  hidden_size: 500
+  input_dir: ./datasets/Sports_and_Outdoors/
+  kernel_list: [2, 3, 4]
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: MSANR
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Sports_and_Outdoors - MSANR/
+  output_size: 50
+  pretrained_src: 1
+  random_seed: 1234
+  save_model: Sports_and_Outdoors_MSANR
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 645,026, # of Items: 221,569
+
+Creating model (Selected Model: MSANR)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 4.75s (0.08 minute)
+
+Loading uid_userDoc from "./datasets/Sports_and_Outdoors/Sports_and_Outdoors_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (645026, 500)]
+
+Loading iid_itemDoc from "./datasets/Sports_and_Outdoors/Sports_and_Outdoors_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (221569, 500)]
+
+Loading pretrained word embeddings from "./datasets/Sports_and_Outdoors/Sports_and_Outdoors_wed300_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (50002, 300)]
+
+Initialization Complete.. Elapsed Time: 7.86s (0.13 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 800,000, |DEV|: 25,665, |TEST|: 25,738
+Train/Dev/Test splits loaded! Elapsed Time: 8.06s (0.13 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 19.72920, MAE: 4.30649
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 19.72476, MAE: 4.30694
+
+Initial Evaluation Complete.. Elapsed Time: 24.73s (0.41 minute)
+
+Parameters with L2 Regularization (Regularization Strength: 1e-06):
+MSANR_RatingPred.uid_userOffset.weight, MSANR_RatingPred.iid_itemOffset.weight
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 449,242,196
+# of Trainable Parameters: 944,096
+MSANR (
+  (uid_userDoc): Embedding(645026, 500), weights = ((645026, 500),), parameters = 322,513,000
+  (iid_itemDoc): Embedding(221569, 500), weights = ((221569, 500),), parameters = 110,784,500
+  (wid_wEmbed): Embedding(50002, 300), weights = ((50002, 300),), parameters = 15,000,600
+  (MSANR_ARL): MSANR_ARL(
+    (aspEmbed): ModuleList(
+      (0): Embedding(5, 100)
+      (1): Embedding(5, 150)
+      (2): Embedding(5, 200)
+    )
+    (filterEmbed): Embedding(5, 50)
+    (aspProj): Parameter(5, 300, 50)
+  ), weights = ((5, 300, 50), (5, 100), (5, 150), (5, 200), (5, 50)), parameters = 77,500 (Trainable)
+  (MSANR_RatingPred): MSANR_RatingPred(
+    (userAspRepDropout): Dropout(p=0.9, inplace=False)
+    (itemAspRepDropout): Dropout(p=0.9, inplace=False)
+    (uid_userOffset): Embedding(645026, 1)
+    (iid_itemOffset): Embedding(221569, 1)
+    (globalOffset): Parameter(1,)
+  ), weights = ((1,), (645026, 1), (221569, 1)), parameters = 866,596 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/10] Training Loss: 2.35139	Elapsed Time: 668.81s (0:11:08)
+[Epoch 1] [Dev]  MSE: 1.10709, MAE: 0.81019
+[Epoch 1] [Test] MSE: 1.10135, MAE: 0.81044
+
+*** MODEL has obtained the best DEV MSE of 1.10709 so far!
+*** The Best MODEL saved to "./__saved_models__/Sports_and_Outdoors - MSANR/Sports_and_Outdoors_MSANR_1234.pth"
+
+[Epoch 2/10] Training Loss: 1.26713	Elapsed Time: 1,357.28s (0:22:37)
+[Epoch 2] [Dev]  MSE: 1.08703, MAE: 0.79591
+[Epoch 2] [Test] MSE: 1.08237, MAE: 0.79493
+
+*** MODEL has obtained the best DEV MSE of 1.08703 so far!
+*** The Best MODEL saved to "./__saved_models__/Sports_and_Outdoors - MSANR/Sports_and_Outdoors_MSANR_1234.pth"
+
+[Epoch 3/10] Training Loss: 1.17624	Elapsed Time: 2,045.64s (0:34:05)
+[Epoch 3] [Dev]  MSE: 1.08269, MAE: 0.78916
+[Epoch 3] [Test] MSE: 1.07915, MAE: 0.78812
+
+*** MODEL has obtained the best DEV MSE of 1.08269 so far!
+*** The Best MODEL saved to "./__saved_models__/Sports_and_Outdoors - MSANR/Sports_and_Outdoors_MSANR_1234.pth"
+
+[Epoch 4/10] Training Loss: 1.10546	Elapsed Time: 2,734.07s (0:45:34)
+[Epoch 4] [Dev]  MSE: 1.08747, MAE: 0.77337
+[Epoch 4] [Test] MSE: 1.08568, MAE: 0.77303
+
+[Epoch 5/10] Training Loss: 1.08097	Elapsed Time: 3,422.62s (0:57:02)
+[Epoch 5] [Dev]  MSE: 1.09249, MAE: 0.78186
+[Epoch 5] [Test] MSE: 1.08772, MAE: 0.78007
+
+[Epoch 6/10] Training Loss: 1.03142	Elapsed Time: 4,111.32s (1:08:31)
+[Epoch 6] [Dev]  MSE: 1.09890, MAE: 0.78246
+[Epoch 6] [Test] MSE: 1.09368, MAE: 0.78033
+
+[Epoch 7/10] Training Loss: 1.00058	Elapsed Time: 4,799.84s (1:19:59)
+[Epoch 7] [Dev]  MSE: 1.10455, MAE: 0.78012
+[Epoch 7] [Test] MSE: 1.09961, MAE: 0.77833
+
+[Epoch 8/10] Training Loss: 1.00701	Elapsed Time: 5,488.35s (1:31:28)
+[Epoch 8] [Dev]  MSE: 1.11104, MAE: 0.78314
+[Epoch 8] [Test] MSE: 1.10375, MAE: 0.78009
+
+[Epoch 9/10] Training Loss: 0.96572	Elapsed Time: 6,176.93s (1:42:56)
+[Epoch 9] [Dev]  MSE: 1.11466, MAE: 0.77968
+[Epoch 9] [Test] MSE: 1.10826, MAE: 0.77681
+
+[Epoch 10/10] Training Loss: 0.95042	Elapsed Time: 6,865.50s (1:54:25)
+[Epoch 10] [Dev]  MSE: 1.11696, MAE: 0.77978
+[Epoch 10] [Test] MSE: 1.11073, MAE: 0.77614
+*** The Last MODEL saved to "./__saved_models__/Sports_and_Outdoors - MSANR/Sports_and_Outdoors_MSANR_1234_10.pth"
+
+[Training Loss]
+[2.35139, 1.26713, 1.17624, 1.10546, 1.08097, 1.03142, 1.00058, 1.00701, 0.96572, 0.95042]
+
+[Dev MSE]
+[1.10709, 1.08703, 1.08269, 1.08747, 1.09249, 1.0989, 1.10455, 1.11104, 1.11466, 1.11696]
+[Test MSE]
+[1.10135, 1.08237, 1.07915, 1.08568, 1.08772, 1.09368, 1.09961, 1.10375, 1.10826, 1.11073]
+[Test MAE]
+[0.81044, 0.79493, 0.78812, 0.77303, 0.78007, 0.78033, 0.77833, 0.78009, 0.77681, 0.77614]
+
+
+Best Dev MSE: 1.08269 (Obtained during Evaluation #3)
+Test MSE: 1.07915, Test MAE: 0.78812
+
+End of Program! Elapsed Time: 6,906.66s (1:55:06)

@@ -1,0 +1,157 @@
+========================================================================================================================
+  ARL_lr: 0.01
+  ARL_path: 
+  batch_size: 128
+  channels_global: 100
+  channels_local: 200
+  command: -d Cell_Phones_and_Accessories -m VANRA -e 5 -dr 0.9 -WED 300 -p 1 -v 50000 -K 5 -h1 25 -kernel_list 3 -output_size 50 -rs 1234 -gpu 0 -vb 1 -sm Cell_Phones_and_Accessories_VANRA
+  ctx_win_size: 3
+  dataset: Cell_Phones_and_Accessories
+  disable_initial_eval: 0
+  dropout_rate: 0.9
+  epochs: 5
+  filters_num: 100
+  gpu: 0
+  h1: 25
+  h2: 50
+  hidden_size: 500
+  input_dir: ./datasets/Cell_Phones_and_Accessories/
+  kernel_list: [3]
+  L2_reg: 1e-06
+  learning_rate: 0.002
+  loss_function: MSELoss
+  max_doc_len: 500
+  max_vis_len: 500
+  model: VANRA
+  num_aspects: 5
+  optimizer: Adam
+  out_dir: ./experimental_results/Cell_Phones_and_Accessories - VANRA/
+  output_size: 50
+  pretrained_src: 1
+  random_seed: 1234
+  save_model: Cell_Phones_and_Accessories_VANRA
+  use_cuda: True
+  verbose: 1
+  vocab_size: 50000
+  word_embed_dim: 300
+========================================================================================================================
+
+[INFO] # of Users: 687,583, # of Items: 148,399
+
+Creating model (Selected Model: VANRA)..
+[args.use_cuda: True] Model is on the GPU! (args.gpu: 0, torch.cuda.current_device(): 0)
+Model created! Elapsed Time: 9.68s (0.16 minute)
+
+Loading uid_userDoc from "./datasets/Cell_Phones_and_Accessories/Cell_Phones_and_Accessories_uid_userDoc.npy"..
+uid_userDoc loaded! [uid_userDoc: (687583, 500)]
+
+Loading iid_itemDoc from "./datasets/Cell_Phones_and_Accessories/Cell_Phones_and_Accessories_iid_itemDoc.npy"..
+iid_itemDoc loaded! [iid_itemDoc: (148399, 500)]
+
+Loading pretrained word embeddings from "./datasets/Cell_Phones_and_Accessories/Cell_Phones_and_Accessories_wed300_wid_wordEmbed.npy"..
+Pretrained word embeddings loaded! [wid_wEmbed: (50002, 300)]
+
+Loading uid_userVis from "./datasets/Cell_Phones_and_Accessories/Cell_Phones_and_Accessories_uid_userVis.npy"..
+uid_userVis loaded! [uid_userVis: (687583, 500)]
+
+Loading iid_itemVis from "./datasets/Cell_Phones_and_Accessories/Cell_Phones_and_Accessories_iid_itemVis.npy"..
+iid_itemVis loaded! [iid_itemVis: (148399, 500)]
+
+Initialization Complete.. Elapsed Time: 54.04s (0.90 minute)
+
+Train/Dev/Test splits loaded! |TRAIN|: 800,000, |DEV|: 21,045, |TEST|: 21,154
+Train/Dev/Test splits loaded! Elapsed Time: 54.27s (0.90 minute)
+
+Performing initial evaluation for VALIDATION set..
+[Initial] [Dev]  MSE: 8.89071, MAE: 2.63350
+
+Performing initial evaluation for TESTING set..
+[Initial] [Test] MSE: 8.97972, MAE: 2.64085
+
+Initial Evaluation Complete.. Elapsed Time: 59.46s (0.99 minute)
+
+Parameters with L2 Regularization (Regularization Strength: 1e-06):
+VANRA_RatingPred.uid_userOffset.weight, VANRA_RatingPred.iid_itemOffset.weight
+
+Optimizer: Adam, Loss Function: MSELoss
+
+Model Size: 851,898,533
+# of Trainable Parameters: 915,933
+VANRA (
+  (uid_userDoc): Embedding(687583, 500), weights = ((687583, 500),), parameters = 343,791,500
+  (iid_itemDoc): Embedding(148399, 500), weights = ((148399, 500),), parameters = 74,199,500
+  (wid_wEmbed): Embedding(50002, 300), weights = ((50002, 300),), parameters = 15,000,600
+  (uid_userVis): Embedding(687583, 500), weights = ((687583, 500),), parameters = 343,791,500
+  (iid_itemVis): Embedding(148399, 500), weights = ((148399, 500),), parameters = 74,199,500
+  (MSANR_ARL): MSANR_ARL(
+    (aspEmbed): ModuleList(
+      (0): Embedding(5, 75)
+    )
+    (filterEmbed): Embedding(5, 25)
+    (aspProj): Parameter(5, 300, 25)
+  ), weights = ((5, 300, 25), (5, 75), (5, 25)), parameters = 38,000 (Trainable)
+  (VANRA_VRL): VANRA_VRL(
+    (fcLayer): Sequential(
+      (0): Dropout(p=0.9, inplace=False)
+      (1): Linear(in_features=500, out_features=50, bias=True)
+    )
+    (visProj): Parameter(500, 25)
+  ), weights = ((500, 25), (50, 500), (50,)), parameters = 37,550 (Trainable)
+  (VANRA_RatingPred): VANRA_RatingPred(
+    (uid_userOffset): Embedding(687583, 1)
+    (iid_itemOffset): Embedding(148399, 1)
+    (fcLayer1): Sequential(
+      (0): Linear(in_features=175, out_features=25, bias=True)
+      (1): ReLU()
+      (2): Dropout(p=0.9, inplace=False)
+    )
+    (globalOffset): Parameter(1,)
+  ), weights = ((1,), (687583, 1), (148399, 1), (25, 175), (25,)), parameters = 840,383 (Trainable)
+)
+========================================================================================================================
+
+[Epoch 1/5] Training Loss: 55.71815	Elapsed Time: 191.30s (0:03:11)
+[Epoch 1] [Dev]  MSE: 1.68426, MAE: 1.08826
+[Epoch 1] [Test] MSE: 1.66899, MAE: 1.08229
+
+*** MODEL has obtained the best DEV MSE of 1.68426 so far!
+*** The Best MODEL saved to "./__saved_models__/Cell_Phones_and_Accessories - VANRA/Cell_Phones_and_Accessories_VANRA_1234.pth"
+
+[Epoch 2/5] Training Loss: 1.85070	Elapsed Time: 387.13s (0:06:27)
+[Epoch 2] [Dev]  MSE: 1.63198, MAE: 1.05844
+[Epoch 2] [Test] MSE: 1.62130, MAE: 1.05413
+
+*** MODEL has obtained the best DEV MSE of 1.63198 so far!
+*** The Best MODEL saved to "./__saved_models__/Cell_Phones_and_Accessories - VANRA/Cell_Phones_and_Accessories_VANRA_1234.pth"
+
+[Epoch 3/5] Training Loss: 1.68175	Elapsed Time: 583.03s (0:09:43)
+[Epoch 3] [Dev]  MSE: 1.62673, MAE: 1.05046
+[Epoch 3] [Test] MSE: 1.61927, MAE: 1.04809
+
+*** MODEL has obtained the best DEV MSE of 1.62673 so far!
+*** The Best MODEL saved to "./__saved_models__/Cell_Phones_and_Accessories - VANRA/Cell_Phones_and_Accessories_VANRA_1234.pth"
+
+[Epoch 4/5] Training Loss: 1.57297	Elapsed Time: 779.06s (0:12:59)
+[Epoch 4] [Dev]  MSE: 1.62817, MAE: 1.04212
+[Epoch 4] [Test] MSE: 1.61976, MAE: 1.03955
+
+[Epoch 5/5] Training Loss: 1.49722	Elapsed Time: 974.87s (0:16:14)
+[Epoch 5] [Dev]  MSE: 1.63152, MAE: 1.03636
+[Epoch 5] [Test] MSE: 1.62433, MAE: 1.03425
+*** The Last MODEL saved to "./__saved_models__/Cell_Phones_and_Accessories - VANRA/Cell_Phones_and_Accessories_VANRA_1234_5.pth"
+
+[Training Loss]
+[55.71815, 1.8507, 1.68175, 1.57297, 1.49722]
+
+[Dev MSE]
+[1.68426, 1.63198, 1.62673, 1.62817, 1.63152]
+[Test MSE]
+[1.66899, 1.6213, 1.61927, 1.61976, 1.62433]
+[Test MAE]
+[1.08229, 1.05413, 1.04809, 1.03955, 1.03425]
+
+
+Best Dev MSE: 1.62673 (Obtained during Evaluation #3)
+Test MSE: 1.61927, Test MAE: 1.04809
+
+End of Program! Elapsed Time: 1,038.69s (0:17:18)

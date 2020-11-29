@@ -52,6 +52,8 @@ parser.add_argument("-h1", dest="h1", type=int, default=10,
                     help="Dimensionality of the Aspect-level Representations (Default: 10)")
 parser.add_argument("-c", dest="ctx_win_size", type=int, default=3,
                     help="Window Size (i.e. Number of Words) for Calculating Attention (Default: 3)")
+parser.add_argument("-kernel_list", dest="kernel_list", nargs='+', type=int, default=2,
+                    help="kernel Size List for Calculating Word-aware Attention (Default: [2, 3, 4])")
 parser.add_argument("-h2", dest="h2", type=int, default=50,
                     help="Dimensionality of the Hidden Layers used for Aspect Importance Estimation (Default: 50)")
 parser.add_argument("-L2_reg", dest="L2_reg", type=float, default=1E-6,
